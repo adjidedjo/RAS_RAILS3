@@ -1,0 +1,52 @@
+<%= form_tag laporan_cabang_index_path, :method => 'get' do %>
+  <p>
+    Date Range<br />
+    <%= label_tag 'From' %>
+    <%= text_field_tag 'from'  %>
+    <%= label_tag 'To' %>
+    <%= text_field_tag 'to' %>
+  </p>
+  <p>
+    <%= submit_tag "Submit" %>
+  </p>
+<% end %>
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+    <table border="1" id="laporancabang" class="display"  data-source="<%= laporan_cabang_index_path(format: :json) %>">
+      <thead>
+        <tr>
+          <th>Id Branches</th>
+          <th>Invoices Date</th>
+          <th>Customers</th>
+          <th>Code Items</th>
+          <th>Quantity</th>
+          <th>Netto Prices</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>Id Branches</th>
+          <th>Invoices Date</th>
+          <th>Customers</th>
+          <th>Code Items</th>
+          <th>Quantity</th>
+          <th>Netto Prices</th>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% @laporancabang.find_in_batches(:batch_size => 5000) do |batches| %>
+          <% batches.each do |laporan| %>
+            <tr>
+              <td><%= laporan.idcabang %></td>
+              <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
+              <td><%= laporan.customer %></td>
+              <td><%= laporan.kodebrg %></td>
+              <td><%= laporan.jumlah %></td>
+              <td><%= number_to_currency(laporan.harganetto2, :precision => 0, :unit => 'Rp. ') %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>

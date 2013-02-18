@@ -1,0 +1,2 @@
+module LaporanCabangHelper
+end
