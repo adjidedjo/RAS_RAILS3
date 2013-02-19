@@ -61,7 +61,7 @@ $(document).ready(function(){
     }(jQuery)); */
     
     // Add a tabletool to export to pdf, excel and csv
-    $('#laporancabang').dataTable({
+    var oTable = $('#laporancabang').dataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         sDom: 'T<"clear"><"fg-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"fg-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip',
@@ -73,20 +73,42 @@ $(document).ready(function(){
             ]
         }
     }).columnFilter({
+        sPlaceHolder: "head:after",
         aoColumns: [
-        {
-            type: "number"
-        },
         null,
+        null,
+        {
+            type: "checkbox",
+            values: ["Narogong 02"]
+        },
         {
             type: "text",
             bRegex: true,
             bSmart: true
         },
+        null,
+        null,
         {
             type: "checkbox",
-            values: ["A", "B"]
-        }
+            values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
+        },
+        null,
+        null,
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        null,
+        null,
         ]
     });
+    new FixedHeader( oTable);
 });

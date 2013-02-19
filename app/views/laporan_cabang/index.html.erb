@@ -1,48 +1,80 @@
 <%= form_tag laporan_cabang_index_path, :method => 'get' do %>
   <p>
-    Date Range<br />
+    Date Range<br /><br />
     <%= label_tag 'From' %>
     <%= text_field_tag 'from'  %>
     <%= label_tag 'To' %>
     <%= text_field_tag 'to' %>
   </p>
+  <br /><br />
   <p>
     <%= submit_tag "Submit" %>
   </p>
 <% end %>
+<br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
     <table border="1" id="laporancabang" class="display"  data-source="<%= laporan_cabang_index_path(format: :json) %>">
       <thead>
         <tr>
-          <th>Id Branches</th>
-          <th>Invoices Date</th>
+          <th></th>
+          <th></th>
+          <th>Id</th>
+          <th>Cust</th>
+          <th></th>
+          <th></th>
+          <th>Cat</th>
+          <th></th>
+          <th></th>
+          <th>Article</th>
+          <th>Fabric</th>
+          <th>L</th>
+          <th>W</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr>
+          <th>No</th>
+          <th>Date</th>
+          <th>IdBranches</th>
           <th>Customers</th>
-          <th>Code Items</th>
-          <th>Quantity</th>
-          <th>Netto Prices</th>
+          <th>ItemCodes</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Type</th>
+          <th>Articel</th>
+          <th>Fabric</th>
+          <th>Length</th>
+          <th>Width</th>
+          <th>Qty</th>
+          <th>Price</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
-          <th>Id Branches</th>
-          <th>Invoices Date</th>
-          <th>Customers</th>
-          <th>Code Items</th>
-          <th>Quantity</th>
-          <th>Netto Prices</th>
+
         </tr>
       </tfoot>
       <tbody>
         <% @laporancabang.find_in_batches(:batch_size => 5000) do |batches| %>
           <% batches.each do |laporan| %>
             <tr>
-              <td><%= laporan.idcabang %></td>
+              <td><%= laporan.nofaktur %></td>
               <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
+              <td><%= laporan.idcabang %></td>
               <td><%= laporan.customer %></td>
               <td><%= laporan.kodebrg %></td>
+              <td><%= laporan.namabrg %></td>
+              <td><%= laporan.jenisbrgdisc %></td>
+              <td><%= laporan.namabrand %></td>
+              <td><%= laporan.jenisbrg %></td>
+              <td><%= laporan.namaartikel %></td>
+              <td><%= laporan.namakain %></td>
+              <td><%= laporan.panjang %></td>
+              <td><%= laporan.lebar %></td>
               <td><%= laporan.jumlah %></td>
-              <td><%= number_to_currency(laporan.harganetto2, :precision => 0, :unit => 'Rp. ') %></td>
+              <td><%= number_to_currency(laporan.harganetto2, :precision => 0, :unit => '') %></td>
             </tr>
           <% end %>
         <% end %>
