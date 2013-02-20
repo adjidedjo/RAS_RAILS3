@@ -20,64 +20,23 @@
     <table id="table_year" class="pretty">
       <thead>
         <tr>
-          <th rowspan="3">Dates</th>
-          <th colspan="40">Annual Control Sales Branches Report</th>
+          <th rowspan="2">Dates</th>
+          <th colspan="13">Annual Control Sales Branches Report</th>
         </tr>
         <tr>
-          <th colspan="3">Bandung</th>
-          <th colspan="3">Narogong</th>
-          <th colspan="3">Bali</th>
-          <th colspan="3">Medan</th>
-          <th colspan="3">Surabaya</th>
-          <th colspan="3">Semarang</th>
-          <th colspan="3">Yogyakarta</th>
-          <th colspan="3">Palembang</th>
-          <th colspan="3">Lampung</th>
-          <th colspan="3">Meruya</th>
-          <th colspan="3">Makasar</th>
-          <th colspan="3">Pekanbaru</th>
-          <th colspan="3">Jember</th>
-        </tr>
-        <tr>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
-          <th>El</th>
-          <th>Ro</th>
-          <th>La</th>
+          <th>Bandung</th>
+          <th>Narogong</th>
+          <th>Bali</th>
+          <th>Medan</th>
+          <th>Surabaya</th>
+          <th>Semarang</th>
+          <th>Yogyakarta</th>
+          <th>Palembang</th>
+          <th>Lampung</th>
+          <th>Meruya</th>
+          <th>Makasar</th>
+          <th>Pekanbaru</th>
+          <th>Jember</th>
         </tr>
       </thead>
       <tfoot>
@@ -85,62 +44,9 @@
       <tbody>
         <% @dates.each do |date| %>
           <tr>
-            <% @model.query_by_date(params[:from], params[:to]).find_in_batches(:batch_size => 5000) do |a| %>
-              <% a.each do |b| %>
-                <th scope="row"><%= date %></th>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "02" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "02" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "02" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "03" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "03" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "03" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "04" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "04" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "04" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "05" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "05" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "05" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "06" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "06" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "06" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "07" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "07" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "07" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "10" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "10" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "10" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "11" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "11" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "11" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "13" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "13" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "13" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "18" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "18" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "18" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "19" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "19" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "19" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "20" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "20" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "20" %></td>
-                
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Elite" && b.idcabang == "22" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Royal" && b.idcabang == "22" %></td>
-                <td><%= "Aya" if b.tanggalfaktur == date && b.jenisbrgdisc == "Lady" && b.idcabang == "22" %></td>
-              <% end %>
+            <th scope="row"><%= date.strftime("%e %B %Y") %></th>
+            <% Cabang.get_id.each do |cab| %>
+              <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
             <% end %>
           </tr>
         <% end %>

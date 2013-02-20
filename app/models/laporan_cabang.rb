@@ -6,6 +6,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :by_category_items, lambda {|category, date, idcabang| where(:jenisbrgdisc => category, :tanggalfaktur => date, :idcabang => idcabang)}
   scope :query_by_year, lambda {|year| where("tanggalfaktur >= ? and tanggalfaktur <= ?", "#{year}-01-01", "#{year}-12-31")}
   scope :query_by_branch, lambda {|id_cabang| where(:idcabang => id_cabang)}
+  scope :check_invoices, lambda {|date| where(:tanggalsj => date)}
   
   def self.query_by_year_and_idcabang(year, idcabang)
     sum(:jumlah, :conditions => ["tanggalfaktur >= ? and tanggalfaktur <= ? and idcabang = ?", "#{year}-01-01", "#{year}-12-31", idcabang])
