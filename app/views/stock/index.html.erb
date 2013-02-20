@@ -1,0 +1,24 @@
+<%= form_tag stock_index_path, :method => 'get' do %>
+  <br />
+  <p>
+    <%= label_tag 'Date' %>
+    <%= text_field_tag 'date'  %>
+  </p><br />
+  <p>
+    <%= label_tag 'Category' %>
+    <%= select_tag 'jenis_barang', "<option>Classic</option><option>Elite</option><option>Grand</option>
+  <option>Lady Americana</option><option>Royal</option><option>Serenity</option>".html_safe, 
+      :include_blank => false, :multiple => false, :size => 10 %>
+  </p>
+  <p>
+    <%= submit_tag "Submit" %>
+  </p>
+<% end %>
+
+<script type="text/javascript">
+  $(function(){
+    $("select").multiselect(); 
+  });
+</script>
+
+

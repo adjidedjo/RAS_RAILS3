@@ -1,4 +1,6 @@
 Rain::Application.routes.draw do
+  get "stock/index"
+
   get "model/new"
 
   get "model/index"
