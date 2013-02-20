@@ -61,7 +61,7 @@
           <% batches.each do |laporan| %>
             <tr>
               <td><%= laporan.nofaktur %></td>
-              <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
+              <td><%= laporan.tanggalfaktur.strftime("%e %B %Y") %></td>
               <td><%= laporan.cabang.Cabang %></td>
               <td><%= laporan.customer %></td>
               <td><%= laporan.kodebrg %></td>
