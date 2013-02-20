@@ -64,12 +64,15 @@ $(document).ready(function(){
     var oTable = $('#laporancabang').dataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
-        sDom: 'T<"clear"><"fg-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"fg-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip',
+        sDom: '<"H"Tfr>t<"F"ip>',
         bRetrieve: true,
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
             aButtons: [
-            "xls"
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
             ]
         }
     }).columnFilter({
