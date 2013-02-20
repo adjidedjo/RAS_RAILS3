@@ -21,7 +21,7 @@
       <thead>
         <tr>
           <th rowspan="2">Dates</th>
-          <th colspan="13">Annual Control Sales Branches Report</th>
+          <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
         </tr>
         <tr>
           <th>Bandung</th>
@@ -46,7 +46,11 @@
           <tr>
             <th scope="row"><%= date.strftime("%e %B %Y") %></th>
             <% Cabang.get_id.each do |cab| %>
-              <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+              <% if params[:category] == "Penjualan" %>
+                <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+              <% else %>
+                <td><%= cab.stock.check_stock(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+              <% end %>
             <% end %>
           </tr>
         <% end %>

@@ -1,5 +1,5 @@
 class Stock < ActiveRecord::Base
-  set_table_name "TbStockCabang"
-  scope :query_by_date, lambda {|from, to| where(:tanggalfaktur => from..to)}
-  
+  set_table_name "tbstockcabang"
+  belongs_to :cabang
+  scope :check_stock, lambda {|date| where(:tanggal => date)}
 end
