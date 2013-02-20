@@ -79,7 +79,8 @@ $(document).ready(function(){
         null,
         {
             type: "checkbox",
-            values: ["Narogong 02"]
+            values: ["Bandung", "Narogong", "Bali", "Medan", "Surabaya", "Semarang", "Cirebon",
+            "Yogyakarta", "Palembang", "Lampung", "Meruya", "Makasar", "Pekanbaru", "Jember"]
         },
         {
             type: "text",

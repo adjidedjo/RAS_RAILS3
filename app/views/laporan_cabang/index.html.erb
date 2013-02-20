@@ -19,7 +19,7 @@
         <tr>
           <th></th>
           <th></th>
-          <th>Id</th>
+          <th>Branch</th>
           <th>Cust</th>
           <th></th>
           <th></th>
@@ -36,7 +36,7 @@
         <tr>
           <th>No</th>
           <th>Date</th>
-          <th>IdBranches</th>
+          <th>Branches</th>
           <th>Customers</th>
           <th>ItemCodes</th>
           <th>Name</th>
@@ -62,7 +62,7 @@
             <tr>
               <td><%= laporan.nofaktur %></td>
               <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
-              <td><%= laporan.idcabang %></td>
+              <td><%= laporan.cabang.Cabang %></td>
               <td><%= laporan.customer %></td>
               <td><%= laporan.kodebrg %></td>
               <td><%= laporan.namabrg %></td>
