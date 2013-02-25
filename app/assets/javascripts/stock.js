@@ -4,12 +4,23 @@
  */
 
 $(document).ready(function(){
-    $('#category').multiselect({
-        noneSelectedText: 'Select car/boat manufacturers',
+    $('#stock_category').multiselect({
         selectedList: 4
     });
     
     $('#date').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
+    
+    $('#stock.display').dataTable({
+        "sScrollY": "200px",
+        "bScrollCollapse": true,
+        "bPaginate": false,
+        "bJQueryUI": true,
+        "aoColumnDefs": [
+        {
+            "aTargets": [ -1 ]
+        }
+        ]
+    });
 });

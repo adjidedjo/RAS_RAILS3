@@ -45,18 +45,15 @@ div.dataTables_length {
 
 div.dataTables_filter {
 	float: right;
-	background-color: green;
 }
 
 div.dataTables_info {
 	padding: 9px 6px 6px 6px;
 	float: left;
-	background-color: blue;
 }
 
 div.dataTables_paginate {
 	float: right;
-	background-color: yellow;
 }
 
 div.dataTables_length,

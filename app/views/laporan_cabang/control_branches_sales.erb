@@ -45,7 +45,7 @@
         <% @dates.each do |date| %>
           <tr>
             <th scope="row"><%= date.strftime("%e %B %Y") %></th>
-            <% Cabang.get_id.each do |cab| %>
+            <% @cabang_get_id.each do |cab| %>
               <% if params[:category] == "Penjualan" %>
                 <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
               <% else %>

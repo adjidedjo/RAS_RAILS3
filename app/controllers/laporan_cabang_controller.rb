@@ -18,6 +18,7 @@ class LaporanCabangController < ApplicationController
   
   def control_branches_sales
     @dates = params[:from].to_date..params[:to].to_date unless params[:from].nil? && params[:to].nil?
+    @cabang_get_id = Cabang.get_id
     
     respond_to do |format|
       format.html # index.html.erb

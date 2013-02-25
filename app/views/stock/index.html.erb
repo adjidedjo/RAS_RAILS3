@@ -6,7 +6,7 @@
   </p><br />
   <p>
     <%= label_tag 'Category' %>
-    <%= select_tag 'jenis_barang', "<option>Classic</option><option>Elite</option><option>Grand</option>
+    <%= select_tag 'stock_category', "<option>Classic</option><option>Elite</option><option>Grand</option>
   <option>Lady Americana</option><option>Royal</option><option>Serenity</option>".html_safe, 
       :include_blank => false, :multiple => false, :size => 10 %>
   </p>
@@ -15,10 +15,55 @@
   </p>
 <% end %>
 
-<script type="text/javascript">
-  $(function(){
-    $("select").multiselect(); 
-  });
-</script>
+<% unless params[:date].nil? %>
 
-
+  <table id="stock" class="display">
+    <thead>
+      <tr>
+        <th rowspan="3">Nama Barang</th>
+        <th colspan="30">Annual Stock Branches Report</th>
+      </tr>
+      <tr>
+        <th colspan="2">Bandung</th>
+        <th colspan="2">Narogong</th>
+        <th colspan="2">Bali</th>
+        <th colspan="2">Medan</th>
+        <th colspan="2">Surabaya</th>
+        <th colspan="2">Semarang</th>
+        <th colspan="2">Yogyakarta</th>
+        <th colspan="2">Palembang</th>
+        <th colspan="2">Lampung</th>
+        <th colspan="2">Meruya</th>
+        <th colspan="2">Makasar</th>
+        <th colspan="2">Pekanbaru</th>
+        <th colspan="2">Jember</th>
+      </tr>
+      <tr>
+        <% (1..13).each do |i| %>
+          <th>Free</th>
+          <th>Buffer</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tfoot>
+    </tfoot>
+    <tbody>
+      <% @get_stock.find_each(:batch_size => 10000) do |stock| %>
+        <tr>
+          <th scope="row"><%= stock.namabrg %></th>
+          <% @id_cabang.each do |cabang| %>
+            <% if Stock.get_stock_in_branch(params[:date], cabang, stock).empty? %>
+              <td></td>
+              <td></td>
+            <% else %>
+              <% Stock.get_stock_in_branch(params[:date], cabang, stock).find_each(:batch_size => 10000) do |a| %>
+                <td><%= a.freestock  %></td>
+                <td><%= a.bufferstock %></td>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
