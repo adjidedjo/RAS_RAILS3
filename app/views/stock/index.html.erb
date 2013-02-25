@@ -8,7 +8,7 @@
     <%= label_tag 'Category' %>
     <%= select_tag 'stock_category', "<option>Classic</option><option>Elite</option><option>Grand</option>
   <option>Lady Americana</option><option>Royal</option><option>Serenity</option>".html_safe, 
-      :include_blank => false, :multiple => false, :size => 10 %>
+      :include_blank => false, :multiple => false, :size => 10, :onchange => "alert($('select').multiselect('getChecked').map(function(){return this.value;)" %>
   </p>
   <p>
     <%= submit_tag "Submit" %>
@@ -20,7 +20,7 @@
   <table id="stock" class="display">
     <thead>
       <tr>
-        <th rowspan="3">Nama Barang</th>
+        <th rowspan="4">Nama Barang</th>
         <th colspan="30">Annual Stock Branches Report</th>
       </tr>
       <tr>
@@ -40,8 +40,8 @@
       </tr>
       <tr>
         <% (1..13).each do |i| %>
-          <th>Free</th>
-          <th>Buffer</th>
+          <th>F</th>
+          <th>B</th>
         <% end %>
       </tr>
     </thead>

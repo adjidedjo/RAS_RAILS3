@@ -12,14 +12,15 @@ $(document).ready(function(){
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
     
-    $('#stock.display').dataTable({
-        "sScrollY": "200px",
-        "bScrollCollapse": true,
-        "bPaginate": false,
-        "bJQueryUI": true,
-        "aoColumnDefs": [
+    var oTable = $('#stock.display').dataTable({
+        sScrollY: "200px",
+        bPaginate: false,
+        bJQueryUI: true
+    }).columnFilter({
+        aoColumns: [
         {
-            "aTargets": [ -1 ]
+            type: "checkbox",
+            values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
         }
         ]
     });
