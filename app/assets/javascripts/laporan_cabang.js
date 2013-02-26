@@ -23,6 +23,12 @@ $(document).ready(function(){
     $('#to').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
+    $('#week').datepicker({
+        dateFormat: 'yy-mm-dd'
+    }).attr('readonly','readonly');
+    $('#periode').datepicker({
+        dateFormat: 'yy-mm-dd'
+    }).attr('readonly','readonly');
     
     // Add a tabletool to export to pdf, excel and csv
     var oTable = $('#laporancabang').dataTable({

@@ -5,7 +5,7 @@ class Stock < ActiveRecord::Base
   scope :find_kodebrg, lambda {|kodebrg| where(:kodebrg => kodebrg)}
   scope :find_cabang_id, lambda {|cabang_id| where(:cabang_id => cabang_id)}
   
-  def self.get_stock_in_branch(date, cabang, stock)
-    check_stock(date).find_cabang_id(cabang).find_kodebrg(stock.kodebrg)
+  def self.get_stock_in_branch(cabang, stock)
+    find_cabang_id(cabang).find_kodebrg(stock.kodebrg)
   end
 end

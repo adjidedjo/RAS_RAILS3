@@ -6,9 +6,7 @@
   </p><br />
   <p>
     <%= label_tag 'Category' %>
-    <%= select_tag 'stock_category', "<option>Classic</option><option>Elite</option><option>Grand</option>
-  <option>Lady Americana</option><option>Royal</option><option>Serenity</option>".html_safe, 
-      :include_blank => false, :multiple => false, :size => 10, :onchange => "alert($('select').multiselect('getChecked').map(function(){return this.value;)" %>
+    <%= select_tag 'stock_category', options_from_collection_for_select(@get_merk, 'id', 'Merk'), :include_blank => false, :multiple => true %>
   </p>
   <p>
     <%= submit_tag "Submit" %>
@@ -20,7 +18,7 @@
   <table id="stock" class="display">
     <thead>
       <tr>
-        <th rowspan="4">Nama Barang</th>
+        <th rowspan="3">Nama Barang</th>
         <th colspan="30">Annual Stock Branches Report</th>
       </tr>
       <tr>
@@ -48,15 +46,15 @@
     <tfoot>
     </tfoot>
     <tbody>
-      <% @get_stock.find_each(:batch_size => 10000) do |stock| %>
+      <% @get_stock.find_each(:batch_size => 5000) do |stock| %>
         <tr>
           <th scope="row"><%= stock.namabrg %></th>
           <% @id_cabang.each do |cabang| %>
-            <% if Stock.get_stock_in_branch(params[:date], cabang, stock).empty? %>
+            <% if @get_stock.get_stock_in_branch(cabang, stock).empty? %>
               <td></td>
               <td></td>
             <% else %>
-              <% Stock.get_stock_in_branch(params[:date], cabang, stock).find_each(:batch_size => 10000) do |a| %>
+              <% @get_stock.get_stock_in_branch(cabang, stock).find_each(:batch_size => 5000) do |a| %>
                 <td><%= a.freestock  %></td>
                 <td><%= a.bufferstock %></td>
               <% end %>

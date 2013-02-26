@@ -9,7 +9,9 @@ class LaporanCabangController < ApplicationController
   end
   
   def comparison_by_year
-    
+    @cabang_get_id = Cabang.get_id
+    @periode = params[:periode]
+    @get_data_classic = LaporanCabang.query_by_date(params[:periode].to_date, 1.year.ago(params[:periode].to_date)).query_classic
     
     respond_to do |format|
       format.html # index.html.erb

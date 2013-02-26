@@ -6,7 +6,7 @@ Rain::Application.routes.draw do
   get "model/index"
 
   get "laporan_cabang/index"
-  get "laporan_cabang/comparison"
+  get "laporan_cabang/comparison_by_year"
   get "laporan_cabang/control_branches_sales"
 
   # The priority is based upon order of creation:
