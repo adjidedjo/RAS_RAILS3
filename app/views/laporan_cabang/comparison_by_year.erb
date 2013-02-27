@@ -52,21 +52,21 @@
         <th rowspan="2">%</th>
       </tr>
       <tr>
-        <th><%= 1.year.ago(1.weeks.ago(@periode.to_date - 6.days)).to_date.strftime('%d') %>-<%= 1.year.ago(1.weeks.ago(@periode.to_date)).to_date.strftime('%d %b') %></th>
-        <th><%= 1.weeks.ago(@periode.to_date - 6.days).to_date.strftime('%d') %>-<%= 1.weeks.ago(@periode.to_date).to_date.strftime('%d %b') %></th>
-        <th><%= 1.year.ago(@periode.to_date - 6.days).to_date.strftime('%d') %> - <%= 1.year.ago(@periode.to_date).strftime('%d %b')  %></th>
-        <th><%= (@periode.to_date - 6.days).to_date.strftime('%d') %> - <%= @periode.to_date.strftime('%d %b')  %></th>
+        <th><%= @last_week_on_last_year.strftime('%d') %>-<%= 1.year.ago(1.weeks.ago(@periode.to_date)).to_date.strftime('%d %b') %></th>
+        <th><%= @last_week_on_current_year.strftime('%d') %>-<%= 1.weeks.ago(@periode.to_date).to_date.strftime('%d %b') %></th>
+        <th><%= @this_week_on_last_year.strftime('%d') %> - <%= 1.year.ago(@periode.to_date).strftime('%d %b')  %></th>
+        <th><%= @this_week_on_current_year.strftime('%d') %> - <%= @periode.to_date.strftime('%d %b')  %></th>
       </tr>
     </thead>
     <tfoot>
       <tr>
         <th scope="row">Total</th>
-        <td>212.920</td>
-        <td>214.860</td>
-        <td>206.390</td>
-        <td>207.535</td>
-        <td>2.7</td>
-        <td>0.1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>2.7</td>
         <td>0.1</td>
         <td>2.7</td>
@@ -79,18 +79,18 @@
       <% @cabang_get_id.each do |cabang| %>
         <tr>
           <th scope="row"><%= cabang.Cabang %></th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><%= cabang.laporan_cabang.monthly_sum_last_year(@periode.to_date) %></td>
+          <td><%= cabang.laporan_cabang.monthly_sum_current_year(@periode.to_date) %></td>
+          <td></td>
+          <td><%= cabang.laporan_cabang.yearly_sum_last_year(@periode.to_date) %></td>
+          <td><%= cabang.laporan_cabang.yearly_sum_current_year(@periode.to_date) %></td>
+          <td></td>
         </tr>
       <% end %>
     </tbody>
@@ -102,7 +102,35 @@
   $(document).ready(function() {
     $('#table_year').dataTable( {
       sPaginationType: "full_numbers",
-      bJQueryUI: true
-    } );
-  } );
+      bJQueryUI: true,
+      "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+        /*
+         * Calculate the total market share for all browsers in this table (ie inc. outside
+         * the pagination)
+         */
+        var iTotalLastYearMonth = 0;
+        var iTotalCurrentYearMonth = 0;
+        var iTotalLastYear = 0;
+        var iTotalCurrentYear = 0;
+        
+        for ( var i=0 ; i<aaData.length ; i++ )
+        {
+          iTotalLastYearMonth += aaData[i][7]*1;
+          iTotalCurrentYearMonth += aaData[i][8]*1;
+          iTotalLastYear += aaData[i][10]*1;
+          iTotalCurrentYear += aaData[i][11]*1;
+          console.log(aaData[i][1])
+        }
+             
+        /* Modify the footer row to match what we want */
+        var nCells = nRow.getElementsByTagName('td');
+        nCells[6].innerHTML = parseInt(iTotalLastYearMonth)
+        nCells[7].innerHTML = parseInt(iTotalCurrentYearMonth)
+        nCells[9].innerHTML = parseInt(iTotalLastYear)
+        nCells[10].innerHTML = parseInt(iTotalCurrentYear)
+        nCells[8].innerHTML = parseInt(iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100/100 ;
+        nCells[11].innerHTML = parseInt(iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100/100 ;
+      }
+    });
+  });
 </script>
