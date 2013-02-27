@@ -19,7 +19,7 @@ class LaporanCabang < ActiveRecord::Base
   end
   
   def self.monthly_sum_last_year(date)
-    query_by_date(get_last_month_on_last_year(date), date).sum(:harganetto2).to_i
+    query_by_date(get_last_month_on_last_year(date), 1.year.ago(date)).sum(:harganetto2).to_i
   end
   
   def self.monthly_sum_current_year(date)
@@ -27,7 +27,7 @@ class LaporanCabang < ActiveRecord::Base
   end
   
   def self.yearly_sum_last_year(date)
-    query_by_date(get_beginning_of_year_on_last_year(date), date).sum(:harganetto2).to_i
+    query_by_date(get_beginning_of_year_on_last_year(date), 1.year.ago(date)).sum(:harganetto2).to_i
   end
   
   def self.yearly_sum_current_year(date)
@@ -48,6 +48,10 @@ class LaporanCabang < ActiveRecord::Base
   
   def self.get_beginning_of_year_on_current_year(date)
     date.to_date.beginning_of_year.to_date
+  end
+  
+  def self.get_percentage(last_month, current_month)
+    (current_month.to_f - last_month.to_f) / last_month.to_f * 100
   end
  
 end

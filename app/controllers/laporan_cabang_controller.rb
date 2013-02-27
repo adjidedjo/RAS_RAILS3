@@ -15,11 +15,13 @@ class LaporanCabangController < ApplicationController
       1.year.ago(params[:periode].to_date))
     .query_classic unless params[:periode].nil?
     #   find a week for report weekly
-    @this_week_on_current_year = (params[:periode].to_date - 6.days).to_date
-    @this_week_on_last_year = 1.year.ago(params[:periode].to_date - 6.days).to_date
-    @last_week_on_current_year = 1.weeks.ago(params[:periode].to_date - 6.days).to_date
-    @last_week_on_last_year = 1.year.ago(1.weeks.ago(params[:periode].to_date - 6.days)).to_date
-    
+    unless params[:periode].nil?
+      @this_week_on_current_year = (params[:periode].to_date - 6.days).to_date
+      @this_week_on_last_year = 1.year.ago(params[:periode].to_date - 6.days).to_date
+      @last_week_on_current_year = 1.weeks.ago(params[:periode].to_date - 6.days).to_date
+      @last_week_on_last_year = 1.year.ago(1.weeks.ago(params[:periode].to_date - 6.days)).to_date
+    end
+      
     respond_to do |format|
       format.html # index.html.erb
     end

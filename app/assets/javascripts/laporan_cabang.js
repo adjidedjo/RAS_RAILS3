@@ -37,8 +37,6 @@ $(document).ready(function(){
         sDom: '<"H"Tfr>t<"F"ip>',
         bRetrieve: true,
         fnRowCallback: function( nRow, aData, iDisplayIndex ) {
-            var id = aData[5];
-            $(nRow).attr("id",id);
             return nRow;
         },
         oTableTools: {
