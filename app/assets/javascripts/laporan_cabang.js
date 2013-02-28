@@ -87,4 +87,8 @@ $(document).ready(function(){
         null,
         ]
     });
+    $('#table_control_branch').dataTable({
+        bJQueryUI: true,
+        sPaginationType: "full_numbers"
+    });
 });
