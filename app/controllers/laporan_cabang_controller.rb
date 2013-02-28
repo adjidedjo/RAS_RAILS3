@@ -11,9 +11,6 @@ class LaporanCabangController < ApplicationController
   def comparison_by_year
     @cabang_get_id = Cabang.get_id
     @periode = params[:periode]
-    @get_data_classic = LaporanCabang.query_by_date(params[:periode].to_date, 
-      1.year.ago(params[:periode].to_date))
-    .query_classic unless params[:periode].nil?
     #   find a week for report weekly
     unless params[:periode].nil?
       @this_week_on_current_year = (params[:periode].to_date - 6.days).to_date
