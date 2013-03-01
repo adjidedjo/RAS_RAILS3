@@ -34,6 +34,26 @@ class LaporanCabang < ActiveRecord::Base
         get_beginning_of_year_on_current_year(date), date, jenis ]).to_i
   end
   
+  def self.monthly_sum_last_year_multiple_jenis(date, jenis)
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
+        get_last_month_on_last_year(date), 1.year.ago(date), jenis]).to_i
+  end
+  
+  def self.monthly_sum_current_year_multiple_jenis(date, jenis)
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
+        get_last_month_on_current_year(date), date, jenis ]).to_i
+  end
+  
+  def self.yearly_sum_last_year_multiple_jenis(date, jenis)
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
+        get_beginning_of_year_on_last_year(date), 1.year.ago(date), jenis]).to_i
+  end
+  
+  def self.yearly_sum_current_year_multiple_jenis(date, jenis)
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
+        get_beginning_of_year_on_current_year(date), date, jenis ]).to_i
+  end
+  
   def self.weekly_sum_last_year(from, to, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         from, to, jenis ], :order => "id").to_i
