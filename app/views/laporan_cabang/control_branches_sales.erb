@@ -17,44 +17,46 @@
 <% end %><br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <table id="table_control_branch" class="display">
-      <thead>
-        <tr>
-          <th rowspan="2">Dates</th>
-          <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
-        </tr>
-        <tr>
-          <th>Bandung</th>
-          <th>Narogong</th>
-          <th>Bali</th>
-          <th>Medan</th>
-          <th>Surabaya</th>
-          <th>Semarang</th>
-          <th>Yogyakarta</th>
-          <th>Palembang</th>
-          <th>Lampung</th>
-          <th>Meruya</th>
-          <th>Makasar</th>
-          <th>Pekanbaru</th>
-          <th>Jember</th>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% @dates.each do |date| %>
+    <% cache do %>
+      <table id="table_control_branch" class="display">
+        <thead>
           <tr>
-            <th scope="row"><%= date.strftime("%e %B %Y") %></th>
-            <% @cabang_get_id.each do |cab| %>
-              <% if params[:category] == "Penjualan" %>
-                <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
-              <% else %>
-                <td><%= cab.stock.check_stock(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
-              <% end %>
-            <% end %>
+            <th rowspan="2">Dates</th>
+            <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <tr>
+            <th>Bandung</th>
+            <th>Narogong</th>
+            <th>Bali</th>
+            <th>Medan</th>
+            <th>Surabaya</th>
+            <th>Semarang</th>
+            <th>Yogyakarta</th>
+            <th>Palembang</th>
+            <th>Lampung</th>
+            <th>Meruya</th>
+            <th>Makasar</th>
+            <th>Pekanbaru</th>
+            <th>Jember</th>
+          </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+          <% @dates.each do |date| %>
+            <tr>
+              <th scope="row"><%= date.strftime("%e %B %Y") %></th>
+              <% @cabang_get_id.each do |cab| %>
+                <% if params[:category] == "Penjualan" %>
+                  <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+                <% else %>
+                  <td><%= cab.stock.check_stock(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   <% end %>
 <% end %>
