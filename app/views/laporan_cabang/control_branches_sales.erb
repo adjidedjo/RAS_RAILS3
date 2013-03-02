@@ -47,9 +47,9 @@
               <th scope="row"><%= date.strftime("%e %B %Y") %></th>
               <% @cabang_get_id.each do |cab| %>
                 <% if params[:category] == "Penjualan" %>
-                  <td><%= cab.laporan_cabang.order("id desc").check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+                  <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
                 <% else %>
-                  <td><%= cab.stock.order("id desc").check_stock(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+                  <td><%= cab.stock.check_stock(date).order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
                 <% end %>
               <% end %>
             </tr>

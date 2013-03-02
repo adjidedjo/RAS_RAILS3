@@ -1,6 +1,5 @@
 class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
-  set_primary_key "nofaktur"
   belongs_to :cabang
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :by_category_items, lambda {|category, date, cabang_id| where(:jenisbrgdisc => category, :tanggalfaktur => date, :cabang_id => cabang_id)}
