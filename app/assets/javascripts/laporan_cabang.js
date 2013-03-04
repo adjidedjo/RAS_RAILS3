@@ -50,33 +50,34 @@ $(document).ready(function(){
         
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalLastYearMonth += aaData[i][7]*1;
-                iTotalCurrentYearMonth += aaData[i][8]*1;
-                iTotalLastYear += aaData[i][10]*1;
-                iTotalCurrentYear += aaData[i][11]*1;
+                iTotalLastYearMonth += parseCurrency(aaData[i][7])*1;
+                console.log(aaData[i][7])
+                iTotalCurrentYearMonth += parseCurrency(aaData[i][8])*1;
+                iTotalLastYear += parseCurrency(aaData[i][10])*1;
+                iTotalCurrentYear += parseCurrency(aaData[i][11])*1;
           
-                iTotalLastWeekLastYear += aaData[i][1]*1;
-                iTotalLastWeekCurrentYear += aaData[i][2]*1;
-                iTotalThisWeekLastYear += aaData[i][4]*1;
-                iTotalThisWeekCurrentYear += aaData[i][5]*1;
+                iTotalLastWeekLastYear += parseCurrency(aaData[i][1])*1;
+                iTotalLastWeekCurrentYear += parseCurrency(aaData[i][2])*1;
+                iTotalThisWeekLastYear += parseCurrency(aaData[i][4])*1;
+                iTotalThisWeekCurrentYear += parseCurrency(aaData[i][5])*1;
             }
              
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
-            nCells[0].innerHTML = parseInt(iTotalLastWeekLastYear)
-            nCells[1].innerHTML = parseInt(iTotalLastWeekCurrentYear)
-            nCells[3].innerHTML = parseInt(iTotalThisWeekLastYear)
-            nCells[4].innerHTML = parseInt(iTotalThisWeekCurrentYear)
+            nCells[0].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear))
         
-            nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100)
-            nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100)
+            nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100) + "%"
+            nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100) + "%"
         
-            nCells[6].innerHTML = parseInt(iTotalLastYearMonth)
-            nCells[7].innerHTML = parseInt(iTotalCurrentYearMonth)
-            nCells[9].innerHTML = parseInt(iTotalLastYear)
-            nCells[10].innerHTML = parseInt(iTotalCurrentYear)
-            nCells[8].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) ;
-            nCells[11].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) ;
+            nCells[6].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalCurrentYearMonth))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalLastYear))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalCurrentYear))
+            nCells[8].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
+            nCells[11].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
         },
         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
         
@@ -113,46 +114,46 @@ $(document).ready(function(){
         
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalLastYearMonth += aaData[i][13]*1;
-                iTotalCurrentYearMonth += aaData[i][14]*1;
-                iTotalLastYear += aaData[i][16]*1;
-                iTotalCurrentYear += aaData[i][17]*1;
+                iTotalLastYearMonth += parseCurrency(aaData[i][13])*1;
+                iTotalCurrentYearMonth += parseCurrency(aaData[i][14])*1;
+                iTotalLastYear += parseCurrency(aaData[i][16])*1;
+                iTotalCurrentYear += parseCurrency(aaData[i][17])*1;
           
-                iTotalLastWeekLastYear += aaData[i][1]*1;
-                iTotalLastWeekCurrentYear += aaData[i][2]*1;
-                iTotalThisWeekLastYear += aaData[i][4]*1;
-                iTotalThisWeekCurrentYear += aaData[i][5]*1;
+                iTotalLastWeekLastYear += parseCurrency(aaData[i][1])*1;
+                iTotalLastWeekCurrentYear += parseCurrency(aaData[i][2])*1;
+                iTotalThisWeekLastYear += parseCurrency(aaData[i][4])*1;
+                iTotalThisWeekCurrentYear += parseCurrency(aaData[i][5])*1;
           
-                iTotalLastWeekLastYear2 += aaData[i][7]*1;
-                iTotalLastWeekCurrentYear2 += aaData[i][8]*1;
-                iTotalThisWeekLastYear2 += aaData[i][10]*1;
-                iTotalThisWeekCurrentYear2 += aaData[i][11]*1;
+                iTotalLastWeekLastYear2 += parseCurrency(aaData[i][7])*1;
+                iTotalLastWeekCurrentYear2 += parseCurrency(aaData[i][8])*1;
+                iTotalThisWeekLastYear2 += parseCurrency(aaData[i][10])*1;
+                iTotalThisWeekCurrentYear2 += parseCurrency(aaData[i][11])*1;
             }
              
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
-            nCells[0].innerHTML = parseInt(iTotalLastWeekLastYear)
-            nCells[1].innerHTML = parseInt(iTotalLastWeekCurrentYear)
-            nCells[3].innerHTML = parseInt(iTotalThisWeekLastYear)
-            nCells[4].innerHTML = parseInt(iTotalThisWeekCurrentYear)
+            nCells[0].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear))
         
-            nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100)
-            nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100)
+            nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100) + "%"
+            nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100) + "%"
         
-            nCells[6].innerHTML = parseInt(iTotalLastWeekLastYear2)
-            nCells[7].innerHTML = parseInt(iTotalLastWeekCurrentYear2)
-            nCells[9].innerHTML = parseInt(iTotalThisWeekLastYear2)
-            nCells[10].innerHTML = parseInt(iTotalThisWeekCurrentYear2)
+            nCells[6].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear2))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear2))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear2))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear2))
         
-            nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100)
-            nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100)
+            nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100) + "%"
+            nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100) + "%"
         
-            nCells[12].innerHTML = parseInt(iTotalLastYearMonth)
-            nCells[13].innerHTML = parseInt(iTotalCurrentYearMonth)
-            nCells[15].innerHTML = parseInt(iTotalLastYear)
-            nCells[16].innerHTML = parseInt(iTotalCurrentYear)
-            nCells[14].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) ;
-            nCells[17].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) ;
+            nCells[12].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
+            nCells[13].innerHTML = addCommas(parseInt(iTotalCurrentYearMonth))
+            nCells[15].innerHTML = addCommas(parseInt(iTotalLastYear))
+            nCells[16].innerHTML = addCommas(parseInt(iTotalCurrentYear))
+            nCells[14].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
+            nCells[17].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
         }
     });
     
@@ -217,4 +218,21 @@ $(document).ready(function(){
         bJQueryUI: true,
         sPaginationType: "full_numbers"
     });
+    
+    function parseCurrency( num ) {
+        return parseFloat( num.replace(/\./g, '') );
+    }
+    
+    function addCommas(nStr)
+    {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + '.' + '$2');
+        }
+        return x1 + x2;
+    }
 });

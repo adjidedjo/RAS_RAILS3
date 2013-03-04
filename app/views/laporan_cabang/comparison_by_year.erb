@@ -62,21 +62,21 @@
           <tr>
             <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
             <th scope="row"><%= cabang.Cabang %></th>
-            <td><%= weekly_last_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Classic') %></td>
-            <td><%= weekly_last_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Classic') %></td>
-            <td><%= weekly_last_week_on_last_year == 0 &&  weekly_last_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year, weekly_last_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Classic')) %></td>
+            <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Classic')) %></td>
+            <td><%= weekly_last_week_on_last_year.to_i == 0 &&  weekly_last_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year.to_i, weekly_last_week_on_current_year.to_i)) %></td>
 
-            <td><%= weekly_this_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Classic') %></td>
-            <td><%= weekly_this_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Classic') %></td>
-            <td><%= weekly_this_week_on_last_year == 0 &&  weekly_this_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year, weekly_this_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Classic')) %></td>
+            <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Classic')) %></td>
+            <td><%= weekly_this_week_on_last_year.to_i == 0 &&  weekly_this_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year.to_i, weekly_this_week_on_current_year.to_i)) %></td>
 
-            <td><%= monthly_last_year =  laporan_cabang_by_cabang.monthly_sum_last_year(@periode.to_date, "Classic") %></td>
-            <td><%= monthly_current_year = laporan_cabang_by_cabang.monthly_sum_current_year(@periode.to_date, "Classic") %></td>
-            <td><%= monthly_last_year == 0 && monthly_current_year == 0 ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(monthly_last_year, monthly_current_year), :precision => 0) %></td>
+            <td><%= monthly_last_year =  currency(laporan_cabang_by_cabang.monthly_sum_last_year(@periode.to_date, "Classic")) %></td>
+            <td><%= monthly_current_year = currency(laporan_cabang_by_cabang.monthly_sum_current_year(@periode.to_date, "Classic")) %></td>
+            <td><%= monthly_last_year.to_i == 0 && monthly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(monthly_last_year.to_i, monthly_current_year.to_i)) %></td>
 
-            <td><%= yearly_last_year = laporan_cabang_by_cabang.yearly_sum_last_year(@periode.to_date, "Classic") %></td>
-            <td><%= yearly_current_year = laporan_cabang_by_cabang.yearly_sum_current_year(@periode.to_date, "Classic") %></td>
-            <td><%= yearly_last_year == 0 && yearly_current_year== 0 ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(yearly_last_year, yearly_current_year), :precision => 0) %></td>
+            <td><%= yearly_last_year = currency(laporan_cabang_by_cabang.yearly_sum_last_year(@periode.to_date, "Classic")) %></td>
+            <td><%= yearly_current_year = currency(laporan_cabang_by_cabang.yearly_sum_current_year(@periode.to_date, "Classic")) %></td>
+            <td><%= yearly_last_year.to_i == 0 && yearly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(yearly_last_year.to_i, yearly_current_year.to_i)) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -139,29 +139,29 @@
           <tr>
             <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
             <th scope="row"><%= cabang.Cabang %></th>
-            <td><%= weekly_last_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Serenity') %></td>
-            <td><%= weekly_last_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Serenity') %></td>
-            <td><%= weekly_last_week_on_last_year == 0 &&  weekly_last_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year, weekly_last_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Serenity')) %></td>
+            <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Serenity')) %></td>
+            <td><%= weekly_last_week_on_last_year.to_i == 0 &&  weekly_last_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year.to_i, weekly_last_week_on_current_year.to_i)) %></td>
 
-            <td><%= weekly_this_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Serenity') %></td>
-            <td><%= weekly_this_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Serenity') %></td>
-            <td><%= weekly_this_week_on_last_year == 0 &&  weekly_this_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year, weekly_this_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Serenity')) %></td>
+            <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Serenity')) %></td>
+            <td><%= weekly_this_week_on_last_year.to_i == 0 &&  weekly_this_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year.to_i, weekly_this_week_on_current_year.to_i)) %></td>
 
-            <td><%= weekly_last_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Non Serenity') %></td>
-            <td><%= weekly_last_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Non Serenity') %></td>
-            <td><%= weekly_last_week_on_last_year == 0 &&  weekly_last_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year, weekly_last_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Non Serenity')) %></td>
+            <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Non Serenity')) %></td>
+            <td><%= weekly_last_week_on_last_year.to_i == 0 &&  weekly_last_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year.to_i, weekly_last_week_on_current_year.to_i)) %></td>
 
-            <td><%= weekly_this_week_on_last_year = laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Non Serenity') %></td>
-            <td><%= weekly_this_week_on_current_year = laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Non Serenity') %></td>
-            <td><%= weekly_this_week_on_last_year == 0 &&  weekly_this_week_on_current_year ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year, weekly_this_week_on_current_year), :precision => 0) %></td>
+            <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Non Serenity')) %></td>
+            <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Non Serenity')) %></td>
+            <td><%= weekly_this_week_on_last_year.to_i == 0 &&  weekly_this_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year.to_i, weekly_this_week_on_current_year.to_i)) %></td>
 
-            <td><%= monthly_last_year =  laporan_cabang_by_cabang.monthly_sum_last_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity']) %></td>
-            <td><%= monthly_current_year = laporan_cabang_by_cabang.monthly_sum_current_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity']) %></td>
-            <td><%= monthly_last_year == 0 && monthly_current_year == 0 ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(monthly_last_year, monthly_current_year), :precision => 0) %></td>
+            <td><%= monthly_last_year =  currency(laporan_cabang_by_cabang.monthly_sum_last_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity'])) %></td>
+            <td><%= monthly_current_year = currency(laporan_cabang_by_cabang.monthly_sum_current_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity'])) %></td>
+            <td><%= monthly_last_year.to_i == 0 && monthly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(monthly_last_year.to_i, monthly_current_year.to_i)) %></td>
 
-            <td><%= yearly_last_year = laporan_cabang_by_cabang.yearly_sum_last_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity']) %></td>
-            <td><%= yearly_current_year = laporan_cabang_by_cabang.yearly_sum_current_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity']) %></td>
-            <td><%= yearly_last_year == 0 && yearly_current_year== 0 ? 0 : number_to_percentage(cabang.laporan_cabang.get_percentage(yearly_last_year, yearly_current_year), :precision => 0) %></td>
+            <td><%= yearly_last_year = currency(laporan_cabang_by_cabang.yearly_sum_last_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity'])) %></td>
+            <td><%= yearly_current_year = currency(laporan_cabang_by_cabang.yearly_sum_current_year_multiple_jenis(@periode.to_date, ['Serenity','Non Serenity'])) %></td>
+            <td><%= yearly_last_year.to_i == 0 && yearly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(yearly_last_year.to_i, yearly_current_year.to_i)) %></td>
           </tr>
         <% end %>
       </tbody>
