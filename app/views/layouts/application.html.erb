@@ -9,6 +9,20 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
+    <div>
+      <ul id="list-nav">
+        <% if user_signed_in? %>
+          <li><%= link_to "Penjualan", laporan_cabang_index_path %></li>
+          <li><%= link_to "Stock", stock_index_path %></li>
+          <li><%= link_to "Import Penjualan dan Stock", laporan_cabang_control_branches_sales_path %></li>
+          <li><%= link_to "Sales Performances", laporan_cabang_comparison_by_year_path %></li>
+          <li><%= link_to "Keluar", destroy_user_session_path %></li>
+        <% end %>
+        <li></li>
+      </ul>
+    </div>
+    <div class="clear"></div>
+    <div class="clear"></div>
 
     <%= yield %>
 

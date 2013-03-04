@@ -10,9 +10,9 @@
     <%= label_tag 'Category' %>
     <%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe, 
       :prompt => "--Select Category--", :include_blank => false %>
-  </p><br />
+  </p><br /><br />
   <p>
-    <%= submit_tag "Submit" %>
+    <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %><br />
 <% unless params[:from].nil? %>

@@ -31,6 +31,7 @@ form
     border-radius: 10px;
     padding:10px;
 }
+
 input
 {
     width:250px;
@@ -42,10 +43,10 @@ input
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);    
 }
 .button {
-    width:100px;
+    width:70px;
     position:absolute;
     right:114px;
-    bottom:20px;
+    bottom:8px;
     background:#09C;
     color:#fff;
     font-family: Tahoma, Geneva, sans-serif;
@@ -63,4 +64,61 @@ p
 {
     text-indent:10px;
     margin-top: 10px;
+}
+
+ul#list-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul#list-nav li {
+    margin: 0;
+    padding: 0;
+    float: left;
+}
+
+ul#list-nav li a {
+    display: block;
+    padding: 4px 8px;
+    text-decoration: none;
+    border: solid black 1px;
+    color: black;
+    background-color: white;
+}
+
+ul#list-nav li a:hover {
+    color: white;
+    background-color: #4A63B8;
+}
+
+.input_login
+{
+    width: 298px;
+}
+
+form#user_new
+{
+    border: inset 1px solid #333;
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+    position:relative;
+    width:300px;
+    height:250px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #09C;
+    text-decoration: none;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding:10px;
+    position: fixed;
+    top: 30%;
+    left: 45%;
+    margin-top: -50px;
+    margin-left: -100px;
+    text-align: center;
 }

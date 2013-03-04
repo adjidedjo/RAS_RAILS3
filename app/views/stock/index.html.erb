@@ -3,13 +3,9 @@
   <p>
     <%= label_tag 'Date' %>
     <%= text_field_tag 'date'  %>
-  </p><br />
-  <p>
-    <%= label_tag 'Category' %>
-    <%= select_tag 'stock_category', options_from_collection_for_select(@get_merk, 'id', 'Merk'), :include_blank => false, :multiple => true %>
   </p>
   <p>
-    <%= submit_tag "Submit" %>
+    <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %>
 

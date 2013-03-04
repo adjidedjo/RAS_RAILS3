@@ -1,0 +1,15 @@
+
+
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <h2>Forgot your password?</h2>
+
+  <div><%= f.label :email %><br />
+    <%= f.email_field :email, :autofocus => true, :class => "input_login" %></div>
+
+  <div><%= f.submit "Send me", :class => "button" %></div>
+  <div class="clear"></div>
+
+  <%= render "devise/shared/links" %>
+<% end %>
