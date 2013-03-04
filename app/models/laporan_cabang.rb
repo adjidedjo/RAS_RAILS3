@@ -93,7 +93,7 @@ class LaporanCabang < ActiveRecord::Base
   end
   
   def self.get_percentage(last_month, current_month)
-    (current_month.to_f - last_month.to_f) / last_month.to_f * 100
+    (current_month.to_f - last_month.to_f) / last_month.to_f * 100.0  
   end
   
   #calculate week

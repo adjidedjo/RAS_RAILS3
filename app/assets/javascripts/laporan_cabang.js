@@ -51,7 +51,6 @@ $(document).ready(function(){
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalLastYearMonth += parseCurrency(aaData[i][7])*1;
-                console.log(aaData[i][7])
                 iTotalCurrentYearMonth += parseCurrency(aaData[i][8])*1;
                 iTotalLastYear += parseCurrency(aaData[i][10])*1;
                 iTotalCurrentYear += parseCurrency(aaData[i][11])*1;
@@ -97,11 +96,7 @@ $(document).ready(function(){
          * Calculate the total market share for all browsers in this table (ie inc. outside
          * the pagination)
          */
-            var iTotalLastYearMonth = 0;
-            var iTotalCurrentYearMonth = 0;
-            var iTotalLastYear = 0;
-            var iTotalCurrentYear = 0;
-        
+            
             var iTotalLastWeekLastYear = 0;
             var iTotalLastWeekCurrentYear = 0;
             var iTotalThisWeekLastYear = 0;
@@ -114,11 +109,6 @@ $(document).ready(function(){
         
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalLastYearMonth += parseCurrency(aaData[i][13])*1;
-                iTotalCurrentYearMonth += parseCurrency(aaData[i][14])*1;
-                iTotalLastYear += parseCurrency(aaData[i][16])*1;
-                iTotalCurrentYear += parseCurrency(aaData[i][17])*1;
-          
                 iTotalLastWeekLastYear += parseCurrency(aaData[i][1])*1;
                 iTotalLastWeekCurrentYear += parseCurrency(aaData[i][2])*1;
                 iTotalThisWeekLastYear += parseCurrency(aaData[i][4])*1;
@@ -148,12 +138,36 @@ $(document).ready(function(){
             nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100) + "%"
             nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100) + "%"
         
-            nCells[12].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
-            nCells[13].innerHTML = addCommas(parseInt(iTotalCurrentYearMonth))
-            nCells[15].innerHTML = addCommas(parseInt(iTotalLastYear))
-            nCells[16].innerHTML = addCommas(parseInt(iTotalCurrentYear))
-            nCells[14].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
-            nCells[17].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
+        }
+    });
+    $('#table_year_elite_month_and_year').dataTable({
+        sPaginationType: "full_numbers",
+        bJQueryUI: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+         * Calculate the total market share for all browsers in this table (ie inc. outside
+         * the pagination)
+         */
+            var iTotalLastYearMonth = 0;
+            var iTotalCurrentYearMonth = 0;
+            var iTotalLastYear = 0;
+            var iTotalCurrentYear = 0;
+            
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalLastYearMonth += parseCurrency(aaData[i][1])*1;
+                iTotalCurrentYearMonth += parseCurrency(aaData[i][2])*1;
+                iTotalLastYear += parseCurrency(aaData[i][4])*1;
+                iTotalCurrentYear += parseCurrency(aaData[i][5])*1;
+            }
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalCurrentYearMonth))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalLastYear))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalCurrentYear))
+            nCells[2].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
+            nCells[5].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
+            
         }
     });
     

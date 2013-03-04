@@ -1,4 +1,7 @@
+<h1>Laporan Penjualan Cabang</h1>
+<br />
 <%= form_tag laporan_cabang_index_path, :method => 'get' do %>
+
   <p>
     Date Range<br /><br />
     <%= label_tag 'From' %>
@@ -8,7 +11,7 @@
   </p>
   <br /><br />
   <p>
-    <%= submit_tag "Submit" %>
+    <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %>
 <br />
