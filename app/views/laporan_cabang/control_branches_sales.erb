@@ -1,10 +1,12 @@
+<div class="clear"></div>
+<br /><h1>Control Branches Sales</h1><br />
 <%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get' do %>
   <p>
     Date Range<br />
     <%= label_tag 'From' %>
-    <%= text_field_tag 'from'  %>
+    <%= text_field_tag 'from', nil, :class => "input_form"  %>
     <%= label_tag 'To' %>
-    <%= text_field_tag 'to' %>
+    <%= text_field_tag 'to', nil, :class => "input_form" %>
   </p><br />
   <p>
     <%= label_tag 'Category' %>
@@ -15,46 +17,47 @@
     <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %><br />
+<div class="clear"></div>
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-      <table id="table_control_branch" class="display">
-        <thead>
+    <table id="table_control_branch" class="display">
+      <thead>
+        <tr>
+          <th rowspan="2">Dates</th>
+          <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
+        </tr>
+        <tr>
+          <th>Bandung</th>
+          <th>Narogong</th>
+          <th>Bali</th>
+          <th>Medan</th>
+          <th>Surabaya</th>
+          <th>Semarang</th>
+          <th>Yogyakarta</th>
+          <th>Palembang</th>
+          <th>Lampung</th>
+          <th>Meruya</th>
+          <th>Makasar</th>
+          <th>Pekanbaru</th>
+          <th>Jember</th>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @dates.each do |date| %>
           <tr>
-            <th rowspan="2">Dates</th>
-            <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
-          </tr>
-          <tr>
-            <th>Bandung</th>
-            <th>Narogong</th>
-            <th>Bali</th>
-            <th>Medan</th>
-            <th>Surabaya</th>
-            <th>Semarang</th>
-            <th>Yogyakarta</th>
-            <th>Palembang</th>
-            <th>Lampung</th>
-            <th>Meruya</th>
-            <th>Makasar</th>
-            <th>Pekanbaru</th>
-            <th>Jember</th>
-          </tr>
-        </thead>
-        <tfoot>
-        </tfoot>
-        <tbody>
-          <% @dates.each do |date| %>
-            <tr>
-              <th scope="row"><%= date.strftime("%e %B %Y") %></th>
-              <% @cabang_get_id.each do |cab| %>
-                <% if params[:category] == "Penjualan" %>
-                  <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
-                <% else %>
-                  <td><%= cab.stock.check_stock(date).order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
-                <% end %>
+            <th scope="row"><%= date.strftime("%e %B %Y") %></th>
+            <% @cabang_get_id.each do |cab| %>
+              <% if params[:category] == "Penjualan" %>
+                <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+              <% else %>
+                <td><%= cab.stock.check_stock(date).order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
               <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   <% end %>
 <% end %>

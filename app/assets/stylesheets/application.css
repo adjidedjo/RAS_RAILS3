@@ -11,7 +11,6 @@
  *= require_tree .
 
 */
-
 form
 {
     border: inset 1px solid #333;
@@ -30,9 +29,13 @@ form
     -moz-border-radius: 10px;
     border-radius: 10px;
     padding:10px;
+    top: 20%;
+    left: 1%;
+    margin-top: -50px;
+    margin-left: -100px;
 }
 
-input
+.input_form
 {
     width:250px;
     display:block;
@@ -95,6 +98,7 @@ ul#list-nav li a:hover {
 .input_login
 {
     width: 298px;
+    height: 25px;
 }
 
 form#user_new

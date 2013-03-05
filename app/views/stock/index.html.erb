@@ -1,14 +1,16 @@
+ <div class="clear"></div>
+<br /><h1>Stock Cabang</h1><br />
 <%= form_tag stock_index_path, :method => 'get' do %>
   <br />
   <p>
     <%= label_tag 'Date' %>
-    <%= text_field_tag 'date'  %>
+    <%= text_field_tag 'date', nil, :class => "input_form"  %>
   </p>
   <p>
     <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %>
-
+<div class="clear"></div><br />
 <% unless params[:date].nil? %>
   <table id="stock" class="display">
     <thead>

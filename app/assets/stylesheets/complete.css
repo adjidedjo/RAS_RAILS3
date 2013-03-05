@@ -28,11 +28,10 @@ body {
 }
 
 h1 {
-	text-align: left;
-	font-size: 2em;
+	text-align: center;
+	font-size: 1.2em;
 	font-weight: bold;
-        font-style: italic;
-	margin: 0 1em;
+	margin: 1em 0;
 }
 
 

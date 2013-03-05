@@ -1,9 +1,11 @@
-<h1>Annual Sales Performances</h1>
-<%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get' do %>
+<div class="clear"></div>
+<br /><h1>Annual Sales Performances</h1><br />
 
+<%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get' do %>
+  <br />  
   <p>
-    <%= label_tag 'Periode' %>
-    <%= text_field_tag 'periode' %>
+    <%= label_tag 'Periode' %><br />
+    <%= text_field_tag 'periode', nil, :class => "input_form" %>
   </p>
   <br />
   <p>
@@ -11,6 +13,7 @@
   </p>
 <% end %>
 <br />
+<div class="clear"></div>
 
 <% unless params[:periode].nil? %>
   <% cache do %>

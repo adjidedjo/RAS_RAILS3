@@ -1,13 +1,11 @@
-<h1>Laporan Penjualan Cabang</h1>
-<br />
+<br /><h1>Laporan Penjualan Cabang</h1><br />
 <%= form_tag laporan_cabang_index_path, :method => 'get' do %>
-
   <p>
     Date Range<br /><br />
     <%= label_tag 'From' %>
-    <%= text_field_tag 'from'  %>
+    <%= text_field_tag 'from', nil, :class => "input_form"  %>
     <%= label_tag 'To' %>
-    <%= text_field_tag 'to' %>
+    <%= text_field_tag 'to', nil, :class => "input_form" %>
   </p>
   <br /><br />
   <p>
@@ -56,7 +54,6 @@
       </thead>
       <tfoot>
         <tr>
-
         </tr>
       </tfoot>
       <tbody>
