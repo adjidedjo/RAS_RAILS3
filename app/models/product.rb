@@ -1,6 +1,7 @@
 class Product < ActiveRecord::Base
   set_table_name "tbbjkodeproduk"
   belongs_to :merk
+  belongs_to :brand
   belongs_to :artikel
   belongs_to :ukuran
   belongs_to :kain
