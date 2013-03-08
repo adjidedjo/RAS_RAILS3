@@ -176,6 +176,9 @@ $(document).ready(function(){
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         sDom: '<"H"Tfr>t<"F"ip>',
+        sScrollX: "100%",
+        sScrollXInner: "110%",
+        bScrollCollapse: true,
         bRetrieve: true,
         fnRowCallback: function( nRow, aData, iDisplayIndex ) {
             return nRow;

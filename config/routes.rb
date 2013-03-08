@@ -11,6 +11,7 @@ Rain::Application.routes.draw do
   get "laporan_cabang/index"
   get "laporan_cabang/comparison_by_year"
   get "laporan_cabang/control_branches_sales"
+  get 'stock/update_kategori', :as => 'update_kategori'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,10 +1,19 @@
- <div class="clear"></div>
+<div class="clear"></div>
 <br /><h1>Stock Cabang</h1><br />
 <%= form_tag stock_index_path, :method => 'get' do %>
   <br />
   <p>
     <%= label_tag 'Date' %>
     <%= text_field_tag 'date', nil, :class => "input_form"  %>
+  </p><br />
+  <p>
+    <%= label_tag 'Brand' %>
+    <%= collection_select(nil, :brand_id, @get_merk, :id, :Merk, {:prompt   => ""}, {:multiple => true, :id => 'brand_select'}) %>
+  </p>
+  <br />
+  <p>
+    <%= label_tag 'category' %>
+    <%= collection_select(nil, :category_id, @category, :id, :NamaBrand, {:prompt   => ""}, {:multiple => true,:id => 'category_select'}) %>
   </p>
   <p>
     <%= submit_tag "Search", :class => "button" %>
@@ -12,53 +21,69 @@
 <% end %>
 <div class="clear"></div><br />
 <% unless params[:date].nil? %>
-  <table id="stock" class="display">
-    <thead>
-      <tr>
-        <th rowspan="3">Nama Barang</th>
-        <th colspan="30">Annual Stock Branches Report</th>
-      </tr>
-      <tr>
-        <th colspan="2">Bandung</th>
-        <th colspan="2">Narogong</th>
-        <th colspan="2">Bali</th>
-        <th colspan="2">Medan</th>
-        <th colspan="2">Surabaya</th>
-        <th colspan="2">Semarang</th>
-        <th colspan="2">Yogyakarta</th>
-        <th colspan="2">Palembang</th>
-        <th colspan="2">Lampung</th>
-        <th colspan="2">Meruya</th>
-        <th colspan="2">Makasar</th>
-        <th colspan="2">Pekanbaru</th>
-        <th colspan="2">Jember</th>
-      </tr>
-      <tr>
-        <% (1..13).each do |i| %>
-          <th>F</th>
-          <th>B</th>
-        <% end %>
-      </tr>
-    </thead>
-    <tfoot>
-    </tfoot>
-    <tbody>
-      <% @get_stock.find_each(:batch_size => 5000) do |stock| %>
+  <% unless params[:category_id].nil? %>
+    <table id="stock" class="display">
+      <thead>
         <tr>
-          <th scope="row"><%= stock.namabrg %></th>
-          <% @id_cabang.each do |cabang| %>
-            <% if @get_stock.get_stock_in_branch(cabang, stock).empty? %>
-              <td></td>
-              <td></td>
-            <% else %>
-              <% @get_stock.get_stock_in_branch(cabang, stock).find_each(:batch_size => 5000) do |a| %>
-                <td><%= a.freestock  %></td>
-                <td><%= a.bufferstock %></td>
-              <% end %>
-            <% end %>
+          <th rowspan="3">Nama Barang</th>
+          <th colspan="30">Annual Stock Branches Report</th>
+        </tr>
+        <tr>
+          <th colspan="2">Bandung</th>
+          <th colspan="2">Narogong</th>
+          <th colspan="2">Bali</th>
+          <th colspan="2">Medan</th>
+          <th colspan="2">Surabaya</th>
+          <th colspan="2">Semarang</th>
+          <th colspan="2">Yogyakarta</th>
+          <th colspan="2">Palembang</th>
+          <th colspan="2">Lampung</th>
+          <th colspan="2">Meruya</th>
+          <th colspan="2">Makasar</th>
+          <th colspan="2">Pekanbaru</th>
+          <th colspan="2">Jember</th>
+        </tr>
+        <tr>
+          <% (1..13).each do |i| %>
+            <th>F</th>
+            <th>B</th>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @get_stock.map do |stock| %>
+          <tr>
+            <th scope="row"><%= stock.namabrg %></th>
+            <% @id_cabang.each do |cabang| %>
+              <% if cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).empty? %>
+                <td></td>
+                <td></td>
+              <% else %>
+                <% cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).find_each(:batch_size => 5000) do |a| %>
+                  <td><%= a.freestock  %></td>
+                  <td><%= a.bufferstock %></td>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 <% end %>
+<script>
+  $(document).ready(function() {
+    $('#category_select').multiselect({});
+    $('#brand_select').live('change', function() {
+      $.ajax({
+        url: "<%= update_kategori_path %>",
+        data: {
+          merk_id : $('#brand_select').val()
+        },
+        dataType: "script"
+      });
+    });
+  });
+</script>

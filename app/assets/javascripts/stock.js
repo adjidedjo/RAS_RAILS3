@@ -4,7 +4,7 @@
  */
 
 $(document).ready(function(){
-    $('#stock_category').multiselect({
+    $('#brand_select').multiselect({
         selectedList: 4
     });
     
@@ -12,9 +12,12 @@ $(document).ready(function(){
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
     
-    var oTable = $('#stock.display').dataTable({
+    $('#stock.display').dataTable({
         sScrollY: "200px",
         bPaginate: false,
+        sScrollX: "100%",
+        sScrollXInner: "110%",
+        bScrollCollapse: true,
         bJQueryUI: true
     }).columnFilter({
         aoColumns: [
