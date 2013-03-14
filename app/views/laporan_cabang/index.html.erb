@@ -68,9 +68,9 @@
               <td><%= laporan.namakain %></td>
               <td><%= laporan.panjang %></td>
               <td><%= laporan.lebar %></td>
-              <% jumlah = @laporancabang.sum(:jumlah) %>
-              <td><%= LaporanCabang.get_value_of_hash(jumlah)[laporan.customer][laporan.jenisbrgdisc] %></td>
-              <td><%= currency(laporan.harganetto2) %></td>
+              <% jumlah = @laporancabang.group(:kodebrg) %>
+              <td><%= LaporanCabang.get_value_of_hash(jumlah.sum(:jumlah))[laporan.customer][laporan.kodebrg] %></td>
+              <td><%= currency(LaporanCabang.get_value_of_hash(jumlah.sum(:totalnetto2))[laporan.customer][laporan.kodebrg]) %></td>
             </tr>
           <% end %>
         <% end %>

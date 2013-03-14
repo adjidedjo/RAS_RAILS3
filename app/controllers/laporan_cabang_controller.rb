@@ -1,6 +1,6 @@
 class LaporanCabangController < ApplicationController
   def index
-    @laporancabang = LaporanCabang.order("id desc").query_by_date(params[:from], params[:to]).remove_cab.group(:customer, :jenisbrgdisc)
+    @laporancabang = LaporanCabang.order("id desc").query_by_date(params[:from], params[:to]).remove_cab.group(:customer)
     
     respond_to do |format|
       format.html # index.html.erb
