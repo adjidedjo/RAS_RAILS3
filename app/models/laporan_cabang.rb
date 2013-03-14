@@ -8,6 +8,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :by_jenisbrg, lambda {|jenis| where(:jenisbrgdisc => jenis).order("tanggalsj desc")}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
+  scope :remove_cab, where("customer not like ?","#{'CAB'}%")
   
   def self.query_by_year_and_cabang_id(year, cabang_id)
     sum(:jumlah, :conditions => ["tanggalfaktur >= ? and tanggalfaktur <= ? and cabang_id = ?", "#{year}-01-01", "#{year}-12-31", cabang_id])
@@ -115,6 +116,14 @@ class LaporanCabang < ActiveRecord::Base
   def self.weekly_sum_last_week_on_last_year(date, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         week_on_current_year(date), date.to_date, jenis ]).to_i
+  end
+  
+  def self.get_value_of_hash(jenis_barang)
+    jenis_barang.each_with_object({}) { |((*keys, l), v), m|
+      keys.inject(m) {|mm, key|
+        mm[key] ||= {}
+      }[l] = v
+    }
   end
  
 end

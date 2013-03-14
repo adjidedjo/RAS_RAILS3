@@ -195,19 +195,14 @@ $(document).ready(function(){
     }).columnFilter({
         sPlaceHolder: "head:after",
         aoColumns: [
-        null,
-        null,
         {
             type: "checkbox",
             values: ["Bandung", "Narogong", "Bali", "Medan", "Surabaya", "Semarang", "Cirebon",
             "Yogyakarta", "Palembang", "Lampung", "Meruya", "Makasar", "Pekanbaru", "Jember"]
         },
         {
-            type: "text",
-            bRegex: true,
-            bSmart: true
+            type: "checkbox"
         },
-        null,
         null,
         {
             type: "checkbox",
