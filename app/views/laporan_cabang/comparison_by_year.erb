@@ -4,7 +4,7 @@
 <%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get' do %>
   <br />  
   <p>
-    <%= label_tag 'Periode' %><br />
+    <%= label_tag 'Periode' %>
     <%= text_field_tag 'periode', nil, :class => "input_form" %>
   </p>
   <br />
@@ -15,7 +15,7 @@
 <br />
 <div class="clear"></div>
 
-<% unless params[:periode].empty? %>
+<% unless params[:periode].nil? || params[:periode].empty? %>
   <% cache do %>
     <table id="table_year" class="pretty">
       <p>WEEKLY SALES PERFORMANCE</p>

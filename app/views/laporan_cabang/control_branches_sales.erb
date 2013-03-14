@@ -2,9 +2,12 @@
 <br /><h1>Control Branches Sales</h1><br />
 <%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get' do %>
   <p>
-    Date Range<br />
+    <br /><br />
     <%= label_tag 'From' %>
     <%= text_field_tag 'from', nil, :class => "input_form"  %>
+  </p>
+  <br />
+  <p>
     <%= label_tag 'To' %>
     <%= text_field_tag 'to', nil, :class => "input_form" %>
   </p><br />

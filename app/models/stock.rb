@@ -11,11 +11,4 @@ class Stock < ActiveRecord::Base
   def self.get_stock_in_branch(date, stock)
     check_stock(date).find_barang_id(stock)
   end
-  
-  def self.get_stock_by_category(category)
-    category.map do |cat|
-      where(['kodebrg like ?', "%#{cat}%"])
-    end.flatten
-    
-  end
 end

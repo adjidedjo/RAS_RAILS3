@@ -18,8 +18,8 @@ form
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     position:relative;
-    width:300px;
-    height:200px;
+    width:420px;
+    height:250px;
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 14px;
     font-style: italic;
@@ -40,6 +40,7 @@ form
     width:250px;
     display:block;
     border: 1px solid #999;
+    float: right;
     height: 25px;
     -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -48,7 +49,7 @@ form
 .button {
     width:70px;
     position:absolute;
-    right:114px;
+    right:186px;
     bottom:8px;
     background:#09C;
     color:#fff;
@@ -63,10 +64,10 @@ form
     background:#fff;
     color:#09C;
 }
-p 
+p label
 {
     text-indent:10px;
-    margin-top: 10px;
+    margin-bottom: 25px;
 }
 
 ul#list-nav {
@@ -126,14 +127,15 @@ form#user_new
     margin-left: -100px;
     text-align: center;
 }
-form#stock_form
+
+#stock_form
 {
     border: inset 1px solid #333;
     -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     position:relative;
-    width:300px;
+    width:420px;
     height:250px;
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 14px;
@@ -144,10 +146,26 @@ form#stock_form
     -moz-border-radius: 10px;
     border-radius: 10px;
     padding:10px;
-    position: fixed;
-    top: 20%;
+    top: 40%;
     left: 8%;
-    margin-top: -50px;
+    margin-top: -10px;
     margin-left: -100px;
-    text-align: left;
+}
+
+#stock_form p label
+{
+ text-indent: 0px;
+ margin-bottom: 25px;
+ margin-left: 10px;
+}
+
+#stock_form p input_form hasDatepicker button
+{
+ text-indent: 0px;
+ float: right;
+}
+
+#category
+{
+    float: right;
 }

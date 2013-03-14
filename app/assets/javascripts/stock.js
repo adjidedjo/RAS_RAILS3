@@ -8,11 +8,19 @@ $(document).ready(function(){
         selectedList: 4
     });
     
+    $('#brand_product_select').multiselect({
+        selectedList: 4
+    });
+    
+    $('#artikel_select').multiselect({
+        selectedList: 4
+    });
+    
     $('#date').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
     
-    $('#stock.display').dataTable({
+    $('#stock').dataTable({
         sScrollY: "200px",
         bPaginate: false,
         sScrollX: "100%",
@@ -20,10 +28,23 @@ $(document).ready(function(){
         bScrollCollapse: true,
         bJQueryUI: true
     }).columnFilter({
+        sPlaceHolder: "head:after",
         aoColumns: [
+        null,
         {
-            type: "checkbox",
-            values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
+        },
+        {
+            type: "checkbox"
         }
         ]
     });

@@ -1,77 +1,84 @@
 <div class="clear"></div>
 <br /><h1>Stock Cabang</h1><br />
-<%= form_tag stock_index_path, :method => 'get' do %>
+<%= form_tag stock_index_path, :method => 'get', :id => 'stock_form' do %>
   <br />
   <p>
     <%= label_tag 'Date' %>
     <%= text_field_tag 'date', nil, :class => "input_form"  %>
   </p><br />
   <p>
-    <%= label_tag 'Brand' %>
-    <%= collection_select(nil, :brand_id, @get_merk, :id, :Merk, {:prompt   => ""}, {:multiple => true, :id => 'brand_select'}) %>
-  </p>
-  <br />
-  <p>
-    <%= label_tag 'category' %>
-    <%= collection_select(nil, :category_id, @category, :id, :NamaBrand, {:prompt   => ""}, {:multiple => true,:id => 'category_select'}) %>
-  </p>
-  <p>
     <%= submit_tag "Search", :class => "button" %>
   </p>
 <% end %>
-<div class="clear"></div><br />
+<br />
 <% unless params[:date].nil? %>
-  <% unless params[:category_id].nil? %>
-    <table id="stock" class="display">
-      <thead>
+  <table id="stock" class="display">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Category</th>
+        <th>Artikel</th>
+        <th>Kain</th>
+        <th>Panjang</th>
+        <th>Lebar</th>
+      </tr>
+      <tr>
+        <th rowspan="3">Nama Barang</th>
+        <th rowspan="3">Category</th>
+        <th rowspan="3">Artikel</th>
+        <th rowspan="3">Kain</th>
+        <th rowspan="3">Panjang</th>
+        <th rowspan="3">Lebar</th>
+        <th colspan="30">Annual Stock Branches Report</th>
+      </tr>
+      <tr>
+        <th colspan="2">Bandung</th>
+        <th colspan="2">Narogong</th>
+        <th colspan="2">Bali</th>
+        <th colspan="2">Medan</th>
+        <th colspan="2">Surabaya</th>
+        <th colspan="2">Semarang</th>
+        <th colspan="2">Yogyakarta</th>
+        <th colspan="2">Palembang</th>
+        <th colspan="2">Lampung</th>
+        <th colspan="2">Meruya</th>
+        <th colspan="2">Makasar</th>
+        <th colspan="2">Pekanbaru</th>
+        <th colspan="2">Jember</th>
+      </tr>
+      <tr>
+        <% (1..13).each do |i| %>
+          <th>F</th>
+          <th>B</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tfoot>
+    </tfoot>
+    <tbody>
+      <% @get_stock.map do |stock| %>
         <tr>
-          <th rowspan="3">Nama Barang</th>
-          <th colspan="30">Annual Stock Branches Report</th>
-        </tr>
-        <tr>
-          <th colspan="2">Bandung</th>
-          <th colspan="2">Narogong</th>
-          <th colspan="2">Bali</th>
-          <th colspan="2">Medan</th>
-          <th colspan="2">Surabaya</th>
-          <th colspan="2">Semarang</th>
-          <th colspan="2">Yogyakarta</th>
-          <th colspan="2">Palembang</th>
-          <th colspan="2">Lampung</th>
-          <th colspan="2">Meruya</th>
-          <th colspan="2">Makasar</th>
-          <th colspan="2">Pekanbaru</th>
-          <th colspan="2">Jember</th>
-        </tr>
-        <tr>
-          <% (1..13).each do |i| %>
-            <th>F</th>
-            <th>B</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% @get_stock.map do |stock| %>
-          <tr>
-            <th scope="row"><%= stock.namabrg %></th>
-            <% @id_cabang.each do |cabang| %>
-              <% if cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).empty? %>
-                <td></td>
-                <td></td>
-              <% else %>
-                <% cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).find_each(:batch_size => 5000) do |a| %>
-                  <td><%= a.freestock  %></td>
-                  <td><%= a.bufferstock %></td>
-                <% end %>
+          <th scope="row"><%= truncate(stock.namabrg, :length => 13) %></th>
+          <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
+          <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
+          <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
+          <th scope="row"><%= stock.barang.Panjang.to_i %></th>      
+          <th scope="row"><%= stock.barang.Lebar.to_i %></th>      
+          <% @id_cabang.each do |cabang| %>
+            <% if cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).empty? %>
+              <td></td>
+              <td></td>
+            <% else %>
+              <% cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).find_each(:batch_size => 5000) do |a| %>
+                <td><%= a.freestock  %></td>
+                <td><%= a.bufferstock %></td>
               <% end %>
             <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 <script>
   $(document).ready(function() {
@@ -81,6 +88,26 @@
         url: "<%= update_kategori_path %>",
         data: {
           merk_id : $('#brand_select').val()
+        },
+        dataType: "script"
+      });
+    });
+    
+    $('#category_select').live('change', function() {
+      $.ajax({
+        url: "<%= update_jenis_produk_path %>",
+        data: {
+          category_id : $('#category_select').val()
+        },
+        dataType: "script"
+      });
+    });
+      
+    $('#brand_product_select').live('change', function() {
+      $.ajax({
+        url: "<%= update_artikel_path %>",
+        data: {
+          artikel_id : $('#brand_product_select').val()
         },
         dataType: "script"
       });
