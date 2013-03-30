@@ -1,6 +1,6 @@
 class LaporanCabangController < ApplicationController
   def index
-    @laporancabang = LaporanCabang.order("id desc").query_by_date(params[:from], params[:to]).remove_cab.group(:customer)
+    @laporancabang = LaporanCabang.get_record(params[:from], params[:to], current_user) unless params[:from].nil? && params[:to].nil?
     
     respond_to do |format|
       format.html # index.html.erb

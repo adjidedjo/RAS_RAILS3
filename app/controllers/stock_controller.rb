@@ -1,7 +1,7 @@
 class StockController < ApplicationController
   def index
     @id_cabang = Cabang.get_id
-    @get_stock = Stock.check_stock(params[:date]).group("barang_id").order("id desc") unless params[:date].nil?
+    @get_stock = Stock.get_record(params[:date]) unless params[:date].nil?
   end
   
   def update_kategori

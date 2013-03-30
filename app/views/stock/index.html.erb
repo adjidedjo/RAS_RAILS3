@@ -1,6 +1,6 @@
 <div class="clear"></div>
 <br /><h1>Stock Cabang</h1><br />
-<%= form_tag stock_index_path, :method => 'get', :id => 'stock_form' do %>
+<%= form_tag stock_index_path, :method => 'get' do %>
   <br />
   <p>
     <%= label_tag 'Date' %>
@@ -12,19 +12,30 @@
 <% end %>
 <br />
 <% unless params[:date].nil? %>
+  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+  <br /><br />
+  <form id="placeholder_datatables_stock" style="width: 1330px; height: 43px">
+    <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
+    <p id="brand" style="position: absolute; right: 803px; top: 2px"></p>
+    <p id="artikel" style="position: absolute; right: 713px; top: 2px "></p>
+    <p id="kain" style="position: absolute; right: 638px; top: 2px "></p>
+    <p id="panjang" style="position: absolute; right: 537px; top: 2px "></p>
+    <p id="lebar" style="position: absolute; right: 453px; top: 2px "></p>
+  </form>
+  <br />
   <table id="stock" class="display">
     <thead>
       <tr>
         <th></th>
-        <th>Category</th>
+        <th>Brand</th>
         <th>Artikel</th>
         <th>Kain</th>
         <th>Panjang</th>
         <th>Lebar</th>
       </tr>
       <tr>
-        <th rowspan="3">Nama Barang</th>
-        <th rowspan="3">Category</th>
+        <th rowspan="3">Jenis</th>
+        <th rowspan="3">Brand</th>
         <th rowspan="3">Artikel</th>
         <th rowspan="3">Kain</th>
         <th rowspan="3">Panjang</th>
@@ -58,18 +69,18 @@
     <tbody>
       <% @get_stock.map do |stock| %>
         <tr>
-          <th scope="row"><%= truncate(stock.namabrg, :length => 13) %></th>
+          <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
           <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
           <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
           <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
-          <th scope="row"><%= stock.barang.Panjang.to_i %></th>      
-          <th scope="row"><%= stock.barang.Lebar.to_i %></th>      
+          <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
+          <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
           <% @id_cabang.each do |cabang| %>
-            <% if cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).empty? %>
+            <% if cabang.stock.get_stock_in_branch(params[:date], stock.kodebrg).empty? %>
               <td></td>
               <td></td>
             <% else %>
-              <% cabang.stock.get_stock_in_branch(params[:date], stock.barang_id).find_each(:batch_size => 5000) do |a| %>
+              <% cabang.stock.get_stock_in_branch(params[:date], stock.kodebrg).find_each(:batch_size => 5000) do |a| %>
                 <td><%= a.freestock  %></td>
                 <td><%= a.bufferstock %></td>
               <% end %>
@@ -92,7 +103,7 @@
         dataType: "script"
       });
     });
-    
+
     $('#category_select').live('change', function() {
       $.ajax({
         url: "<%= update_jenis_produk_path %>",
@@ -102,7 +113,7 @@
         dataType: "script"
       });
     });
-      
+
     $('#brand_product_select').live('change', function() {
       $.ajax({
         url: "<%= update_artikel_path %>",

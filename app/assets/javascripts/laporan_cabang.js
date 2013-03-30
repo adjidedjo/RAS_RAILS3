@@ -33,6 +33,8 @@ $(document).ready(function(){
     $('#table_year').dataTable( {
         sPaginationType: "full_numbers",
         bJQueryUI: true,
+        iDisplayLength: 20,
+        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
          * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -86,11 +88,22 @@ $(document).ready(function(){
             {
                 iTotalLastYearMonth = aData[i][2];
             }
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
         }
     });
     $('#table_year_elite').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
+        iDisplayLength: 20,
+        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
          * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -138,11 +151,22 @@ $(document).ready(function(){
             nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100) + "%"
             nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100) + "%"
         
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
         }
     });
     $('#table_year_elite_month_and_year').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
+        iDisplayLength: 20,
+        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
          * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -168,6 +192,15 @@ $(document).ready(function(){
             nCells[2].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
             nCells[5].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
             
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
         }
     });
     
@@ -175,13 +208,39 @@ $(document).ready(function(){
     var oTable = $('#laporancabang').dataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
-        sDom: '<"H"Tfr>t<"F"ip>',
-        sScrollX: "100%",
-        sScrollXInner: "110%",
-        bScrollCollapse: true,
+        iDisplayLength: 10,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         fnRowCallback: function( nRow, aData, iDisplayIndex ) {
             return nRow;
+        },
+        "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+            /*
+         * Calculate the total market share for all browsers in this table (ie inc. outside
+         * the pagination)
+         */
+            var iTotalQuantity = 0;
+            var iTotalValue = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalQuantity += parseCurrency(aaData[i][11])*1;
+                iTotalValue += parseCurrency(aaData[i][12])*1;
+            }
+
+            var iPageQuantity = 0;
+            var iPageValue = 0;
+            for ( var i=iStart ; i<iEnd ; i++ )
+            {
+                iPageQuantity += aaData[ aiDisplay[i] ][11]*1;
+                iPageValue += parseCurrency(aaData[ aiDisplay[i] ][12])*1;
+            }
+
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[10].innerHTML = addCommas(parseInt(iPageQuantity) + ' ('+ parseInt(iTotalQuantity) +')');
+            nCells[11].innerHTML = addCommas(parseInt(iPageValue) + ' ('+ parseInt(iTotalValue) +')');
+
         },
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
@@ -193,33 +252,44 @@ $(document).ready(function(){
             ]
         }
     }).columnFilter({
-        sPlaceHolder: "head:after",
+        sPlaceHolder: "head:before",
         aoColumns: [
         {
+            sSelector: "#cabang",
             type: "checkbox",
             values: ["Bandung", "Narogong", "Bali", "Medan", "Surabaya", "Semarang", "Cirebon",
             "Yogyakarta", "Palembang", "Lampung", "Meruya", "Makasar", "Pekanbaru", "Jember"]
         },
         {
+            sSelector: "#customer",
             type: "checkbox"
         },
         null,
+        null,
         {
+            sSelector: "#brand",
             type: "checkbox",
             values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
         },
         null,
-        null,
         {
+            sSelector: "#tipe",
             type: "checkbox"
         },
         {
+            sSelector: "#artikel",
             type: "checkbox"
         },
         {
+            sSelector: "#kain",
             type: "checkbox"
         },
         {
+            sSelector: "#panjang",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#lebar",
             type: "checkbox"
         },
         null,
@@ -247,4 +317,5 @@ $(document).ready(function(){
         }
         return x1 + x2;
     }
+    
 });

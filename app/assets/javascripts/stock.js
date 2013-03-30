@@ -32,18 +32,23 @@ $(document).ready(function(){
         aoColumns: [
         null,
         {
+            sSelector: "#brand",
             type: "checkbox"
         },
         {
+            sSelector: "#artikel",
             type: "checkbox"
         },
         {
+            sSelector: "#kain",
             type: "checkbox"
         },
         {
+            sSelector: "#panjang",
             type: "checkbox"
         },
         {
+            sSelector: "#lebar",
             type: "checkbox"
         }
         ]

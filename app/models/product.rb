@@ -7,4 +7,5 @@ class Product < ActiveRecord::Base
   belongs_to :ukuran
   belongs_to :kain
   scope :get_product, :conditions => ['id > 4 AND id != 24']
+	scope :product_name, lambda {|product| where(:KodeProduk => product)}
 end

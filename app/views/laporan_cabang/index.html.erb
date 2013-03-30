@@ -1,7 +1,7 @@
 <br /><h1>Laporan Penjualan Cabang</h1><br />
 <%= form_tag laporan_cabang_index_path, :method => 'get' do %>
   <p>
-    <br /><br />
+    <br />
     <%= label_tag 'From' %>
     <%= text_field_tag 'from', nil, :class => "input_form"  %>
   </p><br />
@@ -17,62 +17,63 @@
 <br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2><i>Laporan Penjualan Periode <%= params[:from].to_date.strftime("%e %B %Y") %> sampai <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Laporan Penjualan Periode <%= params[:from].to_date.strftime("%e %B %Y") %> sampai <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br /><br />
+    <form id="placeholder_datatables" style="width: 1330px; height: 43px">
+      <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
+      <p id="cabang" style="position: absolute; right: 924px; top: 2px"></p>
+      <p id="customer" style="position: absolute; right: 805px; top: 2px "></p>
+      <p id="brand" style="position: absolute; right: 723px; top: 2px "></p>
+      <p id="tipe" style="position: absolute; right: 654px; top: 2px "></p>
+      <p id="artikel" style="position: absolute; right: 568px; top: 2px "></p>
+      <p id="kain" style="position: absolute; right: 497px; top: 2px "></p>
+      <p id="panjang" style="position: absolute; right: 400px; top: 2px "></p>
+      <p id="lebar" style="position: absolute; right: 320px; top: 2px "></p>
+    </form>
     <br />
     <table border="1" id="laporancabang" class="display"  data-source="<%= laporan_cabang_index_path(format: :json) %>">
       <thead>
         <tr>
-          <th>Branch</th>
-          <th>Cust</th>
-          <th></th>
-          <th>Cat</th>
-          <th></th>
-          <th></th>
-          <th>Article</th>
-          <th>Fabric</th>
-          <th>L</th>
-          <th>W</th>
-          <th></th>
-          <th></th>
-        </tr>
-        <tr>
-          <th>Branches</th>
+          <th>Cabang</th>
           <th>Customers</th>
-          <th>Name</th>
-          <th>Category</th>
+          <th>Bulan</th>
+          <th>Tahun</th>
           <th>Brand</th>
-          <th>Type</th>
-          <th>Articel</th>
-          <th>Fabric</th>
-          <th>Length</th>
-          <th>Width</th>
+          <th>Kategori</th>
+          <th>Tipe</th>
+          <th>Artikel</th>
+          <th>Kain</th>
+          <th>Panjang</th>
+          <th>Lebar</th>
           <th>Qty</th>
-          <th>Price</th>
+          <th>Harga</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
+          <th scope="row">Total</th>
+          <% (1..12).each do  %>
+            <td></td>
+          <% end %>
         </tr>
       </tfoot>
       <tbody>
-        <% @laporancabang.find_in_batches(:batch_size => 5000) do |batches| %>
-          <% batches.each do |laporan| %>
-            <tr>
-              <td><%= laporan.cabang.Cabang %></td>
-              <td><%= laporan.customer %></td>
-              <td><%= laporan.namabrg %></td>
-              <td><%= laporan.jenisbrgdisc %></td>
-              <td><%= laporan.namabrand %></td>
-              <td><%= laporan.jenisbrg %></td>
-              <td><%= laporan.namaartikel %></td>
-              <td><%= laporan.namakain %></td>
-              <td><%= laporan.panjang %></td>
-              <td><%= laporan.lebar %></td>
-              <% jumlah = @laporancabang.group(:kodebrg) %>
-              <td><%= LaporanCabang.get_value_of_hash(jumlah.sum(:jumlah))[laporan.customer][laporan.kodebrg] %></td>
-              <td><%= currency(LaporanCabang.get_value_of_hash(jumlah.sum(:totalnetto2))[laporan.customer][laporan.kodebrg]) %></td>
-            </tr>
-          <% end %>
+        <% @laporancabang.each do |laporan| %>
+          <tr>
+            <td><%= laporan.cabang.Cabang %></td>
+            <td><%= laporan.customer %></td>
+            <td><%= laporan.tanggalsj.strftime("%B") %></td>
+            <td><%= laporan.tanggalsj.strftime("%Y") %></td>
+            <td><%= laporan.jenisbrgdisc %></td>
+            <td><%= laporan.namabrand %></td>
+            <td><%= laporan.jenisbrg %></td>
+            <td><%= laporan.namaartikel %></td>
+            <td><%= laporan.namakain %></td>
+            <td><%= laporan.panjang %></td>
+            <td><%= laporan.lebar %></td>
+            <td><%= laporan.sum_jumlah.to_i %></td>
+            <td><%= currency(laporan.sum_harganetto2.to_i) %></td>
+          </tr>
         <% end %>
       </tbody>
     </table>
