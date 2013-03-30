@@ -80,7 +80,7 @@
               <td></td>
               <td></td>
             <% else %>
-              <% cabang.stock.get_stock_in_branch(params[:date], stock.kodebrg).find_each(:batch_size => 5000) do |a| %>
+              <% cabang.stock.get_stock_in_branch(params[:date], stock.kodebrg).each do |a| %>
                 <td><%= a.freestock  %></td>
                 <td><%= a.bufferstock %></td>
               <% end %>
@@ -91,37 +91,3 @@
     </tbody>
   </table>
 <% end %>
-<script>
-  $(document).ready(function() {
-    $('#category_select').multiselect({});
-    $('#brand_select').live('change', function() {
-      $.ajax({
-        url: "<%= update_kategori_path %>",
-        data: {
-          merk_id : $('#brand_select').val()
-        },
-        dataType: "script"
-      });
-    });
-
-    $('#category_select').live('change', function() {
-      $.ajax({
-        url: "<%= update_jenis_produk_path %>",
-        data: {
-          category_id : $('#category_select').val()
-        },
-        dataType: "script"
-      });
-    });
-
-    $('#brand_product_select').live('change', function() {
-      $.ajax({
-        url: "<%= update_artikel_path %>",
-        data: {
-          artikel_id : $('#brand_product_select').val()
-        },
-        dataType: "script"
-      });
-    });
-  });
-</script>
