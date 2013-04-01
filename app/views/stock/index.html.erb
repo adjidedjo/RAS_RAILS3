@@ -18,9 +18,10 @@
     <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
     <p id="brand" style="position: absolute; right: 803px; top: 2px"></p>
     <p id="artikel" style="position: absolute; right: 713px; top: 2px "></p>
-    <p id="kain" style="position: absolute; right: 638px; top: 2px "></p>
-    <p id="panjang" style="position: absolute; right: 537px; top: 2px "></p>
-    <p id="lebar" style="position: absolute; right: 453px; top: 2px "></p>
+    <p id="kain" style="position: absolute; right: 640px; top: 2px "></p>
+    <p id="ukuran" style="position: absolute; right: 546px; top: 2px "></p>
+    <p id="panjang" style="position: absolute; right: 445px; top: 2px "></p>
+    <p id="lebar" style="position: absolute; right: 362px; top: 2px "></p>
   </form>
   <br />
   <table id="stock" class="display">
@@ -30,6 +31,7 @@
         <th>Brand</th>
         <th>Artikel</th>
         <th>Kain</th>
+        <th>Ukuran</th>
         <th>Panjang</th>
         <th>Lebar</th>
       </tr>
@@ -38,6 +40,7 @@
         <th rowspan="3">Brand</th>
         <th rowspan="3">Artikel</th>
         <th rowspan="3">Kain</th>
+        <th rowspan="3">Ukuran</th>
         <th rowspan="3">Panjang</th>
         <th rowspan="3">Lebar</th>
         <th colspan="30">Annual Stock Branches Report</th>
@@ -73,6 +76,7 @@
           <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
           <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
           <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
+          <th scope="row"><%= stock.kodebrg.slice(11) == "T" ? "Tanggung" : "Standard" %></th>
           <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
           <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
           <% @id_cabang.each do |cabang| %>

@@ -44,6 +44,10 @@ $(document).ready(function(){
             type: "checkbox"
         },
         {
+            sSelector: "#ukuran",
+            type: "checkbox"
+        },
+        {
             sSelector: "#panjang",
             type: "checkbox"
         },
