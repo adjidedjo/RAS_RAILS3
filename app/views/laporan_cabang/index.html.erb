@@ -19,7 +19,7 @@
   <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Laporan Penjualan Periode <%= params[:from].to_date.strftime("%e %B %Y") %> sampai <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-    <form id="placeholder_datatables" style="width: 1330px; height: 43px">
+    <form id="placeholder_datatables" style="width: 1300px; height: 43px">
       <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
       <p id="cabang" style="position: absolute; right: 924px; top: 2px"></p>
       <p id="customer" style="position: absolute; right: 805px; top: 2px "></p>
@@ -29,6 +29,12 @@
       <p id="kain" style="position: absolute; right: 497px; top: 2px "></p>
       <p id="panjang" style="position: absolute; right: 400px; top: 2px "></p>
       <p id="lebar" style="position: absolute; right: 320px; top: 2px "></p>
+      <p id="market" style="position: absolute; right: 232px; top: 2px "></p>
+    </form>
+    <form id="radio_button_form" style="width: 1300px; height: 43px">
+			<p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Sum</p>
+      <p style="position: absolute; right: 924px; top: 2px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 260px'>by Brand</button>".html_safe, laporan_cabang_group_by_cabang_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 805px; top: 2px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 245px'>by Category</button>".html_safe, laporan_cabang_group_by_category_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
     </form>
     <br />
     <table border="1" id="laporancabang" class="display"  data-source="<%= laporan_cabang_index_path(format: :json) %>">
@@ -36,6 +42,7 @@
         <tr>
           <th>Cabang</th>
           <th>Customers</th>
+          <th>Market</th>
           <th>Bulan</th>
           <th>Tahun</th>
           <th>Brand</th>
@@ -52,7 +59,7 @@
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..12).each do  %>
+          <% (1..13).each do  %>
             <td></td>
           <% end %>
         </tr>
@@ -60,8 +67,17 @@
       <tbody>
         <% @laporancabang.each do |laporan| %>
           <tr>
-            <td><%= laporan.cabang.Cabang %></td>
+            <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
             <td><%= laporan.customer %></td>
+            <% if ( laporan.customer =~ /\bES\b/ ) %>
+              <td>ES</td>
+            <% elsif ( laporan.customer =~ /\bSOGO\b/ ) %>
+              <td>SOGO</td>
+            <% elsif ( laporan.customer =~ /\bSHOWROOM\b/ ) %>
+              <td>SHOWROOM</td>
+            <% else %>
+              <td>Retail</td>
+            <% end %>
             <td><%= laporan.tanggalsj.strftime("%B") %></td>
             <td><%= laporan.tanggalsj.strftime("%Y") %></td>
             <td><%= laporan.jenisbrgdisc %></td>

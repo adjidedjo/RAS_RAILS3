@@ -14,7 +14,7 @@
 <% unless params[:date].nil? %>
   <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
   <br /><br />
-  <form id="placeholder_datatables_stock" style="width: 1330px; height: 43px">
+  <form id="placeholder_datatables_stock" style="width: 1300px; height: 43px">
     <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
     <p id="brand" style="position: absolute; right: 803px; top: 2px"></p>
     <p id="artikel" style="position: absolute; right: 713px; top: 2px "></p>
@@ -76,7 +76,13 @@
           <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
           <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
           <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
-          <th scope="row"><%= stock.kodebrg.slice(11) == "T" ? "Tanggung" : "Standard" %></th>
+          <% if stock.kodebrg.slice(11) == "T" %>
+            <th scope="row">Tanggung</th>
+          <%  elsif stock.kodebrg.slice(11) == "P" %>
+            <th scope="row">Display</th>
+          <% else %>
+            <th scope="row">Standard</th>
+          <% end %>
           <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
           <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
           <% @id_cabang.each do |cabang| %>

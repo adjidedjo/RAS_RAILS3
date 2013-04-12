@@ -185,7 +185,7 @@ a { text-decoration: none; color: #4E6CA3; }
 a:hover { text-decoration: underline; }
 .css_link { text-decoration: none; color: #4E6CA3; cursor: pointer; *cursor: hand; }
 .css_link:hover { text-decoration: underline; }
-h1 { font-size: 2em; line-height: 1.45em; vertical-align: middle; color: black; }
+h1 { font-size: 1em; line-height: 1.45em; vertical-align: middle; color: rgb(125, 194, 233); }
 h1 img { margin-top: -5px; vertical-align: middle; }
 h2 { font-size: 1.3em; line-height: 1.45em; color: black; }
 h3 { font-size: 1.2em; line-height: 1.45em; padding-top: 2em; margin-bottom: 0.5em; border-bottom: 1px solid #829ac6; }
