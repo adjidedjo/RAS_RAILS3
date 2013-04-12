@@ -1,0 +1,126 @@
+<br /><h1>Laporan Penjualan Cabang per Brand</h1><br />
+<%= form_tag laporan_cabang_index_path, :method => 'get' do %>
+  <p>
+    <br />
+    <%= label_tag 'From' %>
+    <%= text_field_tag 'from', nil, :class => "input_form"  %>
+  </p><br />
+  <p>
+    <%= label_tag 'To' %>
+    <%= text_field_tag 'to', nil, :class => "input_form" %>
+  </p>
+  <br /><br />
+  <p>
+    <%= submit_tag "Search", :class => "button" %>
+  </p>
+<% end %>
+<br />
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Laporan Penjualan per Brand Periode <%= params[:from].to_date.strftime("%e %B %Y") %> sampai <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br /><br />
+    <form id="radio_button_form" style="width: 1300px; height: 43px">
+			<p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Sum</p>
+      <p style="position: absolute; right: 805px; top: 2px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 260px'>by Category</button>".html_safe, laporan_cabang_group_by_category_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 805px; top: 2px "></p>
+    </form>
+    <br />
+    <table border="1" id="group_by_category" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Cabang</th>
+        </tr>
+        <tr>
+          <% @cabang_get_id.each do |cabang| %>
+            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..13).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..26).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% Merk.all.each do |merk| %>
+          <tr>
+            <td><%= merk.Merk %></td>
+            <% LaporanCabang.sum_of_brand(2, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Narogong -->
+            <% LaporanCabang.sum_of_brand(3, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Bali -->
+            <% LaporanCabang.sum_of_brand(4, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Medan -->
+            <% LaporanCabang.sum_of_brand(5, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Surabaya -->
+            <% LaporanCabang.sum_of_brand(7, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Semarang -->
+            <% LaporanCabang.sum_of_brand(8, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Cirebon -->
+            <% LaporanCabang.sum_of_brand(9, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Yogyakarta -->
+            <% LaporanCabang.sum_of_brand(10, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Palembang -->
+            <% LaporanCabang.sum_of_brand(11, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Lampung -->
+            <% LaporanCabang.sum_of_brand(13, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Makasar -->
+            <% LaporanCabang.sum_of_brand(19, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Pekanbaru -->
+            <% LaporanCabang.sum_of_brand(20, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Jember -->
+            <% LaporanCabang.sum_of_brand(22, merk.Merk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
