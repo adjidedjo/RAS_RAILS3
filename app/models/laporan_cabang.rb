@@ -12,6 +12,18 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
+  def self.sum_of_brand(cabang, merk, from, to)
+    find(:all, :conditions => ["cabang_id = ? and jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
+        cabang, merk, 'cab%', from.to_date, to.to_date],
+      :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
+  end
+
+	def self.sum_of_category(cabang, cat, from, to)
+    find(:all, :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
+        cabang, "%#{cat}%", 'cab%', from.to_date, to.to_date],
+      :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
+  end
+
   def self.jenisbrgdisc_by_user(from, to, user)
     unless user.merk.nil?
       get_record(from, to).find(:jenisbrgdisc => user.merk.Merk)

@@ -18,8 +18,8 @@
 <% unless params[:periode].nil? || params[:periode].empty? %>
   <table id="table_year" class="pretty">
     <p>WEEKLY SALES PERFORMANCE</p>
-    <p><%= @periode.to_date.strftime('%B %Y')  %></p>
-    <p>WEEK <%= @periode.to_date.cweek %></p><br />
+    <p><%= @periode.strftime('%B %Y')  %></p>
+    <p>WEEK <%= @periode.cweek %></p><br />
     <p>Classic Brand</p><br />
     <thead>
       <tr>
@@ -29,27 +29,27 @@
       <tr>
         <th colspan="3">Last Week</th>
         <th colspan="3">This Week</th>
-        <th colspan="3">Total bulan berjalan <br /> s/d <%= @periode.to_date.strftime('%d %B')  %></th>
+        <th colspan="3">Total bulan berjalan <br /> s/d <%= @periode.strftime('%d %B')  %></th>
         <th colspan="3">Akumulasi Total</th>
       </tr>
       <tr>
         <% (1..2).each do |loop| %>
-          <th><%= 1.year.ago(@periode.to_date).year %></th>
-          <th><%= @periode.to_date.year %></th>
+          <th><%= 1.year.ago(@periode).year %></th>
+          <th><%= @periode.year %></th>
           <th rowspan="2">%</th>
         <% end %>
-        <th rowspan="2"><%= 1.year.ago(@periode.to_date).year %></th>
-        <th rowspan="2"><%= @periode.to_date.year %></th>
+        <th rowspan="2"><%= 1.year.ago(@periode).year %></th>
+        <th rowspan="2"><%= @periode.year %></th>
         <th rowspan="2">%</th>
-        <th rowspan="2">Jan s/d <br /> <%= 1.year.ago(@periode.to_date).strftime('%d %b %Y') %></th>
-        <th rowspan="2">Jan s/d <br /> <%= @periode.to_date.strftime('%d %b %Y') %></th>
+        <th rowspan="2">Jan s/d <br /> <%= 1.year.ago(@periode).strftime('%d %b %Y') %></th>
+        <th rowspan="2">Jan s/d <br /> <%= @periode.strftime('%d %b %Y') %></th>
         <th rowspan="2">%</th>
       </tr>
       <tr>
-        <th><%= @last_week_on_last_year.strftime('%d') %>-<%= 1.year.ago(1.weeks.ago(@periode.to_date)).to_date.strftime('%d %b') %></th>
-        <th><%= @last_week_on_current_year.strftime('%d') %>-<%= 1.weeks.ago(@periode.to_date).to_date.strftime('%d %b') %></th>
-        <th><%= @this_week_on_last_year.strftime('%d') %> - <%= 1.year.ago(@periode.to_date).strftime('%d %b')  %></th>
-        <th><%= @this_week_on_current_year.strftime('%d') %> - <%= @periode.to_date.strftime('%d %b')  %></th>
+         <th><%= @last_week_on_last_year.strftime('%d') %>-<%= 1.year.ago(1.weeks.ago(@periode.to_date)).to_date.strftime('%d %b') %></th>
+         <th><%= @last_week_on_current_year.strftime('%d') %>-<%= 1.weeks.ago(@periode.to_date).to_date.strftime('%d %b') %></th>
+         <th><%= @this_week_on_last_year.strftime('%d') %> - <%= 1.year.ago(@periode.to_date).strftime('%d %b')  %></th>
+         <th><%= @this_week_on_current_year.strftime('%d') %> - <%= @periode.to_date.strftime('%d %b')  %></th>
       </tr>
     </thead>
     <tfoot>
@@ -65,21 +65,21 @@
         <tr>
           <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
           <th scope="row"><%= cabang.Cabang %></th>
-          <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Classic')) %></td>
-          <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Classic')) %></td>
+          <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Serenity')) %></td>
+          <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Serenity')) %></td>
           <td><%= weekly_last_week_on_last_year.to_i == 0 &&  weekly_last_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year.gsub(/\./, ''), weekly_last_week_on_current_year.gsub(/\./, ''))) %></td>
 
-          <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Classic')) %></td>
-          <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_current_year(@periode.to_date, 'Classic')) %></td>
+          <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Serenity')) %></td>
+          <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_current_year(@periode.to_date, 'Serenity')) %></td>
           <td><%= weekly_this_week_on_last_year.to_i == 0 &&  weekly_this_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year.gsub(/\./, ''), weekly_this_week_on_current_year.gsub(/\./, ''))) %></td>
 
-          <td><%= monthly_last_year =  currency(laporan_cabang_by_cabang.monthly_sum_last_year(@periode.to_date, "Classic")) %></td>
-          <td><%= monthly_current_year = currency(laporan_cabang_by_cabang.monthly_sum_current_year(@periode.to_date, "Classic")) %></td>
-          <td><%= monthly_last_year.to_i == 0 && monthly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(monthly_last_year.gsub(/\./, ''), monthly_current_year.gsub(/\./, ''))) %></td>
+          <td><%= weekly_last_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_last_year(@periode.to_date, 'Non Serenity')) %></td>
+          <td><%= weekly_last_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_last_week_on_current_year(@periode.to_date, 'Non Serenity')) %></td>
+          <td><%= weekly_last_week_on_last_year.to_i == 0 &&  weekly_last_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_last_week_on_last_year.gsub(/\./, ''), weekly_last_week_on_current_year.gsub(/\./, ''))) %></td>
 
-          <td><%= yearly_last_year = currency(laporan_cabang_by_cabang.yearly_sum_last_year(@periode.to_date, "Classic")) %></td>
-          <td><%= yearly_current_year = currency(laporan_cabang_by_cabang.yearly_sum_current_year(@periode.to_date, "Classic")) %></td>
-          <td><%= yearly_last_year.to_i == 0 && yearly_current_year.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(yearly_last_year.gsub(/\./, ''), yearly_current_year.gsub(/\./, ''))) %></td>
+          <td><%= weekly_this_week_on_last_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_last_year(@periode.to_date, 'Non Serenity')) %></td>
+          <td><%= weekly_this_week_on_current_year = currency(laporan_cabang_by_cabang.weekly_sum_week_on_current_year(@periode.to_date, 'Non Serenity')) %></td>
+          <td><%= weekly_this_week_on_last_year.to_i == 0 &&  weekly_this_week_on_current_year.to_i ? 0 : percentage(cabang.laporan_cabang.get_percentage(weekly_this_week_on_last_year.gsub(/\./, ''), weekly_this_week_on_current_year.gsub(/\./, ''))) %></td>
         </tr>
       <% end %>
     </tbody>
