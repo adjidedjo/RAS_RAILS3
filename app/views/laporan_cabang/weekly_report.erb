@@ -1,0 +1,278 @@
+<div class="clear"></div>
+<br /><h1>Annual Weekly Sales Performances</h1><br />
+
+<%= form_tag laporan_cabang_weekly_report_path, :method => 'get' do %>
+  <br />
+  <p>
+    <%= label_tag 'Periode' %>
+    <%= text_field_tag 'periode_week', nil, :class => "input_form" %>
+  </p>
+  <br />
+  <p>
+    <%= submit_tag "Search", :class => "button" %>
+  </p>
+<% end %>
+<br />
+<div class="clear"></div>
+
+<% unless params[:periode_week].nil? || params[:periode_week].empty? %>
+  <table id="weekly_report_sales" class="pretty">
+    <p>WEEKLY SALES PERFORMANCE REPORT</p>
+    <p><%= @periode.strftime('%B %Y')  %></p>
+    <p>WEEK <%= @periode.to_date.cweek %></p><br />
+    <p>Elite Brand</p><br />
+    <thead>
+      <tr>
+        <th rowspan="3">Branches</th>
+      </tr>
+      <tr>
+        <th colspan="7">Serenity</th>
+        <th colspan="7">Non Serenity</th>
+      </tr>
+      <tr>
+         <th>Week I </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week II </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week III </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week IV </br><%= @periode.strftime('%B %Y') %></th>
+				 <th>Week V </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week V </br><%= (@periode - 1.months).strftime('%B %Y') %></th>
+         <th>Growth</th>
+         <th>Week I </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week II </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week III </br><%= @periode.strftime('%B %Y') %></th>
+				 <th>Week IV </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week V </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week V </br><%= (@periode - 1.months).strftime('%B %Y') %></th>
+         <th>Growth</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..14).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @cabang_get_id.each do |cabang| %>
+        <tr>
+          <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+          <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+					<% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_1, @last_day_week_1).each do |week_1| %>
+          	<td><%= week_1.sum_harganetto2.nil? ? "0" : currency(week_1.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_2, @last_day_week_2).each do |week_2| %>
+          	<td><%= week_2.sum_harganetto2.nil? ? "0" : currency(week_2.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_3, @last_day_week_3).each do |week_3| %>
+          	<td><%= week_3.sum_harganetto2.nil? ? "0" : currency(week_3.sum_harganetto2) %></td>
+					<% end %>
+
+          <% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_4, @last_day_week_4).each do |week_4| %>
+          	<td><%= week_4.sum_harganetto2.nil? ? "0" : currency(week_4.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<td><%= week_5.sum_harganetto2.nil? ? "0" : currency(week_5.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+
+          <% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_1, @last_day_week_1).each do |week_1| %>
+          	<td><%= week_1.sum_harganetto2.nil? ? "0" : currency(week_1.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_2, @last_day_week_2).each do |week_2| %>
+          	<td><%= week_2.sum_harganetto2.nil? ? "0" : currency(week_2.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_3, @last_day_week_3).each do |week_3| %>
+          	<td><%= week_3.sum_harganetto2.nil? ? "0" : currency(week_3.sum_harganetto2) %></td>
+					<% end %>
+
+          <% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_4, @last_day_week_4).each do |week_4| %>
+          	<td><%= week_4.sum_harganetto2.nil? ? "0" : currency(week_4.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<td><%= week_5.sum_harganetto2.nil? ? "0" : currency(week_5.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+	<br />
+	<table id="weekly_report_sales_total" class="pretty">
+    <thead>
+      <tr>
+        <th rowspan="3">Branches</th>
+      </tr>
+      <tr>
+        <th colspan="7">Total</th>
+				<th rowspan="2">Akumulasi</br> <%= @periode.strftime('%B %Y') %></th>
+				<th rowspan="2">Akumulasi</br> <%= (@periode - 1.months).strftime('%B %Y') %></th>
+				<th rowspan="2">Growth</th>
+				<th rowspan="2">Target</br> <%= @periode.strftime('%B %Y') %></th>
+				<th rowspan="2">ACV</th>
+      </tr>
+      <tr>
+         <th>Week I </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week II </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week III </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week IV </br><%= @periode.strftime('%B %Y') %></th>
+				 <th>Week V </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week V </br><%= (@periode - 1.months).strftime('%B %Y') %></th>
+         <th>Growth</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..12).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @cabang_get_id.each do |cabang| %>
+        <tr>
+          <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+          <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@first_day_week_1, @last_day_week_1).each do |week_1| %>
+          	<td><%= week_1.sum_harganetto2.nil? ? "0" : currency(week_1.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@first_day_week_2, @last_day_week_2).each do |week_2| %>
+          	<td><%= week_2.sum_harganetto2.nil? ? "0" : currency(week_2.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@first_day_week_3, @last_day_week_3).each do |week_3| %>
+          	<td><%= week_3.sum_harganetto2.nil? ? "0" : currency(week_3.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@first_day_week_4, @last_day_week_4).each do |week_4| %>
+          	<td><%= week_4.sum_harganetto2.nil? ? "0" : currency(week_4.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<td><%= week_5.sum_harganetto2.nil? ? "0" : currency(week_5.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@periode.beginning_of_month, @periode.end_of_month).each do |month| %>
+          	<td><%= month.sum_harganetto2.nil? ? "0" : currency(month.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					1.month.ago.beginning_of_month, 1.month.ago.end_of_month).each do |month| %>
+          	<td><%= month.sum_harganetto2.nil? ? "0" : currency(month.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+	<br />
+	<table id="yearly_report_sales_total" class="pretty">
+    <thead>
+      <tr>
+        <th rowspan="3">Branches</th>
+      </tr>
+      <tr>
+        <th colspan="3">Akumulasi</th>
+				<th rowspan="2">Target</br> <%= @periode.strftime('%Y') %></th>
+				<th rowspan="2">ACV</br>Target <%= @periode.strftime('%Y') %></th>
+      </tr>
+			<tr>
+				<th>Akumulasi</br> <%= @periode.beginning_of_year.strftime('%B') %> s/d <%= @periode.strftime('%B %Y') %></th>
+				<th>Akumulasi</br> <%= @periode.beginning_of_year.strftime('%B') %> s/d <%= (@periode - 1.years).beginning_of_month.strftime('%B %Y') %></th>
+				<th>Growth</th>
+			</tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..5).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @cabang_get_id.each do |cabang| %>
+        <tr>
+          <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+          <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					@periode.beginning_of_year, @last_day_week_5).each do |week| %>
+          	<td><%= week.sum_harganetto2.nil? ? "0" : currency(week.sum_harganetto2) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+					(@periode - 1.years).beginning_of_year, @last_year_last_day_week).each do |week| %>
+          	<td><%= week.sum_harganetto2.nil? ? "0" : currency(week.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+	<br />
+	<table id="classic_weekly_sales_report" class="pretty">
+    <p>WEEKLY SALES PERFORMANCE REPORT</p>
+    <p><%= @periode.strftime('%B %Y')  %></p>
+    <p>WEEK <%= @periode.to_date.cweek %></p><br />
+    <p>Classic Brand</p><br />
+    <thead>
+      <tr>
+        <th rowspan="2">Branches</th>
+      </tr>
+      <tr>
+         <th>Week I </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week II </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week III </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week IV </br><%= @periode.strftime('%B %Y') %></th>
+				 <th>Week V </br><%= @periode.strftime('%B %Y') %></th>
+         <th>Week V </br><%= (@periode - 1.months).strftime('%B %Y') %></th>
+         <th>Growth</th>
+			</tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..7).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @cabang_get_id.each do |cabang| %>
+        <tr>
+          <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+          <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+					<% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_1, @last_day_week_1).each do |week_1| %>
+          	<td><%= week_1.sum_harganetto2.nil? ? "0" : currency(week_1.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_2, @last_day_week_2).each do |week_2| %>
+          	<td><%= week_2.sum_harganetto2.nil? ? "0" : currency(week_2.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_3, @last_day_week_3).each do |week_3| %>
+          	<td><%= week_3.sum_harganetto2.nil? ? "0" : currency(week_3.sum_harganetto2) %></td>
+					<% end %>
+
+          <% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_4, @last_day_week_4).each do |week_4| %>
+          	<td><%= week_4.sum_harganetto2.nil? ? "0" : currency(week_4.sum_harganetto2) %></td>
+					<% end %>
+          <% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<td><%= week_5.sum_harganetto2.nil? ? "0" : currency(week_5.sum_harganetto2) %></td>
+					<% end %>
+					<td>0</td>
+					<td>0</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -4,7 +4,7 @@ class Merk < ActiveRecord::Base
   has_many :user
   has_many :product, :through => :merk_products
   has_many :brand
-  scope :merk_name, lambda {|merk| where(:merk_id => merk)}
+  scope :merk_name, lambda {|merk| where(:IdMerk => merk)}
   
   def self.get_merk_name(merk_id)
     merk_name(merk_id).map{|merk| merk.Merk}.join(", ")

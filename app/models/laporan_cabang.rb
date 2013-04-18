@@ -12,6 +12,18 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
+# weekly report sales performance
+	def self.weekly_sum_value(cat, from, to)
+		find(:all, :conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ?", cat, from.to_date, to.to_date],
+      :select => "sum(harganetto2) as sum_harganetto2")
+	end
+
+	def self.weekly_total_sum_value(cat, from, to)
+		find(:all, :conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ?", cat, from.to_date, to.to_date],
+      :select => "sum(harganetto2) as sum_harganetto2")
+	end
+# ----------
+
   def self.sum_of_brand(cabang, merk, from, to)
     find(:all, :conditions => ["cabang_id = ? and jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
         cabang, merk, 'cab%', from.to_date, to.to_date],
@@ -31,7 +43,7 @@ class LaporanCabang < ActiveRecord::Base
       get_record(from, to)
     end
   end
-  
+
 	def self.get_record(from, to, user)
     unless user.merk.nil?
       find(:all, :conditions => ["jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
@@ -52,22 +64,22 @@ class LaporanCabang < ActiveRecord::Base
     sum(:jumlah, :conditions => ["tanggalfaktur >= ? and tanggalfaktur <= ? and cabang_id = ?",
         "#{year}-01-01", "#{year}-12-31", cabang_id])
   end
-  
+
   def self.monthly_sum_last_year(date, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         get_last_month_on_last_year(date), 1.year.ago(date), jenis ]).to_i
   end
-  
+
   def self.monthly_sum_current_year(date, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         get_last_month_on_current_year(date), date, jenis ]).to_i
   end
-  
+
   def self.yearly_sum_last_year(date, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         get_beginning_of_year_on_last_year(date), 1.year.ago(date), jenis ]).to_i
   end
-  
+
   def self.yearly_sum_current_year(date, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         get_beginning_of_year_on_current_year(date), date, jenis ]).to_i
@@ -80,97 +92,97 @@ class LaporanCabang < ActiveRecord::Base
       :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
         date, date_helper,["Serenity", "Non Serenity"]])[0].sum_harga.to_i
   end
-  
-  def self.monthly_sum_last_year_multiple_jenis(date)
+
+  def self.monthly_sum_last_year_multiple_jenis(date, jenis)
     find(:all, :select => "sum(harganetto2) as sum_harga",
       :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
         get_last_month_on_last_year(date), 1.year.ago(date),
-        ["Serenity", "Non Serenity"]])[0].sum_harga.to_i
+        jenis])[0].sum_harga.to_i
   end
-  
-  def self.monthly_sum_current_year_multiple_jenis(date)
+
+  def self.monthly_sum_current_year_multiple_jenis(date, jenis)
     find(:all, :select => "sum(harganetto2) as sum_harga",
       :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
         get_last_month_on_current_year(date), date,
-        ["Serenity", "Non Serenity"]])[0].sum_harga.to_i
+        jenis])[0].sum_harga.to_i
   end
-  
-  def self.yearly_sum_last_year_multiple_jenis(date)
+
+  def self.yearly_sum_last_year_multiple_jenis(date, jenis)
     find(:all, :select => "sum(harganetto2) as sum_harga",
       :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
         get_beginning_of_year_on_last_year(date), 1.year.ago(date),
-        ["Serenity", "Non Serenity"]])[0].sum_harga.to_i
+        jenis])[0].sum_harga.to_i
   end
-  
-  def self.yearly_sum_current_year_multiple_jenis(date)
+
+  def self.yearly_sum_current_year_multiple_jenis(date, jenis)
     find(:all, :select => "sum(harganetto2) as sum_harga",
       :conditions => ["tanggalsj between ? and ? and jenisbrgdisc in (?)",
         get_beginning_of_year_on_current_year(date), date,
-        ["Serenity", "Non Serenity"]])[0].sum_harga.to_i
+        jenis])[0].sum_harga.to_i
   end
-  
+
   def self.weekly_sum_last_year(from, to, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
         from, to, jenis ], :order => "id").to_i
   end
-  
+
   # year and month
   def self.get_last_month_on_last_year(date)
     1.year.ago(date.to_date.beginning_of_month).to_date
   end
-  
+
   def self.get_last_month_on_current_year(date)
     date.to_date.beginning_of_month.to_date
   end
-  
+
   def self.get_beginning_of_year_on_last_year(date)
     1.year.ago(date.to_date.beginning_of_year).to_date
   end
-  
+
   def self.get_beginning_of_year_on_current_year(date)
     date.to_date.beginning_of_year.to_date
   end
-  
+
   # week
   def self.last_week_on_last_year(date)
     1.year.ago(1.weeks.ago(date.to_date - 6.days)).to_date
   end
-  
+
   def self.week_on_last_year(date)
     1.year.ago(date.to_date).to_date
   end
-  
+
   def self.last_week_on_current_year(date)
     1.weeks.ago(date.to_date - 6.days).to_date
   end
-  
+
   def self.week_on_current_year(date)
     (date - 6.days).to_date
   end
-  
+
   def self.get_percentage(last_month, current_month)
     (current_month.to_f - last_month.to_f) / last_month.to_f * 100.0
   end
-  
+
   #calculate week for classic brand
-  def self.weekly_sum_last_week_on_last_year(date, jenis)
+  def self.weekly_sum_last_week_on_last_year(first_day, last_day, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
-        last_week_on_last_year(date), 1.year.ago(1.weeks.ago(date.to_date)).to_date, jenis ]).to_i
+        first_day, last_day, jenis ]).to_i
   end
-  
-  def self.weekly_sum_last_week_on_current_year(date, jenis)
+
+  def self.weekly_sum_last_week_on_current_year(first_day, last_day, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
-        last_week_on_current_year(date), 1.weeks.ago(date.to_date).to_date, jenis ]).to_i
+        first_day, last_day, jenis ]).to_i
   end
-  
-  def self.weekly_sum_week_on_last_year(date, jenis)
+
+  def self.weekly_sum_week_on_last_year(first_day, last_day, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
-        week_on_last_year(date), 1.year.ago(date.to_date).to_date, jenis ]).to_i
+        first_day, last_day, jenis ]).to_i
   end
-  
-  def self.weekly_sum_week_on_current_year(date, jenis)
+
+  def self.weekly_sum_week_on_current_year(first_day, last_day, jenis)
     sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ?",
-        week_on_current_year(date), date.to_date, jenis ]).to_i
+        first_day, last_day, jenis ]).to_i
   end
- 
+
 end

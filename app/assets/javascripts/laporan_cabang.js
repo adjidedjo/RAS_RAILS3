@@ -7,7 +7,7 @@ function fnCreateSelect( aData, aSelected )
     for ( i=0 ; i<iLen ; i++ )
     {
         r += '<option value="'+aData[i]+'" ';
-        if(aSelected == aData[i]) { 
+        if(aSelected == aData[i]) {
             r +='selected="selected"';
         }
         r +='>'+aData[i]+'</option>';
@@ -29,7 +29,252 @@ $(document).ready(function(){
     $('#periode').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
-    
+		$('#periode_week').datepicker({
+       dateFormat: 'dd-mm-yy'
+    }).attr('readonly','readonly');
+
+		$('#weekly_report_sales').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalWeek1 = 0;
+            var iTotalWeek2 = 0;
+            var iTotalWeek3 = 0;
+            var iTotalWeek4 = 0;
+            var iTotalWeek5 = 0;
+            var iTotalWeekS1 = 0;
+            var iTotalWeekS2 = 0;
+            var iTotalWeekS3 = 0;
+            var iTotalWeekS4 = 0;
+            var iTotalWeekS5 = 0;
+            var iTotalWeekLastMonth = 0;
+            var iTotalWeekLastMonthS = 0;
+            var iTotalGrowth = 0;
+            var iTotalGrowthS = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalWeek1 += parseCurrency(aaData[i][1])*1;
+                iTotalWeek2 += parseCurrency(aaData[i][2])*1;
+                iTotalWeek3 += parseCurrency(aaData[i][3])*1;
+                iTotalWeek4 += parseCurrency(aaData[i][4])*1;
+                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
+                iTotalGrowth += parseCurrency(aaData[i][7])*1;
+                iTotalWeekS1 += parseCurrency(aaData[i][8])*1;
+                iTotalWeekS2 += parseCurrency(aaData[i][9])*1;
+                iTotalWeekS3 += parseCurrency(aaData[i][10])*1;
+                iTotalWeekS4 += parseCurrency(aaData[i][11])*1;
+                iTotalWeekS5 += parseCurrency(aaData[i][12])*1;
+                iTotalWeekLastMonthS += parseCurrency(aaData[i][13])*1;
+                iTotalGrowthS += parseCurrency(aaData[i][14])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalWeek1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalWeekS1))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalWeekS2))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalWeekS3))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalWeekS4))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalWeekS5))
+            nCells[12].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
+            nCells[13].innerHTML = addCommas(parseInt(iTotalGrowthS))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
+		$('#weekly_report_sales_total').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalWeek1 = 0;
+            var iTotalWeek2 = 0;
+            var iTotalWeek3 = 0;
+            var iTotalWeek4 = 0;
+            var iTotalWeek5 = 0;
+            var iTotalWeekLastMonth = 0;
+						var iTotalGrowth = 0;
+            var iTotalAkumulasiThisMonth = 0;
+            var iTotalAkumulasiLastMonth = 0;
+            var iTotalGrowthAkumulasi = 0;
+            var iTotalTarget = 0;
+            var iTotalAcv = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalWeek1 += parseCurrency(aaData[i][1])*1;
+                iTotalWeek2 += parseCurrency(aaData[i][2])*1;
+                iTotalWeek3 += parseCurrency(aaData[i][3])*1;
+                iTotalWeek4 += parseCurrency(aaData[i][4])*1;
+                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
+                iTotalGrowth += parseCurrency(aaData[i][7])*1;
+								iTotalAkumulasiThisMonth += parseCurrency(aaData[i][8])*1;
+            		iTotalAkumulasiLastMonth += parseCurrency(aaData[i][9])*1;
+            		iTotalGrowthAkumulasi += parseCurrency(aaData[i][10])*1;
+            		iTotalTarget += parseCurrency(aaData[i][11])*1;
+            		iTotalAcv += parseCurrency(aaData[i][12])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalWeek1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
+						nCells[7].innerHTML = addCommas(parseInt(iTotalAkumulasiThisMonth))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalAkumulasiLastMonth))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalGrowthAkumulasi))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalTarget))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalAcv))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
+		$('#yearly_report_sales_total').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalThisYear = 0;
+            var iTotalLastYear = 0;
+            var iTotalGrowthYear = 0;
+            var iTotalTargetYear = 0;
+            var iTotalAcvYear = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalThisYear += parseCurrency(aaData[i][1])*1;
+                iTotalLastYear += parseCurrency(aaData[i][2])*1;
+                iTotalGrowthYear += parseCurrency(aaData[i][3])*1;
+                iTotalTargetYear += parseCurrency(aaData[i][4])*1;
+                iTotalAcvYear += parseCurrency(aaData[i][5])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalThisYear))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalLastYear))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalGrowthYear))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalTargetYear))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalAcvYear))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
+		$('#classic_weekly_sales_report').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalWeek1 = 0;
+            var iTotalWeek2 = 0;
+            var iTotalWeek3 = 0;
+            var iTotalWeek4 = 0;
+            var iTotalWeek5 = 0;
+            var iTotalWeekLastMonth = 0;
+						var iTotalGrowth = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalWeek1 += parseCurrency(aaData[i][1])*1;
+                iTotalWeek2 += parseCurrency(aaData[i][2])*1;
+                iTotalWeek3 += parseCurrency(aaData[i][3])*1;
+                iTotalWeek4 += parseCurrency(aaData[i][4])*1;
+                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
+                iTotalGrowth += parseCurrency(aaData[i][7])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalWeek1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
     $('#table_year').dataTable( {
         sPaginationType: "full_numbers",
         bJQueryUI: true,
@@ -44,35 +289,35 @@ $(document).ready(function(){
             var iTotalCurrentYearMonth = 0;
             var iTotalLastYear = 0;
             var iTotalCurrentYear = 0;
-        
+
             var iTotalLastWeekLastYear = 0;
             var iTotalLastWeekCurrentYear = 0;
             var iTotalThisWeekLastYear = 0;
             var iTotalThisWeekCurrentYear = 0;
-        
+
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalLastYearMonth += parseCurrency(aaData[i][7])*1;
                 iTotalCurrentYearMonth += parseCurrency(aaData[i][8])*1;
                 iTotalLastYear += parseCurrency(aaData[i][10])*1;
                 iTotalCurrentYear += parseCurrency(aaData[i][11])*1;
-          
+
                 iTotalLastWeekLastYear += parseCurrency(aaData[i][1])*1;
                 iTotalLastWeekCurrentYear += parseCurrency(aaData[i][2])*1;
                 iTotalThisWeekLastYear += parseCurrency(aaData[i][4])*1;
                 iTotalThisWeekCurrentYear += parseCurrency(aaData[i][5])*1;
             }
-             
+
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
             nCells[0].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear))
             nCells[1].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear))
             nCells[3].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear))
             nCells[4].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear))
-        
+
             nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100) + "%"
             nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100) + "%"
-        
+
             nCells[6].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
             nCells[7].innerHTML = addCommas(parseInt(iTotalCurrentYearMonth))
             nCells[9].innerHTML = addCommas(parseInt(iTotalLastYear))
@@ -81,9 +326,9 @@ $(document).ready(function(){
             nCells[11].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
         },
         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-        
+
             var iTotalLastYearMonth = 0;
-        
+
             for ( var i=0 ; i< aData.length ; i++ )
             {
                 iTotalLastYearMonth = aData[i][2];
@@ -112,12 +357,12 @@ $(document).ready(function(){
              * Calculate the total market share for all browsers in this table (ie inc. outside
              * the pagination)
              */
-            
+
             var iTotalQtyClassic = 0;
             var iTotalValueClassic = 0;
             var iTotalQtyElite = 0;
             var iTotalValueElite = 0;
-        
+
             var iTotalQtyLady = 0;
             var iTotalValueLady = 0;
             var iTotalQtyRoyal = 0;
@@ -128,7 +373,7 @@ $(document).ready(function(){
             var iTotalValueGrand = 0;
             var iTotalAllQty = 0;
             var iTotalAllValue = 0;
-        
+
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalQtyClassic += parseCurrency(aaData[i][1])*1;
@@ -137,25 +382,25 @@ $(document).ready(function(){
                 iTotalQtyRoyal += parseCurrency(aaData[i][9])*1;
                 iTotalQtySerenity += parseCurrency(aaData[i][11])*1;
                 iTotalQtyGrand += parseCurrency(aaData[i][5])*1;
-								
+
                 iTotalValueClassic += parseCurrency(aaData[i][2])*1;
                 iTotalValueElite += parseCurrency(aaData[i][4])*1;
                 iTotalValueLady += parseCurrency(aaData[i][8])*1;
                 iTotalValueRoyal += parseCurrency(aaData[i][10])*1;
                 iTotalValueSerenity += parseCurrency(aaData[i][12])*1;
                 iTotalValueGrand += parseCurrency(aaData[i][6])*1;
-								
+
                 iTotalAllQty = iTotalQtyClassic + iTotalQtyElite  + iTotalQtyLady + iTotalQtyRoyal + iTotalQtySerenity + iTotalQtyGrand
                 iTotalAllValue = iTotalValueClassic + iTotalValueElite + iTotalValueLady + iTotalValueRoyal + iTotalValueSerenity + iTotalValueGrand
             }
-             
+
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
             nCells[0].innerHTML = addCommas(parseInt(iTotalQtyClassic) + ' ('+ parseInt(iTotalAllQty) +')');
             nCells[1].innerHTML = addCommas(parseInt(iTotalValueClassic) + ' ('+ parseInt(iTotalAllValue) +')');
             nCells[2].innerHTML = addCommas(parseInt(iTotalQtyElite)+ ' ('+ parseInt(iTotalAllQty) +')');
             nCells[3].innerHTML = addCommas(parseInt(iTotalValueElite)+ ' ('+ parseInt(iTotalAllValue) +')');
-        
+
             nCells[4].innerHTML = addCommas(parseInt(iTotalQtyGrand)+ ' ('+ parseInt(iTotalAllQty) +')');
             nCells[5].innerHTML = addCommas(parseInt(iTotalValueGrand)+ ' ('+ parseInt(iTotalAllValue) +')');
             nCells[6].innerHTML = addCommas(parseInt(iTotalQtyLady)+ ' ('+ parseInt(iTotalAllQty) +')');
@@ -164,7 +409,7 @@ $(document).ready(function(){
             nCells[9].innerHTML = addCommas(parseInt(iTotalValueRoyal)+ ' ('+ parseInt(iTotalAllValue) +')');
             nCells[10].innerHTML = addCommas(parseInt(iTotalQtySerenity)+ ' ('+ parseInt(iTotalAllQty) +')');
             nCells[11].innerHTML = addCommas(parseInt(iTotalValueSerenity)+ ' ('+ parseInt(iTotalAllValue) +')');
-        
+
         },
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
@@ -176,7 +421,7 @@ $(document).ready(function(){
             ]
         }
     });
-    
+
     $('#group_by_category').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
@@ -189,12 +434,12 @@ $(document).ready(function(){
              * Calculate the total market share for all browsers in this table (ie inc. outside
              * the pagination)
              */
-            
+
             var iTotalQtyBandung = 0;
             var iTotalValueBandung = 0;
             var iTotalQtyNarogong = 0;
             var iTotalValueNarogong = 0;
-        
+
             var iTotalQtyBali = 0;
             var iTotalValueBali = 0;
             var iTotalQtyMedan = 0;
@@ -217,11 +462,11 @@ $(document).ready(function(){
             var iTotalValuePekanbaru = 0;
             var iTotalQtyJember = 0;
             var iTotalValueJember = 0;
-        
+
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalQtyBandung += parseCurrency(aaData[i][1])*1;
-                iTotalValueBandung += parseCurrency(aaData[i][2])*1; 
+                iTotalValueBandung += parseCurrency(aaData[i][2])*1;
                 iTotalQtyNarogong += parseCurrency(aaData[i][3])*1;
                 iTotalValueNarogong += parseCurrency(aaData[i][4])*1;
                 iTotalQtyBali += parseCurrency(aaData[i][5])*1;
@@ -247,7 +492,7 @@ $(document).ready(function(){
                 iTotalQtyJember += parseCurrency(aaData[i][25])*1;
                 iTotalValueJember += parseCurrency(aaData[i][26])*1;
             }
-             
+
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
             nCells[0].innerHTML = addCommas(parseInt(iTotalQtyBandung))
@@ -288,7 +533,7 @@ $(document).ready(function(){
 
             nCells[22].innerHTML = addCommas(parseInt(iTotalQtyPekanbaru))
             nCells[23].innerHTML = addCommas(parseInt(iTotalValuePekanbaru))
-        
+
         },
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
@@ -300,7 +545,7 @@ $(document).ready(function(){
             ]
         }
     });
-    
+
     $('#table_year_elite').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
@@ -311,48 +556,48 @@ $(document).ready(function(){
              * Calculate the total market share for all browsers in this table (ie inc. outside
              * the pagination)
              */
-            
+
             var iTotalLastWeekLastYear = 0;
             var iTotalLastWeekCurrentYear = 0;
             var iTotalThisWeekLastYear = 0;
             var iTotalThisWeekCurrentYear = 0;
-        
+
             var iTotalLastWeekLastYear2 = 0;
             var iTotalLastWeekCurrentYear2 = 0;
             var iTotalThisWeekLastYear2 = 0;
             var iTotalThisWeekCurrentYear2 = 0;
-        
+
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalLastWeekLastYear += parseCurrency(aaData[i][1])*1;
                 iTotalLastWeekCurrentYear += parseCurrency(aaData[i][2])*1;
                 iTotalThisWeekLastYear += parseCurrency(aaData[i][4])*1;
                 iTotalThisWeekCurrentYear += parseCurrency(aaData[i][5])*1;
-          
+
                 iTotalLastWeekLastYear2 += parseCurrency(aaData[i][7])*1;
                 iTotalLastWeekCurrentYear2 += parseCurrency(aaData[i][8])*1;
                 iTotalThisWeekLastYear2 += parseCurrency(aaData[i][10])*1;
                 iTotalThisWeekCurrentYear2 += parseCurrency(aaData[i][11])*1;
             }
-             
+
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
             nCells[0].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear))
             nCells[1].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear))
             nCells[3].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear))
             nCells[4].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear))
-        
+
             nCells[2].innerHTML = parseInt((iTotalLastWeekCurrentYear - iTotalLastWeekLastYear) / iTotalLastWeekLastYear * 100) + "%"
             nCells[5].innerHTML = parseInt((iTotalThisWeekCurrentYear - iTotalThisWeekLastYear) / iTotalThisWeekLastYear * 100) + "%"
-        
+
             nCells[6].innerHTML = addCommas(parseInt(iTotalLastWeekLastYear2))
             nCells[7].innerHTML = addCommas(parseInt(iTotalLastWeekCurrentYear2))
             nCells[9].innerHTML = addCommas(parseInt(iTotalThisWeekLastYear2))
             nCells[10].innerHTML = addCommas(parseInt(iTotalThisWeekCurrentYear2))
-        
+
             nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100) + "%"
             nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100) + "%"
-        
+
         },
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
@@ -378,7 +623,7 @@ $(document).ready(function(){
             var iTotalCurrentYearMonth = 0;
             var iTotalLastYear = 0;
             var iTotalCurrentYear = 0;
-            
+
             for ( var i=0 ; i<aaData.length ; i++ )
             {
                 iTotalLastYearMonth += parseCurrency(aaData[i][1])*1;
@@ -393,7 +638,7 @@ $(document).ready(function(){
             nCells[4].innerHTML = addCommas(parseInt(iTotalCurrentYear))
             nCells[2].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
             nCells[5].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
-            
+
         },
         oTableTools: {
             sSwfPath: "/copy_csv_xls.swf",
@@ -405,7 +650,7 @@ $(document).ready(function(){
             ]
         }
     });
-    
+
     // Add a tabletool to export to pdf, excel and csv
     var oTable = $('#laporancabang').dataTable({
         bJQueryUI: true,
@@ -510,11 +755,11 @@ $(document).ready(function(){
         bJQueryUI: true,
         sPaginationType: "full_numbers"
     });
-    
+
     function parseCurrency( num ) {
         return parseFloat( num.replace(/\./g, '') );
     }
-    
+
     function addCommas(nStr)
     {
         nStr += '';
@@ -527,5 +772,5 @@ $(document).ready(function(){
         }
         return x1 + x2;
     }
-    
+
 });

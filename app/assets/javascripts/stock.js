@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,30 +7,46 @@ $(document).ready(function(){
     $('#brand_select').multiselect({
         selectedList: 4
     });
-    
+
     $('#brand_product_select').multiselect({
         selectedList: 4
     });
-    
+
     $('#artikel_select').multiselect({
         selectedList: 4
     });
-    
+
     $('#date').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
-    
+
     $('#stock').dataTable({
-        sScrollY: "200px",
-        bPaginate: false,
-        sScrollX: "100%",
-        sScrollXInner: "110%",
-        bScrollCollapse: true,
-        bJQueryUI: true
+        bJQueryUI: true,
+        sPaginationType: "full_numbers",
+        iDisplayLength: 10,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
     }).columnFilter({
-        sPlaceHolder: "head:after",
+        sPlaceHolder: "head:before",
         aoColumns: [
-        null,
+				{
+            sSelector: "#cabang",
+            type: "checkbox"
+        },
+				{
+            sSelector: "#jenis",
+            type: "checkbox"
+        },
         {
             sSelector: "#brand",
             type: "checkbox"
@@ -45,14 +61,6 @@ $(document).ready(function(){
         },
         {
             sSelector: "#ukuran",
-            type: "checkbox"
-        },
-        {
-            sSelector: "#panjang",
-            type: "checkbox"
-        },
-        {
-            sSelector: "#lebar",
             type: "checkbox"
         }
         ]
