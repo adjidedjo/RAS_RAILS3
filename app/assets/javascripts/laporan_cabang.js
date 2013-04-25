@@ -73,6 +73,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -147,6 +148,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -221,6 +223,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -289,6 +292,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -336,6 +340,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -389,6 +394,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -459,6 +465,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -537,6 +544,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -619,6 +627,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -683,6 +692,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -724,6 +734,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
@@ -773,6 +784,7 @@ $(document).ready(function(){
             aButtons: [
             {
                 "sExtends": "xls",
+								"sFileName": "*.xlsx",
                 "sButtonText": "Export to Excel"
             }
             ]
