@@ -12,16 +12,16 @@
 <% end %>
 <br />
 <% unless params[:date].nil? %>
-  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock Tanggung <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
   <br /><br />
   <form id="placeholder_datatables_stock" style="width: 1300px; height: 43px">
-    <p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Filter</p>
 		<p id="cabang" style="position: absolute; right: 827px; top: 2px"></p>
 		<p id="jenis" style="position: absolute; right: 751px; top: 2px"></p>
     <p id="brand" style="position: absolute; right: 672px; top: 2px"></p>
     <p id="artikel" style="position: absolute; right: 588px; top: 2px "></p>
     <p id="kain" style="position: absolute; right: 519px; top: 2px "></p>
     <p id="ukuran" style="position: absolute; right: 430px; top: 2px "></p>
+		<p style="position: absolute; right: 675px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 260px'>Tanggung</button>".html_safe, stock_special_size_path(:date => params[:date]), :method => :get %></p>
   </form>
   <br />
   <table id="stock" class="display">
@@ -32,7 +32,6 @@
         <th rowspan="2">Brand</th>
         <th rowspan="2">Artikel</th>
         <th rowspan="2">Kain</th>
-        <th rowspan="2">Ukuran</th>
         <th colspan="15">Annual Stock Branches Report</th>
       </tr>
       <tr>
@@ -54,13 +53,6 @@
           <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
           <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
           <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
-          <% if stock.kodebrg.slice(11) == "T" %>
-            <th scope="row">Tanggung</th>
-          <%  elsif stock.kodebrg.slice(11) == "P" %>
-            <th scope="row">Display</th>
-          <% else %>
-            <th scope="row">Standard</th>
-          <% end %>
           <td><%= stock.kodebrg.slice(15..17) == "090" ? (stock.freestock + stock.bufferstock) : "" %></td>
 					<td><%= stock.kodebrg.slice(15..17) == "100" ? (stock.freestock + stock.bufferstock) : "" %></td>
 					<td><%= stock.kodebrg.slice(15..17) == "120" ? (stock.freestock + stock.bufferstock) : "" %></td>

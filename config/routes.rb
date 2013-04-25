@@ -1,5 +1,5 @@
 Rain::Application.routes.draw do
-  
+
   devise_for :users
 
   get "stock/index"
@@ -13,7 +13,14 @@ Rain::Application.routes.draw do
   get "laporan_cabang/control_branches_sales"
   get "laporan_cabang/group_by_cabang"
   get "laporan_cabang/group_by_category"
+  get "laporan_cabang/group_by_customer"
+  get "laporan_cabang/group_by_type"
+  get "laporan_cabang/group_by_merk"
+  get "laporan_cabang/group_by_merk_size"
+  get "laporan_cabang/group_by_merk_customer"
+  get "laporan_cabang/monthly_comparison"
 	get "laporan_cabang/weekly_report"
+	get "stock/special_size"
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
   get 'stock/update_artikel', :as => 'update_artikel'

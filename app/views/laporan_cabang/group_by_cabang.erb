@@ -1,5 +1,5 @@
-<br /><h1>Laporan Penjualan Cabang per Brand</h1><br />
-<%= form_tag laporan_cabang_index_path, :method => 'get' do %>
+<br /><h1>Annual Branches Sales Report by Brand</h1><br />
+<%= form_tag laporan_cabang_group_by_cabang_path, :method => 'get' do %>
   <p>
     <br />
     <%= label_tag 'From' %>
@@ -17,26 +17,27 @@
 <br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Laporan Penjualan per Brand Periode <%= params[:from].to_date.strftime("%e %B %Y") %> sampai <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Annual Branches Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
     <form id="radio_button_form" style="width: 1300px; height: 43px">
-			<p id="filter"style="position: absolute; left: 40px; top: 11px; font-size: 25px; font-style: italic">Sum</p>
-      <p style="position: absolute; right: 805px; top: 2px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 260px'>by Category</button>".html_safe, laporan_cabang_group_by_category_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
-      <p style="position: absolute; right: 805px; top: 2px "></p>
+      <p style="position: absolute; right: 697px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Compare</button>".html_safe, laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 593px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Category</button>".html_safe, laporan_cabang_group_by_category_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 489px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Type</button>".html_safe, laporan_cabang_group_by_type_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 385px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Customer</button>".html_safe, laporan_cabang_group_by_customer_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
     </form>
     <br />
-    <table border="1" id="group_by_category" class="display">
+    <table border="1" id="group_by_cabang" class="display">
       <thead>
         <tr>
-          <th rowspan="3">Cabang</th>
+          <th rowspan="3">Brand</th>
         </tr>
         <tr>
-          <% @cabang_get_id.each do |cabang| %>
+          <% @cabang_get_id_to_7.each do |cabang| %>
             <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
           <% end %>
         </tr>
         <tr>
-          <% (1..13).each do %>
+          <% (1..7).each do %>
             <th>Qty</th>
             <th>Value</th>
           <% end %>
@@ -45,7 +46,7 @@
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..26).each do  %>
+          <% (1..14).each do  %>
             <td></td>
           <% end %>
         </tr>
@@ -53,7 +54,7 @@
       <tbody>
         <% Merk.all.each do |merk| %>
           <tr>
-            <td><%= merk.Merk %></td>
+            <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk, :from => params[:from], :to => params[:to]) %></td>
             <% LaporanCabang.sum_of_brand(2, merk.Merk, params[:from], params[:to]).each do |a| %>
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -88,6 +89,40 @@
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
             <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+		</br>
+		<table border="1" id="group_by_cabang_2" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Brand</th>
+        </tr>
+        <tr>
+          <% @cabang_get_id_to_22.each do |cabang| %>
+            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..6).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..12).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% Merk.all.each do |merk| %>
+          <tr>
+            <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk, :from => params[:from], :to => params[:to]) %></td>
             <!-- Yogyakarta -->
             <% LaporanCabang.sum_of_brand(10, merk.Merk, params[:from], params[:to]).each do |a| %>
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
@@ -122,5 +157,10 @@
         <% end %>
       </tbody>
     </table>
+		</br>
+		<% LaporanCabang.calculation_by_date(params[:from], params[:to]).each do |calc| %>
+			<h2>Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
+			<h2>Total of Quantity : <%= calc.sum_jumlah.to_i %></h2>
+		<% end %>
   <% end %>
 <% end %>

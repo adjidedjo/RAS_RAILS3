@@ -1,4 +1,9 @@
 class StockController < ApplicationController
+
+	def special_size
+		@get_stock = Stock.check_stock(params[:date]).group("kodebrg") unless params[:date].nil?
+	end
+
   def index
     @id_cabang = Cabang.get_id
     @get_stock = Stock.check_stock(params[:date]).group("kodebrg") unless params[:date].nil?

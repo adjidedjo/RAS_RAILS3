@@ -3,9 +3,17 @@ class Cabang < ActiveRecord::Base
   has_many :stock
   has_many :barang,  :through => :stock
   has_many :laporan_cabang
-  
+
   def self.get_id
     find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 19, 20, 22)
   end
-  
+
+  def self.get_id_to_7
+    find(2, 3, 4, 5, 7, 8, 9)
+  end
+
+	def self.get_id_to_22
+    find(10, 11, 13, 19, 20, 22)
+  end
+
 end

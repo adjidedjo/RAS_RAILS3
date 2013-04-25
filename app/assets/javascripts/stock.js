@@ -20,7 +20,7 @@ $(document).ready(function(){
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
 
-    $('#stock').dataTable({
+		$('#special_size').dataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         iDisplayLength: 10,
@@ -60,7 +60,55 @@ $(document).ready(function(){
             type: "checkbox"
         },
         {
-            sSelector: "#ukuran",
+            sSelector: "#panjang",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#lebar",
+            type: "checkbox"
+        },
+				null,
+				null
+        ]
+    });
+
+    $('#stock').dataTable({
+        bJQueryUI: true,
+        sPaginationType: "full_numbers",
+        iDisplayLength: 10,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    }).columnFilter({
+        sPlaceHolder: "head:before",
+        aoColumns: [
+				{
+            sSelector: "#cabang",
+            type: "checkbox"
+        },
+				{
+            sSelector: "#jenis",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#brand",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#artikel",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#kain",
             type: "checkbox"
         }
         ]

@@ -1,0 +1,89 @@
+<br /><h1>Annual Sales Report by Brand Categories Size</h1><br />
+<%= form_tag laporan_cabang_group_by_merk_size_path, :method => 'get' do %>
+  <p>
+    <br />
+    <%= label_tag 'From' %>
+    <%= text_field_tag 'from', nil, :class => "input_form"  %>
+  </p><br />
+  <p>
+    <%= label_tag 'To' %>
+    <%= text_field_tag 'to', nil, :class => "input_form" %>
+  </p>
+  <br /><br />
+  <p>
+    <%= submit_tag "Search", :class => "button" %>
+  </p>
+<% end %>
+<br />
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Annual Branches Sales Report by Brand Categories Size Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br />
+    <br />
+		<table border="1" id="group_by_customer" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Branches</th>
+        </tr>
+        <tr>
+          <th colspan="2">90</th>
+					<th colspan="2">100</th>
+					<th colspan="2">120</th>
+					<th colspan="2">160</th>
+					<th colspan="2">180</th>
+					<th colspan="2">200</th>
+					<th colspan="2">Tanggung</th>
+        </tr>
+        <tr>
+          <% (1..7).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..14).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+      	<% @cabang_get_id.each do |cabang| %>
+					<tr>
+            <td><%= cabang.Cabang.gsub(/Cabang/, "") %></td>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "090", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "100", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "120", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "160", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "180", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "200", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+							<% cabang.laporan_cabang.get_brand_size(params[:merk_id], "T", params[:from], params[:to]).each do |es| %>
+		          	<td><%= es.sum_jumlah.to_i %></td>
+		          	<td><%= es.sum_harganetto2.nil? ? 0 : currency(es.sum_harganetto2) %></td>
+							<% end %>
+        	</tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>

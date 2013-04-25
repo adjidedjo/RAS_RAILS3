@@ -2,27 +2,28 @@
 <html>
   <head>
     <title>Sales Report</title>
-    <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/redmond/jquery-ui.css", "jquery.multiselect",
+    <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/redmond/jquery-ui.css",
       "demo_page", "demo_table", "demo_table_jui", "reset-min.css", "complete", "dropdown", "dropdown.vertical.rtl", "default" %>
     <%= javascript_include_tag "jquery-1.4.4.min", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js", "jquery.ui.datepicker",
-      "complete", "application", "jquery.multiselect","jquery.dataTables.columnFilter", "TableTools.min", "ZeroClipboard", "rails.validations" %>
+      "complete", "application","jquery.dataTables.columnFilter", "TableTools.min", "ZeroClipboard" %>
     <%= csrf_meta_tags %>
   </head>
   <body>
     <div>
       <ul id="nav" class="dropdown dropdown-horizontal">
         <% if user_signed_in? %>
-          <li><%= link_to "Penjualan", laporan_cabang_index_path %></li>
-          <li><%= link_to "Stock", stock_index_path %></li>
-          <li><%= link_to "Control Penjualan dan Stock", laporan_cabang_control_branches_sales_path %></li>
-          <li class="dir">Sales Report
+					<li class="dir">Sales Report
 						<ul>
-							<li><%= link_to "Weekly Sales Report", laporan_cabang_weekly_report_path %></li>
-							<li><%= link_to "Weekly Sales Report Comparison", laporan_cabang_comparison_by_year_path %></li>
-							<li><a href="/">Monthly Report QTY</a></li>
+          		<li><%= link_to "Detail", laporan_cabang_index_path %></li>
+							<li><%= link_to "Weekly", laporan_cabang_weekly_report_path %></li>
+							<li><%= link_to "Weekly Comparison", laporan_cabang_comparison_by_year_path %></li>
+							<li><%= link_to "Monthly", laporan_cabang_group_by_cabang_path %></li>
 						</ul>
 					</li>
-          <li><%= link_to "Keluar", destroy_user_session_path %></li>
+          <li><%= link_to "Stock", stock_index_path %></li>
+          <li><%= link_to "Control Sales and Stock", laporan_cabang_control_branches_sales_path %></li>
+
+          <li><%= link_to "Sign Out", destroy_user_session_path %></li>
         <% end %>
       </ul>
     </div>

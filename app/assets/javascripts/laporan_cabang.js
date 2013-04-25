@@ -33,6 +33,126 @@ $(document).ready(function(){
        dateFormat: 'dd-mm-yy'
     }).attr('readonly','readonly');
 
+		$('#monthly_comparison').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iQtyLast = 0;
+            var iQtyCurrent = 0;
+            var iValueLast = 0;
+            var iValueCurrent = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iQtyLast += parseCurrency(aaData[i][1])*1;
+                iValueLast += parseCurrency(aaData[i][2])*1;
+                iQtyCurrent += parseCurrency(aaData[i][3])*1;
+                iValueCurrent += parseCurrency(aaData[i][4])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iQtyLast))
+            nCells[1].innerHTML = addCommas(parseInt(iValueLast))
+            nCells[2].innerHTML = addCommas(parseInt(iQtyCurrent))
+            nCells[3].innerHTML = addCommas(parseInt(iValueCurrent))
+
+            nCells[4].innerHTML = parseInt((iQtyCurrent - iQtyLast) / iQtyLast * 100) + "%"
+            nCells[5].innerHTML = parseInt((iValueCurrent - iValueLast) / iValueLast * 100) + "%"
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+			});
+
+		$('#group_by_customer').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalWeek1 = 0;
+            var iTotalWeek2 = 0;
+            var iTotalWeek3 = 0;
+            var iTotalWeek4 = 0;
+            var iTotalWeek5 = 0;
+            var iTotalWeekS1 = 0;
+            var iTotalWeekS2 = 0;
+            var iTotalWeekS3 = 0;
+            var iTotalWeekS4 = 0;
+            var iTotalWeekS5 = 0;
+            var iTotalWeekLastMonth = 0;
+            var iTotalWeekLastMonthS = 0;
+            var iTotalGrowth = 0;
+            var iTotalGrowthS = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalWeek1 += parseCurrency(aaData[i][1])*1;
+                iTotalWeek2 += parseCurrency(aaData[i][2])*1;
+                iTotalWeek3 += parseCurrency(aaData[i][3])*1;
+                iTotalWeek4 += parseCurrency(aaData[i][4])*1;
+                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
+                iTotalGrowth += parseCurrency(aaData[i][7])*1;
+                iTotalWeekS1 += parseCurrency(aaData[i][8])*1;
+                iTotalWeekS2 += parseCurrency(aaData[i][9])*1;
+                iTotalWeekS3 += parseCurrency(aaData[i][10])*1;
+                iTotalWeekS4 += parseCurrency(aaData[i][11])*1;
+                iTotalWeekS5 += parseCurrency(aaData[i][12])*1;
+                iTotalWeekLastMonthS += parseCurrency(aaData[i][13])*1;
+                iTotalGrowthS += parseCurrency(aaData[i][14])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalWeek1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalWeekS1))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalWeekS2))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalWeekS3))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalWeekS4))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalWeekS5))
+            nCells[12].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
+            nCells[13].innerHTML = addCommas(parseInt(iTotalGrowthS))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
 		$('#weekly_report_sales').dataTable({
         bJQueryUI: true,
         iDisplayLength: 30,
@@ -345,7 +465,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#group_by_cabang').dataTable({
+		$('#group_by_cabang_2').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
         iDisplayLength: 10,
@@ -358,57 +478,58 @@ $(document).ready(function(){
              * the pagination)
              */
 
-            var iTotalQtyClassic = 0;
-            var iTotalValueClassic = 0;
-            var iTotalQtyElite = 0;
-            var iTotalValueElite = 0;
 
-            var iTotalQtyLady = 0;
-            var iTotalValueLady = 0;
-            var iTotalQtyRoyal = 0;
-            var iTotalValueRoyal = 0;
-            var iTotalQtySerenity = 0;
-            var iTotalValueSerenity = 0;
-            var iTotalQtyGrand = 0;
-            var iTotalValueGrand = 0;
-            var iTotalAllQty = 0;
-            var iTotalAllValue = 0;
+            var iTotalQtyJogyakarta = 0;
+            var iTotalValueJogyakarta = 0;
+            var iTotalQtyPalembang = 0;
+            var iTotalValuePalembang = 0;
+            var iTotalQtyLampung = 0;
+            var iTotalValueLampung = 0;
+            var iTotalQtyMakasar = 0;
+            var iTotalValueMakasar = 0;
+            var iTotalQtyPekanbaru = 0;
+            var iTotalValuePekanbaru = 0;
+            var iTotalQtyJember = 0;
+            var iTotalValueJember = 0;
 
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalQtyClassic += parseCurrency(aaData[i][1])*1;
-                iTotalQtyElite += parseCurrency(aaData[i][3])*1;
-                iTotalQtyLady += parseCurrency(aaData[i][7])*1;
-                iTotalQtyRoyal += parseCurrency(aaData[i][9])*1;
-                iTotalQtySerenity += parseCurrency(aaData[i][11])*1;
-                iTotalQtyGrand += parseCurrency(aaData[i][5])*1;
 
-                iTotalValueClassic += parseCurrency(aaData[i][2])*1;
-                iTotalValueElite += parseCurrency(aaData[i][4])*1;
-                iTotalValueLady += parseCurrency(aaData[i][8])*1;
-                iTotalValueRoyal += parseCurrency(aaData[i][10])*1;
-                iTotalValueSerenity += parseCurrency(aaData[i][12])*1;
-                iTotalValueGrand += parseCurrency(aaData[i][6])*1;
-
-                iTotalAllQty = iTotalQtyClassic + iTotalQtyElite  + iTotalQtyLady + iTotalQtyRoyal + iTotalQtySerenity + iTotalQtyGrand
-                iTotalAllValue = iTotalValueClassic + iTotalValueElite + iTotalValueLady + iTotalValueRoyal + iTotalValueSerenity + iTotalValueGrand
+                iTotalQtyJogyakarta += parseCurrency(aaData[i][1])*1;
+                iTotalValueJogyakarta += parseCurrency(aaData[i][2])*1;
+                iTotalQtyPalembang += parseCurrency(aaData[i][3])*1;
+                iTotalValuePalembang += parseCurrency(aaData[i][4])*1;
+                iTotalQtyLampung += parseCurrency(aaData[i][5])*1;
+                iTotalValueLampung += parseCurrency(aaData[i][6])*1;
+                iTotalQtyMakasar += parseCurrency(aaData[i][7])*1;
+                iTotalValueMakasar += parseCurrency(aaData[i][8])*1;
+                iTotalQtyPekanbaru += parseCurrency(aaData[i][9])*1;
+                iTotalValuePekanbaru += parseCurrency(aaData[i][10])*1;
+                iTotalQtyJember += parseCurrency(aaData[i][11])*1;
+                iTotalValueJember += parseCurrency(aaData[i][12])*1;
             }
 
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
-            nCells[0].innerHTML = addCommas(parseInt(iTotalQtyClassic) + ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[1].innerHTML = addCommas(parseInt(iTotalValueClassic) + ' ('+ parseInt(iTotalAllValue) +')');
-            nCells[2].innerHTML = addCommas(parseInt(iTotalQtyElite)+ ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[3].innerHTML = addCommas(parseInt(iTotalValueElite)+ ' ('+ parseInt(iTotalAllValue) +')');
 
-            nCells[4].innerHTML = addCommas(parseInt(iTotalQtyGrand)+ ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[5].innerHTML = addCommas(parseInt(iTotalValueGrand)+ ' ('+ parseInt(iTotalAllValue) +')');
-            nCells[6].innerHTML = addCommas(parseInt(iTotalQtyLady)+ ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[7].innerHTML = addCommas(parseInt(iTotalValueLady)+ ' ('+ parseInt(iTotalAllValue) +')');
-            nCells[8].innerHTML = addCommas(parseInt(iTotalQtyRoyal)+ ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[9].innerHTML = addCommas(parseInt(iTotalValueRoyal)+ ' ('+ parseInt(iTotalAllValue) +')');
-            nCells[10].innerHTML = addCommas(parseInt(iTotalQtySerenity)+ ' ('+ parseInt(iTotalAllQty) +')');
-            nCells[11].innerHTML = addCommas(parseInt(iTotalValueSerenity)+ ' ('+ parseInt(iTotalAllValue) +')');
+
+            nCells[0].innerHTML = addCommas(parseInt(iTotalQtyJogyakarta))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalValueJogyakarta))
+
+            nCells[2].innerHTML = addCommas(parseInt(iTotalQtyPalembang))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalValuePalembang))
+
+            nCells[4].innerHTML = addCommas(parseInt(iTotalQtyLampung))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalValueLampung))
+
+            nCells[6].innerHTML = addCommas(parseInt(iTotalQtyMakasar))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalValueMakasar))
+
+            nCells[8].innerHTML = addCommas(parseInt(iTotalQtyPekanbaru))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalValuePekanbaru))
+
+            nCells[10].innerHTML = addCommas(parseInt(iTotalQtyJember))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalValueJember))
 
         },
         oTableTools: {
@@ -422,7 +543,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#group_by_category').dataTable({
+    $('#group_by_cabang').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
         iDisplayLength: 10,
@@ -450,18 +571,6 @@ $(document).ready(function(){
             var iTotalValueSemarang = 0;
             var iTotalQtyCirebon = 0;
             var iTotalValueCirebon = 0;
-            var iTotalQtyJogyakarta = 0;
-            var iTotalValueJogyakarta = 0;
-            var iTotalQtyPalembang = 0;
-            var iTotalValuePalembang = 0;
-            var iTotalQtyLampung = 0;
-            var iTotalValueLampung = 0;
-            var iTotalQtyMakasar = 0;
-            var iTotalValueMakasar = 0;
-            var iTotalQtyPekanbaru = 0;
-            var iTotalValuePekanbaru = 0;
-            var iTotalQtyJember = 0;
-            var iTotalValueJember = 0;
 
             for ( var i=0 ; i<aaData.length ; i++ )
             {
@@ -479,18 +588,6 @@ $(document).ready(function(){
                 iTotalValueSemarang += parseCurrency(aaData[i][12])*1;
                 iTotalQtyCirebon += parseCurrency(aaData[i][13])*1;
                 iTotalValueCirebon += parseCurrency(aaData[i][14])*1;
-                iTotalQtyJogyakarta += parseCurrency(aaData[i][15])*1;
-                iTotalValueJogyakarta += parseCurrency(aaData[i][16])*1;
-                iTotalQtyPalembang += parseCurrency(aaData[i][17])*1;
-                iTotalValuePalembang += parseCurrency(aaData[i][18])*1;
-                iTotalQtyLampung += parseCurrency(aaData[i][19])*1;
-                iTotalValueLampung += parseCurrency(aaData[i][20])*1;
-                iTotalQtyMakasar += parseCurrency(aaData[i][21])*1;
-                iTotalValueMakasar += parseCurrency(aaData[i][22])*1;
-                iTotalQtyPekanbaru += parseCurrency(aaData[i][23])*1;
-                iTotalValuePekanbaru += parseCurrency(aaData[i][24])*1;
-                iTotalQtyJember += parseCurrency(aaData[i][25])*1;
-                iTotalValueJember += parseCurrency(aaData[i][26])*1;
             }
 
             /* Modify the footer row to match what we want */
@@ -515,24 +612,6 @@ $(document).ready(function(){
 
             nCells[12].innerHTML = addCommas(parseInt(iTotalQtyCirebon))
             nCells[13].innerHTML = addCommas(parseInt(iTotalValueCirebon))
-
-            nCells[14].innerHTML = addCommas(parseInt(iTotalQtyJogyakarta))
-            nCells[15].innerHTML = addCommas(parseInt(iTotalValueJogyakarta))
-
-            nCells[16].innerHTML = addCommas(parseInt(iTotalQtyPalembang))
-            nCells[17].innerHTML = addCommas(parseInt(iTotalValuePalembang))
-
-            nCells[18].innerHTML = addCommas(parseInt(iTotalQtyLampung))
-            nCells[19].innerHTML = addCommas(parseInt(iTotalValueLampung))
-
-            nCells[20].innerHTML = addCommas(parseInt(iTotalQtyMakasar))
-            nCells[21].innerHTML = addCommas(parseInt(iTotalValueMakasar))
-
-            nCells[24].innerHTML = addCommas(parseInt(iTotalQtyJember))
-            nCells[25].innerHTML = addCommas(parseInt(iTotalValueJember))
-
-            nCells[22].innerHTML = addCommas(parseInt(iTotalQtyPekanbaru))
-            nCells[23].innerHTML = addCommas(parseInt(iTotalValuePekanbaru))
 
         },
         oTableTools: {
@@ -662,10 +741,6 @@ $(document).ready(function(){
         fnRowCallback: function( nRow, aData, iDisplayIndex ) {
             return nRow;
         },
-        "aoColumnDefs": [{
-            "bVisible": false,
-            "aTargets": [2]
-        }],
         "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -689,12 +764,12 @@ $(document).ready(function(){
             }
 
             var nCells = nRow.getElementsByTagName('td');
-            nCells[10].innerHTML = addCommas(parseInt(iPageQuantity) + ' ('+ parseInt(iTotalQuantity) +')');
-            nCells[11].innerHTML = addCommas(parseInt(iPageValue) + ' ('+ parseInt(iTotalValue) +')');
+            nCells[11].innerHTML = addCommas(parseInt(iPageQuantity) + ' ('+ parseInt(iTotalQuantity) +')');
+            nCells[12].innerHTML = addCommas(parseInt(iPageValue) + ' ('+ parseInt(iTotalValue) +')');
 
         },
         oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
+            sSwfPath: "/ZeroClipboard.swf",
             aButtons: [
             {
                 "sExtends": "xls",
