@@ -14,6 +14,47 @@ class LaporanCabang < ActiveRecord::Base
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
 # monthly_comparison by brand
+
+	def self.category_customer_comparison(kodebrg, customer, from, to)
+		if customer == 'RETAIL'
+    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ?  and customer not like ? and
+				customer not like ? and customer not like ? and customer not like ?",
+				from, to, %(%#{kodebrg}%), %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'cab'}%)])
+		else
+    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer like ? and customer not like ?",
+				from, to, %(%#{kodebrg}%), %(#{customer}%), %(#{'cab'}%)])
+		end
+	end
+
+	def self.merk_category_comparison(category, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?", from, to, %(%#{category}%), %(#{'cab'}%)])
+	end
+
+	def self.customer_comparison(customer, from, to)
+		if customer == 'RETAIL'
+    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+				:conditions => ["tanggalsj between ? and ? and customer not like ? and
+				customer not like ? and customer not like ? and customer not like ?",
+				from, to, %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'cab'}%)])
+		else
+    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+				:conditions => ["tanggalsj between ? and ? and customer like ? and customer not like ?", from, to, %(%#{customer}%), %(#{'cab'}%)])
+		end
+	end
+
+	def self.type_comparison(product, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?", from, to, %(#{product}%), %(#{'cab'}%)])
+	end
+
+	def self.category_comparison(category, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?", from, to, %(%#{category}%), %(#{'cab'}%)])
+	end
+
 	def self.monthly_comparison_brand(from, to)
     find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
 			:conditions => ["tanggalsj between ? and ?", from, to])
@@ -25,17 +66,24 @@ class LaporanCabang < ActiveRecord::Base
    		0
 	end
 
+	def self.sum_of_brand_type(merk_id, cabang, cat, from, to)
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+			:conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
+        cabang, "#{cat + merk_id}%", %(#{'cab'}%), from.to_date, to.to_date])
+	end
+
 # brand categories by customer2
 
 	def self.get_value_categories_customer(merk_id, customer, from, to)
 		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["kodebrg like ? and customer like ? and tanggalsj between ? and ?", %(%#{merk_id}%), "#{customer}%", from, to])
+			:conditions => ["kodebrg like ? and customer like ? and tanggalsj between ? and ?", %(%#{merk_id}%), %(%#{customer}%), from, to])
 	end
 
 	def self.get_value_categories_customer_retail(merk_id, customer, retail, from, to)
 		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["kodebrg like ? and customer not like ? and customer not like ? and tanggalsj between ? and ?",
-			%(%#{merk_id}%),"#{customer}%", "#{customer}%", from, to])
+			:conditions => ["kodebrg like ? and customer not like ? and customer not like ? and customer not like ? and
+			customer not like ? and tanggalsj between ? and ?",
+			%(%#{merk_id}%), %(%#{'SOGO'}%), %(%#{'SHOWROOM'}%), %(%#{'ES'}%), %(#{'cab'}%), from, to])
 	end
 
 # brand by merk
@@ -43,22 +91,23 @@ class LaporanCabang < ActiveRecord::Base
 	def self.get_brand_size(merk_id, size, from, to)
     	find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
 				:conditions => ["kodebrg like ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        %(%#{size}%), %(%#{merk_id}%), 'cab%', from.to_date, to.to_date])
+        %(%#{size}%), %(%#{merk_id}%), %(#{'cab'}%), from.to_date, to.to_date])
 	end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
-    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2", :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, %(%#{merk}%), 'cab%', from.to_date, to.to_date])
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+			:conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
+        cabang, %(%#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
 	end
 
 # monthly by customer
 	def self.get_value_customer(customer, from, to)
-		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah", :conditions => ["customer like ? and tanggalsj between ? and ?", "#{customer}%", from, to])
+		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah", :conditions => ["customer like ? and tanggalsj between ? and ?", %(%#{customer}%), from, to])
 	end
 
 	def self.get_value_customer_retail(customer, retail, from, to)
 		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah", :conditions => ["customer not like ? and customer not like ? and tanggalsj between ? and ?",
-		"#{customer}%", "#{customer}%", from, to])
+		%(#{customer}%), %(%#{customer}%), from, to])
 	end
 
 # weekly sales report performance
@@ -81,7 +130,12 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.calculation_by_date(from, to)
 		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ?", from, to])
+			:conditions => ["tanggalsj between ? and ? and customer not like ?", from, to, %(#{'cab'}%)])
+	end
+
+	def self.calculation_by_date_merk(merk_id, from, to)
+		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["kodebrg like ? and tanggalsj between ? and ? and customer not like ?", %(%#{merk_id}%), from, to, %(%#{'cab'}%)])
 	end
 
 	def self.get_customers_from_last_year(last_year_date, date_today)
@@ -98,14 +152,14 @@ class LaporanCabang < ActiveRecord::Base
 # ----------
 
   def self.sum_of_brand(cabang, merk, from, to)
-    find(:all, :conditions => ["cabang_id = ? and jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, merk, 'cab%', from.to_date, to.to_date],
+    find(:all, :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
+        cabang, %(%#{merk}%), %(#{'cab'}%), from.to_date, to.to_date],
       :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
   end
 
 	def self.sum_of_category(cabang, cat, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2", :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, "%#{cat}%", 'cab%', from.to_date, to.to_date])
+        cabang, %(%#{cat}%), %(#{'cab'}%), from.to_date, to.to_date])
   end
 
   def self.jenisbrgdisc_by_user(from, to, user)
@@ -123,11 +177,11 @@ class LaporanCabang < ActiveRecord::Base
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
         :group => "customer, kodebrg", :limit => 5000, :conditions => ["jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
-          "Classic", 'cab%', from.to_date, to.to_date])
+          "Classic", %(#{'cab'}%), from.to_date, to.to_date])
     else
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-        :group => "customer, kodebrg", :limit => 5000, :conditions => ["customer not like ? and tanggalsj between ? and ?", 'cab%',
+        :group => "customer, kodebrg", :limit => 5000, :conditions => ["customer not like ? and tanggalsj between ? and ?", %(#{'cab'}%),
           from.to_date, to.to_date])
     end
   end
@@ -160,7 +214,7 @@ class LaporanCabang < ActiveRecord::Base
 		find(:all,:select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
         :group => "customer, kodebrg", :limit => 5000, :conditions => ["kodebrg like ? and customer not REGEXP ? and customer not REGEXP ? and customer not like ?
-				and tanggalsj between ? and ?", %(%#{merk_id}%),%(^#{customer}), %(^#{customer2}), %(%SHOWROOM%), from.to_date, to.to_date])
+				and tanggalsj between ? and ?", %(%#{merk_id}%),%(^#{customer}), %(^#{customer2}), %(#{'SHOWROOM'}%), from.to_date, to.to_date])
 	end
 
 	def self.conditional_detail(merk_id, from, to, user, customer, customer2)

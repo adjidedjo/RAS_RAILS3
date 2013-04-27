@@ -92,55 +92,37 @@ $(document).ready(function(){
              * the pagination)
              */
 
-            var iTotalWeek1 = 0;
-            var iTotalWeek2 = 0;
-            var iTotalWeek3 = 0;
-            var iTotalWeek4 = 0;
-            var iTotalWeek5 = 0;
-            var iTotalWeekS1 = 0;
-            var iTotalWeekS2 = 0;
-            var iTotalWeekS3 = 0;
-            var iTotalWeekS4 = 0;
-            var iTotalWeekS5 = 0;
-            var iTotalWeekLastMonth = 0;
-            var iTotalWeekLastMonthS = 0;
-            var iTotalGrowth = 0;
-            var iTotalGrowthS = 0;
+            var iTotalRow1 = 0;
+            var iTotalRow2 = 0;
+            var iTotalRow3 = 0;
+            var iTotalRow4 = 0;
+            var iTotalRow5 = 0;
+            var iTotalRow6 = 0;
+            var iTotalRow7 = 0;
+            var iTotalRow8 = 0;
 
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalWeek1 += parseCurrency(aaData[i][1])*1;
-                iTotalWeek2 += parseCurrency(aaData[i][2])*1;
-                iTotalWeek3 += parseCurrency(aaData[i][3])*1;
-                iTotalWeek4 += parseCurrency(aaData[i][4])*1;
-                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
-                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
-                iTotalGrowth += parseCurrency(aaData[i][7])*1;
-                iTotalWeekS1 += parseCurrency(aaData[i][8])*1;
-                iTotalWeekS2 += parseCurrency(aaData[i][9])*1;
-                iTotalWeekS3 += parseCurrency(aaData[i][10])*1;
-                iTotalWeekS4 += parseCurrency(aaData[i][11])*1;
-                iTotalWeekS5 += parseCurrency(aaData[i][12])*1;
-                iTotalWeekLastMonthS += parseCurrency(aaData[i][13])*1;
-                iTotalGrowthS += parseCurrency(aaData[i][14])*1;
+                iTotalRow1 += parseCurrency(aaData[i][1])*1;
+                iTotalRow2 += parseCurrency(aaData[i][2])*1;
+                iTotalRow3 += parseCurrency(aaData[i][3])*1;
+                iTotalRow4 += parseCurrency(aaData[i][4])*1;
+                iTotalRow5 += parseCurrency(aaData[i][5])*1;
+                iTotalRow6 += parseCurrency(aaData[i][6])*1;
+                iTotalRow7 += parseCurrency(aaData[i][7])*1;
+                iTotalRow8 += parseCurrency(aaData[i][8])*1;
             }
 
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
-            nCells[0].innerHTML = addCommas(parseInt(iTotalWeek1))
-            nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
-            nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
-            nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
-            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
-            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
-            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
-            nCells[7].innerHTML = addCommas(parseInt(iTotalWeekS1))
-            nCells[8].innerHTML = addCommas(parseInt(iTotalWeekS2))
-            nCells[9].innerHTML = addCommas(parseInt(iTotalWeekS3))
-            nCells[10].innerHTML = addCommas(parseInt(iTotalWeekS4))
-            nCells[11].innerHTML = addCommas(parseInt(iTotalWeekS5))
-            nCells[12].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
-            nCells[13].innerHTML = addCommas(parseInt(iTotalGrowthS))
+            nCells[0].innerHTML = addCommas(parseInt(iTotalRow1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalRow2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalRow3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalRow4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalRow5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalRow6))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalRow7))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalRow8))
 
         },
         oTableTools: {
@@ -219,7 +201,7 @@ $(document).ready(function(){
 
         },
         oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
+            sSwfPath: "media/dataTables/extras/swf/copy_csv_xls.swf",
             aButtons: [
             {
                 "sExtends": "xls",
@@ -288,7 +270,7 @@ $(document).ready(function(){
 
         },
         oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
+            sSwfPath: "<%= asset_path('copy_csv_xls.swf')%>",
             aButtons: [
             {
                 "sExtends": "xls",
@@ -336,7 +318,7 @@ $(document).ready(function(){
 
         },
         oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
+            sSwfPath: "<%= asset_path('copy_csv_xls.swf')%>",
             aButtons: [
             {
                 "sExtends": "xls",
@@ -475,7 +457,7 @@ $(document).ready(function(){
 		$('#group_by_cabang_2').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
-        iDisplayLength: 10,
+        iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
@@ -554,7 +536,7 @@ $(document).ready(function(){
     $('#group_by_cabang').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
-        iDisplayLength: 10,
+        iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
@@ -780,7 +762,7 @@ $(document).ready(function(){
 
         },
         oTableTools: {
-            sSwfPath: "/ZeroClipboard.swf",
+            sSwfPath: "/copy_csv_xls.swf",
             aButtons: [
             {
                 "sExtends": "xls",

@@ -10,6 +10,6 @@
 //= require complete
 //= require jquery.dataTables.columnFilter
 //= require jquery.dataTables
-//= require TableTools.min
-//= require ZeroClipboard
+//= require dataTables/extras/TableTools
+//= require dataTables/extras/ZeroClipboard
 //= require_tree .

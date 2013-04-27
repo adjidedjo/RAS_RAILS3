@@ -1,4 +1,4 @@
-<br /><h1>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Brand Customer Report</h1><br />
+<br /><h1>Sales Report by Customer</h1><br />
 <%= form_tag laporan_cabang_group_by_customer_path, :method => 'get' do %>
   <p>
     <br />
@@ -18,10 +18,10 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
     <form id="radio_button_form" style="width: 1300px; height: 43px">
-      <p style="position: absolute; right: 600px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Compare</button>".html_safe, laporan_cabang_group_category_customer_comparison_path(:merk_id => params[:merk_id], :from => params[:from], :to => params[:to] ), :method => :get %></p>
+      <p style="position: absolute; right: 600px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Compare</button>".html_safe, laporan_cabang_monthly_customer_comparison_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
     </form>
 		<br />
-    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Brand Customer Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales Report by Customer Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
 		<table border="1" id="group_by_customer" class="display">
@@ -30,10 +30,10 @@
           <th rowspan="3">Customers</th>
         </tr>
         <tr>
-          <th colspan="2"><%= link_to 'ES', laporan_cabang_index_path(:merk_id => params[:merk_id], :customer => "ES", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SOGO', laporan_cabang_index_path(:merk_id => params[:merk_id], :customer => "SOGO", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SHOWROOM', laporan_cabang_index_path(:merk_id => params[:merk_id], :customer => "SHOWROOM", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'RETAIL', laporan_cabang_index_path(:merk_id => params[:merk_id], :customer => "ES", :customer2 => "SOGO",:from => params[:from], :to => params[:to]) %></th>
+          <th colspan="2"><%= link_to 'ES', laporan_cabang_index_path(:customer => "ES", :from => params[:from], :to => params[:to]) %></th>
+					<th colspan="2"><%= link_to 'SOGO', laporan_cabang_index_path(:customer => "SOGO", :from => params[:from], :to => params[:to]) %></th>
+					<th colspan="2"><%= link_to 'SHOWROOM', laporan_cabang_index_path(:customer => "SHOWROOM", :from => params[:from], :to => params[:to]) %></th>
+					<th colspan="2"><%= link_to 'RETAIL', laporan_cabang_index_path(:customer => "ES", :customer2 => "SOGO",:from => params[:from], :to => params[:to]) %></th>
         </tr>
         <tr>
           <% (1..4).each do %>
@@ -54,19 +54,19 @@
       	<% @cabang_get_id.each do |cabang| %>
 					<tr>
             <td><%= cabang.Cabang.gsub(/Cabang/, "") %></td>
-						<% cabang.laporan_cabang.get_value_categories_customer(params[:merk_id], "ES", params[:from], params[:to]).each do |es| %>
+						<% cabang.laporan_cabang.get_value_customer("ES", params[:from], params[:to]).each do |es| %>
 		          <td><%= es.sum_jumlah.nil? ? "0" : es.sum_jumlah.to_i %></td>
               <td><%= es.sum_harganetto2.nil? ? "0" : currency(es.sum_harganetto2) %></td>
 						<% end %>
-           <% cabang.laporan_cabang.get_value_categories_customer(params[:merk_id], "SOGO", params[:from], params[:to]).each do |sogo| %>
+           <% cabang.laporan_cabang.get_value_customer("SOGO", params[:from], params[:to]).each do |sogo| %>
 		          <td><%= sogo.sum_jumlah.nil? ? "0" : sogo.sum_jumlah.to_i %></td>
               <td><%= sogo.sum_harganetto2.nil? ? "0" : currency(sogo.sum_harganetto2) %></td>
 						<% end %>
-           <% cabang.laporan_cabang.get_value_categories_customer(params[:merk_id], "SHOWROOM", params[:from], params[:to]).each do |showroom| %>
+           <% cabang.laporan_cabang.get_value_customer("SHOWROOM", params[:from], params[:to]).each do |showroom| %>
 		          <td><%= showroom.sum_jumlah.nil? ? "0" : showroom.sum_jumlah.to_i %></td>
               <td><%= showroom.sum_harganetto2.nil? ? "0" : currency(showroom.sum_harganetto2) %></td>
 						<% end %>
-            <% cabang.laporan_cabang.get_value_categories_customer_retail(params[:merk_id], "ES", "SOGO", params[:from], params[:to]).each do |retail| %>
+            <% cabang.laporan_cabang.get_value_customer_retail("ES", "SOGO", params[:from], params[:to]).each do |retail| %>
 		          <td><%= retail.sum_jumlah.nil? ? "0" : retail.sum_jumlah.to_i %></td>
               <td><%= retail.sum_harganetto2.nil? ? "0" : currency(retail.sum_harganetto2) %></td>
 						<% end %>

@@ -1,5 +1,33 @@
 class LaporanCabangController < ApplicationController
 
+
+	def group_category_type_comparison
+		group_categories_comparison
+	end
+
+	def group_category_customer_comparison
+		group_categories_comparison
+	end
+
+	def group_categories_comparison
+		monthly_category_comparison
+		@brand = Brand.brand_id(params[:merk_id])
+	end
+
+	def monthly_customer_comparison
+		monthly_comparison
+	end
+
+	def monthly_type_comparison
+		monthly_comparison
+		@product = Product.all
+	end
+
+	def monthly_category_comparison
+		monthly_comparison
+		@brand = Brand.all
+	end
+
 	def monthly_comparison
 		@cabang_get_id = Cabang.get_id
 		@qty_last = 0
@@ -29,6 +57,11 @@ class LaporanCabangController < ApplicationController
   def control_branches_sales
     @dates = params[:from].to_date..params[:to].to_date unless params[:from].nil? && params[:to].nil?
     @cabang_get_id = Cabang.get_id
+  end
+
+  def group_by_merk_type
+		group_by_type
+		@kodebrg = LaporanCabang.query_by_date(params[:from], params[:to])
   end
 
   def group_by_merk_size
