@@ -1,0 +1,71 @@
+<br /><h1>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Customer Comparison Report</h1><br />
+<%= form_tag laporan_cabang_monthly_customer_comparison_path, :method => 'get' do %>
+  <p>
+    <br />
+    <%= label_tag 'From' %>
+    <%= text_field_tag 'from', nil, :class => "input_form"  %>
+  </p><br />
+  <p>
+    <%= label_tag 'To' %>
+    <%= text_field_tag 'to', nil, :class => "input_form" %>
+  </p>
+  <br /><br />
+  <p>
+    <%= submit_tag "Search", :class => "button" %>
+  </p>
+<% end %>
+<br />
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+    </form>
+		<br />
+<h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Customer Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br /><br />
+		<table id="monthly_comparison" class="pretty">
+		  <thead>
+		    <tr>
+		      <th rowspan="3">Customer</th>
+		      <th colspan="6">Comparison</th>
+		    </tr>
+		    <tr>
+		      <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+		      <th colspan="2"><%= params[:to].to_date.year  %></th>
+					<th colspan="2">Growth</th>
+		    </tr>
+		    <tr>
+				<% (1..3).each do |a| %>
+		      <th>QTY</th>
+		      <th>Value</th>
+				<% end %>
+		    </tr>
+		  </thead>
+		  <tfoot>
+		    <tr>
+		      <th scope="row">Total</th>
+		      <% (1..6).each do  %>
+		        <td></td>
+		      <% end %>
+		    </tr>
+		  </tfoot>
+		  <tbody>
+		    <% ["ES","SHOWROOM","SOGO","RETAIL"].each do |customer| %>
+		      <tr>
+		        <th scope="row"><%= customer %></th>
+							<% LaporanCabang.category_customer_comparison(params[:merk_id], customer, @from_last_year, @to_last_year).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_last) %></td>
+							<% end %>
+							<% LaporanCabang.category_customer_comparison(params[:merk_id], customer, params[:from], params[:to]).each do |a| %>
+								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_current) %></td>
+							<% end %>
+							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+	<% end %>
+<% end %>
