@@ -33,6 +33,81 @@ $(document).ready(function(){
        dateFormat: 'dd-mm-yy'
     }).attr('readonly','readonly');
 
+		$('#group_by_size_comparison').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        "fnFooterCallback": function ( nRow, aaData ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+            var iTotalRow1 = 0;
+            var iTotalRow2 = 0;
+            var iTotalRow3 = 0;
+            var iTotalRow4 = 0;
+            var iTotalRow5 = 0;
+            var iTotalRow6 = 0;
+            var iTotalRow7 = 0;
+            var iTotalRow8 = 0;
+            var iTotalRow9 = 0;
+            var iTotalRow10 = 0;
+            var iTotalRow11 = 0;
+            var iTotalRow12 = 0;
+            var iTotalRow13 = 0;
+            var iTotalRow14 = 0;
+
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalRow1 += parseCurrency(aaData[i][1])*1;
+                iTotalRow2 += parseCurrency(aaData[i][2])*1;
+                iTotalRow3 += parseCurrency(aaData[i][3])*1;
+                iTotalRow4 += parseCurrency(aaData[i][4])*1;
+                iTotalRow5 += parseCurrency(aaData[i][5])*1;
+                iTotalRow6 += parseCurrency(aaData[i][6])*1;
+                iTotalRow7 += parseCurrency(aaData[i][7])*1;
+                iTotalRow8 += parseCurrency(aaData[i][8])*1;
+                iTotalRow9 += parseCurrency(aaData[i][9])*1;
+                iTotalRow10 += parseCurrency(aaData[i][10])*1;
+                iTotalRow11 += parseCurrency(aaData[i][11])*1;
+                iTotalRow12 += parseCurrency(aaData[i][12])*1;
+                iTotalRow13 += parseCurrency(aaData[i][13])*1;
+                iTotalRow14 += parseCurrency(aaData[i][14])*1;
+            }
+
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('td');
+            nCells[0].innerHTML = addCommas(parseInt(iTotalRow1))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalRow2))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalRow3))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalRow4))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalRow5))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalRow6))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalRow7))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalRow8))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalRow9))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalRow10))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalRow11))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalRow12))
+            nCells[12].innerHTML = addCommas(parseInt(iTotalRow13))
+            nCells[13].innerHTML = addCommas(parseInt(iTotalRow14))
+
+        },
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+								"sFileName": "*.xlsx",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    });
+
 		$('#monthly_comparison').dataTable({
         bJQueryUI: true,
         iDisplayLength: 30,

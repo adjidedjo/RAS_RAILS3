@@ -12,8 +12,6 @@
 <% end %>
 <br />
 <% unless params[:date].nil? %>
-  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-  <br /><br />
   <form id="placeholder_datatables_stock" style="width: 1300px; height: 43px">
 		<p id="cabang" style="position: absolute; right: 827px; top: 2px"></p>
 		<p id="jenis" style="position: absolute; right: 751px; top: 2px"></p>
@@ -24,6 +22,8 @@
     <p id="lebar" style="position: absolute; right: 346px; top: 2px "></p>
   </form>
   <br />
+  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Under Size Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+  <br /><br />
   <table id="special_size" class="display">
     <thead>
       <tr>
@@ -36,6 +36,7 @@
         <th>Lebar</th>
         <th>Freestock</th>
         <th>Bufferstock</th>
+        <th>Realstock</th>
       </tr>
     </thead>
     <tfoot>
@@ -53,6 +54,7 @@
 		        <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
 		        <th scope="row"><%= stock.freestock %></th>
 		        <th scope="row"><%= stock.bufferstock %></th>
+		        <th scope="row"><%= stock.realstock %></th>
 		      </tr>
 				<% end %>
       <% end %>

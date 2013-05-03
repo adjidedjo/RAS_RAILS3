@@ -12,53 +12,65 @@
 <% end %>
 <br />
 <% unless params[:date].nil? %>
-  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Laporan Stock Tanggung <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-  <br /><br />
   <form id="placeholder_datatables_stock" style="width: 1300px; height: 43px">
 		<p id="cabang" style="position: absolute; right: 827px; top: 2px"></p>
 		<p id="jenis" style="position: absolute; right: 751px; top: 2px"></p>
     <p id="brand" style="position: absolute; right: 672px; top: 2px"></p>
     <p id="artikel" style="position: absolute; right: 588px; top: 2px "></p>
     <p id="kain" style="position: absolute; right: 519px; top: 2px "></p>
-    <p id="ukuran" style="position: absolute; right: 430px; top: 2px "></p>
-		<p style="position: absolute; right: 675px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style='left: 260px'>Tanggung</button>".html_safe, stock_special_size_path(:date => params[:date]), :method => :get %></p>
+		<p style="position: absolute; right: 417px; top: 2px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Tanggung</button>".html_safe, stock_special_size_path(:date => params[:date]), :method => :get %></p>
   </form>
   <br />
+  <h2 style="font-size: 20px; position: absolute; left: 543px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+  <br /><br />
   <table id="stock" class="display">
     <thead>
       <tr>
-        <th rowspan="2">Cabang</th>
-        <th rowspan="2">Jenis</th>
-        <th rowspan="2">Brand</th>
-        <th rowspan="2">Artikel</th>
-        <th rowspan="2">Kain</th>
-        <th colspan="15">Annual Stock Branches Report</th>
+        <th rowspan="3">Cabang</th>
+        <th rowspan="3">Jenis</th>
+        <th rowspan="3">Brand</th>
+        <th rowspan="3">Artikel</th>
+        <th rowspan="3">Kain</th>
       </tr>
       <tr>
-        <th>90</th>
-        <th>100</th>
-        <th>120</th>
-        <th>160</th>
-        <th>180</th>
-        <th>200</th>
+      	<th colspan="3">90</th>
+      	<th colspan="3">100</th>
+      	<th colspan="3">120</th>
+      	<th colspan="3">160</th>
+      	<th colspan="3">180</th>
+      	<th colspan="3">200</th>
+      </tr>
+      <tr>
+				<% (1..6).each do %>
+					<th>FS</th>
+					<th>BS</th>
+					<th>RS</th>
+				<% end %>
       </tr>
     </thead>
     <tfoot>
     </tfoot>
     <tbody>
-      <% @get_stock.map do |stock| %>
+      <% @task_months.each do |test, stocks| %>
         <tr>
-					<th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
-          <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
-          <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
-          <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
-          <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
-          <td><%= stock.kodebrg.slice(15..17) == "090" ? (stock.freestock + stock.bufferstock) : "" %></td>
-					<td><%= stock.kodebrg.slice(15..17) == "100" ? (stock.freestock + stock.bufferstock) : "" %></td>
-					<td><%= stock.kodebrg.slice(15..17) == "120" ? (stock.freestock + stock.bufferstock) : "" %></td>
-					<td><%= stock.kodebrg.slice(15..17) == "160" ? (stock.freestock + stock.bufferstock) : "" %></td>
-					<td><%= stock.kodebrg.slice(15..17) == "180" ? (stock.freestock + stock.bufferstock) : "" %></td>
-					<td><%= stock.kodebrg.slice(15..17) == "200" ? (stock.freestock + stock.bufferstock) : "" %></td>
+					<th scope="row"><%= Cabang.find_by_id(test[1]).Cabang.gsub(/Cabang/, "") %></th>
+          <td scope="row"><%= Product.product_name(test[0].slice(0..1)).first.Namaroduk unless Product.product_name(test[0].slice(0..1)).first.nil? %></th>
+          <td scope="row"><%= Merk.merk_name(test[0].slice(2)).first.Merk unless Merk.merk_name(test[0].slice(2)).first.nil? %></th>
+          <td scope="row"><%= Artikel.artikel_name(test[0].slice(2..5)).first.Produk unless Artikel.artikel_name(test[0].slice(2..5)).first.nil? %></th>
+          <td scope="row"><%= Kain.kain_name(test[0].slice(6..10)).first.NamaKain unless Kain.kain_name(test[0].slice(6..10)).first.nil? %></th>
+				  <% ["090","100","120","160","180","200"].each do |size| %>
+				  	<% if Stock.get_size_qty(test[0], test[1], params[:date], size).empty? %>
+				  		<td>-</td>
+				  		<td>-</td>
+				  		<td>-</td>
+				  	<% else %>
+							<% Stock.get_size_qty(test[0], test[1], params[:date], size).each do |qty| %>
+								<td><%= qty.freestock  %></td>
+								<td><%= qty.bufferstock  %></td>
+								<td><%= qty.realstock  %></td>
+							<% end %>
+						<% end %>
+				  <% end %>
         </tr>
       <% end %>
     </tbody>

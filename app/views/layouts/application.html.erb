@@ -3,7 +3,8 @@
   <head>
     <title>Sales Report</title>
     <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/redmond/jquery-ui.css",
-      "demo_page", "demo_table", "demo_table_jui", "reset-min.css", "complete", "dropdown", "dropdown.vertical.rtl", "default" %>
+      "demo_page", "demo_table", "demo_table_jui", "reset-min.css", "complete", "dropdown", "dropdown.vertical.rtl", "default",
+      'gmaps4rails' %>
     <%= javascript_include_tag "jquery-1.4.4.min", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js", "jquery.ui.datepicker",
       "complete", "application","jquery.dataTables.columnFilter", "dataTables/extras/TableTools", "dataTables/extras/ZeroClipboard" %>
     <%= csrf_meta_tags %>
@@ -22,7 +23,9 @@
 					</li>
           <li><%= link_to "Stock", stock_index_path %></li>
           <li><%= link_to "Control Sales and Stock", laporan_cabang_control_branches_sales_path %></li>
-
+          <% if current_user.user_brand.slice(0) == "A" %>
+          	<li><%= link_to "Store Maps", store_maps_path %></li>
+					<% end %>
           <li><%= link_to "Sign Out", destroy_user_session_path %></li>
         <% end %>
       </ul>
@@ -33,4 +36,5 @@
     <%= yield %>
 
   </body>
+  <%= yield :scripts %>
 </html>

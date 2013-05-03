@@ -1,4 +1,4 @@
-<br /><h1>Annual Sales Report by Brand Categories Size</h1><br />
+<br /><h1>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Report</h1><br />
 <%= form_tag laporan_cabang_group_by_merk_size_path, :method => 'get' do %>
   <p>
     <br />
@@ -17,10 +17,14 @@
 <br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Annual Branches Sales Report by Brand Categories Size Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <form id="radio_button_form" style="width: 1300px; height: 43px">
+      <p style="position: absolute; right: 600px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Compare</button>".html_safe, laporan_cabang_group_category_size_comparison_path(:merk_id => params[:merk_id], :from => params[:from], :to => params[:to] ), :method => :get %></p>
+    </form>
+		<br />
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
-		<table border="1" id="group_by_customer" class="display">
+		<table border="1" id="group_by_size_comparison" class="display">
       <thead>
         <tr>
           <th rowspan="3">Branches</th>

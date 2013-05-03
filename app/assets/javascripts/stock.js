@@ -75,7 +75,7 @@ $(document).ready(function(){
     $('#stock').dataTable({
         bJQueryUI: true,
         sPaginationType: "full_numbers",
-        iDisplayLength: 10,
+        iDisplayLength: -1,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,

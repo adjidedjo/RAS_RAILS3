@@ -1,5 +1,13 @@
 class LaporanCabangController < ApplicationController
 
+	def group_category_type_comparison
+		group_category_size_comparison
+		@product = Product.all
+	end
+
+	def group_category_size_comparison
+		group_category_type_comparison
+	end
 
 	def group_category_type_comparison
 		group_categories_comparison
@@ -25,7 +33,14 @@ class LaporanCabangController < ApplicationController
 
 	def monthly_category_comparison
 		monthly_comparison
-		@brand = Brand.all
+
+		unless params[:user_brand].nil?
+			if params[:user_brand].slice(0) == "A"
+				@brand = Brand.all
+			else
+				@brand = Brand.where(["KodeBrand like ?", %(#{params[:user_brand].slice(0)}%)])
+			end
+		end
 	end
 
 	def monthly_comparison
@@ -96,7 +111,12 @@ class LaporanCabangController < ApplicationController
 	def group_by_category
     @cabang_get_id_to_7 = Cabang.get_id_to_7
 		@cabang_get_id_to_22 = Cabang.get_id_to_22
-		@brand = Brand.all
+
+		if params[:user_brand].slice(0) == "A"
+			@brand = Brand.all
+		else
+			@brand = Brand.where(["KodeBrand like ?", %(#{params[:user_brand].slice(0)}%)])
+		end
   end
 
 	def weekly_report

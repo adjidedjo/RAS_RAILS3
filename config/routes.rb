@@ -1,5 +1,7 @@
 Rain::Application.routes.draw do
 
+  resources :store_maps
+
   devise_for :users
 
   get "stock/index"
@@ -22,6 +24,7 @@ Rain::Application.routes.draw do
   get "laporan_cabang/group_categories_comparison"
   get "laporan_cabang/group_category_customer_comparison"
   get "laporan_cabang/group_category_type_comparison"
+  get "laporan_cabang/group_category_size_comparison"
   get "laporan_cabang/monthly_comparison"
   get "laporan_cabang/monthly_category_comparison"
   get "laporan_cabang/monthly_type_comparison"

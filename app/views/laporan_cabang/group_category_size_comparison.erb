@@ -1,5 +1,5 @@
-<br /><h1>Sales Comparison Report by Brand</h1><br />
-<%= form_tag laporan_cabang_monthly_comparison_path, :method => 'get' do %>
+<br /><h1>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report</h1><br />
+<%= form_tag laporan_cabang_group_category_size_comparison_path, :method => 'get' do %>
   <p>
     <br />
     <%= label_tag 'From' %>
@@ -17,12 +17,14 @@
 <br />
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-<h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales Comparison Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    </form>
+		<br />
+<h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<table id="monthly_comparison" class="pretty">
 		  <thead>
 		    <tr>
-		      <th rowspan="3">Branches</th>
+		      <th rowspan="3">Size</th>
 		      <th colspan="6">Comparison</th>
 		    </tr>
 		    <tr>
@@ -46,16 +48,15 @@
 		    </tr>
 		  </tfoot>
 		  <tbody>
-		    <% @cabang_get_id.each do |cabang| %>
+		    <% ["90","100","120","160", "180", "200", "Tanggung"].each do |size| %>
 		      <tr>
-		        <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
-		        <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-							<% laporan_cabang_by_cabang.monthly_comparison_brand(@from_last_year, @to_last_year, current_user.user_brand.slice(0)).each do |a| %>
+		        <th scope="row"><%= size %></th>
+							<% LaporanCabang.category_size_comparison(params[:merk_id], size, @from_last_year, @to_last_year).each do |a| %>
 								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
-							<% laporan_cabang_by_cabang.monthly_comparison_brand(params[:from], params[:to], current_user.user_brand.slice(0)).each do |a| %>
+							<% LaporanCabang.category_size_comparison(params[:merk_id], size, params[:from], params[:to]).each do |a| %>
 								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_current) %></td>

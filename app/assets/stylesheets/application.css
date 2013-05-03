@@ -8,6 +8,7 @@
  *= require TableTools
  *= require TableTools_JUI
  *= require jquery.ui.all
+ *= require gmaps4rails
  *= require_tree .
 
 */
@@ -127,7 +128,7 @@ form#user_new
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     position:relative;
     width:300px;
-    height:250px;
+    height:303px;
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 14px;
     font-style: italic;
