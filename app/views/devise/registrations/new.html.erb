@@ -13,6 +13,10 @@
   <div><%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, :class => "input_login" %></div>
 
+  <div><%= f.label :user_brand %><br />
+    <%= f.select :user_brand, options_for_select(["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand"]),
+    	:include_blank => "Select One", :class => "input_login" %></div>
+
   <div><%= f.submit "Sign up", :class => "button" %></div>
   <div class="clear"></div>
 

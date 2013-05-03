@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Address:</b>
+  <%= @store_map.address %>
+</p>
+
+<p>
+  <b>City:</b>
+  <%= @store_map.city %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @store_map.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @store_map.longitude %>
+</p>
+
+<p>
+  <b>Gmaps:</b>
+  <%= @store_map.gmaps %>
+</p>
+
+
+<%= link_to 'Edit', edit_store_map_path(@store_map) %> |
+<%= link_to 'Back', store_maps_path %>

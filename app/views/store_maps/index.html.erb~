@@ -1,0 +1,7 @@
+<br />
+
+<%= gmaps4rails(@store_maps) %>
+
+<br />
+
+<%= link_to 'New Store', new_store_map_path %>
