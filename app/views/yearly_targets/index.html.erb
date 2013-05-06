@@ -1,0 +1,27 @@
+<h1>Listing yearly_targets</h1>
+
+<table>
+  <tr>
+    <th>Cabang</th>
+    <th>Target year</th>
+    <th>Brand</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @yearly_targets.each do |yearly_target| %>
+  <tr>
+    <td><%= yearly_target.cabang_id %></td>
+    <td><%= yearly_target.target_year %></td>
+    <td><%= yearly_target.brand_id %></td>
+    <td><%= link_to 'Show', yearly_target %></td>
+    <td><%= link_to 'Edit', edit_yearly_target_path(yearly_target) %></td>
+    <td><%= link_to 'Destroy', yearly_target, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Yearly target', new_yearly_target_path %>

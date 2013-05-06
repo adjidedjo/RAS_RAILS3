@@ -11,27 +11,37 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :address %><br />
-    <%= f.text_area :address %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name, :class => 'input_form' %>
   </div>
-  <div class="field">
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
+  <br />
+  <div>
+    <%= f.label :address %>
+    <%= f.text_field :address, :class => 'input_form' %>
   </div>
-  <div class="field">
-    <%= f.label :latitude %><br />
-    <%= f.text_field :latitude %>
+  <br />
+  <div>
+    <%= f.label :city %>
+    <%= f.text_field :city, :class => 'input_form' %>
   </div>
-  <div class="field">
-    <%= f.label :longitude %><br />
-    <%= f.text_field :longitude %>
+  <br />
+  <div>
+    <%= f.label :latitude %>
+    <%= f.text_field :latitude, :class => 'input_form' %>
   </div>
-  <div class="field">
-    <%= f.label :gmaps %><br />
-    <%= f.check_box :gmaps %>
+  <br />
+  <div>
+    <%= f.label :longitude %>
+    <%= f.text_field :longitude, :class => 'input_form' %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <br />
+  <div>
+    <%= f.label :gmaps %>
+    <%= f.check_box :gmaps, :class => 'input_form' %>
+  </div>
+  <br />
+  <div>
+    <%= submit_tag "Create", :class => "button_yearly" %>
   </div>
 <% end %>

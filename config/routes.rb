@@ -1,5 +1,11 @@
 Rain::Application.routes.draw do
 
+  resources :yearly_targets
+
+  resources :monthly_targets
+
+  resources :targets
+
   resources :store_maps
 
   devise_for :users

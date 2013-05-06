@@ -74,13 +74,10 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.monthly_comparison_brand(from, to, user_brand)
-		if user_brand == "A"
-    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and customer not like ?", from, to, %(#{'cab'}%)])
-		else
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?", from, to, %(%#{user_brand}%), %(#{'cab'}%)])
-		end
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and customer not like ?
+			and cabang_id = ?", from, to, %(#{'cab'}%)]) if user_brand == "A"
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and left(kodebrg, 3) like ?
+			and customer not like ?", from, to, %(#{user_brand}), %(#{'cab'}%)])
 	end
 
 	def self.growth(last, current)
@@ -132,17 +129,15 @@ class LaporanCabang < ActiveRecord::Base
 
 # weekly sales report performance
 
-	def self.comparison_week(week_1, week_2, week_3, week_4, week_5, week_last_month, get_week_number)
-		if get_week_number == 1 && week_1 != 0
+	def self.comparison_week(week_1, week_2, week_3, week_4, week_last_month, get_week_number, date)
+		if (date.beginning_of_month.cweek - get_week_number) == 4
 			((week_1 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif get_week_number == 2  && week_1 != 0
+		elsif ((date.beginning_of_month.cweek + 1) - get_week_number) == 4
 			((week_2 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif get_week_number == 3  && week_1 != 0
-			((week_3 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif get_week_number == 4  && week_1 != 0
-			((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100
+		elsif ((date.beginning_of_month.cweek + 2) - get_week_number) == 4
+ 			((week_3 - week_last_month.to_i) / week_last_month.to_i) * 100
 		else
-			((week_5 - week_last_month.to_i) / week_last_month.to_i) * 100 unless week_5 != 0
+			((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100
 		end
 		rescue ZeroDivisionError
    		0
@@ -177,9 +172,9 @@ class LaporanCabang < ActiveRecord::Base
 # ----------
 
   def self.sum_of_brand(cabang, merk, from, to)
-    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, %(%#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
+		  find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+				:conditions => ["cabang_id = ? and left(kodebrg, 3) like ? and customer not like ? and tanggalsj between ? and ?",
+				cabang, %(__#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
   end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
@@ -207,7 +202,7 @@ class LaporanCabang < ActiveRecord::Base
     unless user.merk.nil?
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-        :group => "customer, kodebrg", :limit => 5000, :conditions => ["jenisbrgdisc = ? and customer not like ? and tanggalsj between ? and ?",
+        :group => "customer, kodebrg", :limit => 5000, :conditions => ["jenisbrgdisc like ? and customer not like ? and tanggalsj between ? and ?",
           "Classic", %(#{'cab'}%), from.to_date, to.to_date])
     else
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
@@ -265,22 +260,22 @@ class LaporanCabang < ActiveRecord::Base
   end
 
   def self.monthly_sum_last_year(date, jenis)
-    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ? and customer not like ?",
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
         get_last_month_on_last_year(date), 1.year.ago(date), jenis, %(#{'cab'}%) ]).to_i
   end
 
   def self.monthly_sum_current_year(date, jenis)
-    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ? and customer not like ?",
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
         get_last_month_on_current_year(date), date, jenis, %(#{'cab'}%) ]).to_i
   end
 
   def self.yearly_sum_last_year(date, jenis)
-    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ? and customer not like ?",
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
         get_beginning_of_year_on_last_year(date), 1.year.ago(date), jenis, %(#{'cab'}%)]).to_i
   end
 
   def self.yearly_sum_current_year(date, jenis)
-    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc = ? and customer not like ?",
+    sum(:harganetto2, :conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
         get_beginning_of_year_on_current_year(date), date, jenis, %(#{'cab'}%) ]).to_i
   end
 
@@ -321,7 +316,7 @@ class LaporanCabang < ActiveRecord::Base
   end
 
   def self.weekly_sum_last_year(from, to, jenis)
-    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc = ?",
+    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
         %(#{'cab'}%), from, to, jenis ], :order => "id").to_i
   end
 
@@ -365,22 +360,22 @@ class LaporanCabang < ActiveRecord::Base
 
   #calculate week for classic brand
   def self.weekly_sum_last_week_on_last_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc = ?",
+    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
         %(#{'cab'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_last_week_on_current_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc = ?",
+    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
         %(#{'cab'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_week_on_last_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc = ?",
+    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
         %(#{'cab'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_week_on_current_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc = ?",
+    sum(:harganetto2, :conditions => ["customer not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
         %(#{'cab'}%), first_day, last_day, jenis ]).to_i
   end
 

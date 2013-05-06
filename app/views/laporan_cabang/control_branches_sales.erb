@@ -13,7 +13,7 @@
   </p><br />
   <p>
     <%= label_tag 'Category' %>
-    <%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe, 
+    <%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe,
       :prompt => "--Select Category--", :include_blank => false %>
   </p><br /><br />
   <p>
@@ -27,7 +27,7 @@
       <thead>
         <tr>
           <th rowspan="2">Dates</th>
-          <th colspan="13">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
+          <th colspan="14">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
         </tr>
         <tr>
           <th>Bandung</th>
@@ -36,6 +36,7 @@
           <th>Medan</th>
           <th>Surabaya</th>
           <th>Semarang</th>
+          <th>Cirebon</th>
           <th>Yogyakarta</th>
           <th>Palembang</th>
           <th>Lampung</th>

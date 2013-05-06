@@ -1,0 +1,37 @@
+<%= form_for(@yearly_target) do |f| %>
+  <% if @yearly_target.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@yearly_target.errors.count, "error") %> prohibited this yearly_target from being saved:</h2>
+
+      <ul>
+      <% @yearly_target.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :branch %>
+    <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}, { :class => 'input_form' }) %>
+  </div>
+  <br />
+  <div>
+    <%= f.label :target_year %>
+    <%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' }, :class => 'input_form' %>
+  </div>
+  <br />
+  <div>
+    <%= f.label :brand_id %>
+    <%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}, { :class => 'input_form' }) %>
+  </div>
+  <br />
+  </div>
+  <div>
+    <%= f.label :total %>
+    <%= f.number_field :total, :class => 'input_form' %>
+  </div>
+  <p>
+    <%= submit_tag "Create", :class => "button" %>
+  </p>
+<% end %>

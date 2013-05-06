@@ -148,8 +148,8 @@ class LaporanCabangController < ApplicationController
 			@first_day_week_5 = Date.commercial(date.year, date.end_of_month.cweek, 1)
 			@last_day_week_5 = Date.commercial(date.year, date.end_of_month.cweek, 7)
 
-			@first_day_last_month_week = Date.commercial(date.year, (date - 1.months).cweek, 1)
-			@last_day_last_month_week = Date.commercial(date.year, (date - 1.months).cweek, 7)
+			@first_day_last_month_week = Date.commercial(date.year, date.cweek - 4, 1)
+			@last_day_last_month_week = Date.commercial(date.year, date.cweek - 4, 7)
 
 			@last_year_last_day_week = Date.commercial(date.year - 1, date.end_of_month.cweek, 7)
 	end

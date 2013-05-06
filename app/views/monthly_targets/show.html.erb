@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Cabang:</b>
+  <%= @monthly_target.cabang_id %>
+</p>
+
+<p>
+  <b>Target month:</b>
+  <%= @monthly_target.target_month %>
+</p>
+
+<p>
+  <b>Brand:</b>
+  <%= @monthly_target.brand_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_monthly_target_path(@monthly_target) %> |
+<%= link_to 'Back', monthly_targets_path %>

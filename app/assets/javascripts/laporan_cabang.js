@@ -218,6 +218,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -228,12 +229,10 @@ $(document).ready(function(){
             var iTotalWeek2 = 0;
             var iTotalWeek3 = 0;
             var iTotalWeek4 = 0;
-            var iTotalWeek5 = 0;
             var iTotalWeekS1 = 0;
             var iTotalWeekS2 = 0;
             var iTotalWeekS3 = 0;
             var iTotalWeekS4 = 0;
-            var iTotalWeekS5 = 0;
             var iTotalWeekLastMonth = 0;
             var iTotalWeekLastMonthS = 0;
             var iTotalGrowth = 0;
@@ -245,16 +244,14 @@ $(document).ready(function(){
                 iTotalWeek2 += parseCurrency(aaData[i][2])*1;
                 iTotalWeek3 += parseCurrency(aaData[i][3])*1;
                 iTotalWeek4 += parseCurrency(aaData[i][4])*1;
-                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
-                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
-                iTotalGrowth += parseCurrency(aaData[i][7])*1;
-                iTotalWeekS1 += parseCurrency(aaData[i][8])*1;
-                iTotalWeekS2 += parseCurrency(aaData[i][9])*1;
-                iTotalWeekS3 += parseCurrency(aaData[i][10])*1;
-                iTotalWeekS4 += parseCurrency(aaData[i][11])*1;
-                iTotalWeekS5 += parseCurrency(aaData[i][12])*1;
-                iTotalWeekLastMonthS += parseCurrency(aaData[i][13])*1;
-                iTotalGrowthS += parseCurrency(aaData[i][14])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][5])*1;
+                iTotalGrowth += parseCurrency(aaData[i][6])*1;
+                iTotalWeekS1 += parseCurrency(aaData[i][7])*1;
+                iTotalWeekS2 += parseCurrency(aaData[i][8])*1;
+                iTotalWeekS3 += parseCurrency(aaData[i][9])*1;
+                iTotalWeekS4 += parseCurrency(aaData[i][10])*1;
+                iTotalWeekLastMonthS += parseCurrency(aaData[i][11])*1;
+                iTotalGrowthS += parseCurrency(aaData[i][12])*1;
             }
 
             /* Modify the footer row to match what we want */
@@ -263,16 +260,14 @@ $(document).ready(function(){
             nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
             nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
             nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
-            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
-            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
-            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
-            nCells[7].innerHTML = addCommas(parseInt(iTotalWeekS1))
-            nCells[8].innerHTML = addCommas(parseInt(iTotalWeekS2))
-            nCells[9].innerHTML = addCommas(parseInt(iTotalWeekS3))
-            nCells[10].innerHTML = addCommas(parseInt(iTotalWeekS4))
-            nCells[11].innerHTML = addCommas(parseInt(iTotalWeekS5))
-            nCells[12].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
-            nCells[13].innerHTML = addCommas(parseInt(iTotalGrowthS))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalGrowth))
+            nCells[6].innerHTML = addCommas(parseInt(iTotalWeekS1))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalWeekS2))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalWeekS3))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalWeekS4))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
+            nCells[11].innerHTML = addCommas(parseInt(iTotalGrowthS))
 
         },
         oTableTools: {
@@ -293,6 +288,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -303,7 +299,6 @@ $(document).ready(function(){
             var iTotalWeek2 = 0;
             var iTotalWeek3 = 0;
             var iTotalWeek4 = 0;
-            var iTotalWeek5 = 0;
             var iTotalWeekLastMonth = 0;
 						var iTotalGrowth = 0;
             var iTotalAkumulasiThisMonth = 0;
@@ -318,14 +313,13 @@ $(document).ready(function(){
                 iTotalWeek2 += parseCurrency(aaData[i][2])*1;
                 iTotalWeek3 += parseCurrency(aaData[i][3])*1;
                 iTotalWeek4 += parseCurrency(aaData[i][4])*1;
-                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
-                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
-                iTotalGrowth += parseCurrency(aaData[i][7])*1;
-								iTotalAkumulasiThisMonth += parseCurrency(aaData[i][8])*1;
-            		iTotalAkumulasiLastMonth += parseCurrency(aaData[i][9])*1;
-            		iTotalGrowthAkumulasi += parseCurrency(aaData[i][10])*1;
-            		iTotalTarget += parseCurrency(aaData[i][11])*1;
-            		iTotalAcv += parseCurrency(aaData[i][12])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][5])*1;
+                iTotalGrowth += parseCurrency(aaData[i][6])*1;
+								iTotalAkumulasiThisMonth += parseCurrency(aaData[i][7])*1;
+            		iTotalAkumulasiLastMonth += parseCurrency(aaData[i][8])*1;
+            		iTotalGrowthAkumulasi += parseCurrency(aaData[i][9])*1;
+            		iTotalTarget += parseCurrency(aaData[i][10])*1;
+            		iTotalAcv += parseCurrency(aaData[i][11])*1;
             }
 
             /* Modify the footer row to match what we want */
@@ -334,14 +328,13 @@ $(document).ready(function(){
             nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
             nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
             nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
-            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
-            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
-            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
-						nCells[7].innerHTML = addCommas(parseInt(iTotalAkumulasiThisMonth))
-            nCells[8].innerHTML = addCommas(parseInt(iTotalAkumulasiLastMonth))
-            nCells[9].innerHTML = addCommas(parseInt(iTotalGrowthAkumulasi))
-            nCells[10].innerHTML = addCommas(parseInt(iTotalTarget))
-            nCells[11].innerHTML = addCommas(parseInt(iTotalAcv))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalGrowth))
+						nCells[6].innerHTML = addCommas(parseInt(iTotalAkumulasiThisMonth))
+            nCells[7].innerHTML = addCommas(parseInt(iTotalAkumulasiLastMonth))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalGrowthAkumulasi))
+            nCells[9].innerHTML = addCommas(parseInt(iTotalTarget))
+            nCells[10].innerHTML = addCommas(parseInt(iTotalAcv))
 
         },
         oTableTools: {
@@ -362,6 +355,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -410,6 +404,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -420,7 +415,6 @@ $(document).ready(function(){
             var iTotalWeek2 = 0;
             var iTotalWeek3 = 0;
             var iTotalWeek4 = 0;
-            var iTotalWeek5 = 0;
             var iTotalWeekLastMonth = 0;
 						var iTotalGrowth = 0;
 
@@ -430,9 +424,8 @@ $(document).ready(function(){
                 iTotalWeek2 += parseCurrency(aaData[i][2])*1;
                 iTotalWeek3 += parseCurrency(aaData[i][3])*1;
                 iTotalWeek4 += parseCurrency(aaData[i][4])*1;
-                iTotalWeek5 += parseCurrency(aaData[i][5])*1;
-                iTotalWeekLastMonth += parseCurrency(aaData[i][6])*1;
-                iTotalGrowth += parseCurrency(aaData[i][7])*1;
+                iTotalWeekLastMonth += parseCurrency(aaData[i][5])*1;
+                iTotalGrowth += parseCurrency(aaData[i][6])*1;
             }
 
             /* Modify the footer row to match what we want */
@@ -441,9 +434,8 @@ $(document).ready(function(){
             nCells[1].innerHTML = addCommas(parseInt(iTotalWeek2))
             nCells[2].innerHTML = addCommas(parseInt(iTotalWeek3))
             nCells[3].innerHTML = addCommas(parseInt(iTotalWeek4))
-            nCells[4].innerHTML = addCommas(parseInt(iTotalWeek5))
-            nCells[5].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
-            nCells[6].innerHTML = addCommas(parseInt(iTotalGrowth))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalGrowth))
 
         },
         oTableTools: {
@@ -769,6 +761,8 @@ $(document).ready(function(){
             var iTotalCurrentYearMonth = 0;
             var iTotalLastYear = 0;
             var iTotalCurrentYear = 0;
+            var iTotalTargetMonth = 0;
+            var iTotalTargetYear = 0;
 
             for ( var i=0 ; i<aaData.length ; i++ )
             {
@@ -776,6 +770,9 @@ $(document).ready(function(){
                 iTotalCurrentYearMonth += parseCurrency(aaData[i][2])*1;
                 iTotalLastYear += parseCurrency(aaData[i][4])*1;
                 iTotalCurrentYear += parseCurrency(aaData[i][5])*1;
+            		iTotalTargetMonth += parseCurrency(aaData[i][7])*1;
+            		iTotalTargetYear += parseCurrency(aaData[i][9])*1;
+
             }
             var nCells = nRow.getElementsByTagName('td');
             nCells[0].innerHTML = addCommas(parseInt(iTotalLastYearMonth))
@@ -784,6 +781,8 @@ $(document).ready(function(){
             nCells[4].innerHTML = addCommas(parseInt(iTotalCurrentYear))
             nCells[2].innerHTML = parseInt((iTotalCurrentYearMonth - iTotalLastYearMonth) / iTotalLastYearMonth * 100) + "%" ;
             nCells[5].innerHTML = parseInt((iTotalCurrentYear - iTotalLastYear) / iTotalLastYear * 100) + "%" ;
+            nCells[6].innerHTML = addCommas(parseInt(iTotalTargetMonth))
+            nCells[8].innerHTML = addCommas(parseInt(iTotalTargetYear))
 
         },
         oTableTools: {

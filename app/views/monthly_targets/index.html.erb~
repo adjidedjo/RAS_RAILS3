@@ -1,0 +1,28 @@
+<h1>Listing monthly_targets</h1>
+
+<table>
+  <tr>
+    <th>Cabang</th>
+    <th>Target year</th>
+    <th>Target month</th>
+    <th>Brand</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @monthly_targets.each do |monthly_target| %>
+  <tr>
+    <td><%= monthly_target.cabang_id %></td>
+    <td><%= monthly_target.target_month %></td>
+    <td><%= monthly_target.brand_id %></td>
+    <td><%= link_to 'Show', monthly_target %></td>
+    <td><%= link_to 'Edit', edit_monthly_target_path(monthly_target) %></td>
+    <td><%= link_to 'Destroy', monthly_target, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Monthly target', new_monthly_target_path %>

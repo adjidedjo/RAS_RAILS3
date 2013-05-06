@@ -1,0 +1,3 @@
+<h1>New yearly_target</h1>
+
+<%= render 'form' %>
