@@ -1,0 +1,14 @@
+class CreateYearlyTargets < ActiveRecord::Migration
+  def change
+    create_table :yearly_targets do |t|
+      t.integer :cabang_id
+      t.string :target_year
+      t.integer :brand_id
+
+      t.timestamps
+    end
+    add_index :yearly_targets_cabang_id, [:cabang_id]
+    add_index :yearly_targets_target_year, [:target_year]
+    add_index :yearly_targets_brand_id, [:brand_id]
+  end
+end
