@@ -113,6 +113,7 @@ $(document).ready(function(){
         iDisplayLength: 30,
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -528,6 +529,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -607,6 +609,7 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
+        "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside

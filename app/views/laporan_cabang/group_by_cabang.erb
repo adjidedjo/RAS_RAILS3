@@ -72,7 +72,7 @@
 
             <!-- Bandung -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(2, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(2, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -83,7 +83,7 @@
             <% end %>
             <!-- Narogong -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(3, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(3, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -94,7 +94,7 @@
             <% end %>
             <!-- Bali -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(4, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(4, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -105,7 +105,7 @@
             <% end %>
             <!-- Medan -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(5, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(5, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -116,7 +116,7 @@
             <% end %>
             <!-- Surabaya -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(7, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(7, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -127,7 +127,7 @@
             <% end %>
             <!-- Semarang -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(8, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(8, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -138,7 +138,7 @@
             <% end %>
             <!-- Cirebon -->
 						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(9, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(9, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -192,7 +192,7 @@
 
             <!-- Yogyakarta -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(10, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(10, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -203,7 +203,7 @@
             <% end %>
             <!-- Palembang -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(11, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(11, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -214,7 +214,7 @@
             <% end %>
             <!-- Lampung -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(13, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(13, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -225,7 +225,7 @@
             <% end %>
             <!-- Makasar -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(19, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(19, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -236,7 +236,7 @@
             <% end %>
             <!-- Pekanbaru -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(20, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(20, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -247,7 +247,7 @@
             <% end %>
             <!-- Jember -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(22, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+		          <% LaporanCabang.sum_of_brand(22, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>

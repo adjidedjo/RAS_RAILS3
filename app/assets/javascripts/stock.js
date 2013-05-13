@@ -24,7 +24,7 @@ $(document).ready(function(){
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         iDisplayLength: 10,
-        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        "bPaginate": false,
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         oTableTools: {
@@ -76,7 +76,7 @@ $(document).ready(function(){
         bJQueryUI: true,
         sPaginationType: "full_numbers",
         iDisplayLength: -1,
-        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        "bPaginate": false,
         sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         oTableTools: {

@@ -27,6 +27,9 @@ gem 'devise'
 gem 'client_side_validations'
 gem 'thin'
 gem 'gmaps4rails'
+gem "spreadsheet", "~> 0.8.5"
+gem 'axlsx_rails'
+gem 'acts_as_xlsx'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -34,7 +37,9 @@ gem 'gmaps4rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'capistrano-ext'
+gem 'rvm-capistrano'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'

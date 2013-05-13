@@ -1,5 +1,6 @@
 class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
+  acts_as_xlsx
   belongs_to :cabang
 	belongs_to :brand
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
@@ -74,10 +75,13 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.monthly_comparison_brand(from, to, user_brand)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and customer not like ?
-			and cabang_id = ?", from, to, %(#{'cab'}%)]) if user_brand == "A"
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and left(kodebrg, 3) like ?
-			and customer not like ?", from, to, %(#{user_brand}), %(#{'cab'}%)])
+		if user_brand == "A"
+			select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and customer not like ?",
+				from, to, %(#{'cab'}%)])
+		else
+			select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and left(kodebrg, 3) like ?
+				and customer not like ?", from, to, %(__#{user_brand}), %(#{'cab'}%)])
+		end
 	end
 
 	def self.growth(last, current)
@@ -172,20 +176,22 @@ class LaporanCabang < ActiveRecord::Base
 # ----------
 
   def self.sum_of_brand(cabang, merk, from, to)
+  	merk = 'Non Serenity' if merk == 'Elite'
 		  find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-				:conditions => ["cabang_id = ? and left(kodebrg, 3) like ? and customer not like ? and tanggalsj between ? and ?",
-				cabang, %(__#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
+				:conditions => ["cabang_id = ? and jenisbrgdisc like ? and customer not like ? and tanggalsj between ? and ?",
+				cabang, %(#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
   end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
 			:conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, %(%#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
+        cabang, %(__#{merk}%), %(#{'cab'}%), from.to_date, to.to_date])
 	end
 
 	def self.sum_of_category(cabang, cat, from, to)
-    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2", :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
-        cabang, %(%#{cat}%), %(#{'cab'}%), from.to_date, to.to_date])
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+		  :conditions => ["cabang_id = ? and kodebrg like ? and customer not like ? and tanggalsj between ? and ?",
+		  cabang, %(__#{cat}%), %(#{'cab'}%), from.to_date, to.to_date])
   end
 
   def self.jenisbrgdisc_by_user(from, to, user)

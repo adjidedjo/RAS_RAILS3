@@ -130,6 +130,20 @@ class LaporanCabangController < ApplicationController
      	@periode = params[:periode_week].to_date
 			calculation_date_weekly_report(@periode)
     end
+		respond_to do |format|
+			format.html
+			 format.xlsx {
+				xlsx_package = LaporanCabang.to_xlsx
+				begin
+					temp = Tempfile.new("posts.xlsx")
+					xlsx_package.serialize temp.path
+					send_file temp.path, :filename => "posts.xlsx", :type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+				ensure
+					temp.close
+					temp.unlink
+				end
+		 		}
+		end
 	end
 
 	def calculation_date_weekly_report(date)
