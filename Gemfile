@@ -16,6 +16,23 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+group :production do
+ 	gem 'jquery-rails'
+	gem 'jquery-ui-rails'
+	gem 'jquery-datatables-rails'
+	gem 'will_paginate'
+	gem 'ajax-datatables-rails'
+	gem 'execjs'
+	gem 'therubyracer'
+	gem 'devise'
+	gem 'client_side_validations'
+	gem 'thin'
+	gem 'gmaps4rails'
+	gem "spreadsheet", "~> 0.8.5"
+	gem 'axlsx_rails'
+	gem 'acts_as_xlsx'
+end
+
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-datatables-rails'
