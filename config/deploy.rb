@@ -23,11 +23,16 @@ namespace :deploy do
     run "touch #{current_path}/tmp/restart.txt"
   end
 
-  desc "Symlink shared configs and folders on each release."
-  task :symlink_shared do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/assets #{release_path}/public/assets"
+  namespace :assets do
+  task :precompile, :roles => :web do
+    run "cd #{current_path} && RAILS_ENV=production bundle exec rake assets:precompile"
   end
+
+  task :cleanup, :roles => :web do
+    run "cd #{current_path} && RAILS_ENV=production bundle exec rake assets:clean"
+  end
+	end
 end
 
+after :deploy, "assets:precompile"
 after 'deploy:update_code', 'deploy:symlink_shared'
