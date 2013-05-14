@@ -35,5 +35,5 @@ production:
   database: dbmarketing
   pool: 5
   username: root
-  password: yulianto
+  password: royalabadi
   host: localhost
