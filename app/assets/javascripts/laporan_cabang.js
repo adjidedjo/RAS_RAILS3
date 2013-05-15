@@ -899,7 +899,15 @@ $(document).ready(function(){
     });
     $('#table_control_branch').dataTable({
         bJQueryUI: true,
-        sPaginationType: "full_numbers"
+        sPaginationType: "full_numbers",
+        iDisplayLength: 10,
+        bPaginate: false,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        fnRowCallback: function( nRow, aData, iDisplayIndex ) {
+            return nRow;
+        }
     });
 
     function parseCurrency( num ) {
