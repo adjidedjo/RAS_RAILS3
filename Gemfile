@@ -31,7 +31,7 @@ gem "spreadsheet", "~> 0.8.5"
 gem 'axlsx_rails'
 gem 'acts_as_xlsx'
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-#gem "twitter-bootstrap-rails"
+gem "twitter-bootstrap-rails"
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
