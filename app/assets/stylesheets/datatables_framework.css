@@ -38,13 +38,6 @@ h1 {
 /*
  * DataTables framework
  */
-div.dataTables_length {
-	float: left;
-}
-
-div.dataTables_filter {
-	float: right;
-}
 
 div.dataTables_info {
 	padding: 9px 6px 6px 6px;

@@ -1,35 +1,36 @@
-<br /><h1>Annual Sales Detail Report</h1><br />
-<%= form_tag laporan_cabang_index_path, :method => 'get' do %>
-  <p>
-    <br />
-    <%= label_tag 'From' %>
-    <%= text_field_tag 'from', nil, :class => "input_form"  %>
-  </p><br />
-  <p>
-    <%= label_tag 'To' %>
-    <%= text_field_tag 'to', nil, :class => "input_form" %>
-  </p>
-  <br /><br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Annual Sales Detail Report</legend>
+			<label>From</label>
+			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+			<label>To</label>
+			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</fieldset>
+	<% end %>
+</div>
+
 <br />
+<div class="clear"></div>
+
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Annual Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-    <form id="placeholder_datatables" style="width: 1300px; height: 43px">
-      <p id="cabang" style="position: absolute; right: 924px; top: 2px"></p>
-      <p id="customer" style="position: absolute; right: 805px; top: 2px "></p>
-      <p id="brand" style="position: absolute; right: 723px; top: 2px "></p>
-      <p id="tipe" style="position: absolute; right: 654px; top: 2px "></p>
-      <p id="artikel" style="position: absolute; right: 568px; top: 2px "></p>
-      <p id="kain" style="position: absolute; right: 497px; top: 2px "></p>
-      <p id="panjang" style="position: absolute; right: 400px; top: 2px "></p>
-      <p id="lebar" style="position: absolute; right: 320px; top: 2px "></p>
-      <p id="market" style="position: absolute; right: 232px; top: 2px "></p>
-    </form>
+		<div class="offset2">
+			<div class="form-inline">
+		    <label id="cabang"></label>
+		    <label id="customer"></label>
+		    <label id="brand"></label>
+		    <label id="tipe"></label>
+		    <label id="artikel"></label>
+		    <label id="kain"></label>
+		    <label id="panjang"></label>
+		    <label id="lebar"></label>
+		    <label id="market" ></label>
+			</div>
+		</div>
     <br />
     <table border="1" id="laporancabang" class="display" data-source="<%= laporan_cabang_index_path(format: :json) %>">
       <thead>

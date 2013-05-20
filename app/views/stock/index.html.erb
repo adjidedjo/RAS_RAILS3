@@ -1,16 +1,17 @@
-<div class="clear"></div>
-<br /><h1>Stock Cabang</h1><br />
-<%= form_tag stock_index_path, :method => 'get' do %>
-  <br />
-  <p>
-    <%= label_tag 'Date' %>
-    <%= text_field_tag 'date', nil, :class => "input_form"  %>
-  </p><br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag stock_index_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Branches Stock</legend>
+			<%= label_tag 'Date' %>
+			<%= text_field_tag 'date', nil, :placeholder => "Date"  %><br />
+			<button type="submit" class="btn btn-primary">Search</button>
+		</fieldset>
+	<% end %>
+</div>
+
 <br />
+<div class="clear"></div>
+
 <% unless params[:date].nil? %>
   <form id="placeholder_datatables_stock" style="width: 1300px; height: 43px">
 		<p id="cabang" style="position: absolute; right: 827px; top: 2px"></p>

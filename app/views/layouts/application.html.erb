@@ -1,45 +1,66 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Sales Report</title>
-    <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/redmond/jquery-ui.css",
-      "demo_page", "demo_table", "demo_table_jui", "reset-min.css", "complete", "dropdown", "dropdown.vertical.rtl", "default" %>
-    <%= javascript_include_tag "jquery-1.4.4.min", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js", "jquery.ui.datepicker",
-      "complete", "application","jquery.dataTables.columnFilter", "dataTables/extras/TableTools", "dataTables/extras/ZeroClipboard" %>
-    <%= csrf_meta_tags %>
-  </head>
-  <body>
-    <div>
-      <ul id="nav" class="dropdown dropdown-horizontal">
-        <% if user_signed_in? %>
-					<li class="dir">Sales Report
-						<ul>
-          		<li><%= link_to "Detail", laporan_cabang_index_path %></li>
-							<li><%= link_to "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %></li>
-							<li><%= link_to "Weekly Comparison", laporan_cabang_comparison_by_year_path(:periode => Date.today) %></li>
-							<li><%= link_to "Monthly", laporan_cabang_group_by_cabang_path %></li>
-						</ul>
-					</li>
-          <li><%= link_to "Stock", stock_index_path %></li>
-          <li><%= link_to "Control Sales and Stock", laporan_cabang_control_branches_sales_path %></li>
-          <li class="dir">Target
-						<ul>
-          		<li><%= link_to "Monthly", new_monthly_target_path %></li>
-							<li><%= link_to "Yearly", new_yearly_target_path %></li>
-						</ul>
-					</li>
-          <% if current_user.user_brand.slice(0) == "A" %>
-          	<li><%= link_to "Store Maps", store_maps_path %></li>
-					<% end %>
-          <li><%= link_to "Sign Out", destroy_user_session_path %></li>
-        <% end %>
-      </ul>
-    </div>
-    <div class="clear"></div>
-    <div class="clear"></div>
-
-    <%= yield %>
-
-  </body>
-  <%= yield :scripts %>
+<head>
+  <title>Royal Marketing</title>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+  <![endif]-->
+  <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/redmond/jquery-ui.css",
+      "bootstrap.min", "demo_page", "demo_table", "demo_table_jui", "reset-min.css", "complete", "dropdown", "dropdown.vertical.rtl",
+			"default" %>
+  <%= javascript_include_tag "jquery-1.4.4.min", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js",
+			"bootstrap.min", "bootstrap-dropdown", "jquery.ui.datepicker","complete", "application","jquery.dataTables.columnFilter", "dataTables/extras/TableTools", "dataTables/extras/ZeroClipboard" %>
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+		<div class="navbar navbar-static-top">
+		  <div class="navbar-inner">
+		    <div class="container">
+		      <a class="brand"><%= image_tag("logo.jpg", :size => "80x50", :class=>"img-rounded") %></a>
+		  		<%= render 'layouts/user_header' %>
+					<ul id="nav" class="dropdown dropdown-horizontal">
+		      <% if user_signed_in? %>
+		        <li><%= link_to "Stock", stock_index_path %></li>
+		        <li><%= link_to "Control Sales and Stock", laporan_cabang_control_branches_sales_path %></li>
+		        <% if current_user.user_brand.slice(0) == "A" %>
+		        	<li><%= link_to "Store Maps", store_maps_path %></li>
+						<% end %>
+		        <li class="dir">Target
+							<ul>
+		        		<li><%= link_to "Monthly", new_monthly_target_path %></li>
+								<li><%= link_to "Yearly", new_yearly_target_path %></li>
+							</ul>
+						</li>
+						<li class="dir">Sales Report
+							<ul>
+		        		<li><%= link_to "Detail", laporan_cabang_index_path %></li>
+								<li><%= link_to "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %></li>
+								<li><%= link_to "Weekly Comparison", laporan_cabang_comparison_by_year_path(:periode => Date.today) %></li>
+								<li><%= link_to "Monthly", laporan_cabang_group_by_cabang_path %></li>
+							</ul>
+						</li>
+		      <% end %>
+		    	</ul>
+		    </div>
+		  </div>
+		</div>
+			<div class="container">
+					<div class="content">
+						<div class="wrapper">
+						  <div class="proper-content">
+							  <div class="row">
+							    <%= yield %>
+								</div>
+							</div>
+							<div class="push"></div>						
+					  </div>
+						<div class="footer-wrapper">
+							<div class="container">
+								<p class="muted credit">Copyright &copy; 2013 <a href="http://royalabadisejahtera.com/ras/">Royal Abadi Sejahtera</a></p>
+							</div>
+						</div>
+			    </div>
+		  </div>
+</body>
 </html>

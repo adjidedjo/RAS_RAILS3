@@ -1,4 +1,5 @@
-<%= form_for(@yearly_target) do |f| %>
+<div class="form-div">
+	<%= form_for(@yearly_target) do |f| %>
   <% if @yearly_target.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@yearly_target.errors.count, "error") %> prohibited this yearly_target from being saved:</h2>
@@ -10,28 +11,37 @@
       </ul>
     </div>
   <% end %>
+		<legend>Yearly Target</legend>
+			<div class="control-group">
+		  	<%= f.label :branch %>
+				<div class="controls">
+					<%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+				</div>
+			</div>
 
-  <div>
-    <%= f.label :branch %>
-    <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}, { :class => 'input_form' }) %>
-  </div>
-  <br />
-  <div>
-    <%= f.label :target_year %>
-    <%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' }, :class => 'input_form' %>
-  </div>
-  <br />
-  <div>
-    <%= f.label :brand_id %>
-    <%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}, { :class => 'input_form' }) %>
-  </div>
-  <br />
-  </div>
-  <div>
-    <%= f.label :total %>
-    <%= f.number_field :total, :class => 'input_form' %>
-  </div>
-  <p>
-    <%= submit_tag "Create", :class => "button" %>
-  </p>
-<% end %>
+			<div class="control-group">
+		  	<%= f.label :brand_id %>
+				<div class="controls">
+					<%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+				</div>
+			</div>
+
+			<div class="control-group">
+		  	<%= f.label :total %>
+				<div class="controls">
+					<%= f.number_field :total %>
+				</div>
+			</div>
+
+		  <div class="control-group">
+		  	<%= f.label :target_year %>
+				<div class="controls">
+					<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
+				</div>
+			</div>
+			
+			<div class="controls">
+				<%= submit_tag "Create", :class => "btn btn-primary" %>
+		  </div>
+	<% end %>
+</div>

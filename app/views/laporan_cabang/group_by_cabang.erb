@@ -1,38 +1,25 @@
-<br /><h1>Sales Report by Brand</h1><br />
-<%= form_tag laporan_cabang_group_by_cabang_path, :method => 'get' do %>
-  <p>
-    <br />
-    <%= label_tag 'From' %>
-    <%= text_field_tag 'from', nil, :class => "input_form"  %>
-  </p><br />
-  <p>
-    <%= label_tag 'To' %>
-    <%= text_field_tag 'to', nil, :class => "input_form" %>
-  </p>
-  <br /><br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag laporan_cabang_group_by_cabang_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Annual Sales Monthly Report</legend>
+			<%= label_tag 'From' %>
+			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+			<%= label_tag 'To' %>
+			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+			<button type="submit" class="btn btn-primary">Search</button>
+		</fieldset>
+	<% end %>
+</div>
+
 <br />
+<div class="clear"></div>
+
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <form id="radio_button_form" style="width: 1300px; height: 43px">
-      <p style="position: absolute; right: 697px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Compare</button>".html_safe, laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), :method => :get %></p>
-      <p style="position: absolute; right: 593px; top: 4px"><%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Category</button>".html_safe, laporan_cabang_group_by_category_path(:user_brand => current_user.user_brand, :from => params[:from], :to => params[:to] ), :method => :get %></p>
-      <% unless current_user.user_brand != "Admin" %>
-      	<p style="position: absolute; right: 489px; top: 4px">
-      		<%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Type</button>".html_safe, 						laporan_cabang_group_by_type_path(:from => params[:from], :to => params[:to] ), :method => :get %>
-      	</p>
-      	<p style="position: absolute; right: 385px; top: 4px">
-      		<%= link_to "<button class='group_by ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Customer</button>".html_safe, laporan_cabang_group_by_customer_path(:from => params[:from], :to => params[:to] ), :method => :get %>
-      	</p>
-      <% end %>
-    </form>
 		<br />
-    <h2 style="font-size: 17px; position: absolute; left: 500px;"><i>Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 444px;"><i>Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-    <table border="1" id="group_by_cabang" class="display">
+    <table border="1" id="group_by_cabang" class="display" ">
       <thead>
         <tr>
           <th rowspan="3">Brand</th>
@@ -152,7 +139,7 @@
       </tbody>
     </table>
 		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
+		<table border="1" id="group_by_cabang_2" class="display" ">
       <thead>
         <tr>
           <th rowspan="3">Brand</th>
@@ -262,8 +249,23 @@
     </table>
 		</br>
 		<% LaporanCabang.calculation_by_date(params[:from], params[:to]).each do |calc| %>
-			<h2>Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
+			<h2 float="right">Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
 			<h2>Total of Quantity : <%= calc.sum_jumlah.to_i %></h2>
 		<% end %>
+		</br>
+		<div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
+		<div class="offset4">
+		 <div class="form-inline">
+				<%= link_to "Compare", laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), 
+					:method => :get, :class=>"btn btn-info" %>
+				<%= link_to "Category",
+					 laporan_cabang_group_by_category_path(:user_brand => current_user.user_brand, :from => params[:from], :to => params[:to] ), 
+					 :method => :get, :class=>"btn btn-info" %>
+		   	<%= link_to "Type", laporan_cabang_group_by_type_path(:from => params[:from], :to => params[:to] ), :method => :get, 
+					 :class=>"btn btn-info" %>
+		   	<%= link_to "Customer", laporan_cabang_group_by_customer_path(:from => params[:from], :to => params[:to] ), :method => :get,
+					 :class=>"btn btn-info" %>
+			</div>
+		</div>
   <% end %>
 <% end %>

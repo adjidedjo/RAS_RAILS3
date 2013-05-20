@@ -1,17 +1,13 @@
-<div class="clear"></div>
-<br /><h1>Annual Weekly Sales Report</h1><br />
-
-<%= form_tag laporan_cabang_weekly_report_path, :method => 'get' do %>
-  <br />
-  <p>
-    <%= label_tag 'Periode' %>
-    <%= text_field_tag 'periode_week', nil, :class => "input_form" %>
-  </p>
-  <br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Annual Weekly Sales Report</legend>
+			<%= label_tag 'Periode' %>
+    <%= text_field_tag 'periode_week', nil, :class => "input_form" %><br />
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</fieldset>
+	<% end %>
+</div>
 <br />
 <div class="clear"></div>
 

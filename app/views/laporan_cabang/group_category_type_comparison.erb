@@ -1,23 +1,21 @@
-<br /><h1>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Type Comparison Report</h1><br />
-<%= form_tag laporan_cabang_group_category_type_comparison_path, :method => 'get' do %>
-  <p>
-    <br />
-    <%= label_tag 'From' %>
-    <%= text_field_tag 'from', nil, :class => "input_form"  %>
-  </p><br />
-  <p>
-    <%= label_tag 'To' %>
-    <%= text_field_tag 'to', nil, :class => "input_form" %>
-  </p>
-  <br /><br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag laporan_cabang_group_category_type_comparison_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Type Comparison Report</legend>
+			<%= label_tag 'From' %>
+			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+			<%= label_tag 'To' %>
+			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+			<button type="submit" class="btn btn-primary">Search</button>
+		</fieldset>
+	<% end %>
+</div>
+
 <br />
+<div class="clear"></div>
+
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    </form>
 		<br />
 <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Type Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
@@ -69,3 +67,6 @@
 		</table>
 	<% end %>
 <% end %>
+<br />
+<div class="clear"></div>
+<div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>

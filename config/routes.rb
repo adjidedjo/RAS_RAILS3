@@ -1,5 +1,7 @@
 Rain::Application.routes.draw do
 
+  get "pages/home"
+
   resources :yearly_targets
 
   resources :monthly_targets
@@ -89,8 +91,8 @@ Rain::Application.routes.draw do
   #   end
 
   # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  root :to => 'laporan_cabang#index'
+  # just remember to delete public/index.html
+  root :to => 'pages', :action => 'home'
 
   # See how all your routes lay out with "rake routes"
 

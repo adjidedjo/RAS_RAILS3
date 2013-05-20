@@ -1,4 +1,4 @@
-<%= form_for(@monthly_target) do |f| %>
+	<%= form_for(@monthly_target, :html => {:class => "form-horizontal"}) do |f| %>
   <% if @monthly_target.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@monthly_target.errors.count, "error") %> prohibited this monthly_target from being saved:</h2>
@@ -10,28 +10,36 @@
       </ul>
     </div>
   <% end %>
+		<legend>Monthly Target</legend>
+			<div class="control-group">
+		  	<%= f.label :branch %>
+				<div class="controls">
+					<%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+				</div>
+			</div>
 
-  <div>
-    <%= f.label :cabang_id %>
-    <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}, { :class => 'input_form_monthly' }) %>
-  </div>
-  <br />
-  <div>
-    <%= f.label :target_month %>
-    <%= f.date_select :target_month, :discard_day => true, :prompt => { :month => 'Select Month', :year => 'Select year' }, :class => 'input_form_monthly' %>
-  </div>
-  <br />
-  <div>
-    <%= f.label :brand_id %>
-    <%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}, { :class => 'input_form_monthly' }) %>
-  </div>
-  <br />
-  <div>
-    <%= f.label :total %>
-    <%= f.number_field :total, :class => 'input_form' %>
-  </div>
-  <br />
-  <div>
-    <%= submit_tag "Create", :class => "button_monthly" %>
-  </div>
-<% end %>
+			<div class="control-group">
+		  	<%= f.label :brand_id %>
+				<div class="controls">
+					<%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+				</div>
+			</div>
+
+			<div class="control-group">
+		  	<%= f.label :total %>
+				<div class="controls">
+					<%= f.number_field :total %>
+				</div>
+			</div>
+
+		  <div class="control-group">
+		  	<%= f.label :target_month %>
+				<div class="controls">
+					<%= f.date_select :target_month, :discard_day => true, :prompt => { :month => 'Select Month', :year => 'Select year' } %>
+				</div>
+			</div>
+			
+			<div class="controls">
+				<%= submit_tag "Create", :class => "btn btn-primary" %>
+		  </div>
+	<% end %>

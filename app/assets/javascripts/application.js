@@ -9,6 +9,7 @@
 //= require jquery.ui.datepicker
 //= require complete
 //= require jquery.dataTables.columnFilter
+//= require twitter/bootstrap
 //= require jquery.dataTables
 //= require dataTables/extras/TableTools
 //= require dataTables/extras/ZeroClipboard

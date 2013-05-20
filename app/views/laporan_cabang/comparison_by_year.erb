@@ -1,17 +1,13 @@
-<div class="clear"></div>
-<br /><h1>Annual Weekly Sales Comparison</h1><br />
-
-<%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get' do %>
-  <br />
-  <p>
-    <%= label_tag 'Periode' %>
-    <%= text_field_tag 'periode', nil, :class => "input_form" %>
-  </p>
-  <br />
-  <p>
-    <%= submit_tag "Search", :class => "button" %>
-  </p>
-<% end %>
+<div class="form-div">
+	<%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Annual Weekly Sales Comparison</legend>
+			<%= label_tag 'Periode' %>
+    	<%= text_field_tag 'periode_week', nil, :class => "input_form" %><br />
+			<button type="submit" class="btn btn-primary">Search</button>
+		</fieldset>
+	<% end %>
+</div>
 <br />
 <div class="clear"></div>
 
