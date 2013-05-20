@@ -167,10 +167,6 @@ GEM
       polyglot (>= 0.3.1)
     turn (0.8.2)
       ansi (>= 1.2.2)
-    twitter-bootstrap-rails (2.2.6)
-      actionpack (>= 3.1)
-      execjs
-      railties (>= 3.1)
     tzinfo (0.3.37)
     uglifier (2.1.0)
       execjs (>= 0.3.0)
@@ -205,6 +201,5 @@ DEPENDENCIES
   therubyracer
   thin
   turn (= 0.8.2)
-  twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   will_paginate
