@@ -22,10 +22,7 @@
 					<ul id="nav" class="dropdown dropdown-horizontal">
 		      <% if user_signed_in? %>
 		        <li><%= link_to "Stock", stock_index_path %></li>
-		        <li><%= link_to "Control Sales and Stock", laporan_cabang_control_branches_sales_path %></li>
-		        <% if current_user.user_brand.slice(0) == "A" %>
-		        	<li><%= link_to "Store Maps", store_maps_path %></li>
-						<% end %>
+		        <li><%= link_to "Control", laporan_cabang_control_branches_sales_path %></li>
 		        <li class="dir">Target
 							<ul>
 		        		<li><%= link_to "Monthly", new_monthly_target_path %></li>
