@@ -17,7 +17,7 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
 		<br />
-<h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories Comparison  Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories Comparison  Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<table id="monthly_comparison" class="pretty">
 		  <thead>
@@ -70,3 +70,6 @@
 <br />
 <div class="clear"></div>
 <div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>
+<br />
+<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
+	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

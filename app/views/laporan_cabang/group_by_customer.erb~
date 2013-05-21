@@ -15,7 +15,7 @@
 <div class="clear"></div>
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Report by Customer Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 444px;"><i>Sales Report by Customer Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
 		<table border="1" id="group_by_customer" class="display">

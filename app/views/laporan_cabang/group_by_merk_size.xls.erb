@@ -1,25 +1,8 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_group_by_merk_size_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Report</legend>
-			<%= label_tag 'From' %>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<%= label_tag 'To' %>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
 
-<br />
-<div class="clear"></div>
-
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
-		<table border="1" id="group_by_size_comparison" class="display">
+		<table id="group_by_size_comparison" class="display">
       <thead>
         <tr>
           <th rowspan="3">Branches</th>
@@ -84,16 +67,3 @@
         <% end %>
       </tbody>
     </table>
-  <% end %>
-	</br>
-  <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
-  <div class="offset5">
-	 <div class="form-inline">
-			<%= link_to "Compare", laporan_cabang_group_category_size_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-		</div>
-	</div>
-<% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

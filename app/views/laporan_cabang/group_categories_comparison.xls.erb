@@ -1,29 +1,9 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_monthly_category_comparison_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Comparison Report by Categories</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<%= submit_tag "Search", :class => "btn btn-primary" %>
-		</fieldset>
-	<% end %>
-</div>
-
-<br />
-<div class="clear"></div>
-
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-    </form>
-		<br />
-<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Comparison Report by Categories Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories Comparison  Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<table id="monthly_comparison" class="pretty">
 		  <thead>
 		    <tr>
-		      <th rowspan="3">Category</th>
+		      <th rowspan="3">Categories</th>
 		      <th colspan="6">Comparison</th>
 		    </tr>
 		    <tr>
@@ -50,12 +30,12 @@
 		    <% @brand.each do |brand| %>
 		      <tr>
 		        <th scope="row"><%= brand.NamaBrand %></th>
-							<% LaporanCabang.category_comparison(brand.KodeBrand, @from_last_year, @to_last_year).each do |a| %>
+							<% LaporanCabang.merk_category_comparison(brand.KodeBrand, @from_last_year, @to_last_year).each do |a| %>
 								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
-							<% LaporanCabang.category_comparison(brand.KodeBrand, params[:from], params[:to]).each do |a| %>
+							<% LaporanCabang.merk_category_comparison(brand.KodeBrand, params[:from], params[:to]).each do |a| %>
 								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_current) %></td>
@@ -66,11 +46,3 @@
 		    <% end %>
 		  </tbody>
 		</table>
-	<% end %>
-<% end %>
-<br />
-<div class="clear"></div>
-<div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:user_brand => current_user.user_brand), :class=>"btn btn-info" %></label>

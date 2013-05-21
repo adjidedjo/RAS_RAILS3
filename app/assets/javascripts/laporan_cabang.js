@@ -37,7 +37,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
@@ -95,23 +94,12 @@ $(document).ready(function(){
             nCells[12].innerHTML = addCommas(parseInt(iTotalRow13))
             nCells[13].innerHTML = addCommas(parseInt(iTotalRow14))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
 		$('#monthly_comparison').dataTable({
         bJQueryUI: true,
         iDisplayLength: 30,
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
@@ -143,16 +131,6 @@ $(document).ready(function(){
             nCells[4].innerHTML = parseInt((iQtyCurrent - iQtyLast) / iQtyLast * 100) + "%"
             nCells[5].innerHTML = parseInt((iValueCurrent - iValueLast) / iValueLast * 100) + "%"
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
 			});
 
@@ -160,7 +138,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
@@ -200,16 +177,6 @@ $(document).ready(function(){
             nCells[6].innerHTML = addCommas(parseInt(iTotalRow7))
             nCells[7].innerHTML = addCommas(parseInt(iTotalRow8))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -217,7 +184,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
 				"bAutoWidth": false,
         "bPaginate": false,
@@ -271,16 +237,6 @@ $(document).ready(function(){
             nCells[10].innerHTML = addCommas(parseInt(iTotalWeekLastMonthS))
             nCells[11].innerHTML = addCommas(parseInt(iTotalGrowthS))
 
-        },
-        oTableTools: {
-            sSwfPath: "media/dataTables/extras/swf/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -288,7 +244,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
@@ -338,16 +293,6 @@ $(document).ready(function(){
             nCells[9].innerHTML = addCommas(parseInt(iTotalTarget))
             nCells[10].innerHTML = addCommas(parseInt(iTotalAcv))
 
-        },
-        oTableTools: {
-            sSwfPath: "<%= asset_path('copy_csv_xls.swf')%>",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -355,7 +300,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
@@ -387,16 +331,6 @@ $(document).ready(function(){
             nCells[3].innerHTML = addCommas(parseInt(iTotalTargetYear))
             nCells[4].innerHTML = addCommas(parseInt(iTotalAcvYear))
 
-        },
-        oTableTools: {
-            sSwfPath: "<%= asset_path('copy_csv_xls.swf')%>",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -404,7 +338,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
@@ -439,16 +372,6 @@ $(document).ready(function(){
             nCells[4].innerHTML = addCommas(parseInt(iTotalWeekLastMonth))
             nCells[5].innerHTML = addCommas(parseInt(iTotalGrowth))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -456,7 +379,6 @@ $(document).ready(function(){
         sPaginationType: "full_numbers",
         bJQueryUI: true,
         iDisplayLength: 20,
-        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -510,16 +432,6 @@ $(document).ready(function(){
             {
                 iTotalLastYearMonth = aData[i][2];
             }
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -528,7 +440,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
         "fnFooterCallback": function ( nRow, aaData ) {
@@ -590,16 +501,6 @@ $(document).ready(function(){
             nCells[10].innerHTML = addCommas(parseInt(iTotalQtyJember))
             nCells[11].innerHTML = addCommas(parseInt(iTotalValueJember))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -607,7 +508,6 @@ $(document).ready(function(){
         bJQueryUI: true,
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
         bRetrieve: true,
         "bPaginate": false,
 				"fnInitComplete": function() {
@@ -676,16 +576,6 @@ $(document).ready(function(){
             nCells[12].innerHTML = addCommas(parseInt(iTotalQtyCirebon))
             nCells[13].innerHTML = addCommas(parseInt(iTotalValueCirebon))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 
@@ -693,7 +583,6 @@ $(document).ready(function(){
         sPaginationType: "full_numbers",
         bJQueryUI: true,
         iDisplayLength: 20,
-        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -741,23 +630,12 @@ $(document).ready(function(){
             nCells[8].innerHTML = parseInt((iTotalLastWeekCurrentYear2 - iTotalLastWeekLastYear2) / iTotalLastWeekLastYear2 * 100) + "%"
             nCells[11].innerHTML = parseInt((iTotalThisWeekCurrentYear2 - iTotalThisWeekLastYear2) / iTotalThisWeekLastYear2 * 100) + "%"
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
     $('#table_year_elite_month_and_year').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,
         iDisplayLength: 20,
-        sDom: '<"H"Tfr>t<"F"ip>',
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -790,16 +668,6 @@ $(document).ready(function(){
             nCells[6].innerHTML = addCommas(parseInt(iTotalTargetMonth))
             nCells[8].innerHTML = addCommas(parseInt(iTotalTargetYear))
 
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
         }
     });
 

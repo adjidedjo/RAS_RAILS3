@@ -1,17 +1,4 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_comparison_by_year_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Annual Weekly Sales Comparison</legend>
-			<%= label_tag 'Periode' %>
-    	<%= text_field_tag 'periode_week', nil, :class => "input_form" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
-<br />
-<div class="clear"></div>
 
-<% unless params[:periode].nil? || params[:periode].empty? %>
   <table id="table_year" class="pretty">
     <p>WEEKLY SALES PERFORMANCE</p>
     <p><%= @periode.strftime('%B %Y')  %></p>
@@ -80,7 +67,8 @@
       <% end %>
     </tbody>
   </table>
-  <br />
+<br />
+
   <table id="table_year_elite" class="pretty">
     <p>WEEKLY SALES PERFORMANCE</p>
     <p><%= @periode.to_date.strftime('%B %Y')  %></p>
@@ -149,7 +137,8 @@
       <% end %>
     </tbody>
   </table>
-  <br />
+
+<br />
   <table id="table_year_elite_month_and_year" class="pretty">
     <thead>
       <tr>
@@ -215,6 +204,3 @@
       <% end %>
     </tbody>
   </table>
-<% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :periode => params[:periode]), :class=>"btn btn-info" %></label>

@@ -18,4 +18,8 @@ class Cabang < ActiveRecord::Base
     find(10, 11, 13, 19, 20, 22)
   end
 
+	def self.get_id
+    find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 19, 20, 22)
+  end
+
 end

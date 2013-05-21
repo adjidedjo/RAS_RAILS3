@@ -1,31 +1,13 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_group_by_cabang_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Annual Sales Monthly Report</legend>
-			<%= label_tag 'From' %>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<%= label_tag 'To' %>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
-
+<h2 style="font-size: 17px; position: absolute; left: 444px;"><i>Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
 <br />
-<div class="clear"></div>
 
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-		<br />
-    <h2 style="font-size: 17px; position: absolute; left: 444px;"><i>Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
-    <br /><br />
-    <table border="1" id="group_by_cabang" class="display" ">
+<table>
       <thead>
         <tr>
           <th rowspan="3">Brand</th>
         </tr>
         <tr>
-          <% @cabang_get_id_to_7.each do |cabang| %>
+          <% Cabang.get_id.each do |cabang| %>
             <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
           <% end %>
         </tr>
@@ -48,11 +30,9 @@
 				<% Merk.all.each do |merk| %>
           <tr>
           	<% if merk.Merk == current_user.user_brand %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
+		          <td><%= merk.Merk %></td>
 		        <% elsif current_user.user_brand == "Admin" %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
+		          <td><%= merk.Merk %></td>
 		        <% else %>
 		          <td><%= merk.Merk %></td>
 		        <% end %>
@@ -134,50 +114,7 @@
             	<td>0</td>
             	<td>0</td>
             <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display" ">
-      <thead>
-        <tr>
-          <th rowspan="3">Brand</th>
-        </tr>
-        <tr>
-          <% @cabang_get_id_to_22.each do |cabang| %>
-            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..12).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% Merk.all.each do |merk| %>
-          <tr>
-          	<% if merk.Merk == current_user.user_brand %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% elsif current_user.user_brand == "Admin" %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% else %>
-		          <td><%= merk.Merk %></td>
-		        <% end %>
-
-            <!-- Yogyakarta -->
+						<!-- Yogyakarta -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
 		          <% LaporanCabang.sum_of_brand(10, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
 		          	params[:from], params[:to]).each do |a| %>
@@ -247,28 +184,3 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<% LaporanCabang.calculation_by_date(params[:from], params[:to]).each do |calc| %>
-			<h2 float="right">Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
-			<h2>Total of Quantity : <%= calc.sum_jumlah.to_i %></h2>
-		<% end %>
-		</br>
-		<div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
-		<div class="offset4">
-		 <div class="form-inline">
-				<%= link_to "Compare", laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), 
-					:method => :get, :class=>"btn btn-info" %>
-				<%= link_to "Category",
-					 laporan_cabang_group_by_category_path(:user_brand => current_user.user_brand, :from => params[:from], :to => params[:to] ), 
-					 :method => :get, :class=>"btn btn-info" %>
-		   	<%= link_to "Type", laporan_cabang_group_by_type_path(:from => params[:from], :to => params[:to] ), :method => :get, 
-					 :class=>"btn btn-info" %>
-		   	<%= link_to "Customer", laporan_cabang_group_by_customer_path(:from => params[:from], :to => params[:to] ), :method => :get,
-					 :class=>"btn btn-info" %>
-			</div>
-		</div>
-  <% end %>
-<% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to]), :class=>"btn btn-info" %></label>
-		

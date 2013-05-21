@@ -1,30 +1,13 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_group_by_merk_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories Report</legend>
-			<%= label_tag 'From' %>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<%= label_tag 'To' %>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
 
-<br />
-<div class="clear"></div>
-
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-    <table border="1" id="group_by_cabang" class="display">
+    <table id="group_by_cabang" class="display">
       <thead>
         <tr>
           <th rowspan="3"><%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories	</th>
         </tr>
         <tr>
-          <% @cabang_get_id_to_7.each do |cabang| %>
+          <% Cabang.get_id.each do |cabang| %>
             <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
           <% end %>
         </tr>
@@ -81,41 +64,7 @@
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
             <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3"><%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories	</th>
-        </tr>
-        <tr>
-          <% @cabang_get_id_to_22.each do |cabang| %>
-            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..12).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% @category_merk.each do |merk| %>
-          <tr>
-            <td><%= merk.NamaBrand %></td>
-            <!-- Yogyakarta -->
+						<!-- Yogyakarta -->
             <% LaporanCabang.sum_by_value_merk(10, merk.KodeBrand, params[:from], params[:to]).each do |a| %>
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -149,27 +98,3 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<% LaporanCabang.calculation_by_date_merk(params[:merk_id], params[:from], params[:to]).each do |calc| %>
-			<h2>Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
-			<h2>Total of Quantity : <%= calc.sum_jumlah.to_i %></h2>
-		<% end %>
-  <% end %>
-	</br>
-  <div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
-  <div class="offset4">
-	 <div class="form-inline">
-			<%= link_to "Customer", laporan_cabang_group_by_merk_customer_path(:merk_id => params[:merk_id],:from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-			<%= link_to "Size", laporan_cabang_group_by_merk_size_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-     	<%= link_to "Type", laporan_cabang_group_by_merk_type_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-     	<%= link_to "Compare", laporan_cabang_group_categories_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to]), :method => :get,	:class=>"btn btn-info" %>
-		</div>
-	</div>
-<% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

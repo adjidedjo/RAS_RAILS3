@@ -329,3 +329,5 @@
     </tbody>
   </table>
 <% end %>
+<br />
+<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :periode_week => params[:periode_week]), :class=>"btn btn-info" %></label>

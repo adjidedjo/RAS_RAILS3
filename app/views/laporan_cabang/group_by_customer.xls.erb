@@ -1,33 +1,17 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_group_by_customer_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Report by Customer</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<%= submit_tag "Search", :class => "btn btn-primary" %>
-		</fieldset>
-	<% end %>
-</div>
 
-<br />
-<div class="clear"></div>
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Report by Customer Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
-		<table border="1" id="group_by_customer" class="display">
+		<table>
       <thead>
         <tr>
           <th rowspan="3">Customers</th>
         </tr>
         <tr>
-          <th colspan="2"><%= link_to 'ES', laporan_cabang_index_path(:customer => "ES", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SOGO', laporan_cabang_index_path(:customer => "SOGO", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SHOWROOM', laporan_cabang_index_path(:customer => "SHOWROOM", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'RETAIL', laporan_cabang_index_path(:customer => "ES", :customer2 => "SOGO",:from => params[:from], :to => params[:to]) %></th>
+          <th colspan="2">ES</th>
+					<th colspan="2">SOGO</th>
+					<th colspan="2">SHOWROOM</th>
+					<th colspan="2">RETAIL</th>
         </tr>
         <tr>
           <% (1..4).each do %>
@@ -68,15 +52,3 @@
         <% end %>
       </tbody>
     </table>
-  <% end %>
-<% end %>
-<br />
-<div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
-<div class="offset5">
- <div class="form-inline">
-  <%= link_to "Compare", laporan_cabang_monthly_customer_comparison_path(:from => params[:from], :to => params[:to] ), 
-		:method => :get, :class=>"btn btn-info" %>
- </div>
-</div>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to]), :class=>"btn btn-info" %></label>

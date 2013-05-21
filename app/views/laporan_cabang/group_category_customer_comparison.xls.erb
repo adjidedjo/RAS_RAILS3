@@ -1,24 +1,5 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_monthly_customer_comparison_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Comparison Report by Customer</legend>
-			<%= label_tag 'From' %>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<%= label_tag 'To' %>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
 
-<br />
-<div class="clear"></div>
-
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-    </form>
-		<br />
-<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Comparison Report by Customer Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Customer Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<table id="monthly_comparison" class="pretty">
 		  <thead>
@@ -50,12 +31,12 @@
 		    <% ["ES","SHOWROOM","SOGO","RETAIL"].each do |customer| %>
 		      <tr>
 		        <th scope="row"><%= customer %></th>
-							<% LaporanCabang.customer_comparison(customer, @from_last_year, @to_last_year).each do |a| %>
+							<% LaporanCabang.category_customer_comparison(params[:merk_id], customer, @from_last_year, @to_last_year).each do |a| %>
 								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
-							<% LaporanCabang.customer_comparison(customer, params[:from], params[:to]).each do |a| %>
+							<% LaporanCabang.category_customer_comparison(params[:merk_id], customer, params[:from], params[:to]).each do |a| %>
 								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_current) %></td>
@@ -66,9 +47,3 @@
 		    <% end %>
 		  </tbody>
 		</table>
-	<% end %>
-<% end %>
-<br />
-<div class="clear"></div>
-<div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to]), :class=>"btn btn-info" %></label>

@@ -18,21 +18,41 @@ class LaporanCabangController < ApplicationController
 	end
 
 	def group_categories_comparison
-		monthly_category_comparison
+		monthly
 		@brand = Brand.brand_id(params[:merk_id])
 	end
 
 	def monthly_customer_comparison
-		monthly_comparison
+		monthly
+
+		respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
 	end
 
 	def monthly_type_comparison
-		monthly_comparison
+		monthly
 		@product = Product.all
+
+		respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
 	end
 
-	def monthly_category_comparison
-		monthly_comparison
+	def monthly
+		@cabang_get_id = Cabang.get_id
+		@qty_last = 0
+		@value_last = 0
+		@qty_current = 0
+		@value_current = 0
+		unless params[:from].nil?
+			@from_last_year = params[:from].to_date - 1.years
+			@to_last_year = params[:to].to_date - 1.years
+		end
 
 		unless params[:user_brand].nil?
 			if params[:user_brand].slice(0) == "A"
@@ -43,16 +63,24 @@ class LaporanCabangController < ApplicationController
 		end
 	end
 
+	def monthly_category_comparison
+		monthly
+
+		respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
+	end
+
 	def monthly_comparison
-		@cabang_get_id = Cabang.get_id
-		@qty_last = 0
-		@value_last = 0
-		@qty_current = 0
-		@value_current = 0
-		unless params[:from].nil?
-			@from_last_year = params[:from].to_date - 1.years
-			@to_last_year = params[:to].to_date - 1.years
-		end
+		monthly
+
+		respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
 	end
 
   def index
@@ -106,6 +134,12 @@ class LaporanCabangController < ApplicationController
   def group_by_cabang
     @cabang_get_id_to_7 = Cabang.get_id_to_7
 		@cabang_get_id_to_22 = Cabang.get_id_to_22
+
+		respond_to do |format|
+      format.html # index.html.erb
+      format.xls
+      format.xml
+    end
   end
 
 	def group_by_category
@@ -117,6 +151,12 @@ class LaporanCabangController < ApplicationController
 		else
 			@brand = Brand.where(["KodeBrand like ?", %(#{params[:user_brand].slice(0)}%)])
 		end
+
+		respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
 	def weekly_report
@@ -130,20 +170,12 @@ class LaporanCabangController < ApplicationController
      	@periode = params[:periode_week].to_date
 			calculation_date_weekly_report(@periode)
     end
+
 		respond_to do |format|
-			format.html
-			 format.xlsx {
-				xlsx_package = LaporanCabang.to_xlsx
-				begin
-					temp = Tempfile.new("posts.xlsx")
-					xlsx_package.serialize temp.path
-					send_file temp.path, :filename => "posts.xlsx", :type => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-				ensure
-					temp.close
-					temp.unlink
-				end
-		 		}
-		end
+      format.html
+      format.xls
+      format.xml
+    end
 	end
 
 	def calculation_date_weekly_report(date)

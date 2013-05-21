@@ -1,31 +1,14 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Report by Category</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<%= submit_tag "Search", :class => "btn btn-primary" %>
-		</fieldset>
-	<% end %>
-</div>
 
-<br />
-<div class="clear"></div>
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-		<br />
-    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Report by Category Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Sales Report by Category Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
-    <table border="1" id="group_by_cabang" class="display">
+    <table>
       <thead>
         <tr>
           <th rowspan="3">Category</th>
         </tr>
         <tr>
-          <% @cabang_get_id_to_7.each do |cabang| %>
+          <% Cabang.get_id.each do |cabang| %>
             <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
           <% end %>
         </tr>
@@ -82,41 +65,7 @@
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
             <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Category</th>
-        </tr>
-        <tr>
-          <% @cabang_get_id_to_22.each do |cabang| %>
-            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..12).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% @brand.each do |brand| %>
-          <tr>
-            <td><%= brand.NamaBrand %></td>
-            <!-- Yogyakarta -->
+						<!-- Yogyakarta -->
             <% LaporanCabang.sum_of_category(10, brand.KodeBrand, params[:from], params[:to]).each do |a| %>
               <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
               <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -149,17 +98,4 @@
           </tr>
         <% end %>
       </tbody>
-    </table></br>
-  <% end %>
-<% end %>
-<br />
-<div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
-<div class="offset5">
- <div class="form-inline">
-  <%= link_to "Compare", laporan_cabang_monthly_category_comparison_path(:user_brand => current_user.user_brand, :from => params[:from], 
-		:to => params[:to]), :method => :get, :class=>"btn btn-info" %></p>
- </div>
-</div>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:user_brand => current_user.user_brand), :class=>"btn btn-info" %></label>
+    </table>
