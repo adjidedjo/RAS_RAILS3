@@ -510,9 +510,6 @@ $(document).ready(function(){
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
         "bPaginate": false,
-				"fnInitComplete": function() {
-                oTable.fnAdjustColumnSizing();
-         },
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside

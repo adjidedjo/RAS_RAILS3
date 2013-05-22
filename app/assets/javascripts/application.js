@@ -7,10 +7,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.datepicker
+//= require twitter/bootstrap
 //= require complete
 //= require jquery.dataTables.columnFilter
-//= require twitter/bootstrap
-//= require jquery.dataTables
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/extras/TableTools
 //= require dataTables/extras/ZeroClipboard
 //= require_tree .
