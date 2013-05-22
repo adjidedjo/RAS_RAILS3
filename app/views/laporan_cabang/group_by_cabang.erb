@@ -267,7 +267,9 @@
 					 :class=>"btn btn-info" %>
 			</div>
 		</div>
+		<br />
+		<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
+			:to => params[:to]), :class=>"btn btn-info" %>
+		</label>
   <% end %>
 <% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to]), :class=>"btn btn-info" %></label>

@@ -14,5 +14,3 @@
 //= require dataTables/extras/TableTools
 //= require dataTables/extras/ZeroClipboard
 //= require_tree .
-
-   alert( $.fn.dataTable.fnVersionCheck( '1.9.0' ) );
