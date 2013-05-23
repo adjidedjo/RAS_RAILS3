@@ -4,17 +4,6 @@
  */
 
 $(document).ready(function(){
-    $('#brand_select').multiselect({
-        selectedList: 4
-    });
-
-    $('#brand_product_select').multiselect({
-        selectedList: 4
-    });
-
-    $('#artikel_select').multiselect({
-        selectedList: 4
-    });
 
     $('#date').datepicker({
         dateFormat: 'yy-mm-dd'

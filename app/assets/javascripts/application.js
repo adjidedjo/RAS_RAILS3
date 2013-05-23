@@ -11,4 +11,6 @@
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/extras/TableTools
+//= require dataTables/extras/ZeroClipboard
+//= require jquery.dataTables.columnFilter
 //= require_tree .

@@ -670,8 +670,12 @@ $(document).ready(function(){
 
     // Add a tabletool to export to pdf, excel and csv
     $('#laporancabang').dataTable({
-  		"sPaginationType": "bootstrap",
-  		"bProcessing": true,
+        bJQueryUI: true,
+        sPaginationType: "bootstrap",
+        iDisplayLength: 10,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
         "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -709,6 +713,54 @@ $(document).ready(function(){
             }
             ]
         }
+    }).columnFilter({
+        sPlaceHolder: "head:before",
+        aoColumns: [
+        {
+            sSelector: "#cabang",
+            type: "checkbox",
+            values: ["Bandung", "Narogong", "Bali", "Medan", "Surabaya", "Semarang", "Cirebon",
+            "Yogyakarta", "Palembang", "Lampung", "Meruya", "Makasar", "Pekanbaru", "Jember"]
+        },
+        {
+            sSelector: "#customer",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#market",
+            type: "checkbox"
+        },
+        null,
+        null,
+        {
+            sSelector: "#brand",
+            type: "checkbox",
+            values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
+        },
+        null,
+        {
+            sSelector: "#tipe",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#artikel",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#kain",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#panjang",
+            type: "checkbox"
+        },
+        {
+            sSelector: "#lebar",
+            type: "checkbox"
+        },
+        null,
+        null,
+        ]
     });
 
     $('#table_control_branch').dataTable({

@@ -11,16 +11,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-		<div class="navbar navbar-static-top">
-		  <div class="navbar-inner">
-		    <div class="container">
-		      <a class="brand"><%= image_tag("logo.jpg", :size => "80x50", :class=>"img-rounded") %></a>
-		  		<%= render 'layouts/user_header' %>
-					<ul id="nav" class="dropdown dropdown-horizontal">
-		    	</ul>
-		    </div>
-		  </div>
-		</div>
+					<%= nav_bar :fixed => :top, :brand => "Sales Report", :responsive => true do %>					
+						<% if current_user %>
+							<%= menu_group do %>
+									<%= menu_item "Stock", stock_index_path %>
+									<%= menu_item "Control Sales and Stock", laporan_cabang_control_branches_sales_path %>
+									<%= menu_divider %>
+									<%= drop_down "Sales Report" do %>
+										  <%= menu_item "Detail", laporan_cabang_index_path %>
+										  <%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
+										  <%= menu_item "Weekly Comparison", laporan_cabang_comparison_by_year_path(:periode => Date.today) %>
+										  <%= menu_item "Monthly", laporan_cabang_group_by_cabang_path %>
+									<% end %>
+							<% end %>
+							<%= menu_group :pull => :right do %>
+									<%= menu_item "Log Out", destroy_user_session_path %>
+							<% end %>
+						<% else %>
+							<%= menu_group :pull => :right do %>
+									<%= menu_item "Log In", new_user_session_path %>
+							<% end %>
+						<% end %>
+				<% end %>
 			<div class="container">
 					<div class="content">
 						<div class="wrapper">

@@ -21,6 +21,7 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery_datepicker'
+gem 'rails_bootstrap_navbar'
 gem "twitter-bootstrap-rails"
 gem 'jquery-datatables-rails'
 gem 'will_paginate'
