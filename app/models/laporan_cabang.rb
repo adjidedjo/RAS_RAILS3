@@ -1,6 +1,5 @@
 class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
-  acts_as_xlsx
   belongs_to :cabang
 	belongs_to :brand
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}

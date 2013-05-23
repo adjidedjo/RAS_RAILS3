@@ -12,13 +12,13 @@
 </div>
 
 <br />
-<div class="clear"></div>
+<div style="clear:both;"></div>
 
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
 <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Comparison Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-		<table id="monthly_comparison" class="pretty">
+		<table id="monthly_comparison" class="display">
 		  <thead>
 		    <tr>
 		      <th rowspan="3">Branches</th>

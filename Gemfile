@@ -14,26 +14,21 @@ group :assets do
   gem 'sass-rails',   '~> 3.1.5'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-	gem 'less'
   gem 'commonjs'
 	gem 'therubyracer'
 end
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'jquery_datepicker'
+gem "twitter-bootstrap-rails"
 gem 'jquery-datatables-rails'
 gem 'will_paginate'
-gem 'ajax-datatables-rails'
 gem 'execjs'
 gem 'devise'
-gem 'client_side_validations'
 gem 'thin'
 gem 'gmaps4rails'
-gem "spreadsheet", "~> 0.8.5"
-gem 'axlsx_rails'
-gem 'acts_as_xlsx'
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-gem "twitter-bootstrap-rails"
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

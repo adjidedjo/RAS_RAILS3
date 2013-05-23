@@ -5,13 +5,13 @@
  *= require_self
  *= require jquery.ui.core
  *= require jquery.ui.theme
- *= require TableTools
- *= require TableTools_JUI
- *= require jquery.ui.all
- *= require gmaps4rails
+ *= require dataTables/jquery.dataTables
+ *= require dataTables/jquery.dataTables.bootstrap
+ *= require dataTables/extras/TableTools
+ *= require dataTables/extras/TableTools_JUI
  *= require_tree .
-
 */
+
 .navbar .brand { 
 	max-height: 40px; 
 	overflow: visible;
@@ -20,7 +20,8 @@
 }
 
 html, body, .container, .content {
-	height: 50%;
+	height: 100%;
+	font-size:12px;
 }
  
 .container,.content {

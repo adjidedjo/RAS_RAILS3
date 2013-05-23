@@ -6,12 +6,9 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.datepicker
+//= require jquery-ui
 //= require twitter/bootstrap
-//= require complete
-//= require jquery.dataTables.columnFilter
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/extras/TableTools
-//= require dataTables/extras/ZeroClipboard
 //= require_tree .

@@ -1,5 +1,5 @@
 <div class="form-div">
-	<%= form_for(@yearly_target) do |f| %>
+	<%= form_for(@yearly_target, :html => {:class => "well"}) do |f| %>
   <% if @yearly_target.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@yearly_target.errors.count, "error") %> prohibited this yearly_target from being saved:</h2>
@@ -36,7 +36,7 @@
 		  <div class="control-group">
 		  	<%= f.label :target_year %>
 				<div class="controls">
-					<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
+					<%= f.date_select :target_year, :discard_day => true %>
 				</div>
 			</div>
 			

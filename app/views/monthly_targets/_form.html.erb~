@@ -1,4 +1,5 @@
-	<%= form_for(@monthly_target, :html => {:class => "form-horizontal"}) do |f| %>
+<div class="form-div">
+	<%= form_for(@monthly_target, :html => {:class => "well"}) do |f| %>
   <% if @monthly_target.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@monthly_target.errors.count, "error") %> prohibited this monthly_target from being saved:</h2>
@@ -43,3 +44,4 @@
 				<%= submit_tag "Create", :class => "btn btn-primary" %>
 		  </div>
 	<% end %>
+</div>

@@ -12,11 +12,11 @@
 </div>
 
 <br />
-<div class="clear"></div>
+<div style="clear:both;"></div>
 
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 451px;"><i>Annual Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Annual Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<div class="offset2">
 			<div class="form-inline">
