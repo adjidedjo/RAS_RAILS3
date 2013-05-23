@@ -15,14 +15,17 @@
 </div>
 
 <br />
-<div style="clear:both;"></div>
+<div class="clear"></div>
 
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <table cellpadding='0' cellspacing='0' border='0' width='100%' id="table_control_branch" class="display">
+    <table id="table_control_branch" class="display">
       <thead>
         <tr>
-          <th>Dates</th>
+          <th rowspan="2">Dates</th>
+          <th colspan="14">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
+        </tr>
+        <tr>
           <th>Bandung</th>
           <th>Narogong</th>
           <th>Bali</th>
@@ -39,6 +42,8 @@
           <th>Jember</th>
         </tr>
       </thead>
+      <tfoot>
+      </tfoot>
       <tbody>
         <% @dates.each do |date| %>
           <tr>
