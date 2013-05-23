@@ -63,20 +63,9 @@ $(document).ready(function(){
 
     $('#stock').dataTable({
         bJQueryUI: true,
-        sPaginationType: "full_numbers",
-        iDisplayLength: -1,
-        "bPaginate": false,
-        sDom: '<"H"Tfrl>t<"F"ip>',
-        bRetrieve: true,
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-                "sButtonText": "Export to Excel"
-            }
-            ]
-        }
+        sPaginationType: "bootstrap",
+        iDisplayLength: 50,
+        bRetrieve: true
     }).columnFilter({
         sPlaceHolder: "head:before",
         aoColumns: [

@@ -1,19 +1,4 @@
-<div class="form-div">
-	<%= form_tag stock_index_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Branches Stock</legend>
-			<%= label_tag 'Date' %>
-			<%= text_field_tag 'date', nil, :placeholder => "Date"  %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
-</div>
-
-<br />
-<div style="clear:both;"></div>
-
-<% unless params[:date].nil? %>
-  <h2 style="font-size: 20px; position: absolute; left: 350px;"><i>Normal Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+<h2 style="font-size: 20px; position: absolute; left: 344px;"><i>Under Size Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
   <br /><br />
 		<div class="offset4">
 			<div class="form-inline">
@@ -22,10 +7,11 @@
 		    <label id="brand"></label>
 		    <label id="artikel"></label>
 		    <label id="kain"></label>
+		    <label id="Panjang"></label>
+		    <label id="Lebar"></label>
 			</div>
 		</div>
-    <br />
-  <table id="stock" class="display">
+  <table id="special_size" class="display">
     <thead>
       <tr>
         <th>Cabang</th>
@@ -38,15 +24,13 @@
         <th>Freestock</th>
         <th>Bufferstock</th>
         <th>Realstock</th>
-        <th>Service</th>
-        <th>Downgrade</th>
       </tr>
     </thead>
     <tfoot>
     </tfoot>
     <tbody>
       <% @get_stock.map do |stock| %>
-				<% unless stock.kodebrg.slice(11) == "T" %>
+				<% if stock.kodebrg.slice(11) == "T" %>
 		      <tr>
 						<th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
 		        <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
@@ -65,14 +49,3 @@
       <% end %>
     </tbody>
   </table>
-	</br>
-	<div class="offset4"><label>If you want to Under Size report, please click button below</label></div>
-	<div class="offset5">
-	 <div class="form-inline">
-				<%= link_to "Under Size", stock_special_size_path(:date => params[:date]), :method => :get, :class=>"btn btn-info" %>
-		</div>
-	</div>
-	<br />
-	<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date]), :class=>"btn btn-info" %>
-	</label>
-<% end %>

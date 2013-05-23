@@ -6,7 +6,7 @@ class Stock < ActiveRecord::Base
 	scope :check_branch, lambda {|cabang| where(:cabang_id => cabang)}
 
 	def self.find_barang_id(barang_id, cabang)
-		find(:all, :select => "tanggal, cabang_id, kodebrg, freestock, bufferstock, realstock",
+		find(:all, :select => "tanggal, cabang_id, kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
 			:conditions => ["kodebrg = ? and cabang_id = ?", barang_id, cabang])
 	end
 
@@ -15,7 +15,7 @@ class Stock < ActiveRecord::Base
   end
 
   def self.get_size_qty(kodebrg, cabang, date, size)
-  	find(:all, :select => "kodebrg, freestock, bufferstock, realstock",
+  	find(:all, :select => "kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
   		:conditions => ["kodebrg like ? and kodebrg not like ? and cabang_id = ? and tanggal = ?", %(#{kodebrg + size}%), %(%#{'T'}%),
   		cabang, date])
   end

@@ -44,7 +44,7 @@ class YearlyTargetsController < ApplicationController
 
     respond_to do |format|
       if @yearly_target.save
-        format.html { redirect_to @yearly_target, notice: 'Yearly target was successfully created.' }
+        format.html { redirect_to new_yearly_target_path, notice: 'Yearly target was successfully created.' }
         format.json { render json: @yearly_target, status: :created, location: @yearly_target }
       else
         format.html { render action: "new" }

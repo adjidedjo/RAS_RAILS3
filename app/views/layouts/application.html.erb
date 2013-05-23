@@ -35,13 +35,16 @@
     <%= favicon_link_tag 'logo_ras1.jpg', :rel => 'shortcut icon' %>
   </head>
   <body>
-
-   	<%= nav_bar :fixed => :top, :brand => "Sales Report", :responsive => true do %>					
+		 	<%= nav_bar :fixed => :top, :brand => "Royal Abadi Sejahtera", :responsive => true do %>	
 			<% if current_user %>
 				<%= menu_group do %>
 					<%= menu_item "Stock", stock_index_path %>
-					<%= menu_item "Control Sales and Stock", laporan_cabang_control_branches_sales_path %>
+					<%= menu_item "Control", laporan_cabang_control_branches_sales_path %>
 					<%= menu_divider %>
+						<%= drop_down "Target" do %>
+		 					<%= menu_item "Monthly", new_monthly_target_path %>
+		  				<%= menu_item "Yearly", new_yearly_target_path %>
+						<% end %>
 						<%= drop_down "Sales Report" do %>
 		 					<%= menu_item "Detail", laporan_cabang_index_path %>
 		  				<%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
@@ -58,13 +61,13 @@
 				<% end %>
 			<% end %>
 		<% end %>
-            <%= bootstrap_flash %>
 
     <div class="container">
 			<div class="content">
 				<div class="wrapper">
 				  <div class="proper-content">
 					  <div class="row">
+            	<%= bootstrap_flash %>
 					    <%= yield %>
 						</div>
 					</div>

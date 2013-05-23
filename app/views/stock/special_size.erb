@@ -39,6 +39,8 @@
         <th>Freestock</th>
         <th>Bufferstock</th>
         <th>Realstock</th>
+        <th>Service</th>
+        <th>Downgrade</th>
       </tr>
     </thead>
     <tfoot>
@@ -57,9 +59,14 @@
 		        <th scope="row"><%= stock.freestock %></th>
 		        <th scope="row"><%= stock.bufferstock %></th>
 		        <th scope="row"><%= stock.realstock %></th>
+		        <th scope="row"><%= stock.realstockservice %></th>
+		        <th scope="row"><%= stock.realstockdowngrade %></th>
 		      </tr>
 				<% end %>
       <% end %>
     </tbody>
   </table>
+	</br>
+	<div class="offset4"><label>To return to the previous page, please click the back button on the browser</label></div>
+	<br />
 <% end %>
