@@ -1,27 +1,32 @@
-<h1>Listing yearly_targets</h1>
+<div class="offset4">
+	<h1>Yearly Targets</h1>
+</div>
 
-<table>
-  <tr>
-    <th>Cabang</th>
-    <th>Target year</th>
-    <th>Brand</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
+<table id="yearly_target" class="display">
+	<thead>
+		<tr>
+		  <th>Cabang</th>
+		  <th>Target year</th>
+		  <th>Brand</th>
+		  <th>Total</th>
+		  <th></th>
+		  <th></th>
+		</tr>
+	</thead>
 <% @yearly_targets.each do |yearly_target| %>
-  <tr>
-    <td><%= yearly_target.cabang_id %></td>
-    <td><%= yearly_target.target_year %></td>
-    <td><%= yearly_target.brand_id %></td>
-    <td><%= link_to 'Show', yearly_target %></td>
-    <td><%= link_to 'Edit', edit_yearly_target_path(yearly_target) %></td>
-    <td><%= link_to 'Destroy', yearly_target, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+	<tbody>
+		<tr>
+		  <td><%= Cabang.find_by_id(yearly_target.cabang_id).Cabang %></td>
+		  <td><%= yearly_target.target_year.strftime('%Y') %></td>
+		  <td><%= Merk.find_by_id(yearly_target.brand_id).Merk %></td>
+		  <td><%= currency(yearly_target.total) %></td>
+		  <td><%= link_to 'Edit', edit_yearly_target_path(yearly_target), {:class => "btn btn-info"} %></td>
+		  <td><%= link_to 'Destroy', yearly_target, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
+		</tr>
+	</tbody>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Yearly target', new_yearly_target_path %>
+<%= link_to 'New Yearly target', new_yearly_target_path, {:class => "btn btn-primary"} %>

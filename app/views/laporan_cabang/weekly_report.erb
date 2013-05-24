@@ -198,10 +198,10 @@
 					<% end %>
 					<td><%= @week2 == 0 ? 0 : number_to_percentage((((@week1 - @week2) / @week2) * 100),
 						:precision => 0) rescue ZeroDivisionError 0 %></td>
-					<% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
+					<% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).empty? %>
 							<td>0</td>
 					<% else %>
-						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |monthly_target| %>
+						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).each do |monthly_target| %>
 							<td><%= currency(monthly_target.total.to_i) %></td>
 						<% end %>
 					<% end %>
@@ -328,6 +328,15 @@
       <% end %>
     </tbody>
   </table>
+		</br>
+		<div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
+		<div class="offset5">
+		 <div class="form-inline">
+				<%= link_to "Compare", laporan_cabang_comparison_by_year_path(:periode => Date.today), 
+					:method => :get, :class=>"btn btn-info" %>
+			</div>
+		</div>
+	<br />
+	<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :periode_week => params[:periode_week]), 
+		:class=>"btn btn-info" %></label>
 <% end %>
-<br />
-<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :periode_week => params[:periode_week]), :class=>"btn btn-info" %></label>

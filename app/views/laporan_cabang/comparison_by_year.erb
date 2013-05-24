@@ -195,10 +195,10 @@
           <td><%= yearly_current_year_elite = currency(laporan_cabang_by_cabang.yearly_sum_current_year_multiple_jenis(@periode.to_date, ["Serenity", "Non Serenity"])) %></td>
           <td><%= yearly_last_year_elite.to_i == 0 && yearly_current_year_elite.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(yearly_last_year_elite.gsub(/\./, ''), yearly_current_year_elite.gsub(/\./, ''))) %></td>
 
-          <% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
+          <% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).empty? %>
 							<td>0</td>
 					<% else %>
-						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |monthly_target| %>
+						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).each do |monthly_target| %>
 							<td><%= currency(monthly_target.total.to_i) %></td>
 						<% end %>
 					<% end %>

@@ -36,7 +36,7 @@
 		  <div class="control-group">
 		  	<%= f.label :target_year %>
 				<div class="controls">
-					<%= f.date_select :target_year, :discard_day => true %>
+					<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
 				</div>
 			</div>
 			

@@ -42,13 +42,12 @@
 					<%= menu_item "Control", laporan_cabang_control_branches_sales_path %>
 					<%= menu_divider %>
 						<%= drop_down "Target" do %>
-		 					<%= menu_item "Monthly", new_monthly_target_path %>
-		  				<%= menu_item "Yearly", new_yearly_target_path %>
+		 					<%= menu_item "Monthly", monthly_targets_path %>
+		  				<%= menu_item "Yearly", yearly_targets_path %>
 						<% end %>
 						<%= drop_down "Sales Report" do %>
 		 					<%= menu_item "Detail", laporan_cabang_index_path %>
 		  				<%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
-							<%= menu_item "Weekly Comparison", laporan_cabang_comparison_by_year_path(:periode => Date.today) %>
 					 		<%= menu_item "Monthly", laporan_cabang_group_by_cabang_path %>
 						<% end %>
 					<% end %>

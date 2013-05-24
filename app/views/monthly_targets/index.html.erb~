@@ -1,28 +1,34 @@
-<h1>Listing monthly_targets</h1>
+<div class="offset4">
+	<h2>Listing Monthly Targets</h2>
+</div>
 
-<table>
-  <tr>
-    <th>Cabang</th>
-    <th>Target year</th>
-    <th>Target month</th>
-    <th>Brand</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
+<table id="monthly_target" class="display">
+	<thead>
+		<tr>
+		  <th>Cabang</th>
+		  <th>Brand</th>
+		  <th>Month</th>
+		  <th>Year</th>
+		  <th>Total</th>
+		  <th></th>
+		  <th></th>
+		</tr>
+	</thead>
 <% @monthly_targets.each do |monthly_target| %>
-  <tr>
-    <td><%= monthly_target.cabang_id %></td>
-    <td><%= monthly_target.target_month %></td>
-    <td><%= monthly_target.brand_id %></td>
-    <td><%= link_to 'Show', monthly_target %></td>
-    <td><%= link_to 'Edit', edit_monthly_target_path(monthly_target) %></td>
-    <td><%= link_to 'Destroy', monthly_target, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
+	<tbody>
+		<tr>
+		  <td><%= Cabang.find_by_id(monthly_target.cabang_id).Cabang %></td>
+		  <td><%= Merk.find_by_id(monthly_target.brand_id).Merk %></td>
+		  <td><%= monthly_target.target_month.strftime('%B') %></td>
+		  <td><%= monthly_target.target_year.strftime('%Y') %></td>
+		  <td><%= currency(monthly_target.total) %></td>
+		  <td><%= link_to 'Edit', edit_monthly_target_path(monthly_target), {:class => "btn btn-info"} %></td>
+		  <td><%= link_to 'Destroy', monthly_target, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
+		</tr>
+	</tbody>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Monthly target', new_monthly_target_path %>
+<%= link_to 'New Monthly target', new_monthly_target_path, {:class => "btn btn-primary"} %>

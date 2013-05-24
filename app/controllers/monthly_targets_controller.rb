@@ -44,7 +44,7 @@ class MonthlyTargetsController < ApplicationController
 
     respond_to do |format|
       if @monthly_target.save
-        format.html { redirect_to @monthly_target, notice: 'Monthly target was successfully created.' }
+        format.html { redirect_to monthly_targets_path, notice: 'Monthly target was successfully created.' }
         format.json { render json: @monthly_target, status: :created, location: @monthly_target }
       else
         format.html { render action: "new" }
@@ -60,7 +60,7 @@ class MonthlyTargetsController < ApplicationController
 
     respond_to do |format|
       if @monthly_target.update_attributes(params[:monthly_target])
-        format.html { redirect_to @monthly_target, notice: 'Monthly target was successfully updated.' }
+        format.html { redirect_to monthly_targets_path, notice: 'Monthly target was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -76,7 +76,7 @@ class MonthlyTargetsController < ApplicationController
     @monthly_target.destroy
 
     respond_to do |format|
-      format.html { redirect_to monthly_targets_url }
+      format.html { redirect_to monthly_targets_url, notice: 'Monthly target was successfully removed.'  }
       format.json { head :ok }
     end
   end

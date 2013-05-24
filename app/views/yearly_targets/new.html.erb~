@@ -1,3 +1,15 @@
-<h1>Yearly Target</h1>
+<div class="modal hide fade" id="modal-window">
+  <div class="modal-header">
+    <a href="#" class="close">×</a>
+    <h6>Loading...</h6>
+  </div>
 
-<%= render 'form' %>
+  <div class="modal-body center">
+
+    <h2>Edit business </h2>
+    <%= render 'form' %>
+  </div>
+
+  <div class="modal-footer">&nbsp;
+  </div>
+</div>

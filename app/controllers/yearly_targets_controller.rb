@@ -6,7 +6,7 @@ class YearlyTargetsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @yearly_targets }
+      format.js
     end
   end
 
@@ -28,7 +28,7 @@ class YearlyTargetsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @yearly_target }
+      format.js
     end
   end
 
@@ -44,7 +44,7 @@ class YearlyTargetsController < ApplicationController
 
     respond_to do |format|
       if @yearly_target.save
-        format.html { redirect_to new_yearly_target_path, notice: 'Yearly target was successfully created.' }
+        format.html { redirect_to yearly_targets_path, notice: 'Yearly target was successfully created.' }
         format.json { render json: @yearly_target, status: :created, location: @yearly_target }
       else
         format.html { render action: "new" }
@@ -60,7 +60,7 @@ class YearlyTargetsController < ApplicationController
 
     respond_to do |format|
       if @yearly_target.update_attributes(params[:yearly_target])
-        format.html { redirect_to @yearly_target, notice: 'Yearly target was successfully updated.' }
+        format.html { redirect_to yearly_targets_path, notice: 'Yearly target was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -76,7 +76,7 @@ class YearlyTargetsController < ApplicationController
     @yearly_target.destroy
 
     respond_to do |format|
-      format.html { redirect_to yearly_targets_url }
+      format.html { redirect_to yearly_targets_url, notice: 'Yearly target was successfully removed.' }
       format.json { head :ok }
     end
   end

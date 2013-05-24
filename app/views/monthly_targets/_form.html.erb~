@@ -1,16 +1,17 @@
 <div class="form-div">
 	<%= form_for(@monthly_target, :html => {:class => "well"}) do |f| %>
-  <% if @monthly_target.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@monthly_target.errors.count, "error") %> prohibited this monthly_target from being saved:</h2>
-
-      <ul>
-      <% @monthly_target.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <% if @yearly_target.errors.any? %>
+		<div id="error_explanation">
+		  <div class="alert alert-error">
+		    The form contains <%= pluralize(@yearly_target.errors.count, "error") %>.
+		  </div>
+		  <ul>
+		  <% @yearly_target.errors.full_messages.each do |msg| %>
+		    <li>* <%= msg %></li>
+		  <% end %>
+		  </ul>
+		</div>
+	<% end %>
 		<legend>Monthly Target</legend>
 			<div class="control-group">
 		  	<%= f.label :branch %>
@@ -34,9 +35,16 @@
 			</div>
 
 		  <div class="control-group">
-		  	<%= f.label :target_month %>
+		  	<%= f.label :month %>
 				<div class="controls">
-					<%= f.date_select :target_month, :discard_day => true, :prompt => { :month => 'Select Month', :year => 'Select year' } %>
+					<%= f.date_select :target_month, :discard_day => true, :discard_year => true, :prompt => { :month => 'Select month' } %>
+				</div>
+			</div>
+
+			<div class="control-group">
+		  	<%= f.label :year %>
+				<div class="controls">
+					<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
 				</div>
 			</div>
 			
