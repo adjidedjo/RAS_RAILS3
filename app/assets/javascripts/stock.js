@@ -62,10 +62,8 @@ $(document).ready(function(){
     });
 
     $('#stock').dataTable({
-        bJQueryUI: true,
         sPaginationType: "bootstrap",
-        iDisplayLength: 50,
-        bRetrieve: true
+        iDisplayLength: -1,
     }).columnFilter({
         sPlaceHolder: "head:before",
         aoColumns: [

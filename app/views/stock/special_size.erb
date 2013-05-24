@@ -4,6 +4,8 @@
 			<legend>Branches Under Size Stock</legend>
 			<%= label_tag 'Date' %>
 			<%= text_field_tag 'date', nil, :placeholder => "Date"  %><br />
+			<%= label_tag 'Branch' %>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %><br />
 			<button type="submit" class="btn btn-primary">Search</button>
 		</fieldset>
 	<% end %>

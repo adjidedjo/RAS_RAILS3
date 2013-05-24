@@ -4,6 +4,8 @@
 			<legend>Branches Stock</legend>
 			<%= label_tag 'Date' %>
 			<%= text_field_tag 'date', nil, :placeholder => "Date"  %><br />
+			<%= label_tag 'Branch' %>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %><br />
 			<button type="submit" class="btn btn-primary">Search</button>
 		</fieldset>
 	<% end %>
@@ -69,10 +71,12 @@
 	<div class="offset4"><label>If you want to Under Size report, please click button below</label></div>
 	<div class="offset5">
 	 <div class="form-inline">
-				<%= link_to "Under Size", stock_special_size_path(:date => params[:date]), :method => :get, :class=>"btn btn-info" %>
+				<%= link_to "Under Size", stock_special_size_path(:date => params[:date], :cabang_id => params[:cabang_id]), 
+					:method => :get, :class=>"btn btn-info" %>
 		</div>
 	</div>
 	<br />
-	<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date]), :class=>"btn btn-info" %>
+	<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], 
+		:cabang_id => params[:cabang_id]), :class=>"btn btn-info" %>
 	</label>
 <% end %>

@@ -1,12 +1,12 @@
 class StockController < ApplicationController
 
 	def special_size
-		@get_stock = Stock.check_stock(params[:date]) unless params[:date].nil?
+		@get_stock = Stock.check_stock(params[:date], params[:cabang_id]) unless params[:date].nil?
 	end
 
   def index
     @id_cabang = Cabang.get_id
-    @get_stock = Stock.check_stock(params[:date]) unless params[:date].nil?
+    @get_stock = Stock.check_stock(params[:date], params[:cabang_id]) unless params[:date].nil?
 		@task_months = @get_stock.group_by { |t| [t.kodebrg.slice(0..14), t.cabang_id] } unless params[:date].nil?
   end
 
