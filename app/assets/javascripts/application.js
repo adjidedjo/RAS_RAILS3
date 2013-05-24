@@ -13,5 +13,4 @@
 //= require dataTables/extras/TableTools
 //= require dataTables/extras/ZeroClipboard
 //= require jquery.dataTables.columnFilter
-//= require rails.validations
 //= require_tree .
