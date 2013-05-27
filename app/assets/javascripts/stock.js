@@ -63,7 +63,7 @@ $(document).ready(function(){
 
     $('#stock').dataTable({
         sPaginationType: "bootstrap",
-        iDisplayLength: -1,
+        iDisplayLength: 30,
     }).columnFilter({
         sPlaceHolder: "head:before",
         aoColumns: [

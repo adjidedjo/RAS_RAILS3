@@ -2,8 +2,12 @@ class Stock < ActiveRecord::Base
   set_table_name "tbstockcabang"
   belongs_to :cabang
   belongs_to :barang
-	scope :check_stock, lambda {|date, cabang| where(:tanggal => date, :cabang_id => cabang)}
 	scope :check_branch, lambda {|cabang| where(:cabang_id => cabang)}
+
+	def self.check_stock(tanggal, cabang)
+		find(:all, :select => "tanggal, cabang_id, kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
+			:conditions => ["tanggal = ? and cabang_id = ?", tanggal, cabang])
+	end
 
 	def self.find_barang_id(barang_id, cabang)
 		find(:all, :select => "tanggal, cabang_id, kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
