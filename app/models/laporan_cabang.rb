@@ -136,15 +136,17 @@ class LaporanCabang < ActiveRecord::Base
 
 # weekly sales report performance
 
-	def self.comparison_week(week_1, week_2, week_3, week_4, week_last_month, get_week_number, date)
+	def self.comparison_week(week_1, week_2, week_3, week_4, week_5, week_last_month, get_week_number, date)
 		if (date.beginning_of_month.cweek - get_week_number) == 4
 			((week_1 - week_last_month.to_i) / week_last_month.to_i) * 100
 		elsif ((date.beginning_of_month.cweek + 1) - get_week_number) == 4
 			((week_2 - week_last_month.to_i) / week_last_month.to_i) * 100
 		elsif ((date.beginning_of_month.cweek + 2) - get_week_number) == 4
  			((week_3 - week_last_month.to_i) / week_last_month.to_i) * 100
+		elsif ((date.beginning_of_month.cweek + 3) - get_week_number) == 4
+ 			((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100 == 4
 		else
-			((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100
+			((week_5 - week_last_month.to_i) / week_last_month.to_i) * 100
 		end
 		rescue ZeroDivisionError
    		0

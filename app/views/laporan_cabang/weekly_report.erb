@@ -21,11 +21,11 @@
         <th rowspan="3">Branches</th>
       </tr>
       <tr>
-        <th colspan="6">Serenity</th>
-        <th colspan="6">Non Serenity</th>
+        <th colspan="7">Serenity</th>
+        <th colspan="7">Non Serenity</th>
       </tr>
       <tr>
-				 <% get_week_number = @periode.cweek - 4 %>
+				 <% get_week_number = @periode.cweek - 5 %>
          <th>Week <%= @periode.beginning_of_month.cweek %> </br><%= @first_day_week_1.strftime('%d/%m/%Y') %> -
          <%= @last_day_week_1.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 1 %> </br><%= @first_day_week_2.strftime('%d/%m/%Y') %> -
@@ -34,6 +34,8 @@
          <%= @last_day_week_3.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 3 %> </br><%= @first_day_week_4.strftime('%d/%m/%Y') %>-
          <%= @last_day_week_4.strftime('%d/%m/%Y') %></th>
+         <th>Week <%= @periode.beginning_of_month.cweek + 4 %> </br><%= @first_day_week_5.strftime('%d/%m/%Y') %>-
+         <%= @last_day_week_5.strftime('%d/%m/%Y') %></th>
          <th>Week <%= get_week_number %> </br><%= @first_day_last_month_week.strftime('%d/%m/%Y') %> -
          <%= @last_day_last_month_week.strftime('%d/%m/%Y') %></th>
          <th>Growth</th>
@@ -45,6 +47,8 @@
          <%= @last_day_week_3.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 3 %> </br><%= @first_day_week_4.strftime('%d/%m/%Y') %> -
          <%= @last_day_week_4.strftime('%d/%m/%Y') %></th>
+         <th>Week <%= @periode.beginning_of_month.cweek + 4 %> </br><%= @first_day_week_5.strftime('%d/%m/%Y') %> -
+         <%= @last_day_week_5.strftime('%d/%m/%Y') %></th>
          <th>Week <%= get_week_number %> </br><%= @first_day_last_month_week.strftime('%d/%m/%Y') %> -
          <%= @last_day_last_month_week.strftime('%d/%m/%Y') %></th>
          <th>Growth</th>
@@ -53,7 +57,7 @@
     <tfoot>
       <tr>
         <th scope="row">Total</th>
-        <% (1..12).each do  %>
+        <% (1..14).each do  %>
           <td></td>
         <% end %>
       </tr>
@@ -80,11 +84,15 @@
           	<% @week4 = week_4.sum_harganetto2.nil? ? 0 : week_4.sum_harganetto2 %>
           	<td><%= currency(@week4) %></td>
 					<% end %>
+					 <% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<% @week5 = week_5.sum_harganetto2.nil? ? 0 : week_5.sum_harganetto2 %>
+          	<td><%= currency(@week5) %></td>
+					<% end %>
 					<% laporan_cabang_by_cabang.weekly_sum_value("Serenity", @first_day_last_month_week, @last_day_last_month_week).each do |week| %>
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4, @week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
 
 
@@ -105,11 +113,15 @@
           	<% @week4 = week_4.sum_harganetto2.nil? ? 0 : week_4.sum_harganetto2 %>
           	<td><%= currency(@week4) %></td>
 					<% end %>
+					<% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<% @week5 = week_5.sum_harganetto2.nil? ? 0 : week_5.sum_harganetto2 %>
+          	<td><%= currency(@week5) %></td>
+					<% end %>
 					<% laporan_cabang_by_cabang.weekly_sum_value("Non Serenity", @first_day_last_month_week, @last_day_last_month_week).each do |week| %>
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4, @week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
         </tr>
       <% end %>
@@ -130,7 +142,7 @@
 				<th rowspan="2">ACV</th>
       </tr>
       <tr>
-				 <% get_week_number = @periode.cweek - 4 %>
+				 <% get_week_number = @periode.cweek - 5 %>
          <th>Week <%= @periode.beginning_of_month.cweek %> </br><%= @first_day_week_1.strftime('%d/%m/%Y') %> -
          <%= @last_day_week_1.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 1 %> </br><%= @first_day_week_2.strftime('%d/%m/%Y') %> -
@@ -139,6 +151,8 @@
          <%= @last_day_week_3.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 3 %> </br><%= @first_day_week_4.strftime('%d/%m/%Y') %>-
          <%= @last_day_week_4.strftime('%d/%m/%Y') %></th>
+         <th>Week <%= @periode.beginning_of_month.cweek + 4 %> </br><%= @first_day_week_5.strftime('%d/%m/%Y') %>-
+         <%= @last_day_week_5.strftime('%d/%m/%Y') %></th>
          <th>Week <%= get_week_number %> </br><%= @first_day_last_month_week.strftime('%d/%m/%Y') %> -
          <%= @last_day_last_month_week.strftime('%d/%m/%Y') %></th>
          <th>Growth</th>
@@ -147,7 +161,7 @@
     <tfoot>
       <tr>
         <th scope="row">Total</th>
-        <% (1..11).each do  %>
+        <% (1..12).each do  %>
           <td></td>
         <% end %>
       </tr>
@@ -179,11 +193,16 @@
           	<td><%= currency(@week4) %></td>
 					<% end %>
 					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
+						@first_day_week_5, @last_day_week_5).each do |week_5| %>
+	          	<% @week5 = week_5.sum_harganetto2.nil? ? 0 : week_5.sum_harganetto2 %>
+          	<td><%= currency(@week5) %></td>
+					<% end %>
+					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
 						@first_day_last_month_week, @last_day_last_month_week).each do |week| %>
 	          	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4, @week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
 
 					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
@@ -274,7 +293,7 @@
         <th rowspan="2">Branches</th>
       </tr>
       <tr>
-				 <% get_week_number = @periode.cweek - 4 %>
+				 <% get_week_number = @periode.cweek - 5 %>
          <th>Week <%= @periode.beginning_of_month.cweek %> </br><%= @first_day_week_1.strftime('%d/%m/%Y') %> -
          <%= @last_day_week_1.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 1 %> </br><%= @first_day_week_2.strftime('%d/%m/%Y') %> -
@@ -283,6 +302,8 @@
          <%= @last_day_week_3.strftime('%d/%m/%Y') %></th>
          <th>Week <%= @periode.beginning_of_month.cweek + 3 %> </br><%= @first_day_week_4.strftime('%d/%m/%Y') %>-
          <%= @last_day_week_4.strftime('%d/%m/%Y') %></th>
+         <th>Week <%= @periode.beginning_of_month.cweek + 4 %> </br><%= @first_day_week_5.strftime('%d/%m/%Y') %>-
+         <%= @last_day_week_5.strftime('%d/%m/%Y') %></th>
          <th>Week <%= get_week_number %> </br><%= @first_day_last_month_week.strftime('%d/%m/%Y') %> -
          <%= @last_day_last_month_week.strftime('%d/%m/%Y') %></th>
          <th>Growth</th>
@@ -318,11 +339,15 @@
           	<% @week4 = week_4.sum_harganetto2.nil? ? 0 : week_4.sum_harganetto2 %>
           	<td><%= currency(@week4) %></td>
 					<% end %>
+					<% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_week_5, @last_day_week_5).each do |week_5| %>
+          	<% @week5 = week_5.sum_harganetto2.nil? ? 0 : week_5.sum_harganetto2 %>
+          	<td><%= currency(@week5) %></td>
+					<% end %>
 					<% laporan_cabang_by_cabang.weekly_sum_value("Classic", @first_day_last_month_week, @last_day_last_month_week).each do |week| %>
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4, @week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
         </tr>
       <% end %>
