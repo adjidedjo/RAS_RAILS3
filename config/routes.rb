@@ -44,6 +44,10 @@ Rain::Application.routes.draw do
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
   get 'stock/update_artikel', :as => 'update_artikel'
 
+	authenticated :user do
+		root :to => "laporan_cabang#chart"
+	end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
