@@ -7,7 +7,7 @@ class Stock < ActiveRecord::Base
 
 	def self.check_stock(tanggal, cabang)
 		find(:all, :select => "tanggal, cabang_id, kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
-			:conditions => ["tanggal = ? and cabang_id = ?", tanggal, cabang])
+			:conditions => ["tanggal = ? and cabang_id = ?", tanggal, cabang], :group => "kodebrg")
 	end
 
 	def self.find_barang_id(barang_id, cabang)
