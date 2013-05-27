@@ -38,6 +38,7 @@ Rain::Application.routes.draw do
   get "laporan_cabang/monthly_type_comparison"
   get "laporan_cabang/monthly_customer_comparison"
 	get "laporan_cabang/weekly_report"
+	get "laporan_cabang/chart"
 	get "stock/special_size"
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'

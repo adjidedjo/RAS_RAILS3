@@ -13,6 +13,10 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
+	def self.total_on(date, merk)
+    where("tanggalsj = ? and jenisbrgdisc = ?", date, merk).sum(:jumlah)
+  end
+
 # monthly_comparison by brand
 
 	def self.category_type_comparison(kodebrg, product, from, to)

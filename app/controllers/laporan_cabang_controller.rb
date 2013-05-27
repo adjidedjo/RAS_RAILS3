@@ -1,5 +1,9 @@
 class LaporanCabangController < ApplicationController
 
+	def chart
+		group_by_cabang
+	end
+
 	def group_category_type_comparison
 		group_category_size_comparison
 		@product = Product.all
