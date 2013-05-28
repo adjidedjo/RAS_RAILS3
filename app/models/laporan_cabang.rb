@@ -14,6 +14,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
 	def self.total_on(date, merk)
+	 merk = "Non Serenity" if merk == 'Elite'
    where("MONTH(tanggalsj) = ? and jenisbrgdisc = ?", date, merk).sum(:jumlah)
   end
 
