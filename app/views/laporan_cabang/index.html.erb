@@ -5,7 +5,11 @@
 			<label>From</label>
 			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
 			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+			<%= text_field_tag 'to', nil, :placeholder => "To Date" %>
+			<label>Branch</label>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+			<label>Brand</label>
+			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.Merk]}) %><br />
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</fieldset>
 	<% end %>
@@ -18,11 +22,9 @@
   <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Annual Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-		<div class="offset3">
+		<div class="offset1">
 			<div class="form-inline">
-		    <label id="cabang"></label>
 		    <label id="customer"></label>
-		    <label id="brand"></label>
 		    <label id="tipe"></label>
 		    <label id="artikel"></label>
 		    <label id="kain"></label>

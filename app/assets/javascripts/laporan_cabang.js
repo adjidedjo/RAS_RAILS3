@@ -668,6 +668,12 @@ $(document).ready(function(){
         }
     });
 
+		$('#group_by_cabang_total').dataTable({
+        bJQueryUI: true,
+        bPaginate: false,
+				bFilter: false
+		});
+
     // Add a tabletool to export to pdf, excel and csv
     $('#laporancabang').dataTable({
         bJQueryUI: true,
@@ -716,47 +722,38 @@ $(document).ready(function(){
     }).columnFilter({
         sPlaceHolder: "head:before",
         aoColumns: [
-        {
-            sSelector: "#cabang",
-            type: "checkbox",
-            values: ["Bandung", "Narogong", "Bali", "Medan", "Surabaya", "Semarang", "Cirebon",
-            "Yogyakarta", "Palembang", "Lampung", "Meruya", "Makasar", "Pekanbaru", "Jember"]
-        },
+        null,
         {
             sSelector: "#customer",
-            type: "checkbox"
+            type: "text"
         },
         {
             sSelector: "#market",
-            type: "checkbox"
+            type: "text"
         },
         null,
         null,
-        {
-            sSelector: "#brand",
-            type: "checkbox",
-            values: ["Classic", "Elite", "Grand", "Lady Americana", "Royal", "Serenity"]
-        },
+				null,
         null,
         {
             sSelector: "#tipe",
-            type: "checkbox"
+            type: "text"
         },
         {
             sSelector: "#artikel",
-            type: "checkbox"
+            type: "text"
         },
         {
             sSelector: "#kain",
-            type: "checkbox"
+            type: "text"
         },
         {
             sSelector: "#panjang",
-            type: "checkbox"
+            type: "text"
         },
         {
             sSelector: "#lebar",
-            type: "checkbox"
+            type: "text"
         },
         null,
         null,

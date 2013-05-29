@@ -25,10 +25,10 @@
           <th rowspan="3">Customers</th>
         </tr>
         <tr>
-          <th colspan="2"><%= link_to 'ES', laporan_cabang_index_path(:customer => "ES", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SOGO', laporan_cabang_index_path(:customer => "SOGO", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'SHOWROOM', laporan_cabang_index_path(:customer => "SHOWROOM", :from => params[:from], :to => params[:to]) %></th>
-					<th colspan="2"><%= link_to 'RETAIL', laporan_cabang_index_path(:customer => "ES", :customer2 => "SOGO",:from => params[:from], :to => params[:to]) %></th>
+          <th colspan="2"><%= 'ES' %></th>
+					<th colspan="2"><%= 'SOGO' %></th>
+					<th colspan="2"><%= 'SHOWROOM' %></th>
+					<th colspan="2"><%= 'RETAIL' %></th>
         </tr>
         <tr>
           <% (1..4).each do %>

@@ -149,11 +149,6 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<% LaporanCabang.calculation_by_date_merk(params[:merk_id], params[:from], params[:to]).each do |calc| %>
-			<h2>Total of Value : Rp. <%= currency(calc.sum_harganetto2) %> </h2>
-			<h2>Total of Quantity : <%= calc.sum_jumlah.to_i %></h2>
-		<% end %>
   <% end %>
 	</br>
   <div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>

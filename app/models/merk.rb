@@ -13,4 +13,8 @@ class Merk < ActiveRecord::Base
   def self.merk_all_name
     tabel = Merk.all
   end
+
+  def self.merk_all
+    Merk.all
+  end
 end

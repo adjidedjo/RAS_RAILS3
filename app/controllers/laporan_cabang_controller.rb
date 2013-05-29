@@ -89,7 +89,7 @@ class LaporanCabangController < ApplicationController
 
   def index
     @laporancabang = LaporanCabang.conditional_detail(params[:merk_id], params[:from], params[:to], current_user,
-			params[:customer], params[:customer2]) unless params[:from].nil? && params[:to].nil?
+			params[:customer], params[:customer2], params[:cabang_id]) unless params[:from].nil? && params[:to].nil?
   end
 
   def comparison_by_year

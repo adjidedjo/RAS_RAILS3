@@ -13,6 +13,12 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
+	def self.total_on_merk(merk, from, to)
+		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
+			from, to, %(%#{merk}%), %(#{'cab'}%)])
+	end
+
 	def self.total_on(date, merk)
 	 merk = "Non Serenity" if merk == 'Elite'
    where("MONTH(tanggalsj) = ? and jenisbrgdisc = ?", date, merk).sum(:jumlah)
@@ -210,7 +216,18 @@ class LaporanCabang < ActiveRecord::Base
 
 # get detail report on index
 
-	def self.get_record(from, to, user)
+	def self.conditional_detail(merk_id, from, to, user, customer, customer2, cabang)
+		if customer.nil?
+			get_record(from, to, user, cabang, merk_id)
+		elsif customer2.nil?
+			detail_report_with_customer(merk_id, from, to, user, customer)
+		else
+			detail_report_with_2_customer(merk_id, from, to, user, customer, customer2)
+		end
+	end
+
+	def self.get_record(from, to, user, cabang, merk_id)
+		merk_id = "Non Serenity" if merk_id == "Elite"
     unless user.merk.nil?
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
@@ -219,7 +236,8 @@ class LaporanCabang < ActiveRecord::Base
     else
       find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-        :group => "customer, kodebrg", :limit => 5000, :conditions => ["customer not like ? and tanggalsj between ? and ?", %(#{'cab'}%),
+        :group => "customer, kodebrg", :conditions => ["cabang_id = ? and jenisbrgdisc like ? and customer not like ? 
+				and tanggalsj between ? and ?", cabang, merk_id, %(#{'cab'}%),
           from.to_date, to.to_date])
     end
   end
@@ -253,16 +271,6 @@ class LaporanCabang < ActiveRecord::Base
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
         :group => "customer, kodebrg", :limit => 5000, :conditions => ["kodebrg like ? and customer not REGEXP ? and customer not REGEXP ? and customer not like ?
 				and tanggalsj between ? and ?", %(%#{merk_id}%),%(^#{customer}), %(^#{customer2}), %(#{'SHOWROOM'}%), from.to_date, to.to_date])
-	end
-
-	def self.conditional_detail(merk_id, from, to, user, customer, customer2)
-		if customer.nil?
-			get_record(from, to, user)
-		elsif customer2.nil?
-			detail_report_with_customer(merk_id, from, to, user, customer)
-		else
-			detail_report_with_2_customer(merk_id, from, to, user, customer, customer2)
-		end
 	end
 # ---------------
 
