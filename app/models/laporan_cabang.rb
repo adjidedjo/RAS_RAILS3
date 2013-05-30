@@ -27,9 +27,9 @@ class LaporanCabang < ActiveRecord::Base
 			from, to, %(%#{merk}%), %(#{'cab'}%)])
 	end
 
-	def self.total_on(date, merk)
+	def self.total_on(date, merk, merk_name)
 	 merk = "Non Serenity" if merk == 'Elite'
-   where("MONTH(tanggalsj) = ? and jenisbrgdisc = ?", date, merk).sum(:jumlah)
+   where("MONTH(tanggalsj) = ? and kodebrg like ? and jenisbrgdisc like ?", date, %(__#{merk}%), merk_name).sum(:jumlah)
   end
 
 # monthly_comparison by brand
