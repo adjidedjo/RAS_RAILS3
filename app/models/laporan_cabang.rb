@@ -28,7 +28,7 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.total_on(date, merk, merk_name)
-	 merk = "Non Serenity" if merk == 'Elite'
+	 merk_name = "Non Serenity" if merk_name == 'Elite'
    where("MONTH(tanggalsj) = ? and kodebrg like ? and jenisbrgdisc like ?", date, %(__#{merk}%), merk_name).sum(:jumlah)
   end
 
