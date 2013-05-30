@@ -4,6 +4,7 @@ Rain::Application.routes.draw do
 
   get "pages/home"
 
+
   resources :yearly_targets
 
   resources :monthly_targets
@@ -13,6 +14,10 @@ Rain::Application.routes.draw do
   resources :store_maps
 
   devise_for :users
+
+	devise_scope :user do
+  	resources :users
+  end
 
   get "stock/index"
 

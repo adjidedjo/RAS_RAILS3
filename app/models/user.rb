@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :login, :user_brand
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :login, :approved
   attr_accessor :login
 
 
@@ -19,4 +19,16 @@ class User < ActiveRecord::Base
       where(conditions).first
     end
   end
+
+	def active_for_authentication? 
+  	super && approved? 
+	end 
+
+	def inactive_message 
+		if !approved? 
+		  :not_approved 
+		else 
+		  super # Use whatever other message 
+		end 
+	end
 end
