@@ -20,16 +20,16 @@ class LaporanCabang < ActiveRecord::Base
 			month, year, %(%#{merk}%), %(#{'cab'}%)])
 	end
 
-
 	def self.total_on_merk(merk, from, to)
 		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
 			:conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",
 			from, to, %(%#{merk}%), %(#{'cab'}%)])
 	end
 
-	def self.total_on(date, merk, merk_name)
+	def self.total_on(date, merk, merk_name, year)
 	 merk_name = "Non Serenity" if merk_name == 'Elite'
-   where("MONTH(tanggalsj) = ? and kodebrg like ? and jenisbrgdisc like ?", date, %(__#{merk}%), merk_name).sum(:jumlah)
+   where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and kodebrg like ? and jenisbrgdisc like ?", year, 
+		date, %(__#{merk}%), merk_name).sum(:jumlah)
   end
 
 # monthly_comparison by brand
