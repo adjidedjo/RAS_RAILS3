@@ -576,6 +576,18 @@ $(document).ready(function(){
         }
     });
 
+		$('#monthly').dataTable({
+        bJQueryUI: true,
+        bPaginate: false,
+				bFilter: false
+    });
+
+		$('#monthly2').dataTable({
+        bJQueryUI: true,
+        bPaginate: false,
+				bFilter: false
+    });
+
     $('#table_year_elite').dataTable({
         sPaginationType: "full_numbers",
         bJQueryUI: true,

@@ -88,9 +88,13 @@ class LaporanCabangController < ApplicationController
 	end
 
   def index
-    @laporancabang = LaporanCabang.conditional_detail(params[:merk_id], params[:from], params[:to], current_user,
-			params[:customer], params[:customer2], params[:cabang_id]) unless params[:from].nil? && params[:to].nil?
-  end
+    @laporancabang = LaporanCabang.get_record(params[:merk_id], params[:from], params[:to], params[:cabang_id], 
+			params[:type_id]) unless params[:from].nil? || params[:to].nil? || params[:merk_id].nil? || params[:cabang_id].nil?
+		
+		unless params[:from].nil? || params[:to].nil?
+			redirect_to laporan_cabang_index_path, notice: 'Fill all the criteria bellow ' if params[:merk_id].nil? || params[:cabang_id].nil?
+		end  
+	end
 
   def comparison_by_year
     @cabang_get_id = Cabang.get_id

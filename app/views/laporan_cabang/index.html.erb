@@ -1,26 +1,30 @@
 <div class="form-div">
 	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
 		<fieldset>
-			<legend>Annual Sales Detail Report</legend>
+			<legend>Sales Detail Report</legend>
 			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+			<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
 			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %>
+			<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
 			<label>Branch</label>
-			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_id]), :prompt => 'Select Branch' %>
+			<label>Type</label>
+			<%= select_tag 'type_id', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]}, params[:type_id]), :prompt => 'Select Type' %>
 			<label>Brand</label>
-			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.Merk]}) %><br />
+			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.Merk]}, params[:merk_id]), :prompt => 'Select Brand' %><br />
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</fieldset>
 	<% end %>
 </div>
-
+<div class='offset4'>
+	<h4>To get the data that you want, please fill in all the options except Brand option</h4>
+</div>
 <br />
 <div style="clear:both;"></div>
 
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Annual Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
 		<div class="offset1">
 			<div class="form-inline">
@@ -34,7 +38,7 @@
 			</div>
 		</div>
     <br />
-    <table border="1" id="laporancabang" class="display" data-source="<%= laporan_cabang_index_path(format: :json) %>">
+    <table border="1" id="laporancabang" class="display">
       <thead>
         <tr>
           <th>Cabang</th>

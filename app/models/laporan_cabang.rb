@@ -206,40 +206,21 @@ class LaporanCabang < ActiveRecord::Base
 		  cabang, %(__#{cat}%), %(#{'cab'}%), from.to_date, to.to_date])
   end
 
-  def self.jenisbrgdisc_by_user(from, to, user)
-    unless user.merk.nil?
-      get_record(from, to).find(:jenisbrgdisc => user.merk.Merk)
-    else
-      get_record(from, to)
-    end
-  end
-
 # get detail report on index
 
-	def self.conditional_detail(merk_id, from, to, user, customer, customer2, cabang)
-		if customer.nil?
-			get_record(from, to, user, cabang, merk_id)
-		elsif customer2.nil?
-			detail_report_with_customer(merk_id, from, to, user, customer)
-		else
-			detail_report_with_2_customer(merk_id, from, to, user, customer, customer2)
-		end
-	end
-
-	def self.get_record(from, to, user, cabang, merk_id)
+	def self.get_record(merk_id, from, to, cabang, type_id)
 		merk_id = "Non Serenity" if merk_id == "Elite"
-    unless user.merk.nil?
-      find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
-        namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-        :group => "customer, kodebrg", :limit => 5000, :conditions => ["jenisbrgdisc like ? and customer not like ? and tanggalsj between ? and ?",
-          "Classic", %(#{'cab'}%), from.to_date, to.to_date])
-    else
-      find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
+    	find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
         :group => "customer, kodebrg", :conditions => ["cabang_id = ? and jenisbrgdisc like ? and customer not like ? 
-				and tanggalsj between ? and ?", cabang, merk_id, %(#{'cab'}%),
-          from.to_date, to.to_date])
-    end
+				and kodejenis like ? and tanggalsj between ? and ?", cabang, merk_id, %(#{'cab'}%), type_id,
+          from.to_date, to.to_date]) if merk_id.nil?
+
+    	find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
+        namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+        :group => "customer, kodebrg", :conditions => ["cabang_id = ? and customer not like ? 
+				and kodejenis like ? and tanggalsj between ? and ?", cabang, %(#{'cab'}%), type_id,
+          from.to_date, to.to_date]) unless merk_id.nil? unless merk_id.nil?			
   end
 # brand by customer
 	def self.detail_report_with_customer(merk_id, from, to, user, customer)
