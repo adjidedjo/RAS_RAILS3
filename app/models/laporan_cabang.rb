@@ -13,6 +13,14 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 
+	def self.monthly_report(month, merk, year)
+	 merk = "Non Serenity" if merk == 'Elite'
+		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+			:conditions => ["MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ? and jenisbrgdisc like ? and customer not like ?",
+			month, year, %(%#{merk}%), %(#{'cab'}%)])
+	end
+
+
 	def self.total_on_merk(merk, from, to)
 		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
 			:conditions => ["tanggalsj between ? and ? and jenisbrgdisc like ? and customer not like ?",

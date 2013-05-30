@@ -1,5 +1,7 @@
 Rain::Application.routes.draw do
 
+  get "monthly/monthly"
+
   get "pages/home"
 
   resources :yearly_targets
