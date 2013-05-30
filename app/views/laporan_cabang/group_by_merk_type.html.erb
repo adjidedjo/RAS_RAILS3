@@ -1,0 +1,166 @@
+<div class="form-div">
+	<%= form_tag laporan_cabang_group_by_merk_type_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Brand Type Report</legend>
+			<%= label_tag 'From' %>
+			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+			<%= label_tag 'To' %>
+			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+			<button type="submit" class="btn btn-primary">Search</button>
+		</fieldset>
+	<% end %>
+</div>
+
+<br />
+<div style="clear:both;"></div>
+
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Brand Type Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br />
+    </form>
+    <br />
+    <table border="1" id="group_by_cabang" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3"><%= Merk.merk_name(params[:merk_id]).first.Merk %> Type</th>
+        </tr>
+        <tr>
+          <% @cabang_get_id_to_7.each do |cabang| %>
+            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..7).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..14).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% @product.each do |product| %>
+          <tr>
+            <td><%= product.Namaroduk %></td>
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 2, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Narogong -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 3, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Bali -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 4, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Medan -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 5, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Surabaya -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 7, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Semarang -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 8, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Cirebon -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 9, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+		</br>
+		<table border="1" id="group_by_cabang_2" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3"><%= Merk.merk_name(params[:merk_id]).first.Merk %> Type</th>
+        </tr>
+        <tr>
+          <% @cabang_get_id_to_22.each do |cabang| %>
+            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..6).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..12).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% @product.each do |product| %>
+          <tr>
+            <td><%= product.Namaroduk %></td>
+            <!-- Yogyakarta -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 10, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Palembang -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 11, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Lampung -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 13, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Makasar -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 19, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Pekanbaru -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 20, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+            <!-- Jember -->
+            <% LaporanCabang.sum_of_brand_type(params[:merk_id], 22, product.KodeProduk, params[:from], params[:to]).each do |a| %>
+              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+              <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+	</br>
+  <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
+  <div class="offset5">
+	 <div class="form-inline">
+			<%= link_to "Compare", laporan_cabang_group_category_type_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
+				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
+		</div>
+	</div>
+<% end %>
+<br />
+<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
+	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>
