@@ -50,7 +50,7 @@
 						<%= drop_down "Sales Report" do %>
 		 					<%= menu_item "Detail", laporan_cabang_index_path %>
 		  				<%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
-					 		<%= menu_item "Monthly", monthly_monthly_path %>
+					 		<%= menu_item "Monthly", '#' %>
 					 		<%= menu_item "Brand", laporan_cabang_group_by_cabang_path %>
 					 		<%= menu_item "Brand Detail", "#" %>
 						<% end %>
