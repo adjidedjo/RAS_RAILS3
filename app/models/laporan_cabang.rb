@@ -28,7 +28,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.total_on(month, merk, year)
    where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and kodebrg like ? and kodejenis not like ?
-		and nosj not like ? and nosj not like ?", year, month, %(#{__merk}%), merk, %(#{'SJB'}%), %(#{'SJY'}%)).sum(:jumlah)
+		and nosj not like ? and nosj not like ?", year, month, %(__#{merk}%), %(#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%)).sum(:jumlah)
   end
 
 # monthly_comparison by brand
