@@ -27,8 +27,8 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.total_on(month, merk, year)
-   where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and substring(kodebrg, 3, 1) = ? and kodejenis like ?
-		and nosj not like ? and nosj not like ?", year, month, merk, merk, %(#{'SJB'}%), %(#{'SJY'}%)).sum(:jumlah)
+   where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and kodebrg like ? and kodejenis not like ?
+		and nosj not like ? and nosj not like ?", year, month, %(#{__merk}%), merk, %(#{'SJB'}%), %(#{'SJY'}%)).sum(:jumlah)
   end
 
 # monthly_comparison by brand
@@ -55,18 +55,19 @@ class LaporanCabang < ActiveRecord::Base
 		if customer == 'RETAIL'
     	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
 				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ? and
-				customer not like ? and customer not like ? and customer not like ?",
-				from, to, %(%#{kodebrg}%), %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'cab'}%)])
+				customer not like ? and customer not like ? and nosj not like ? and nosj not like ?",
+				from, to, %(%#{kodebrg}%), %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'SJB'}%), %(#{'SJY'}%)])
 		else
     	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer like ? and customer not like ?",
-				from, to, %(%#{kodebrg}%), %(%#{customer}%), %(#{'cab'}%)])
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer like ? and nosj not like ? and nosj not like ?",
+				from, to, %(%#{kodebrg}%), %(%#{customer}%), %(#{'SJB'}%), %(#{'SJY'}%)])
 		end
 	end
 
 	def self.merk_category_comparison(category, from, to)
     find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?", from, to, %(%#{category}%), %(#{'cab'}%)])
+			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ?", 
+			from, to, %(#{'SJB'}%), %(#{'SJY'}%)])
 	end
 
 	def self.customer_comparison(customer, from, to)
