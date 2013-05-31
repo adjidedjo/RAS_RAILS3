@@ -26,36 +26,35 @@ class LaporanCabang < ActiveRecord::Base
 			from, to, %(%#{merk}%), %(#{'cab'}%)])
 	end
 
-	def self.total_on(date, merk, merk_name, year)
-	 merk_name = "Non Serenity" if merk_name == 'Elite'
-   where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and kodebrg like ? and jenisbrgdisc like ?", year, 
-		date, %(__#{merk}%), merk_name).sum(:jumlah)
+	def self.total_on(month, merk, year)
+   where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and substring(kodebrg, 3, 1) = ? and kodejenis like ?
+		and nosj not like ? and nosj not like ?", year, month, merk, merk, %(#{'SJB'}%), %(#{'SJY'}%)).sum(:jumlah)
   end
 
 # monthly_comparison by brand
 
 	def self.category_type_comparison(kodebrg, product, from, to)
   	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ?",
-			from, to, %(%#{product + kodebrg}%), %(#{'cab'}%)])
+			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ?",
+			from, to, %(%#{product + kodebrg}%), %(#{'SJB'}%), %(#{'SJY'}%)])
 	end
 
 	def self.category_size_comparison(kodebrg, size, from, to)
 		if size == 'Tanggung'
     	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and customer not like ?",
-				from, to, %(%#{kodebrg}%), %(%#{'T'}%), %(#{'cab'}%)])
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ?",
+				from, to, %(%#{kodebrg}%), %(%#{'T'}%),  %(#{'SJB'}%), %(#{'SJY'}%)])
 		else
     	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and customer not like ?",
-				from, to, %(%#{kodebrg}%), %(%#{size}%), %(#{'cab'}%)])
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ?",
+				from, to, %(%#{kodebrg}%), %(%#{size}%), %(#{'SJB'}%), %(#{'SJY'}%)])
 		end
 	end
 
 	def self.category_customer_comparison(kodebrg, customer, from, to)
 		if customer == 'RETAIL'
     	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ?  and customer not like ? and
+				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ? and
 				customer not like ? and customer not like ? and customer not like ?",
 				from, to, %(%#{kodebrg}%), %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'cab'}%)])
 		else
