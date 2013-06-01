@@ -2,14 +2,12 @@ $(document).ready(function(){
 
 		$('#monthly').dataTable({
         bJQueryUI: true,
-        bPaginate: false,
-				bFilter: false
+        iDisplayLength: 20
     });
 
 		$('#monthly2').dataTable({
         bJQueryUI: true,
-        bPaginate: false,
-				bFilter: false
+        iDisplayLength: 20
     });
 
 });

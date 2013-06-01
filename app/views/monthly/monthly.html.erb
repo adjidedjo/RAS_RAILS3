@@ -1,4 +1,26 @@
-    <h2 style="font-size: 17px; position: absolute; left: 450px;"><i>Sales Monthly Report by Brand</i></h2>
+<div class="form-div">
+	<%= form_tag monthly_monthly_path, :method => 'get', :html => {:class => "well"} do %>
+		<fieldset>
+			<legend>Monthly Quantity Report</legend>
+			<label>Branch</label>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_id]), 
+				:prompt => 'Select Branch' %>
+			<label>Type</label>
+			<%= select_tag 'type_id', options_for_select([["Kasur Matras", "KM"], ["Sorong", "S"], ["Divan", "DV"], 
+				["Headboard", "HB"]], params[:type_id]), :prompt => 'Select Type' %>
+			<label>Product Type</label>
+			<%= select_tag 'product_type_id', options_for_select([["Non Serenity", "E"], ["Serenity", "S"]], params[:product_type_id]), 
+				:prompt => 'Select Product Type' %><br />
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</fieldset>
+	<% end %>
+</div>
+
+<br />
+<div style="clear:both;"></div>
+
+<% unless params[:cabang_id].nil? %>
+		<h2 style="font-size: 17px; position: absolute; left: 450px;"><i>Monthly Quantity Sales Report</i></h2>
     <br /><br />
     <table id="monthly" class="display">
       <thead>
@@ -23,76 +45,46 @@
       <tfoot>
       </tfoot>
       <tbody>
-				<% Merk.all.each do |merk| %>
+				<% Artikel.get_artikel_by_brand(params[:product_type_id], params[:type_id]).each do |artikel_name| %>
           <tr>
-		        <td><%= merk.Merk %></td>
+		        <td><%= artikel_name.Produk %></td>
 
             <!-- January -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(1, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(1, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- February -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(2, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(2, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- March -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(3, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(3, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- April -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(4, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(4, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- May -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(5, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(5, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- June -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(6, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(6, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
           </tr>
         <% end %>
       </tbody>
@@ -121,112 +113,53 @@
       <tfoot>
       </tfoot>
       <tbody>
-        <% Merk.all.each do |merk| %>
+				<% Artikel.get_artikel_by_brand(params[:product_type_id], params[:type_id]).each do |artikel_name|	 %>
           <tr>
-		        <td><%= merk.Merk %></td>
+		        <td><%= artikel_name.Produk %></td>
 
             <!-- July -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(7, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(7, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- August -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(8, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(8, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- September -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(9, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(9, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- October -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(10, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(10, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- November -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(11, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(11, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
             <!-- December -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(12, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
+		          <% LaporanCabang.monthly_report(12, params[:cabang_id], params[:type_id], artikel_name.KodeCollection,
+								Date.today.year, params[:product_type_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
 		</br>
-		<table id="group_by_cabang_total" class="display">
-      <thead>
-        <tr>
-          <th rowspan="2">Brand</th>
-          <th colspan="2">Total</th>
-        </tr>
-        <tr>
-          <th>Qty</th>
-        	<th>Value</th>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% Merk.all.each do |merk| %>
-          <tr>
-		        <td><%= merk.Merk %></td>
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.total_on_merk(merk.Merk, Date.today.beginning_of_year.to_date, Date.today).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		<br />
 		<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
 			:to => params[:to]), :class=>"btn btn-info" %>
 		</label>
+<% end %>
+

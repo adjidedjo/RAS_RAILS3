@@ -12,12 +12,17 @@ class LaporanCabang < ActiveRecord::Base
   scope :by_jenisbrg, lambda {|jenis| where(:jenisbrgdisc => jenis).order("tanggalsj desc")}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :remove_cab, where("customer not like ?","#{'CAB'}%")
+# scope for monthly/monthly
+	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) unless branch.blank? }
+	scope :search_by_type, lambda {|type| where("kodejenis like ?", %(#{type}%)) unless type.nil? }
+	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) unless article.nil?}
+	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
+	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%))
 
-	def self.monthly_report(month, merk, year)
-	 merk = "Non Serenity" if merk == 'Elite'
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ? and jenisbrgdisc like ? and customer not like ?",
-			month, year, %(%#{merk}%), %(#{'cab'}%)])
+	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(branch)
+			.search_by_type(type).search_by_article(kode_brand).search_by_month_and_year(month, year)
+			.not_equal_with_nosj
 	end
 
 	def self.total_on_merk(merk, from, to)
