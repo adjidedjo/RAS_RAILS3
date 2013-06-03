@@ -34,7 +34,7 @@
             <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
             <td><%= laporan.kota %></td>
             <td><%= laporan.customer %></td>
-						<% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang).each do |customer| %>
+						<% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang, params[:merk_id]).each do |customer| %>
 		          <td><%= customer.sum_jumlah.to_i %></td>
 		          <td><%= currency(customer.sum_harganetto2) %></td>
 						<% end %>

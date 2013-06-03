@@ -30,32 +30,32 @@
 		        <td><%= laporan.customer %></td>
 
             <!-- January -->
-		          <% LaporanCabang.customer_monthly(1, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(1, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- February -->
-		          <% LaporanCabang.customer_monthly(2, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(2, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- March -->
-		          <% LaporanCabang.customer_monthly(3, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(3, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- April -->
-		          <% LaporanCabang.customer_monthly(4, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(4, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- May -->
-		          <% LaporanCabang.customer_monthly(5, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(5, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- June -->
-		          <% LaporanCabang.customer_monthly(6, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(6, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
@@ -92,32 +92,32 @@
 		        <td><%= laporan.customer %></td>
 
             <!-- July -->
-		          <% LaporanCabang.customer_monthly(7, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(7, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- August -->
-		          <% LaporanCabang.customer_monthly(8, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(8, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- September -->
-		          <% LaporanCabang.customer_monthly(9, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(9, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- October -->
-		          <% LaporanCabang.customer_monthly(10, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(10, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- November -->
-		          <% LaporanCabang.customer_monthly(11, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(11, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
             <!-- December -->
-		          <% LaporanCabang.customer_monthly(12, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		          <% LaporanCabang.customer_monthly(12, Date.today.year, laporan.customer, laporan.cabang_id, params[:merk_id]).each do |a| %>
 		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 		          <% end %>
@@ -127,7 +127,7 @@
     </table>
 		</br>
 		<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
-			:to => params[:to]), :class=>"btn btn-info" %>
+			:to => params[:to], :merk_id => params[:merk_id]), :class=>"btn btn-info" %>
 		</label>
 	<% end %>
 <% end %>

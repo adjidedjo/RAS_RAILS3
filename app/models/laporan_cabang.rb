@@ -17,14 +17,14 @@ class LaporanCabang < ActiveRecord::Base
 	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) unless artikel.nil?}
 	scope :customer, lambda {|customer| where("customer like ?", customer) unless customer.nil?}
 
-	def self.customer_monthly(month, year, customer, cabang)
+	def self.customer_monthly(month, year, customer, cabang, merk)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").not_equal_with_nosj.search_by_month_and_year(month, year)
-			.customer(customer).search_by_branch(cabang)
+			.customer(customer).search_by_branch(cabang).brand(merk)
 	end
 
-	def self.customer_by_store(from, to, customer, cabang)
+	def self.customer_by_store(from, to, customer, cabang, merk)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").not_equal_with_nosj.between_date_sales(from, to).customer(customer)
-			.search_by_branch(cabang)
+			.search_by_branch(cabang).brand(merk)
 	end
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type)

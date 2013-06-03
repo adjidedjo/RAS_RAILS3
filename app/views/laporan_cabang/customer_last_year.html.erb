@@ -27,12 +27,12 @@
 		    <% @customerstore.each do |laporan| %>
 		      <tr>
 		        <th scope="row"><%= laporan.customer %></th>
-							<% LaporanCabang.customer_by_store(@from_last_year, @to_last_year, laporan.customer, laporan.cabang).each do |a| %>
+							<% LaporanCabang.customer_by_store(@from_last_year, @to_last_year, laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
 								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
-							<% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang).each do |a| %>
+							<% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
 								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_current) %></td>
