@@ -698,14 +698,12 @@ $(document).ready(function(){
     // Add a tabletool to export to pdf, excel and csv
     var oTable = jQuery('#laporancabang').dataTable({
           "bPaginate": false, 
-          "bFilter": false, 
+          "bFilter": true, 
           "sScrollY": "600", 
           "sScrollX": "100%", 
           "sScrollXInner": "400%", 
           "bScrollCollapse": true
 		});
-
-		new FixedHeader( oTable );
 
     $('#table_control_branch').dataTable({
         bJQueryUI: true
