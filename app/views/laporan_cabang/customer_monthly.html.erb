@@ -1,0 +1,134 @@
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+		<h2 style="font-size: 17px; position: absolute; left: 450px;"><i>Monthly Customer Sales Report</i></h2>
+    <br /><br />
+    <table id="customer_monthly" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Customer</th>
+        </tr>
+        <tr>
+					<th colspan="2">January</th>
+					<th colspan="2">February</th>
+					<th colspan="2">March</th>
+					<th colspan="2">April</th>
+					<th colspan="2">May</th>
+					<th colspan="2">June</th>
+        </tr>
+        <tr>
+          <% (1..6).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+				<% @customerstore.each do |laporan| %>
+          <tr>
+		        <td><%= laporan.customer %></td>
+
+            <!-- January -->
+		          <% LaporanCabang.customer_monthly(1, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- February -->
+		          <% LaporanCabang.customer_monthly(2, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- March -->
+		          <% LaporanCabang.customer_monthly(3, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- April -->
+		          <% LaporanCabang.customer_monthly(4, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- May -->
+		          <% LaporanCabang.customer_monthly(5, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- June -->
+		          <% LaporanCabang.customer_monthly(6, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+		</br>
+		<table id="customer_monthly2" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Customer</th>
+        </tr>
+        <tr>
+					<th colspan="2">July</th>
+					<th colspan="2">August</th>
+					<th colspan="2">September</th>
+					<th colspan="2">October</th>
+					<th colspan="2">November</th>
+					<th colspan="2">December</th>
+        </tr>
+        <tr>
+          <% (1..6).each do %>
+            <th>Qty</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+				<% @customerstore.each do |laporan|	 %>
+          <tr>
+		        <td><%= laporan.customer %></td>
+
+            <!-- July -->
+		          <% LaporanCabang.customer_monthly(7, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- August -->
+		          <% LaporanCabang.customer_monthly(8, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- September -->
+		          <% LaporanCabang.customer_monthly(9, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- October -->
+		          <% LaporanCabang.customer_monthly(10, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- November -->
+		          <% LaporanCabang.customer_monthly(11, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+            <!-- December -->
+		          <% LaporanCabang.customer_monthly(12, Date.today.year, laporan.customer, laporan.cabang_id).each do |a| %>
+		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+		          <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+		</br>
+		<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
+			:to => params[:to]), :class=>"btn btn-info" %>
+		</label>
+	<% end %>
+<% end %>
+
