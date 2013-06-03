@@ -86,13 +86,6 @@
     </table>
   <% end %>
 	</br>
-  <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
-  <div class="offset5">
-	 <div class="form-inline">
-			<%= link_to "Compare", laporan_cabang_group_category_size_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-		</div>
-	</div>
 <% end %>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
