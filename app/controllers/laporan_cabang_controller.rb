@@ -1,5 +1,31 @@
 class LaporanCabangController < ApplicationController
 
+	def customer_monthly
+		customer_by_store
+	end
+
+	def customer_last_month
+		unless params[:from].nil? && params[:to].nil?
+			customer_by_store
+			@from_last_month = params[:from].to_date - 1.month
+			@to_last_month = params[:to].to_date - 1.month
+		end
+	end
+
+	def customer_last_year
+		unless params[:from].nil? && params[:to].nil?
+			customer_by_store
+			@from_last_year = params[:from].to_date - 1.years
+			@to_last_year = params[:to].to_date - 1.years
+		end
+	end
+
+	def customer_by_store
+		unless params[:from].nil? && params[:to].nil?
+			@customerstore = LaporanCabang.between_date_sales(params[:from], params[:to]).brand(params[:merk_id]).group("customer").not_equal_with_nosj
+		end
+	end
+
 	def chart
 		group_by_cabang
 	end

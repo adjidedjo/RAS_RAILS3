@@ -72,10 +72,12 @@
   <% end %>
 	</br>
   <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
-  <div class="offset5">
+  <div class="offset4">
 	 <div class="form-inline">
 			<%= link_to "Compare", laporan_cabang_group_category_customer_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
+				:to => params[:to]), :method => :get, :class=>"btn btn-info" %>
+			<%= link_to "Customer by Store", laporan_cabang_customer_by_store_path(:merk_id => params[:merk_id], :from => params[:from], 
+				:to => params[:to]), :method => :get, :class=>"btn btn-info" %>
 		</div>
 	</div>
 <% end %>

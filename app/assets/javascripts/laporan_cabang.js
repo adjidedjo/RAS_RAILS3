@@ -33,6 +33,27 @@ $(document).ready(function(){
        dateFormat: 'dd-mm-yy'
     }).attr('readonly','readonly');
 
+		$('#customer_monthly').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        bRetrieve: true
+    });
+
+		$('#customer_monthly2').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        bRetrieve: true
+    });
+
+		$('#customer_by_store').dataTable({
+        bJQueryUI: true,
+        iDisplayLength: 30,
+        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
+        bRetrieve: true
+    });
+
 		$('#group_by_size_comparison').dataTable({
         bJQueryUI: true,
         iDisplayLength: 30,
