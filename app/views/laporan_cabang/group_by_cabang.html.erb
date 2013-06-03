@@ -280,17 +280,10 @@
     </table>
 		</br>
 		<div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
-		<div class="offset4">
+		<div class="offset5">
 		 <div class="form-inline">
 				<%= link_to "Compare", laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), 
 					:method => :get, :class=>"btn btn-info" %>
-				<%= link_to "Category",
-					 laporan_cabang_group_by_category_path(:user_brand => current_user.user_brand, :from => params[:from], :to => params[:to] ), 
-					 :method => :get, :class=>"btn btn-info" %>
-		   	<%= link_to "Type", laporan_cabang_group_by_type_path(:from => params[:from], :to => params[:to] ), :method => :get, 
-					 :class=>"btn btn-info" %>
-		   	<%= link_to "Customer", laporan_cabang_group_by_customer_path(:from => params[:from], :to => params[:to] ), :method => :get,
-					 :class=>"btn btn-info" %>
 			</div>
 		</div>
 		<br />

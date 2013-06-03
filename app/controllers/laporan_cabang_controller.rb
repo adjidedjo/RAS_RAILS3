@@ -88,11 +88,9 @@ class LaporanCabangController < ApplicationController
 	end
 
   def index
-    @laporancabang = LaporanCabang.get_record(params[:merk_id], params[:from], params[:to], params[:cabang_id], 
-			params[:type_id]) unless params[:from].nil? || params[:to].nil? || params[:merk_id].nil? || params[:cabang_id].nil?
-		
-		unless params[:from].nil? || params[:to].nil?
-			redirect_to laporan_cabang_index_path, notice: 'Fill all the criteria bellow ' if params[:merk_id].nil? || params[:cabang_id].nil?
+		unless params[:from].nil? && params[:to].nil? 
+			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:cabang_id])
+				.search_by_type(params[:type_id]).brand(params[:merk_id]).not_equal_with_nosj
 		end  
 	end
 

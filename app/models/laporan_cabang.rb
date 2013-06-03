@@ -2,22 +2,19 @@ class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
   belongs_to :cabang
 	belongs_to :brand
-  scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
-  scope :by_category_items, lambda {|category, date, cabang_id| where(:jenisbrgdisc => category,
-      :tanggalfaktur => date, :cabang_id => cabang_id)}
-  scope :query_by_year, lambda {|year| where("tanggalfaktur >= ? and tanggalfaktur <= ?",
-      "#{year}-01-01", "#{year}-12-31")}
-  scope :query_by_branch, lambda {|id_cabang| where(:cabang_id => id_cabang).order("tanggalsj desc")}
+
   scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
-  scope :by_jenisbrg, lambda {|jenis| where(:jenisbrgdisc => jenis).order("tanggalsj desc")}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
-  scope :remove_cab, where("customer not like ?","#{'CAB'}%")
 # scope for monthly/monthly
-	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) unless branch.blank? }
+	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) unless branch.nil? }
 	scope :search_by_type, lambda {|type| where("kodejenis like ?", %(#{type}%)) unless type.nil? }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) unless article.nil?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%))
+	scope :brand, lambda {|brand| where("kodebrg like ?", %(__#{brand}%)) unless brand.nil?}
+	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(%#{brand_size}%)) unless brand_size.nil?}
+	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) unless from.nil? && to.nil? }
+	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel)}
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(branch)
@@ -140,10 +137,9 @@ class LaporanCabang < ActiveRecord::Base
 
 # brand by merk
 
-	def self.get_brand_size(merk_id, size, from, to)
-    	find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-				:conditions => ["kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ? and tanggalsj between ? and ?",
-        %(%#{size}%), %(%#{merk_id}%), %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date])
+	def self.get_brand_size(artikel, merk_id, size, from, to)
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
+			.not_equal_with_nosj.between_date_sales(from, to)
 	end
 
 # monthly by customer
@@ -235,13 +231,7 @@ class LaporanCabang < ActiveRecord::Base
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
         :group => "customer, kodebrg", :conditions => ["cabang_id = ? and jenisbrgdisc like ? and nosj not like ? and nosj not like ? 
 				and kodejenis like ? and tanggalsj between ? and ?", cabang, merk_id, %(#{'SJB'}%), %(#{'SJY'}%), type_id,
-          from.to_date, to.to_date]) if merk_id.nil?
-
-    	find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
-        namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-        :group => "customer, kodebrg", :conditions => ["cabang_id = ? and nosj not like ? and nosj not like ? 
-				and kodejenis like ? and tanggalsj between ? and ?", cabang, %(#{'SJB'}%), %(#{'SJY'}%), type_id,
-          from.to_date, to.to_date]) unless merk_id.nil? unless merk_id.nil?			
+          from.to_date, to.to_date])	
   end
 # brand by customer
 	def self.detail_report_with_customer(merk_id, from, to, user, customer)

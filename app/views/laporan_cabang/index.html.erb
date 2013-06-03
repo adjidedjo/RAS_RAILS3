@@ -7,11 +7,14 @@
 			<label>To</label>
 			<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
 			<label>Branch</label>
-			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_id]), :prompt => 'Select Branch' %>
-			<label>Type</label>
-			<%= select_tag 'type_id', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]}, params[:type_id]), :prompt => 'Select Type' %>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, 
+				params[:cabang_id]), :prompt => 'Select Branch' %>
 			<label>Brand</label>
-			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.Merk]}, params[:merk_id]), :prompt => 'Select Brand' %><br />
+			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), :prompt => 'Select Brand' %>
+			<label>Type</label>
+			<%= select_tag 'type_id', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+				params[:type_id]), :prompt => 'Select Type' %>
+			<br />
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</fieldset>
 	<% end %>
@@ -42,33 +45,29 @@
       <thead>
         <tr>
           <th>Cabang</th>
+          <th>No SJ</th>
+          <th>Tanggal Faktur</th>
+          <th>No Faktur</th>
+          <th>No SO</th>
           <th>Customers</th>
           <th>Market</th>
           <th>Bulan</th>
           <th>Tahun</th>
-          <th>Brand</th>
-          <th>Kategori</th>
-          <th>Tipe</th>
-          <th>Artikel</th>
-          <th>Kain</th>
-          <th>Panjang</th>
-          <th>Lebar</th>
+          <th>Kode Barang</th>
           <th>Qty</th>
           <th>Harga</th>
         </tr>
       </thead>
       <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..13).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
       </tfoot>
       <tbody>
         <% @laporancabang.each do |laporan| %>
           <tr>
             <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
+            <td><%= laporan.nosj %></td>
+            <td><%= laporan.tanggalfaktur %></td>
+            <td><%= laporan.nofaktur %></td>
+            <td><%= laporan.noso %></td>
             <td><%= laporan.customer %></td>
             <% if ( laporan.customer =~ /\bES\b/ ) %>
               <td>ES</td>
@@ -79,17 +78,11 @@
             <% else %>
               <td>Retail</td>
             <% end %>
-            <td><%= laporan.tanggalsj.strftime("%B") %></td>
+            <td><%= laporan.tanggalsj.strftime("%d %B %Y") %></td>
             <td><%= laporan.tanggalsj.strftime("%Y") %></td>
-            <td><%= laporan.jenisbrgdisc %></td>
-            <td><%= laporan.namabrand %></td>
-            <td><%= laporan.jenisbrg %></td>
-            <td><%= laporan.namaartikel %></td>
-            <td><%= laporan.namakain %></td>
-            <td><%= laporan.panjang %></td>
-            <td><%= laporan.lebar %></td>
-            <td><%= laporan.sum_jumlah.to_i %></td>
-            <td><%= currency(laporan.sum_harganetto2.to_i) %></td>
+            <td><%= laporan.kodebrg %></td>
+            <td><%= laporan.jumlah.to_i %></td>
+            <td><%= currency(laporan.harganetto2.to_i) %></td>
           </tr>
         <% end %>
       </tbody>

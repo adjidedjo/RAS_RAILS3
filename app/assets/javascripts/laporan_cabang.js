@@ -675,90 +675,16 @@ $(document).ready(function(){
 		});
 
     // Add a tabletool to export to pdf, excel and csv
-    $('#laporancabang').dataTable({
-        bJQueryUI: true,
-        sPaginationType: "bootstrap",
-        iDisplayLength: 10,
-        aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        sDom: '<"H"Tfrl>t<"F"ip>',
-        bRetrieve: true,
-        "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
-            /*
-             * Calculate the total market share for all browsers in this table (ie inc. outside
-             * the pagination)
-             */
-            var iTotalQuantity = 0;
-            var iTotalValue = 0;
+    var oTable = jQuery('#laporancabang').dataTable({
+          "bPaginate": false, 
+          "bFilter": false, 
+          "sScrollY": "600", 
+          "sScrollX": "100%", 
+          "sScrollXInner": "400%", 
+          "bScrollCollapse": true
+		});
 
-            for ( var i=0 ; i<aaData.length ; i++ )
-            {
-                iTotalQuantity += parseCurrency(aaData[i][12])*1;
-                iTotalValue += parseCurrency(aaData[i][13])*1;
-            }
-
-            var iPageQuantity = 0;
-            var iPageValue = 0;
-            for ( var i=iStart ; i<iEnd ; i++ )
-            {
-                iPageQuantity += aaData[ aiDisplay[i] ][12]*1;
-                iPageValue += parseCurrency(aaData[ aiDisplay[i] ][13])*1;
-            }
-
-            var nCells = nRow.getElementsByTagName('td');
-            nCells[11].innerHTML = addCommas(parseInt(iPageQuantity) + ' ('+ parseInt(iTotalQuantity) +')');
-            nCells[12].innerHTML = addCommas(parseInt(iPageValue) + ' ('+ parseInt(iTotalValue) +')');
-
-        },
-        oTableTools: {
-            sSwfPath: "/copy_csv_xls.swf",
-            aButtons: [
-            {
-                "sExtends": "xls",
-								"sFileName": "*.xlsx",
-                "sButtonText": "Export to Excel"
-            }
-            ]
-        }
-    }).columnFilter({
-        sPlaceHolder: "head:before",
-        aoColumns: [
-        null,
-        {
-            sSelector: "#customer",
-            type: "text"
-        },
-        {
-            sSelector: "#market",
-            type: "text"
-        },
-        null,
-        null,
-				null,
-        null,
-        {
-            sSelector: "#tipe",
-            type: "text"
-        },
-        {
-            sSelector: "#artikel",
-            type: "text"
-        },
-        {
-            sSelector: "#kain",
-            type: "text"
-        },
-        {
-            sSelector: "#panjang",
-            type: "text"
-        },
-        {
-            sSelector: "#lebar",
-            type: "text"
-        },
-        null,
-        null,
-        ]
-    });
+		new FixedHeader( oTable );
 
     $('#table_control_branch').dataTable({
         bJQueryUI: true
