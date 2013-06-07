@@ -1,5 +1,20 @@
 class LaporanCabangController < ApplicationController
 
+	def search
+		unless params[:from].nil? && params[:to].nil?
+			unless params[:reports].nil? || params[:merk_id].empty?
+				redirect_to laporan_cabang_group_by_merk_customer_path(:from => params[:from], :to => params[:to], 
+					:merk_id => params[:merk_id]) if params[:reports] == 'customer'
+				redirect_to laporan_cabang_group_by_merk_size_path(:from => params[:from], :to => params[:to], 
+					:merk_id => params[:merk_id]) if params[:reports] == 'size'
+				redirect_to laporan_cabang_group_by_merk_type_path(:from => params[:from], :to => params[:to], 
+					:merk_id => params[:merk_id]) if params[:reports] == 'type'
+			else
+				redirect_to laporan_cabang_group_by_cabang_path(:from => params[:from], :to => params[:to])
+			end
+		end
+	end
+
 	def customer_monthly
 		customer_by_store
 	end

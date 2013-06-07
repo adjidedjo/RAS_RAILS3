@@ -2,6 +2,7 @@ class Artikel < ActiveRecord::Base
   set_table_name "tbbjkodeartikel"
   has_many :artikel
   scope :artikel_name, lambda {|artikel| where(:KodeCollection => artikel)}
+	scope :get_artikel_collection, lambda {|collection| where("KodeCollection like ?", collection) unless collection.nil? }
 
 
   def self.get_artikel_name(artikel_id)

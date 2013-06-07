@@ -1,5 +1,9 @@
 Rain::Application.routes.draw do
 
+  get "reports/index"
+
+  get "cabang_so/index"
+
   get "monthly/monthly"
 
   get "pages/home"
@@ -49,6 +53,7 @@ Rain::Application.routes.draw do
   get "laporan_cabang/customer_last_year"
   get "laporan_cabang/customer_monthly"
 	get "laporan_cabang/weekly_report"
+	get "laporan_cabang/search"
 	get "laporan_cabang/chart"
 	get "stock/special_size"
   get 'stock/update_kategori', :as => 'update_kategori'
