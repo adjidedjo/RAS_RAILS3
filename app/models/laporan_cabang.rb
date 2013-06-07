@@ -4,6 +4,7 @@ class LaporanCabang < ActiveRecord::Base
 	belongs_to :brand
 
   scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
+  scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
 # scope for monthly/monthly
 	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) unless branch.nil? }
@@ -16,6 +17,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) unless from.nil? && to.nil? }
 	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) unless artikel.nil?}
 	scope :customer, lambda {|customer| where("customer like ?", customer) unless customer.nil?}
+	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) unless kode_barang.nil?}
 
 	def self.customer_monthly(month, year, customer, cabang, merk)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").not_equal_with_nosj.search_by_month_and_year(month, year)
@@ -28,9 +30,9 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(branch)
-			.search_by_type(type).search_by_article(kode_brand).search_by_month_and_year(month, year)
-			.not_equal_with_nosj
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
+			.search_by_branch(branch).not_equal_with_nosj
+			.search_by_type(type).search_by_article(kode_brand)
 	end
 
 	def self.total_on_merk(merk, from, to)
