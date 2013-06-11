@@ -29,6 +29,12 @@ gem 'execjs'
 gem 'devise'
 gem 'thin'
 gem 'gmaps4rails'
+gem 'wicked'
+gem 'hpricot'
+gem 'premailer-rails'
+
+gem 'roadie'
+gem 'whenever', :require => false
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
