@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   belongs_to :merk
+	has_many :users_mail
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable
 
@@ -31,5 +32,11 @@ class User < ActiveRecord::Base
 		else 
 		  super # Use whatever other message 
 		end 
+	end
+
+	def self.send_mail
+		User.all.each do |user|
+			UserMailer.report(user).deliver
+		end
 	end
 end

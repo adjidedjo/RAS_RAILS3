@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<div class="offset4">
+	<h2>Auto Notification Report</h2>
+</div>
+
+<table id="user" class="display">
+	<thead>
+		<tr>
+		  <th>User</th>
+		  <th>Schedule</th>
+		  <th>Brand</th>
+		  <th>Type</th>
+		  <th></th>
+		  <th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<tr>
+		  <td><%= User.find(@users_mail.user_id).username %></td>
+		  <td><%= @users_mail.schedule %></td>
+		  <td><%= Merk.find_by_IdMerk(@users_mail.brand).Merk %></td>
+		  <td><%= @users_mail.category %></td>
+		  <td><%= link_to 'Edit', edit_users_mail_path(@users_mail), {:class => "btn btn-info"} %></td>
+		  <td><%= link_to 'Back', users_mails_path, {:class => "btn btn-info"} %></td>
+		</tr>
+	</tbody>
+</table>

@@ -1,6 +1,8 @@
 Rain::Application.routes.draw do
 
-  get "reports/index"
+  resources :users_mails
+
+  get "users_mails/cofiguration_email"
 
   get "cabang_so/index"
 
@@ -8,7 +10,7 @@ Rain::Application.routes.draw do
 
   get "pages/home"
 
-
+	resources :reports
   resources :yearly_targets
 
   resources :monthly_targets
