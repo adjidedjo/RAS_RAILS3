@@ -20,18 +20,18 @@ class LaporanCabang < ActiveRecord::Base
 	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) unless kode_barang.nil?}
 
 	def self.customer_monthly(month, year, customer, cabang, merk)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").not_equal_with_nosj.search_by_month_and_year(month, year)
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
 			.customer(customer).search_by_branch(cabang).brand(merk)
 	end
 
 	def self.customer_by_store(from, to, customer, cabang, merk)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").not_equal_with_nosj.between_date_sales(from, to).customer(customer)
+		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
 			.search_by_branch(cabang).brand(merk)
 	end
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
-			.search_by_branch(branch).not_equal_with_nosj
+			.search_by_branch(branch)
 			.search_by_type(type).search_by_article(kode_brand)
 	end
 
@@ -152,7 +152,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.get_brand_size(artikel, merk_id, size, from, to)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
-			.not_equal_with_nosj.between_date_sales(from, to)
+			.between_date_sales(from, to)
 	end
 
 # monthly by customer
@@ -217,9 +217,9 @@ class LaporanCabang < ActiveRecord::Base
 
   def self.sum_of_brand(cabang, merk, from, to)
 		  find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-				:conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? 
-				and tanggalsj between ? and ? and kodejenis not like ?",
-				cabang, %(__#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date, %(#{merk}%)])
+				:conditions => ["cabang_id = ? and kodebrg like ? 
+				and tanggalsj between ? and ?",
+				cabang, %(__#{merk}%), from.to_date, to.to_date])
   end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
