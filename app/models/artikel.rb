@@ -3,6 +3,7 @@ class Artikel < ActiveRecord::Base
   has_many :artikel
   scope :artikel_name, lambda {|artikel| where(:KodeCollection => artikel)}
 	scope :get_artikel_collection, lambda {|collection| where("KodeCollection like ?", collection) unless collection.nil? }
+  scope :get_name, lambda {|artikel| where(:KodeProduk => artikel)}
 
 
   def self.get_artikel_name(artikel_id)

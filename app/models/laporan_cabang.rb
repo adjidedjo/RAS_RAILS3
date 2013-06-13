@@ -7,17 +7,19 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
 # scope for monthly/monthly
-	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) unless branch.nil? }
-	scope :search_by_type, lambda {|type| where("kodejenis like ?", %(#{type}%)) unless type.nil? }
-	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) unless article.nil?}
+	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) if branch.present? }
+	scope :search_by_type, lambda {|type| where("kodejenis like ?", %(#{type}%)) if type.present? }
+	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%))
-	scope :brand, lambda {|brand| where("kodebrg like ?", %(__#{brand}%)) unless brand.nil?}
-	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(%#{brand_size}%)) unless brand_size.nil?}
-	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) unless from.nil? && to.nil? }
-	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) unless artikel.nil?}
-	scope :customer, lambda {|customer| where("customer like ?", customer) unless customer.nil?}
-	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) unless kode_barang.nil?}
+	scope :brand, lambda {|brand| where("kodebrg like ?", %(__#{brand}%)) if brand.present?}
+	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
+	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
+	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) if artikel.present?}
+	scope :customer, lambda {|customer| where("customer like ?", customer) if customer.present?}
+	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
+	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
+	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) if fabric.present?}
 
 	def self.customer_monthly(month, year, customer, cabang, merk)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
