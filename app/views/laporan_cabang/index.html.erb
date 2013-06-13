@@ -1,27 +1,39 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Detail Report</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
-			<label>Branch</label>
-			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, 
-				params[:cabang_id]), :prompt => 'Select Branch' %>
-			<label>Brand</label>
-			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), :prompt => 'Select Brand' %>
-			<label>Type</label>
-			<%= select_tag 'type_id', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
-				params[:type_id]), :prompt => 'Select Type' %>
-			<br />
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</fieldset>
-	<% end %>
-</div>
-<div class='offset4'>
-	<h4>To get the data that you want, please fill in all the options</h4>
-</div>
+<%= form_tag laporan_cabang_index_path, :method => 'get' do %>
+ <fieldset>
+  <legend>Date Filter</legend>
+		<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
+
+		<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
+ </fieldset>
+ <fieldset>
+  <legend>Product Filter</legend>
+
+		<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:prompt => "Select a Fabric"}, {:id => 'fabric_id'}) %>
+
+		<%= collection_select(nil, :article_id, @article, :id, :Produk, {:prompt => "Select an Article"}, {:id => 'article_id'}) %>
+
+		<%= select_tag 'type_id', options_for_select(@category.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+			params[:type_id]), :prompt => 'Select Type' %>
+
+		<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
+			:prompt => 'Select Brand' %>
+
+		<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+			params[:cabang_id]), :prompt => 'Select Branch' %>
+
+ </fieldset>
+ <fieldset>
+  <legend>Size Filter</legend>
+ 	<label class="radio">
+  	<%= radio_button_tag 'size', 'S' %> Standard
+  </label>
+ 	<label class="radio">
+  	<%= radio_button_tag 'size', 'T' %> Special
+  </label>
+ </fieldset>
+<br />
+ <button type="submit" class="btn btn-primary">Search</button>
+<% end %>
 <br />
 <div style="clear:both;"></div>
 
@@ -86,3 +98,27 @@
     </table>
   <% end %>
 <% end %>
+
+<script>
+	$(document).ready(function() {
+		$('#article_id').change(function() {
+			$.ajax({
+				url: "<%= update_kain_path %>",
+				data: {
+					artikel_id : $('#article_id').val()
+					},
+				dataType: "script"
+			});
+		});
+
+		$('#type_id').change(function() {
+			$.ajax({
+				url: "<%= update_article_path %>",
+				data: {
+					type_id : $('#type_id').val()
+					},
+				dataType: "script"
+			});
+		});
+	});
+</script>

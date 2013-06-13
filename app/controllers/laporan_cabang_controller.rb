@@ -128,10 +128,28 @@ class LaporanCabangController < ApplicationController
     end
 	end
 
+	def update_kain
+	# updates artists and songs based on genre selected
+	# map to name and id for use in our options_for_select
+		@fabric = Kain.get_kain_name(params[:artikel_id]).map{|a| [a.NamaKain, a.KodeKain]}.insert(0, "Select Fabric")
+	end
+
+	def update_article
+	# updates artists and songs based on genre selected
+	# map to name and id for use in our options_for_select
+		@article = Artikel.get_name(params[:type_id]).map{|a| [a.Produk, a.KodeCollection]}.insert(0, "Select Article")
+	end
+
   def index
+		@branch = Cabang.get_id
+		@brand = Merk.merk_all
+		@category = Product.all
+		@article = Artikel.group(:Produk)
+		@fabric = Kain.all
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:cabang_id])
-				.search_by_type(params[:type_id]).brand(params[:merk_id]).not_equal_with_nosj
+				.search_by_type(params[:type_id]).brand(params[:merk_id]).kode_barang_like(params[:article_id]).fabric(params[:fabric])
+				.brand_size(params[:size])
 		end  
 	end
 

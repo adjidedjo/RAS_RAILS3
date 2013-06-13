@@ -10,7 +10,12 @@ Rain::Application.routes.draw do
 
   get "pages/home"
 
-	resources :reports
+	#resources :reports
+	get "reports/type"
+	get "reports/detail"
+	get "reports/pivot"
+	get "reports/index"
+	resources :user_steps
   resources :yearly_targets
 
   resources :monthly_targets
@@ -56,11 +61,17 @@ Rain::Application.routes.draw do
   get "laporan_cabang/customer_monthly"
 	get "laporan_cabang/weekly_report"
 	get "laporan_cabang/search"
+	get "laporan_cabang/search_detail"
 	get "laporan_cabang/chart"
 	get "stock/special_size"
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
   get 'stock/update_artikel', :as => 'update_artikel'
+	get 'reports/update_kain', :as => 'update_kain'
+	get 'reports/update_article', :as => 'update_article'
+	get 'laporan_cabang/update_kain', :as => 'update_kain'
+	get 'laporan_cabang/update_article', :as => 'update_article'
+
 
 	#authenticated :user do
 	#	root :to => "laporan_cabang#chart"
