@@ -28,16 +28,13 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
-    <br /><br />
+    <br /><br /><br />
 		<div class="offset1">
 			<div class="form-inline">
 		    <label id="customer"></label>
-		    <label id="tipe"></label>
-		    <label id="artikel"></label>
-		    <label id="kain"></label>
-		    <label id="panjang"></label>
-		    <label id="lebar"></label>
 		    <label id="market" ></label>
+		    <label id="kodebrg"></label>
+		    <label id="qty"></label>
 			</div>
 		</div>
     <br />

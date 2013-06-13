@@ -694,16 +694,53 @@ $(document).ready(function(){
         bPaginate: false,
 				bFilter: false
 		});
-
+$("#laporancabang").css("width","100%")
     // Add a tabletool to export to pdf, excel and csv
-    var oTable = jQuery('#laporancabang').dataTable({
-          "bPaginate": false, 
-          "bFilter": true, 
-          "sScrollY": "600", 
-          "sScrollX": "100%", 
-          "sScrollXInner": "400%", 
-          "bScrollCollapse": true
-		});
+    $('#laporancabang').dataTable({
+				"sScrollX": "100%",
+				"sScrollXInner": "110%",
+				"bScrollCollapse": true,
+        iDisplayLength: -1,
+        sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+								"sFileName": "*.xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
+    }).columnFilter({
+        sPlaceHolder: "head:before",
+        aoColumns: [
+		      null,
+		      null,
+		      null,
+		      null,
+		      null,
+		      {
+		          sSelector: "#customer",
+		          type: "text"
+		      },
+		      {
+		          sSelector: "#market",
+		          type: "text"
+		      },
+		      null,
+		      null,
+		      {
+		          sSelector: "#kodebrg",
+		          type: "text"
+		      },
+		      {
+		          sSelector: "#qty",
+		          type: "text"
+		      }
+        ]
+    });
 
     $('#table_control_branch').dataTable({
         bJQueryUI: true
