@@ -28,13 +28,13 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.customer_by_store(from, to, customer, cabang, merk)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
-			.search_by_branch(cabang).brand(merk)
+			.search_by_branch(cabang).brand(merk).not_equal_with_nosj
 	end
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
 			.search_by_branch(branch)
-			.search_by_type(type).search_by_article(kode_brand)
+			.search_by_type(type).search_by_article(kode_brand).not_equal_with_nosj
 	end
 
 	def self.total_on_merk(merk, from, to)
@@ -154,7 +154,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.get_brand_size(artikel, merk_id, size, from, to)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
-			.between_date_sales(from, to)
+			.between_date_sales(from, to).not_equal_with_nosj
 	end
 
 # monthly by customer
