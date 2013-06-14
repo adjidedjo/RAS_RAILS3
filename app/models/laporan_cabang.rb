@@ -220,8 +220,8 @@ class LaporanCabang < ActiveRecord::Base
   def self.sum_of_brand(cabang, merk, from, to)
 		  find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
 				:conditions => ["cabang_id = ? and kodebrg like ? 
-				and tanggalsj between ? and ?",
-				cabang, %(__#{merk}%), from.to_date, to.to_date])
+				and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
+				cabang, %(__#{merk}%), from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%)])
   end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
