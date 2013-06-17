@@ -125,7 +125,7 @@ class ReportsController < ApplicationController
 	def detail
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
-				.search_by_type(params[:tyoe]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
+				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type])
 		end 
 	end	
