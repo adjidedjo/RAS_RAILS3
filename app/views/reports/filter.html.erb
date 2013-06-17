@@ -1,0 +1,22 @@
+<div class="form-div">
+<%= form_tag reports_filter_path, :method => 'get' do %>
+ <fieldset>
+			<legend>Sales Report</legend>
+			<%= hidden_field_tag 'reports', params[:reports] %>
+			<label>From</label>
+			<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
+			<label>To</label>
+			<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
+			<label>Branch</label>
+			<%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, 
+				params[:cabang_id]), :prompt => 'Select Branch' %>
+			<label>Brand</label>
+			<%= select_tag 'merk_id', options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), :prompt => 'Select Brand' %>
+			<label>Type</label>
+			<%= select_tag 'type_id', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+				params[:type_id]), :prompt => 'Select Type' %>
+			<br />
+			<button type="submit" class="btn btn-primary">Next</button>
+		</fieldset>
+<% end %>
+</div>

@@ -1,0 +1,8 @@
+<%= form_tag reports_size_special_path, :method => 'get' do %>
+ <fieldset>
+  <legend>Size Special</legend>
+  	<%= text_field_tag 'panjang', params[:panjang].nil? ? nil : params[:panjang], :placeholder => "Panjang"  %>
+ </fieldset>
+ <br />
+ <button type="submit" class="btn btn-primary">Next</button>
+<% end %>

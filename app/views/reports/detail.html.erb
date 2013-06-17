@@ -1,0 +1,78 @@
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br /><br /><br />
+		<div class="offset1">
+			<div class="form-inline">
+		    <label id="customer"></label>
+		    <label id="market" ></label>
+		    <label id="kodebrg"></label>
+		    <label id="qty"></label>
+			</div>
+		</div>
+    <br />
+		<div class="offset1">
+		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
+		    <label>Type : <%= Product.product_name(params[:type]).first.Namaroduk %></label>
+		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
+		    <label>Group By : <%= params[:group_by] %></label>
+		</div>
+		<br />
+    <table border="1" id="laporancabang" class="display" cellspacing="0" cellpadding="3" width="100%">
+      <thead>
+        <tr>
+          <th>Cabang</th>
+          <th>No SJ</th>
+          <th>Tanggal Faktur</th>
+          <th>No Faktur</th>
+          <th>No SO</th>
+          <th>Customers</th>
+          <th>Market</th>
+          <th>Bulan</th>
+          <th>Tahun</th>
+          <th>Salesman</th>
+          <th>Artikel</th>
+          <th>Kain</th>
+          <th>Panjang</th>
+          <th>Lebar</th>
+          <th>Kode Barang</th>
+          <th>Qty</th>
+          <th>Harga</th>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @laporancabang.each do |laporan| %>
+          <tr>
+            <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
+            <td><%= laporan.nosj %></td>
+            <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
+            <td><%= laporan.nofaktur %></td>
+            <td><%= laporan.noso %></td>
+            <td><%= laporan.customer %></td>
+            <% if ( laporan.customer =~ /\bES\b/ ) %>
+              <td>ES</td>
+            <% elsif ( laporan.customer =~ /\bSOGO\b/ ) %>
+              <td>SOGO</td>
+            <% elsif ( laporan.customer =~ /\bSHOWROOM\b/ ) %>
+              <td>SHOWROOM</td>
+            <% else %>
+              <td>Retail</td>
+            <% end %>
+            <td><%= laporan.tanggalsj.strftime("%B") %></td>
+            <td><%= laporan.tanggalsj.strftime("%Y") %></td>
+            <td><%= laporan.salesman %></td>
+            <td><%= laporan.namaartikel %></td>
+            <td><%= laporan.namakain %></td>
+            <td><%= laporan.panjang %></td>
+            <td><%= laporan.lebar %></td>
+            <td><%= laporan.kodebrg %></td>
+            <td><%= laporan.jumlah.to_i %></td>
+            <td><%= currency(laporan.harganetto2.to_i) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+<% end %>
+<% end %>

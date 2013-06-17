@@ -1,5 +1,13 @@
 Rain::Application.routes.draw do
 
+  get "reports/size_special"
+	get "reports/size_standard"
+  get "reports/customer_modern"
+  get "reports/customer_retail"
+  get "reports/first_filter"
+  get "reports/second_filter"
+  get "reports/third_filter"
+
   resources :users_mails
 
   get "users_mails/cofiguration_email"
@@ -11,10 +19,10 @@ Rain::Application.routes.draw do
   get "pages/home"
 
 	#resources :reports
-	get "reports/type"
+	#get "reports/type"
 	get "reports/detail"
-	get "reports/pivot"
-	get "reports/index"
+	get "reports/standard"
+	#get "reports/index"
 	resources :user_steps
   resources :yearly_targets
 
@@ -67,8 +75,8 @@ Rain::Application.routes.draw do
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
   get 'stock/update_artikel', :as => 'update_artikel'
-	get 'reports/update_kain', :as => 'update_kain'
-	get 'reports/update_article', :as => 'update_article'
+	get 'reports/update_reports_kain', :as => 'update_reports_kain'
+	get 'reports/update_reports_article', :as => 'update_reports_article'
 	get 'laporan_cabang/update_kain', :as => 'update_kain'
 	get 'laporan_cabang/update_article', :as => 'update_article'
 
