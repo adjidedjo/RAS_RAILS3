@@ -1,5 +1,18 @@
 class ReportsController < ApplicationController
 
+	def clear_session
+		session[:from] = nil
+		session[:to] = nil
+		session[:cabang_id] = nil
+		session[:merk_id] = nil
+		session[:type_id] = nil
+		session[:article_id] = nil
+		session[:fabric_id] = nil
+		session[:customer] = nil
+		session[:size] = nil
+		session[:group_by] = nil
+	end
+
 	def customer_modern
 		unless params[:customer_modern].nil?
 			session[:customer] = params[:customer_modern]
@@ -106,6 +119,7 @@ class ReportsController < ApplicationController
 	def first_filter
 		redirect_to reports_second_filter_path if params[:reports].present?
 		session[:type_report] = params[:reports]
+		clear_session
 	end
 
 	def detail
