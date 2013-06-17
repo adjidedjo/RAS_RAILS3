@@ -135,7 +135,7 @@ class ReportsController < ApplicationController
 			@laporancabang = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
 				sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
-				.search_by_type(params[:tyoe]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
+				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type]).group(params[:group_by])
 		end
 	end
