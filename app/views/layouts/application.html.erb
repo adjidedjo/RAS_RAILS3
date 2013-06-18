@@ -47,8 +47,8 @@
 		 					<%= menu_item "Monthly", monthly_targets_path %>
 		  				<%= menu_item "Yearly", yearly_targets_path %>
 						<% end %>
-						<%= drop_down "Sales Report" do %>
-		 					<%= menu_item "Detail", laporan_cabang_index_path %>
+						<%= drop_down "Sales Reports" do %>
+		 					<%= menu_item "Analysis", reports_first_filter_path %>
 		  				<%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
 					 		<%= menu_item "Monthly", monthly_monthly_path %>
 					 		<%= menu_item "Brand", laporan_cabang_search_path %>

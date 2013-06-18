@@ -2,7 +2,7 @@
   <% unless params[:from].empty? %>
 <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br /><br />
-		<div class="offset1">
+		<div class="offset2">
 			<div class="form-inline">
 		    <label id="customer"></label>
 		    <label id="artikel" ></label>
@@ -18,27 +18,38 @@
 		    <label>Group By : <%= params[:group_by] %></label>
 		</div>
 		<div class="offset6">
-			<label>If you want to repeat your filter, please click New Filter button <%= link_to 'New Filter', 
-				reports_first_filter_path, {:class => "btn btn-primary"} %>
+			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+				reports_first_filter_path, {:class => "btn btn-primary"} %> or, <br />
+				<%= link_to 'Detail', reports_detail_path(
+				:from => session[:from],
+				:to => session[:to],
+				:branch => session[:cabang_id],
+				:brand => session[:merk_id],
+				:type => session[:type_id],
+				:article => session[:article_id],
+				:fabric => session[:fabric_id],
+				:customer => session[:customer],
+				:size => session[:size_standard],
+				:size_type => session[:size]), {:class => "btn btn-primary"} %> to see the detail of this results
 			</label>
 		</div>
 		<br />
     <table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
       <thead>
         <tr>
-          <th>Customers</th>
-          <th>Artikel</th>
-          <th>Kode Barang</th>
-          <th>Cabang</th>
-          <th>Market</th>
-          <th>Bulan</th>
-          <th>Tahun</th>
-          <th>Salesman</th>
-          <th>Kain</th>
-          <th>Panjang</th>
-          <th>Lebar</th>
+					<% if params[:group_by] == 'customer' %>
+          	<th>Customers</th>
+					<% elsif params[:group_by] == 'kodeartikel' %>
+          	<th>Article</th>
+					<% else %>
+          	<th>Items Code</th>
+		        <th>Article</th>
+		        <th>Fabric</th>
+		        <th>Length</th>
+		        <th>Width</th>
+					<% end %>
           <th>Qty</th>
-          <th>Harga</th>
+          <th>Amount</th>
         </tr>
       </thead>
       <tfoot>
@@ -46,25 +57,17 @@
       <tbody>
         <% @laporancabang.each do |laporan| %>
           <tr>
-            <td><%= laporan.customer %></td>
-            <td><%= laporan.namaartikel %></td>
-            <td><%= laporan.kodebrg %></td>
-            <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
-            <% if ( laporan.customer =~ /\bES\b/ ) %>
-              <td>ES</td>
-            <% elsif ( laporan.customer =~ /\bSOGO\b/ ) %>
-              <td>SOGO</td>
-            <% elsif ( laporan.customer =~ /\bSHOWROOM\b/ ) %>
-              <td>SHOWROOM</td>
-            <% else %>
-              <td>Retail</td>
-            <% end %>
-            <td><%= laporan.tanggalsj.strftime("%B") %></td>
-            <td><%= laporan.tanggalsj.strftime("%Y") %></td>
-            <td><%= laporan.salesman %></td>
-            <td><%= laporan.namakain %></td>
-            <td><%= laporan.panjang %></td>
-            <td><%= laporan.lebar %></td>
+						<% if params[:group_by] == 'customer' %>
+            	<td><%= laporan.customer %></td>
+						<% elsif params[:group_by] == 'kodeartikel' %>
+            	<td><%= laporan.namaartikel %></td>
+						<% else %>
+            	<td><%= laporan.kodebrg %></td>
+		          <td><%= laporan.namaartikel %></td>
+		          <td><%= laporan.namakain %></td>
+		          <td><%= laporan.panjang %></td>
+		          <td><%= laporan.lebar %></td>
+						<% end %>
             <td><%= currency(laporan.sum_jumlah.to_i) %></td>
             <td><%= currency(laporan.sum_harga.to_i) %></td>
           </tr>
