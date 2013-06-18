@@ -17,20 +17,9 @@
 		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
 		    <label>Group By : <%= params[:group_by] %></label>
 		</div>
-		<div class="offset6">
+		<div class="offset8">
 			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-				reports_first_filter_path, {:class => "btn btn-primary"} %> or, <br />
-				<%= link_to 'Detail', reports_detail_path(
-				:from => session[:from],
-				:to => session[:to],
-				:branch => session[:cabang_id],
-				:brand => session[:merk_id],
-				:type => session[:type_id],
-				:article => session[:article_id],
-				:fabric => session[:fabric_id],
-				:customer => session[:customer],
-				:size => session[:size_standard],
-				:size_type => session[:size]), {:class => "btn btn-primary"} %> to see the detail of this results
+				reports_first_filter_path, {:class => "btn btn-primary"} %> 
 			</label>
 		</div>
 		<br />
