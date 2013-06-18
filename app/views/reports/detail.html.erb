@@ -13,9 +13,14 @@
     <br />
 		<div class="offset1">
 		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
-		    <label>Type : <%= Product.product_name(params[:type]).first.Namaroduk %></label>
+		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
 		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
 		    <label>Group By : <%= params[:group_by] %></label>
+		</div>
+		<div class="offset6">
+			<label>If you want to repeat your filter, please click New Filter button <%= link_to 'New Filter', 
+				reports_first_filter_path, {:class => "btn btn-primary"} %>
+			</label>
 		</div>
 		<br />
     <table border="1" id="laporancabang" class="display" cellspacing="0" cellpadding="3" width="100%">
