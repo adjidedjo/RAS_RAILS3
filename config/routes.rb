@@ -7,6 +7,7 @@ Rain::Application.routes.draw do
   get "reports/first_filter"
   get "reports/second_filter"
   get "reports/third_filter"
+  get "reports/through"
 
   resources :users_mails
 
