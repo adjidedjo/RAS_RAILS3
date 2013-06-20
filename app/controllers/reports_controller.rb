@@ -1,5 +1,31 @@
 class ReportsController < ApplicationController
 
+	def through
+		redirect_to reports_detail_path(
+			:from => session[:from],
+			:to => session[:to],
+			:branch => session[:cabang_id],
+			:brand => session[:merk_id],
+			:type => session[:type_id],
+			:article => session[:article_id],
+			:fabric => session[:fabric_id],
+			:customer => session[:customer],
+			:size => session[:size_standard],
+			:size_type => session[:size]) if session[:type_report] == 'detail'
+		redirect_to reports_standard_path(
+			:from => session[:from],
+			:to => session[:to],
+			:branch => session[:cabang_id],
+			:brand => session[:merk_id],
+			:type => session[:type_id],
+			:article => session[:article_id],
+			:fabric => session[:fabric_id],
+			:customer => session[:customer],
+			:size => session[:size_standard],
+			:size_type => session[:size],
+			:group_by => session[:group_by]) if session[:type_report] == 'standard'
+	end
+
 	def clear_session
 		session[:from] = nil
 		session[:to] = nil
@@ -19,29 +45,7 @@ class ReportsController < ApplicationController
 			session[:fabric_id] = nil if session[:fabric_id] == 'Select Fabric'
 			session[:article_id] = nil if session[:article_id] == 'Select Article'
 			session[:size_standard] = nil if session[:size_standard] == 'all'
-			redirect_to reports_detail_path(
-				:from => session[:from],
-				:to => session[:to],
-				:branch => session[:cabang_id],
-				:brand => session[:merk_id],
-				:type => session[:type_id],
-				:article => session[:article_id],
-				:fabric => session[:fabric_id],
-				:customer => session[:customer],
-				:size => session[:size_standard],
-				:size_type => session[:size]) if session[:type_report] == 'detail'
-			redirect_to reports_standard_path(
-				:from => session[:from],
-				:to => session[:to],
-				:branch => session[:cabang_id],
-				:brand => session[:merk_id],
-				:type => session[:type_id],
-				:article => session[:article_id],
-				:fabric => session[:fabric_id],
-				:customer => session[:customer],
-				:size => session[:size_standard],
-				:size_type => session[:size],
-				:group_by => session[:group_by]) if session[:type_report] == 'standard'
+			redirect_to reports_through_path
 		end
 	end
 
@@ -52,29 +56,7 @@ class ReportsController < ApplicationController
 			session[:size_standard] = nil if session[:size_standard] == 'all'
 			session[:customer] = params[:customer_retail]
 			session[:customer] = nil if session[:customer] == 'all'
-			redirect_to reports_detail_path(
-				:from => session[:from],
-				:to => session[:to],
-				:branch => session[:cabang_id],
-				:brand => session[:merk_id],
-				:type => session[:type_id],
-				:article => session[:article_id],
-				:fabric => session[:fabric_id],
-				:customer => session[:customer],
-				:size => session[:size_standard],
-				:size_type => session[:size]) if session[:type_report] == 'detail'
-			redirect_to reports_standard_path(
-				:from => session[:from],
-				:to => session[:to],
-				:branch => session[:cabang_id],
-				:brand => session[:merk_id],
-				:type => session[:type_id],
-				:article => session[:article_id],
-				:fabric => session[:fabric_id],
-				:customer => session[:customer],
-				:size => session[:size_standard],
-				:size_type => session[:size],
-				:group_by => session[:group_by]) if session[:type_report] == 'standard'
+			redirect_to reports_through_path
 		end
 		
 	end
@@ -111,6 +93,7 @@ class ReportsController < ApplicationController
 		session[:customer] = params[:customer] if params[:customer].present?
 		session[:size] = params[:size] if params[:size].present?
 		session[:group_by] = params[:group] if params[:group].present?
+		session[:year] = params[:grad_year] if params[:grad_year].present?
 		redirect_to reports_customer_modern_path if params[:size] == 'T' && params[:customer] == 'modern'
 		redirect_to reports_customer_retail_path if params[:size] == 'T' && params[:customer] == 'retail'
 		redirect_to reports_size_standard_path if params[:size] == 'S'

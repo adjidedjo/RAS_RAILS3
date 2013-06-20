@@ -8,18 +8,18 @@
  <fieldset>
   <legend>Product Filter</legend>
 
-		<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:include_blank => true}, {:id => 'fabric_id'}) %>
-
-		<%= collection_select(nil, :article_id, @article, :id, :Produk, {:include_blank => true}, {:id => 'article_id'}) %>
-
-		<%= select_tag 'type_id', options_for_select(@category.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
-			params[:type_id]), :prompt => 'Select Type' %>
+		<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+			params[:cabang_id]), :prompt => 'Select Branch' %>
 
 		<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
 			:prompt => 'Select Brand' %>
 
-		<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-			params[:cabang_id]), :prompt => 'Select Branch' %>
+		<%= select_tag 'type_id', options_for_select(@category.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+			params[:type_id]), :prompt => 'Select Type' %>
+
+		<%= collection_select(nil, :article_id, @article, :id, :Produk, {:include_blank => true, :prompt => 'Select an Article'}, {:id => 'article_id'}) %>
+
+		<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:include_blank => true, :prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %>
 
  </fieldset>
  <fieldset>

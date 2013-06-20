@@ -1,7 +1,7 @@
 <%= form_tag reports_customer_retail_path, :method => 'get' do %>
  <fieldset>
   <legend>Customer Modern</legend>
-		<%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], :placeholder => "customer_retail"  %>
+		<%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], :placeholder => "Customer Retail"  %>
  	<label class="radio">
   	<%= radio_button_tag 'customer_modern', 'all' %> All
   </label>
