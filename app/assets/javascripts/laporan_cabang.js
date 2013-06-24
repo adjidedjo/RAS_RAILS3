@@ -794,7 +794,8 @@ $(document).ready(function(){
     });
 
     $('#table_control_branch').dataTable({
-        bJQueryUI: true
+        bJQueryUI: true,
+        iDisplayLength: -1
     });
 
     function parseCurrency( num ) {
