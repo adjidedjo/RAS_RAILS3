@@ -53,14 +53,12 @@
 
             <!-- January -->
 		          <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -68,14 +66,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -83,14 +79,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -98,14 +92,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -113,14 +105,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -128,14 +118,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -174,14 +162,12 @@
 
             <!-- January -->
 		          <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -189,14 +175,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -204,14 +188,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -219,14 +201,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -234,14 +214,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>
@@ -249,14 +227,12 @@
 
 
 		          <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-								params[:group_by]).empty? %>
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).empty? %>
 				          <td>0</td>
 				          <td>0</td>
 							<% else %>
 								<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:group_by]).each do |a| %>
+										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
 				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
 				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
 								<% end %>

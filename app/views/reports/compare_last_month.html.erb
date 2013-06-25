@@ -62,13 +62,9 @@
 		        	<td><%= laporan.kodebrg %></td>
 						<% end %>
 		        <th scope="row"><%= laporan.kota %></th>
-							<% LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, 
-								sum(harganetto2) as sum_harga, kota")
-								.between_date_sales(@from_last_month, @to_last_month).search_by_branch(laporan.cabang)
-								.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article])
-								.fabric(laporan.kodekain).size_length(params[:size]).customer_analyze(laporan.customer)
-								.brand_size(params[:size_type]).group(params[:group_by]).each do |a| %>
-								<% @value_last = a.sum_harga.nil? ? 0 : a.sum_harga %>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_month, @to_last_month, laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
@@ -149,13 +145,9 @@
 		        	<td><%= laporan.kodebrg %></td>
 						<% end %>
 		        <th scope="row"><%= laporan.kota %></th>
-							<% LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, 
-								sum(harganetto2) as sum_harga, kota")
-								.between_date_sales(@from_last_month, @to_last_month).search_by_branch(laporan.cabang).kode_barang_like(laporan.kodebrg)
-								.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article])
-								.fabric(params[:fabric]).size_length(params[:size]).customer_analyze(params[:customer])
-								.brand_size(params[:size_type]).each do |a| %>
-								<% @value_last = a.sum_harga.nil? ? 0 : a.sum_harga %>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_month, @to_last_month, laporan.cabang, params[:type], 
+								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
@@ -236,13 +228,9 @@
 		        	<td><%= laporan.kodebrg %></td>
 						<% end %>
 		        <th scope="row"><%= laporan.kota %></th>
-							<% LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, 
-								sum(harganetto2) as sum_harga")
-								.between_date_sales(@from_last_month, @to_last_month).search_by_branch(laporan.cabang).kode_barang_like(laporan.kodeartikel)
-								.search_by_type(params[:type]).brand(params[:brand])
-								.fabric(params[:fabric]).size_length(params[:size]).customer_analyze(params[:customer])
-								.brand_size(params[:size_type]).each do |a| %>
-								<% @value_last = a.sum_harga.nil? ? 0 : a.sum_harga %>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_month, @to_last_month, laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
               	<td><%= currency(@value_last) %></td>
 							<% end %>
