@@ -40,7 +40,7 @@
   	<%= radio_button_tag 'customer', 'retail' %> Retail
   </label>
  </fieldset>
- <% if session[:type_report] == 'standard' %>
+ <% unless session[:type_report] == 'detail'  %>
 	 <fieldset>
 		<legend>Group by</legend>
 	 	<label class="radio">

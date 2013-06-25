@@ -1,0 +1,16 @@
+<%= form_tag reports_compare_type_path, :method => 'get' do %>
+ <fieldset>
+  <legend>Compare Type</legend>
+ 	<label class="radio">
+  	<%= radio_button_tag 'compare', 'last_month' %> Last Month
+  </label>
+ 	<label class="radio">
+  	<%= radio_button_tag 'compare', 'last_year' %> Last Year
+  </label>
+ 	<label class="radio">
+  	<%= radio_button_tag 'compare', 'year' %> Current Year
+  </label>
+ </fieldset>
+ <br />
+ <button type="submit" class="btn btn-primary">Next</button>
+<% end %>

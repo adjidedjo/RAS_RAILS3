@@ -1,5 +1,28 @@
 class ReportsController < ApplicationController
 
+	def compare_current_year
+		compare_last_month
+	end
+
+	def compare_last_year
+		compare_last_month
+	end
+
+	def compare_last_month
+		unless params[:from].nil? && params[:to].nil?
+			@customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
+				cabang_id, kodekain")
+				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
+				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
+				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type]).group(params[:group_by])
+		end
+	end
+
+	def compare_type
+		redirect_to reports_second_filter_path if params[:compare].present?
+		session[:compare_type] = params[:compare]
+	end
+
 	def through
 		redirect_to reports_detail_path(
 			:from => session[:from],
@@ -24,6 +47,42 @@ class ReportsController < ApplicationController
 			:size => session[:size_standard],
 			:size_type => session[:size],
 			:group_by => session[:group_by]) if session[:type_report] == 'standard'
+		redirect_to reports_compare_last_month_path(
+			:from => session[:from],
+			:to => session[:to],
+			:branch => session[:cabang_id],
+			:brand => session[:merk_id],
+			:type => session[:type_id],
+			:article => session[:article_id],
+			:fabric => session[:fabric_id],
+			:customer => session[:customer],
+			:size => session[:size_standard],
+			:size_type => session[:size],
+			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'last_month'
+		redirect_to reports_compare_last_year_path(
+			:from => session[:from],
+			:to => session[:to],
+			:branch => session[:cabang_id],
+			:brand => session[:merk_id],
+			:type => session[:type_id],
+			:article => session[:article_id],
+			:fabric => session[:fabric_id],
+			:customer => session[:customer],
+			:size => session[:size_standard],
+			:size_type => session[:size],
+			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'last_year'
+		redirect_to reports_compare_current_year_path(
+			:from => session[:from],
+			:to => session[:to],
+			:branch => session[:cabang_id],
+			:brand => session[:merk_id],
+			:type => session[:type_id],
+			:article => session[:article_id],
+			:fabric => session[:fabric_id],
+			:customer => session[:customer],
+			:size => session[:size_standard],
+			:size_type => session[:size],
+			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'year'
 	end
 
 	def clear_session
@@ -100,7 +159,8 @@ class ReportsController < ApplicationController
 	end
 
 	def first_filter
-		redirect_to reports_second_filter_path if params[:reports].present?
+		redirect_to reports_compare_type_path if params[:reports] == 'compare'
+		redirect_to reports_second_filter_path if params[:reports].present? && params[:reports] != 'compare'
 		session[:type_report] = params[:reports]
 		clear_session
 	end
@@ -121,9 +181,6 @@ class ReportsController < ApplicationController
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type]).group(params[:group_by])
 		end
-	end
-
-	def pivot
 	end
 
 	def type

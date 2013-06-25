@@ -21,14 +21,25 @@ class LaporanCabang < ActiveRecord::Base
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
 	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
 	scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
-	scope :customer_analyze, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer.present?}
+	scope :customer_analyze, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present?}
 	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(____________#{brand_size}%)) if brand_size.present?}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
 
-	def self.customer_monthly(month, year, customer, cabang, merk)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
-			.customer(customer).search_by_branch(cabang).brand(merk)
+	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type)
+		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
+			.between_date_sales(from, to).search_by_branch(branch)
+			.search_by_type(type).brand(brand).kode_barang_like(article)
+			.fabric(fabric).size_length(size).customer_analyze(customer)
+			.brand_size(size_type)
+	end
+
+	def self.customer_monthly(month, year,branch, type, brand, article, fabric, size, customer, size_type)
+		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
+			.search_by_month_and_year(month, year).search_by_branch(branch)
+			.search_by_type(type).brand(brand).kode_barang_like(article)
+			.fabric(fabric).size_length(size).customer_analyze(customer)
+			.brand_size(size_type)
 	end
 
 	def self.customer_by_store(from, to, customer, cabang, merk)

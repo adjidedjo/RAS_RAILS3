@@ -1,0 +1,216 @@
+<% if params[:group_by] == 'customer' %>
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+		<div class="offset2">
+			<div class="form-inline">
+		    <label id="customer"></label>
+		    <label id="artikel" ></label>
+		    <label id="kodebrg"></label>
+		    <label id="kain"></label>
+			</div>
+		</div>
+    <br />
+		<div class="offset1">
+		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
+		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
+		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
+		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
+		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
+		    <label>Group By : <%= params[:group_by] %></label>
+		</div>
+		<div class="offset8">
+			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+				reports_first_filter_path, {:class => "btn btn-primary"} %> 
+			</label>
+		</div>
+		<br />
+		<table id="customer_monthly" class="pretty">
+		  <thead>
+		    <tr>
+		      <th rowspan="3">Customer</th>
+		      <th colspan="6">Comparison</th>
+		    </tr>
+		    <tr>
+		      <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+		      <th colspan="2"><%= params[:to].to_date.year  %></th>
+					<th colspan="2">Growth</th>
+		    </tr>
+		    <tr>
+				<% (1..3).each do |a| %>
+		      <th>QTY</th>
+		      <th>Value</th>
+				<% end %>
+		    </tr>
+		  </thead>
+		  <tfoot>
+		  </tfoot>
+		  <tbody>
+		    <% @customerstore.each do |laporan| %>
+		      <tr>
+		        <th scope="row"><%= laporan.customer %></th>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_year, @to_last_year, laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_last) %></td>
+							<% end %>
+							<% LaporanCabang.analysis_customer_last_year(params[:from].to_date.beginning_of_year, params[:to], laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type]).each do |a| %>
+								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_current) %></td>
+							<% end %>
+							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+	<% end %>
+<% end %>
+<% end %>
+
+<% if params[:group_by] == 'kodebrg' %>
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+		<div class="offset2">
+			<div class="form-inline">
+		    <label id="customer"></label>
+		    <label id="artikel" ></label>
+		    <label id="kodebrg"></label>
+		    <label id="kain"></label>
+			</div>
+		</div>
+    <br />
+		<div class="offset1">
+		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
+		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
+		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
+		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
+		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
+		    <label>Group By : <%= params[:group_by] %></label>
+		</div>
+		<div class="offset8">
+			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+				reports_first_filter_path, {:class => "btn btn-primary"} %> 
+			</label>
+		</div>
+		<br />
+		<table id="customer_monthly" class="pretty">
+		  <thead>
+		    <tr>
+		      <th rowspan="3">Items Code</th>
+		      <th colspan="6">Comparison</th>
+		    </tr>
+		    <tr>
+		      <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+		      <th colspan="2"><%= params[:to].to_date.year  %></th>
+					<th colspan="2">Growth</th>
+		    </tr>
+		    <tr>
+				<% (1..3).each do |a| %>
+		      <th>QTY</th>
+		      <th>Value</th>
+				<% end %>
+		    </tr>
+		  </thead>
+		  <tfoot>
+		  </tfoot>
+		  <tbody>
+		    <% @customerstore.each do |laporan| %>
+		      <tr>
+		        <th scope="row"><%= laporan.kodebrg %></th>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_year, @to_last_year, laporan.cabang, params[:type], 
+								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_last) %></td>
+							<% end %>
+							<% LaporanCabang.analysis_customer_last_year(params[:from].to_date.beginning_of_year, params[:to], laporan.cabang, params[:type], 
+								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type]).each do |a| %>
+								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_current) %></td>
+							<% end %>
+							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+	<% end %>
+<% end %>
+<% end %>
+
+
+<% if params[:group_by] == 'kodeartikel' %>
+<% unless params[:from].nil? %>
+  <% unless params[:from].empty? %>
+		<div class="offset2">
+			<div class="form-inline">
+		    <label id="customer"></label>
+		    <label id="artikel" ></label>
+		    <label id="kodebrg"></label>
+		    <label id="kain"></label>
+			</div>
+		</div>
+    <br />
+		<div class="offset1">
+		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
+		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
+		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
+		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
+		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
+		    <label>Group By : <%= params[:group_by] %></label>
+		</div>
+		<div class="offset8">
+			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+				reports_first_filter_path, {:class => "btn btn-primary"} %> 
+			</label>
+		</div>
+		<br />
+		<table id="customer_monthly" class="pretty">
+		  <thead>
+		    <tr>
+		      <th rowspan="3">Article</th>
+		      <th colspan="6">Comparison</th>
+		    </tr>
+		    <tr>
+		      <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+		      <th colspan="2"><%= params[:to].to_date.year  %></th>
+					<th colspan="2">Growth</th>
+		    </tr>
+		    <tr>
+				<% (1..3).each do |a| %>
+		      <th>QTY</th>
+		      <th>Value</th>
+				<% end %>
+		    </tr>
+		  </thead>
+		  <tfoot>
+		  </tfoot>
+		  <tbody>
+		    <% @customerstore.each do |laporan| %>
+		      <tr>
+		        <th scope="row"><%= Artikel.artikel_name(params[:article]).first.Produk %></th>
+							<% LaporanCabang.analysis_customer_last_year(@from_last_year, @to_last_year, laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type]).each do |a| %>
+								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_last) %></td>
+							<% end %>
+							<% LaporanCabang.analysis_customer_last_year(params[:from].to_date.beginning_of_year, params[:to], laporan.cabang, params[:type], 
+								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type]).each do |a| %>
+								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              	<td><%= currency(@value_current) %></td>
+							<% end %>
+							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+		      </tr>
+		    <% end %>
+		  </tbody>
+		</table>
+	<% end %>
+<% end %>
+<% end %>

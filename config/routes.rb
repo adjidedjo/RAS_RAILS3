@@ -7,6 +7,10 @@ Rain::Application.routes.draw do
   get "reports/first_filter"
   get "reports/second_filter"
   get "reports/third_filter"
+  get "reports/compare_type"
+  get "reports/compare_last_month"
+  get "reports/compare_last_year"
+  get "reports/compare_current_year"
   get "reports/through"
 
   resources :users_mails
