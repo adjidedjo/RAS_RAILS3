@@ -212,11 +212,11 @@ class ReportsController < ApplicationController
   end
 
 	def update_reports_kain
-		@fabric = Kain.get_kain_name(params[:artikel_id]).map{|a| [a.NamaKain, a.KodeKain]}.insert(0, "")
+		@fabric = Kain.order("NamaKain ASC").get_kain_name(params[:artikel_id]).map{|a| [a.NamaKain, a.KodeKain]}.insert(0, "")
 	end
 
 	def update_reports_article
-		@article = Artikel.get_name(params[:type_id]).map{|a| [a.Produk, a.KodeCollection]}.insert(0, "")
+		@article = Artikel.order("Produk ASC").get_name(params[:type_id]).map{|a| [a.Produk, a.KodeCollection]}.insert(0, "")
 	end
 
 end
