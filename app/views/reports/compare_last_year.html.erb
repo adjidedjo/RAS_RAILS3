@@ -10,13 +10,45 @@
 			</div>
 		</div>
     <br />
-		<div class="offset1">
-		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
-		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
-		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
-		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
-		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
-		    <label>Group By : <%= params[:group_by] %></label>
+		<div class="row-fluid">
+			<div class="offset0">
+				<div class="span5">
+					<!-- block -->
+					<div class="block">
+						<div class="navbar navbar-inner block-header">
+						  <div class="muted pull-left">Search Parameters</div>
+						  <div class="pull-right"><span class="badge badge-info"></span>
+
+						  </div>
+						</div>
+						<div class="block-content collapse in">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Brand</th>
+                    <th>Type</th>
+                    <th>Article</th>
+                    <th>Fabric</th>
+                    <th>Size</th>
+                    <th>Group</th>
+                  </tr>
+                </thead>
+                <tbody>
+		              <tr>
+				            <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
+				            <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
+				            <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+				            <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+				            <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
+				            <td><%= params[:group_by] %></td>
+		              </tr>
+                </tbody>
+              </table>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
 		</div>
 		<div class="offset8">
 			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 

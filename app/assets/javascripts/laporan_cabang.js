@@ -695,7 +695,6 @@ $(document).ready(function(){
 				bFilter: false
 		});
 
-		$("#laporancabang").css("width","100%")
     // Add a tabletool to export to pdf, excel and csv
     $('#standard_analyze').dataTable({
 				"sScrollX": "100%",

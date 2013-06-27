@@ -1,62 +1,159 @@
-<%= form_tag reports_second_filter_path, :method => 'get' do %>
- <fieldset>
-  <legend>Date Filter</legend>
-		<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
+<div class="container-fluid">
+	<%= form_tag reports_second_filter_path, :method => 'get' do %>
+		<div class="row-fluid">
+			<div class="offset4">
+				<div class="span5">
+					<!-- block -->
+					<div class="block">
+						<div class="navbar navbar-inner block-header">
+						  <div class="muted pull-left">Date</div>
+						  <div class="pull-right"><span class="badge badge-info"></span>
 
-		<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
- </fieldset>
- <fieldset>
-  <legend>Product Filter</legend>
+						  </div>
+						</div>
+						<div class="block-content collapse in">
+ 							<fieldset>
+								<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
+								<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
+ 							</fieldset>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="offset2">
+				<div class="span10">
+					<!-- block -->
+					<div class="block">
+						<div class="navbar navbar-inner block-header">
+						  <div class="muted pull-left">Product</div>
+						  <div class="pull-right"><span class="badge badge-info"></span>
 
-		<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-			params[:cabang_id]), :prompt => 'Select Branch' %>
+						  </div>
+						</div>
+						<div class="block-content collapse in">
+ 							<fieldset>
+								<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+									params[:cabang_id]), :prompt => 'Select Branch' %>
 
-		<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
-			:prompt => 'Select Brand' %>
+								<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
+									:prompt => 'Select Brand' %>
 
-		<%= select_tag 'type_id', options_for_select(@category.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
-			params[:type_id]), :prompt => 'Select Type' %>
+								<%= select_tag 'type_id', options_for_select(@category.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+									params[:type_id]), :prompt => 'Select Type' %>
 
-		<%= collection_select(nil, :article_id, @article, :id, :Produk, {:include_blank => true, :prompt => 'Select an Article'}, {:id => 'article_id'}) %>
+								<%= collection_select(nil, :article_id, @article, :id, :Produk, {:include_blank => true, 
+									:prompt => 'Select an Article'}, {:id => 'article_id'}) %>
 
-		<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:include_blank => true, :prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %>
+								<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:include_blank => true, 
+									:prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
+ 							</fieldset>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="offset4">
+				<div class="span5">
+					<!-- block -->
+					<div class="block">
+						<div class="navbar navbar-inner block-header">
+						  <div class="muted pull-left">Size</div>
+						  <div class="pull-right"><span class="badge badge-info"></span>
 
- </fieldset>
- <fieldset>
-  <legend>Size Filter</legend>
- 	<label class="radio">
-  	<%= radio_button_tag 'size', 'S' %> Standard
-  </label>
- 	<label class="radio">
-  	<%= radio_button_tag 'size', 'T' %> Special
-  </label>
- </fieldset>
- <fieldset>
-  <legend>Customer Filter</legend>
- 	<label class="radio">
-  	<%= radio_button_tag 'customer', 'modern' %> Modern
-  </label>
- 	<label class="radio">
-  	<%= radio_button_tag 'customer', 'retail' %> Retail
-  </label>
- </fieldset>
- <% unless session[:type_report] == 'detail'  %>
-	 <fieldset>
-		<legend>Group by</legend>
-	 	<label class="radio">
-			<%= radio_button_tag 'group', 'kodebrg' %> Item Code
-		</label>
-	 	<label class="radio">
-			<%= radio_button_tag 'group', 'customer' %> Customer
-		</label>
-	 	<label class="radio">
-			<%= radio_button_tag 'group', 'kodeartikel' %> Article
-		</label>
-	 </fieldset>
+						  </div>
+						</div>
+						<div class="block-content collapse in">
+ 							<fieldset>
+							 	<label class="radio">
+  								<%= radio_button_tag 'size', 'S' %> Standard <br />
+								</label>
+							 	<label class="radio">
+  								<%= radio_button_tag 'size', 'T' %> Special
+								</label>
+ 							</fieldset>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="offset4">
+				<div class="span5">
+					<!-- block -->
+					<div class="block">
+						<div class="navbar navbar-inner block-header">
+						  <div class="muted pull-left">Customer</div>
+						  <div class="pull-right"><span class="badge badge-info"></span>
+
+						  </div>
+						</div>
+						<div class="block-content collapse in">
+ 							<fieldset>
+							 	<label class="radio">
+									<%= radio_button_tag 'customer', 'modern' %> Modern <br />
+								</label>
+							 	<label class="radio">
+									<%= radio_button_tag 'customer', 'retail' %> Retail
+								</label>
+ 							</fieldset>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
+		</div>
+		<% unless session[:type_report] == 'detail' %>
+			<div class="row-fluid">
+				<div class="offset4">
+					<div class="span5">
+						<!-- block -->
+						<div class="block">
+							<div class="navbar navbar-inner block-header">
+								<div class="muted pull-left">Group</div>
+								<div class="pull-right"><span class="badge badge-info"></span>
+
+								</div>
+							</div>
+							<div class="block-content collapse in">
+	 							<fieldset>
+								 	<label class="radio">
+										<%= radio_button_tag 'group', 'kodebrg' %> Item Code <br />
+									</label>
+								 	<label class="radio">
+										<%= radio_button_tag 'group', 'customer' %> Customer <br />
+									</label>
+								 	<label class="radio">
+										<%= radio_button_tag 'group', 'kodeartikel' %> Article
+									</label>
+	 							</fieldset>
+							</div>
+						</div>
+						<!-- /block -->
+					</div>
+				</div>
+			</div>
+		<% end %>
+		<div class="row-fluid">
+			<div class="offset4">
+				<div class="span5">
+					<!-- block -->
+					<div class="block">
+						<div class="block-content collapse in">
+							<div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+						</div>
+					</div>
+					<!-- /block -->
+				</div>
+			</div>
+		</div>
 	<% end %>
-<br />
- <button type="submit" class="btn btn-primary">Next</button>
-<% end %>
+</div>
 
 <script>
 	$(document).ready(function() {

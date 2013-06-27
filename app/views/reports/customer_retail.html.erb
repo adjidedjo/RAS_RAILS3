@@ -1,12 +1,28 @@
-<%= form_tag reports_customer_retail_path, :method => 'get' do %>
- <fieldset>
-  <legend>Customer Modern</legend>
-		<%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], :placeholder => "Customer Retail"  %>
- 	<label class="radio">
-  	<%= radio_button_tag 'customer_modern', 'all' %> All
-  </label>
- </fieldset>
- <br />
- <%= link_to 'Back', reports_second_filter_path, {:class => "btn btn-primary"} %>
- <button type="submit" class="btn btn-primary">Finish</button>
-<% end %>
+<div class="row-fluid">
+  <div class="offset4">
+		<div class="span5">
+		  <!-- block -->
+		  <div class="block">
+		    <div class="navbar navbar-inner block-header">
+		      <div class="muted pull-left">Customer Modern</div>
+		      <div class="pull-right"><span class="badge badge-info"></span>
+
+		      </div>
+		    </div>
+		    <div class="block-content collapse in">
+		      <%= form_tag reports_customer_retail_path, :method => 'get' do %>
+						<fieldset>
+							<%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], 
+								:placeholder => "Customer Retail"  %>
+					 	<label class="radio">
+							<%= radio_button_tag 'customer_modern', 'all' %> All
+						</label>
+						 <br />
+						 <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+					<% end %>
+		    </div>
+		  </div>
+		  <!-- /block -->
+		</div>
+  </div>
+</div>
