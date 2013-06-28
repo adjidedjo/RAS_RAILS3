@@ -1,7 +1,7 @@
 class Product < ActiveRecord::Base
   set_table_name "tbbjkodeproduk"
   has_many :brand_products
-  has_many :brand, :through => :brand_products
+  has_many :merk, :through => :brand_products
   has_many :artikel
   belongs_to :merk
   belongs_to :ukuran

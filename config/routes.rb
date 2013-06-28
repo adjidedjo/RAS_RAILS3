@@ -82,6 +82,7 @@ Rain::Application.routes.draw do
   get 'stock/update_artikel', :as => 'update_artikel'
 	get 'reports/update_reports_kain', :as => 'update_reports_kain'
 	get 'reports/update_reports_article', :as => 'update_reports_article'
+	get 'reports/update_reports_type', :as => 'update_reports_type'
 	get 'laporan_cabang/update_kain', :as => 'update_kain'
 	get 'laporan_cabang/update_article', :as => 'update_article'
 

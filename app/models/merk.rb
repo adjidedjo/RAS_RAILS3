@@ -1,8 +1,8 @@
 class Merk < ActiveRecord::Base
   set_table_name "tbbjmerk"
-  has_many :merk_products
   has_many :user
-  has_many :product, :through => :merk_products
+  has_many :brand_products
+  has_many :product, :through => :brand_products
   has_many :brand
   scope :merk_name, lambda {|merk| where(:IdMerk => merk)}
   

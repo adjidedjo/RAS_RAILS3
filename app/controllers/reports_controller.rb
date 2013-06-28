@@ -139,7 +139,7 @@ class ReportsController < ApplicationController
 	def second_filter
 		@branch = Cabang.get_id
 		@brand = Merk.merk_all
-		@category = Product.all
+		@type = Product.all
 		@article = Artikel.group(:Produk)
 		@fabric = Kain.all
 		session[:from] = params[:from] if params[:from].present?
@@ -200,7 +200,7 @@ class ReportsController < ApplicationController
 	def index
 		@branch = Cabang.get_id
 		@brand = Merk.merk_all
-		@category = Product.all
+		@type = Product.all
 		@article = Artikel.group(:Produk)
 		@fabric = Kain.all
 		redirect_to reports_detail_path(:from => params[:from], :to => params[:to], :cabang_id => params[:cabang_id], 
@@ -210,6 +210,10 @@ class ReportsController < ApplicationController
 			:type_id => params[:type_id], :merk_id => params[:merk_id], :article_id => params[:article_id],
 			:fabric_id => params[:fabric_id], :size => params[:size]) if params[:reports] == "standard"
   end
+
+	def update_reports_type
+		@type = Merk.where(:IdMerk => params[:merk_id]).first.product.map{|a| [a.Namaroduk, a.KodeProduk]}.insert(0, "")
+	end
 
 	def update_reports_kain
 		@fabric = Kain.order("NamaKain ASC").get_kain_name(params[:artikel_id]).map{|a| [a.NamaKain, a.KodeKain]}.insert(0, "")
