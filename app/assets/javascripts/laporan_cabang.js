@@ -713,35 +713,6 @@ $(document).ready(function(){
             }
             ]
         }
-    }).columnFilter({
-        sPlaceHolder: "head:before",
-        aoColumns: [
-		      {
-		          sSelector: "#customer",
-		          type: "text"
-		      },
-		      {
-		          sSelector: "#artikel",
-		          type: "text"
-		      },
-		      {
-		          sSelector: "#kodebrg",
-		          type: "text"
-		      },
-					null,
-		      null,
-		      null,
-		      null,
-		      null,
-		      {
-		          sSelector: "#kain",
-		          type: "text"
-		      },		      
-		      null,
-		      null,
-		      null,
-		      null
-        ]
     });
 
 	$("#laporancabang").css("width","100%")

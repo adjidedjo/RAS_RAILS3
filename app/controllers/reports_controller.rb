@@ -24,6 +24,9 @@ class ReportsController < ApplicationController
 	end
 
 	def through
+		session[:size] = nil if session[:size] == 'all'
+		session[:customer] = nil if session[:customer] == 'all'
+		session[:size_standard] = nil if session[:size_standard] == 'all'
 		redirect_to reports_detail_path(
 			:from => session[:from],
 			:to => session[:to],
@@ -95,6 +98,7 @@ class ReportsController < ApplicationController
 		session[:fabric_id] = nil
 		session[:customer] = nil
 		session[:size] = nil
+		session[:size_standard] = nil
 		session[:group_by] = nil
 	end
 
@@ -126,13 +130,15 @@ class ReportsController < ApplicationController
 			redirect_to reports_customer_modern_path if session[:customer].present? && session[:customer] == 'modern'
 			redirect_to reports_customer_retail_path if session[:customer].present? && session[:customer] == 'retail'
 		end
+		redirect_to reports_through_path if session[:size_standard] == 'all'
 	end
 
 	def size_special
 		session[:size_standard] = params[:panjang] if params[:panjang].present?
-		unless params[:panjang].nil? || params[:lebar].nil?
+		unless params[:panjang].nil?
 			redirect_to reports_customer_modern_path if session[:customer].present? && session[:customer] == 'modern'
 			redirect_to reports_customer_retail_path if session[:customer].present? && session[:customer] == 'retail'
+			redirect_to reports_through_path if session[:customer].present? && session[:customer] == 'all'
 		end
 	end
 
@@ -153,9 +159,13 @@ class ReportsController < ApplicationController
 		session[:size] = params[:size] if params[:size].present?
 		session[:group_by] = params[:group] if params[:group].present?
 		session[:year] = params[:grad_year] if params[:grad_year].present?
-		redirect_to reports_customer_modern_path if params[:size] == 'T' && params[:customer] == 'modern'
-		redirect_to reports_customer_retail_path if params[:size] == 'T' && params[:customer] == 'retail'
+		redirect_to reports_through_path if params[:size] == 'all' && params[:customer] == 'all' 
 		redirect_to reports_size_standard_path if params[:size] == 'S'
+		redirect_to reports_size_special_path if params[:size] == 'T'
+		if params[:size] == 'all'
+			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
+			redirect_to reports_customer_modern_path if params[:customer] == 'modern'
+		end
 	end
 
 	def first_filter

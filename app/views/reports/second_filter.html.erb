@@ -68,6 +68,9 @@
 							 	<label class="radio">
   								<%= radio_button_tag 'size', 'T' %> Special
 								</label>
+							 	<label class="radio">
+  								<%= radio_button_tag 'size', 'all', true %> All
+								</label>
  							</fieldset>
 						</div>
 					</div>
@@ -90,6 +93,9 @@
 							 	<label class="radio">
 									<%= radio_button_tag 'customer', 'retail' %> Retail
 								</label>
+							 	<label class="radio">
+									<%= radio_button_tag 'customer', 'all', true %> All
+								</label>
  							</fieldset>
 						</div>
 					</div>
@@ -111,7 +117,7 @@
 										<%= radio_button_tag 'group', 'kodebrg' %> Item Code <br />
 									</label>
 								 	<label class="radio">
-										<%= radio_button_tag 'group', 'customer' %> Customer <br />
+										<%= radio_button_tag 'group', 'customer', true %> Customer <br />
 									</label>
 								 	<label class="radio">
 										<%= radio_button_tag 'group', 'kodeartikel' %> Article
