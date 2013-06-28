@@ -166,14 +166,10 @@ class ReportsController < ApplicationController
 			redirect_to reports_through_path if params[:customer] == 'all'
 		end
 		if params[:size] == 'S'
-			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
-			redirect_to reports_customer_modern_path if params[:customer] == 'modern' 
-			redirect_to reports_size_standard_path if params[:customer] == 'all'
+			redirect_to reports_size_standard_path
 		end
 		if params[:size] == 'T'
-			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
-			redirect_to reports_customer_modern_path if params[:customer] == 'modern' 
-			redirect_to reports_size_special_path if params[:customer] == 'all'
+			redirect_to reports_size_special_path
 		end
 	end
 
