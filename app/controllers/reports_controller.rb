@@ -14,7 +14,8 @@ class ReportsController < ApplicationController
 				cabang_id, kodekain")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type]).group(params[:group_by])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+				.brand_size(params[:size_type]).group(params[:group_by])
 		end
 	end
 
@@ -127,10 +128,10 @@ class ReportsController < ApplicationController
 	def size_standard
 		session[:size_standard] = params[:size_standard] if params[:size_standard].present?
 		unless params[:size_standard].nil?
+			redirect_to reports_through_path if session[:customer] == 'all' 
 			redirect_to reports_customer_modern_path if session[:customer].present? && session[:customer] == 'modern'
 			redirect_to reports_customer_retail_path if session[:customer].present? && session[:customer] == 'retail'
 		end
-		redirect_to reports_through_path if session[:size_standard] == 'all'
 	end
 
 	def size_special
@@ -159,12 +160,20 @@ class ReportsController < ApplicationController
 		session[:size] = params[:size] if params[:size].present?
 		session[:group_by] = params[:group] if params[:group].present?
 		session[:year] = params[:grad_year] if params[:grad_year].present?
-		redirect_to reports_through_path if params[:size] == 'all' && params[:customer] == 'all' 
-		redirect_to reports_size_standard_path if params[:size] == 'S'
-		redirect_to reports_size_special_path if params[:size] == 'T'
 		if params[:size] == 'all'
 			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
-			redirect_to reports_customer_modern_path if params[:customer] == 'modern'
+			redirect_to reports_customer_modern_path if params[:customer] == 'modern' 
+			redirect_to reports_through_path if params[:customer] == 'all'
+		end
+		if params[:size] == 'S'
+			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
+			redirect_to reports_customer_modern_path if params[:customer] == 'modern' 
+			redirect_to reports_size_standard_path if params[:customer] == 'all'
+		end
+		if params[:size] == 'T'
+			redirect_to reports_customer_retail_path if params[:customer] == 'retail'
+			redirect_to reports_customer_modern_path if params[:customer] == 'modern' 
+			redirect_to reports_size_special_path if params[:customer] == 'all'
 		end
 	end
 
@@ -179,7 +188,8 @@ class ReportsController < ApplicationController
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+				.brand_size(params[:size_type])
 		end 
 	end	
 
@@ -189,7 +199,8 @@ class ReportsController < ApplicationController
 				sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).customer_analyze(params[:customer]).brand_size(params[:size_type]).group(params[:group_by])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+				.brand_size(params[:size_type]).group(params[:group_by])
 		end
 	end
 

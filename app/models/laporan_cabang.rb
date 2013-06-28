@@ -16,13 +16,13 @@ class LaporanCabang < ActiveRecord::Base
 	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
 	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) if artikel.present?}
-	scope :customer, lambda {|customer| where("customer like ?", customer) if customer.present?}
+	scope :customer, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer.present?}
 	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
 	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
 	scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
-	scope :customer_analyze, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present?}
-	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(____________#{brand_size}%)) if brand_size.present?}
+	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
+	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
 
