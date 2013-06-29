@@ -14,8 +14,8 @@ class ReportsController < ApplicationController
 				cabang_id, kodekain")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-				.brand_size(params[:size_type]).group(params[:group_by])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
+				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern]).group(params[:group_by])
 		end
 	end
 
@@ -196,8 +196,8 @@ class ReportsController < ApplicationController
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-				.brand_size(params[:size_type])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
+				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
 		end 
 	end	
 
@@ -207,7 +207,7 @@ class ReportsController < ApplicationController
 				sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
 				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern]).group(params[:group_by])
 		end
 	end
