@@ -12,6 +12,7 @@ Rain::Application.routes.draw do
   get "reports/compare_last_year"
   get "reports/compare_current_year"
   get "reports/through"
+  get "reports/modern_market"
 
   resources :users_mails
 

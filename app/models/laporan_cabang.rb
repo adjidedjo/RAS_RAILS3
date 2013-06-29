@@ -23,6 +23,9 @@ class LaporanCabang < ActiveRecord::Base
 	scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
 	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
 	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
+	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ? or customer like ?", "ES%", 'SHOWROOM%', 
+		'SOGO%') if parameter == 'all'}
+	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
 

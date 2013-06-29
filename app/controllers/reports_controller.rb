@@ -38,6 +38,8 @@ class ReportsController < ApplicationController
 			:fabric => session[:fabric_id],
 			:customer => session[:customer],
 			:size => session[:size_standard],
+			:customer_modern => session[:customer_modern],
+			:customer_modern_all => session[:customer_modern],
 			:size_type => session[:size]) if session[:type_report] == 'detail'
 		redirect_to reports_standard_path(
 			:from => session[:from],
@@ -50,6 +52,8 @@ class ReportsController < ApplicationController
 			:customer => session[:customer],
 			:size => session[:size_standard],
 			:size_type => session[:size],
+			:customer_modern => session[:customer_modern],
+			:customer_modern_all => session[:customer_modern],
 			:group_by => session[:group_by]) if session[:type_report] == 'standard'
 		redirect_to reports_compare_last_month_path(
 			:from => session[:from],
@@ -62,6 +66,8 @@ class ReportsController < ApplicationController
 			:customer => session[:customer],
 			:size => session[:size_standard],
 			:size_type => session[:size],
+			:customer_modern => session[:customer_modern],
+			:customer_modern_all => session[:customer_modern],
 			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'last_month'
 		redirect_to reports_compare_last_year_path(
 			:from => session[:from],
@@ -74,6 +80,8 @@ class ReportsController < ApplicationController
 			:customer => session[:customer],
 			:size => session[:size_standard],
 			:size_type => session[:size],
+			:customer_modern => session[:customer_modern],
+			:customer_modern_all => session[:customer_modern],
 			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'last_year'
 		redirect_to reports_compare_current_year_path(
 			:from => session[:from],
@@ -86,6 +94,8 @@ class ReportsController < ApplicationController
 			:customer => session[:customer],
 			:size => session[:size_standard],
 			:size_type => session[:size],
+			:customer_modern => session[:customer_modern],
+			:customer_modern_all => session[:customer_modern],
 			:group_by => session[:group_by]) if session[:type_report] == 'compare' && session[:compare_type] == 'year'
 	end
 
@@ -101,11 +111,13 @@ class ReportsController < ApplicationController
 		session[:size] = nil
 		session[:size_standard] = nil
 		session[:group_by] = nil
+		session[:customer_modern] = nil
+		session[:customer_modern_all] = nil
 	end
 
 	def customer_modern
 		unless params[:customer_modern].nil?
-			session[:customer] = params[:customer_modern]
+			session[:customer_modern] = params[:customer_modern]
 			session[:fabric_id] = nil if session[:fabric_id] == 'Select Fabric'
 			session[:article_id] = nil if session[:article_id] == 'Select Article'
 			session[:size_standard] = nil if session[:size_standard] == 'all'
@@ -196,7 +208,7 @@ class ReportsController < ApplicationController
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-				.brand_size(params[:size_type]).group(params[:group_by])
+				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern]).group(params[:group_by])
 		end
 	end
 
