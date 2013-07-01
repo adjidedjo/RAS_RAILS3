@@ -1,13 +1,12 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-
-<div class="row-fluid">
-  <div class="offset4">
-			<div class="block-content collapse in">
-				<h2 style="font-size: 17px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
-			</div>
+	<div class="row-fluid">
+		<div class="offset4">
+				<div class="block-content collapse in">
+					<h2 style="font-size: 17px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+				</div>
+		</div>
 	</div>
-</div>
 		<div class="row-fluid">
 			<div class="offset0">
 				<div class="span5">

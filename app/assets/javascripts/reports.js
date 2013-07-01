@@ -17,32 +17,5 @@ $(document).ready(function(){
             }
             ]
         }
-    }).columnFilter({
-        sPlaceHolder: "head:before",
-        aoColumns: [
-		      null,
-		      null,
-		      null,
-		      null,
-		      null,
-		      {
-		          sSelector: "#customer",
-		          type: "text"
-		      },
-		      {
-		          sSelector: "#market",
-		          type: "text"
-		      },
-		      null,
-		      null,
-		      {
-		          sSelector: "#kodebrg",
-		          type: "text"
-		      },
-		      {
-		          sSelector: "#qty",
-		          type: "text"
-		      }
-        ]
     });
 });
