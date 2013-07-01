@@ -1,21 +1,23 @@
 <div class="row-fluid">
-	<div class="block-content collapse in">
-		<div class="border-form-div">
-			<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-				<div class="control-group">
-					<label class="control-label" for="inputEmail">Login</label>
-					<div class="controls">
-						<%= f.text_field :login, :autofocus => true, :id => "inputEmail", :placeholder => "Username" %>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="inputPassword">Password</label>
-					<div class="controls">
-						<%= f.password_field :password, :id => "inputPassword", :placeholder => "Password" %>
-					</div>
-				</div>
-				<button type="submit" class="btn btn-primary">Sign in</button>
-			<% end %>
+  <div class="offset4">
+		<div class="span5">
+			<div class="block-content collapse in">
+					<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+						<div class="control-group">
+							<label class="control-label" for="inputEmail">Login</label>
+							<div class="controls">
+								<%= f.text_field :login, :autofocus => true, :id => "inputEmail", :placeholder => "Username" %>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputPassword">Password</label>
+							<div class="controls">
+								<%= f.password_field :password, :id => "inputPassword", :placeholder => "Password" %>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Sign in</button>
+					<% end %>
+			</div>
 		</div>
 	</div>
 </div>
