@@ -102,7 +102,7 @@ html, body, .container, .content {
 /* User sign in and sign forms. */
 .border-form-div {
   max-width: 400px;
-  padding: 19px 29px 29px;
+  padding: 19px 24px 29px;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
