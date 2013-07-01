@@ -9,6 +9,7 @@
  *= require dataTables/extras/TableTools
  *= require dataTables/extras/TableTools_JUI
  *= require bootstrap
+ *= require bootstrap-responsive
  *= require_tree .
 */
 
