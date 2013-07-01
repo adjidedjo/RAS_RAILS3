@@ -36,7 +36,7 @@
     <%= favicon_link_tag 'logo_ras1.jpg', :rel => 'shortcut icon' %>
   </head>
   <body>
-		 	<%= nav_bar :static => :top, :brand => "Royal Abadi Sejahtera" do %>	
+		 	<%= nav_bar :fixed => :top, :brand => "Royal Abadi Sejahtera", :responsive => true do %>	
 			<% if current_user %>
 				<%= menu_group do %>
 					<%= menu_item "Stock", stock_index_path %>
