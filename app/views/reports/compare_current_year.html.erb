@@ -1,845 +1,940 @@
 <% if params[:group_by] == 'customer' %>
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-		<div class="offset2">
-			<div class="form-inline">
-		    <label id="customer"></label>
-		    <label id="artikel" ></label>
-		    <label id="kodebrg"></label>
-		    <label id="kain"></label>
-			</div>
-		</div>
-    <br />
-		<div class="row-fluid">
-			<div class="offset0">
-				<div class="span5">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Search Parameters</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+	<% unless params[:from].nil? %>
+  	<% unless params[:from].empty? %>
+				<div class="row-fluid">
+					<div class="offset4">
+							<div class="block-content collapse in">
+								<h2 style="font-size: 17px;"><i>Sales Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+							</div>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="offset0">
+						<div class="span5">
+							<!-- block -->
+							<div class="block">
+								<div class="navbar navbar-inner block-header">
+									<div class="muted pull-left">Search Parameters</div>
+									<div class="pull-right"><span class="badge badge-info"></span>
 
-						  </div>
-						</div>
-						<div class="block-content collapse in">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Brand</th>
-                    <th>Type</th>
-                    <th>Article</th>
-                    <th>Fabric</th>
-                    <th>Size</th>
-                    <th>Group</th>
-                  </tr>
-                </thead>
-                <tbody>
-		              <tr>
-				            <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
-				            <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
-				            <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
-				            <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
-				            <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
-				            <td><%= params[:group_by] %></td>
-		              </tr>
-                </tbody>
-              </table>
+									</div>
+								</div>
+								<div class="block-content collapse in">
+				          <table class="table table-striped">
+				            <thead>
+				              <tr>
+				                <th>Brand</th>
+				                <th>Type</th>
+				                <th>Article</th>
+				                <th>Fabric</th>
+				                <th>Size</th>
+				                <th>Group</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+						          <tr>
+								        <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
+								        <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
+								        <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+								        <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+								        <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
+								        <td><%= params[:group_by] %></td>
+						          </tr>
+				            </tbody>
+				          </table>
+								</div>
+							</div>
+							<!-- /block -->
 						</div>
 					</div>
-					<!-- /block -->
+				</div>
+			<div class="row-fluid">
+				<div class="offset7">
+					<div class="block-content collapse in">
+						<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+							reports_first_filter_path, {:class => "btn btn-primary"} %> 
+						</label>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="offset8">
-			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-				reports_first_filter_path, {:class => "btn btn-primary"} %> 
-			</label>
-		</div>
-		<br />
-    <table id="customer_monthly" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Customer</th>
-        </tr>
-        <tr>
-					<th colspan="2">January</th>
-					<th colspan="2">February</th>
-					<th colspan="2">March</th>
-					<th colspan="2">April</th>
-					<th colspan="2">May</th>
-					<th colspan="2">June</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan| %>
-          <tr>
-          	<td><%= laporan.customer %></td>
+			<br />
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Customer</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">January</th>
+								<th colspan="2">February</th>
+								<th colspan="2">March</th>
+								<th colspan="2">April</th>
+								<th colspan="2">May</th>
+								<th colspan="2">June</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan| %>
+						    <tr>
+						    	<td><%= laporan.customer %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table id="customer_monthly2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Customer</th>
-        </tr>
-        <tr>
-					<th colspan="2">July</th>
-					<th colspan="2">August</th>
-					<th colspan="2">September</th>
-					<th colspan="2">October</th>
-					<th colspan="2">November</th>
-					<th colspan="2">December</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan|	 %>
-          <tr>
-		        <td><%= laporan.customer %></td>
+								    <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</br>
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Customer</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">July</th>
+								<th colspan="2">August</th>
+								<th colspan="2">September</th>
+								<th colspan="2">October</th>
+								<th colspan="2">November</th>
+								<th colspan="2">December</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan|	 %>
+						    <tr>
+								  <td><%= laporan.customer %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-
-
-		          <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+								    <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+
+
+								    <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<% end %>
 	<% end %>
-<% end %>
 <% end %>
 
 <% if params[:group_by] == 'kodebrg' %>
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-		<div class="offset2">
-			<div class="form-inline">
-		    <label id="customer"></label>
-		    <label id="artikel" ></label>
-		    <label id="kodebrg"></label>
-		    <label id="kain"></label>
+	<% unless params[:from].nil? %>
+		<% unless params[:from].empty? %>
+				<div class="row-fluid">
+					<div class="offset4">
+							<div class="block-content collapse in">
+								<h2 style="font-size: 17px;"><i>Sales Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+							</div>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="offset0">
+						<div class="span5">
+							<!-- block -->
+							<div class="block">
+								<div class="navbar navbar-inner block-header">
+									<div class="muted pull-left">Search Parameters</div>
+									<div class="pull-right"><span class="badge badge-info"></span>
+
+									</div>
+								</div>
+								<div class="block-content collapse in">
+				          <table class="table table-striped">
+				            <thead>
+				              <tr>
+				                <th>Brand</th>
+				                <th>Type</th>
+				                <th>Article</th>
+				                <th>Fabric</th>
+				                <th>Size</th>
+				                <th>Group</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+						          <tr>
+								        <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
+								        <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
+								        <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+								        <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+								        <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
+								        <td><%= params[:group_by] %></td>
+						          </tr>
+				            </tbody>
+				          </table>
+								</div>
+							</div>
+							<!-- /block -->
+						</div>
+					</div>
+				</div>
+			<div class="row-fluid">
+				<div class="offset7">
+					<div class="block-content collapse in">
+						<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+							reports_first_filter_path, {:class => "btn btn-primary"} %> 
+						</label>
+					</div>
+				</div>
 			</div>
-		</div>
-    <br />
-		<div class="offset1">
-		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
-		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
-		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
-		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
-		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
-		    <label>Group By : <%= params[:group_by] %></label>
-		</div>
-		<div class="offset8">
-			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-				reports_first_filter_path, {:class => "btn btn-primary"} %> 
-			</label>
-		</div>
-		<br />
-    <table id="customer_monthly" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Items Code</th>
-        </tr>
-        <tr>
-					<th colspan="2">January</th>
-					<th colspan="2">February</th>
-					<th colspan="2">March</th>
-					<th colspan="2">April</th>
-					<th colspan="2">May</th>
-					<th colspan="2">June</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan| %>
-          <tr>
-          	<td><%= laporan.kodebrg %></td>
+			<br />
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Items Code</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">January</th>
+								<th colspan="2">February</th>
+								<th colspan="2">March</th>
+								<th colspan="2">April</th>
+								<th colspan="2">May</th>
+								<th colspan="2">June</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan| %>
+						    <tr>
+						    	<td><%= laporan.kodebrg %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table id="customer_monthly2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Customer</th>
-        </tr>
-        <tr>
-					<th colspan="2">July</th>
-					<th colspan="2">August</th>
-					<th colspan="2">September</th>
-					<th colspan="2">October</th>
-					<th colspan="2">November</th>
-					<th colspan="2">December</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan|	 %>
-          <tr>
-		        <td><%= laporan.customer %></td>
+								    <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</br>
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Customer</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">July</th>
+								<th colspan="2">August</th>
+								<th colspan="2">September</th>
+								<th colspan="2">October</th>
+								<th colspan="2">November</th>
+								<th colspan="2">December</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan|	 %>
+						    <tr>
+								  <td><%= laporan.customer %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-
-
-		          <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+								    <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+
+
+								    <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<% end %>
 	<% end %>
-<% end %>
 <% end %>
 
 <% if params[:group_by] == 'kodeartikel' %>
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
-		<div class="offset2">
-			<div class="form-inline">
-		    <label id="customer"></label>
-		    <label id="artikel" ></label>
-		    <label id="kodebrg"></label>
-		    <label id="kain"></label>
+	<% unless params[:from].nil? %>
+		<% unless params[:from].empty? %>
+				<div class="row-fluid">
+					<div class="offset4">
+							<div class="block-content collapse in">
+								<h2 style="font-size: 17px;"><i>Sales Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+							</div>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="offset0">
+						<div class="span5">
+							<!-- block -->
+							<div class="block">
+								<div class="navbar navbar-inner block-header">
+									<div class="muted pull-left">Search Parameters</div>
+									<div class="pull-right"><span class="badge badge-info"></span>
+
+									</div>
+								</div>
+								<div class="block-content collapse in">
+				          <table class="table table-striped">
+				            <thead>
+				              <tr>
+				                <th>Brand</th>
+				                <th>Type</th>
+				                <th>Article</th>
+				                <th>Fabric</th>
+				                <th>Size</th>
+				                <th>Group</th>
+				              </tr>
+				            </thead>
+				            <tbody>
+						          <tr>
+								        <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
+								        <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
+								        <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+								        <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+								        <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
+								        <td><%= params[:group_by] %></td>
+						          </tr>
+				            </tbody>
+				          </table>
+								</div>
+							</div>
+							<!-- /block -->
+						</div>
+					</div>
+				</div>
+			<div class="row-fluid">
+				<div class="offset7">
+					<div class="block-content collapse in">
+						<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
+							reports_first_filter_path, {:class => "btn btn-primary"} %> 
+						</label>
+					</div>
+				</div>
 			</div>
-		</div>
-    <br />
-		<div class="offset1">
-		    <label>Brand : <%= Merk.merk_name(params[:brand]).first.Merk %></label>
-		    <label>Type : <%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></label>
-		    <label>Article : <%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></label>
-		    <label>Fabric : <%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></label>
-		    <label>Size Type : <%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></label>
-		    <label>Group By : <%= params[:group_by] %></label>
-		</div>
-		<div class="offset8">
-			<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-				reports_first_filter_path, {:class => "btn btn-primary"} %> 
-			</label>
-		</div>
-		<br />
-    <table id="customer_monthly" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Article</th>
-        </tr>
-        <tr>
-					<th colspan="2">January</th>
-					<th colspan="2">February</th>
-					<th colspan="2">March</th>
-					<th colspan="2">April</th>
-					<th colspan="2">May</th>
-					<th colspan="2">June</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan| %>
-          <tr>
-          	<td><%= Artikel.artikel_name(params[:article]).first.Produk %></td>
+			<br />
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Article</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">January</th>
+								<th colspan="2">February</th>
+								<th colspan="2">March</th>
+								<th colspan="2">April</th>
+								<th colspan="2">May</th>
+								<th colspan="2">June</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan| %>
+						    <tr>
+						    	<td><%= Artikel.artikel_name(params[:article]).first.Produk %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table id="customer_monthly2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Article</th>
-        </tr>
-        <tr>
-					<th colspan="2">July</th>
-					<th colspan="2">August</th>
-					<th colspan="2">September</th>
-					<th colspan="2">October</th>
-					<th colspan="2">November</th>
-					<th colspan="2">December</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% @customerstore.each do |laporan|	 %>
-          <tr>
-		        <td><%= Artikel.artikel_name(params[:article]).first.Produk %></td>
+								    <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			</br>
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+						  <tr>
+						    <th rowspan="3">Article</th>
+						  </tr>
+						  <tr>
+								<th colspan="2">July</th>
+								<th colspan="2">August</th>
+								<th colspan="2">September</th>
+								<th colspan="2">October</th>
+								<th colspan="2">November</th>
+								<th colspan="2">December</th>
+						  </tr>
+						  <tr>
+						    <% (1..6).each do %>
+						      <th>Qty</th>
+						      <th>Value</th>
+						    <% end %>
+						  </tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan|	 %>
+						    <tr>
+								  <td><%= Artikel.artikel_name(params[:article]).first.Produk %></td>
 
-            <!-- January -->
-		          <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-
-
-		          <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+						      <!-- January -->
+								    <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
+								    <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
 
 
-		          <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-								params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).empty? %>
-				          <td>0</td>
-				          <td>0</td>
-							<% else %>
-								<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
-										params[:customer_modern]).each do |a| %>
-				          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-				          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-								<% end %>
-		          <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+								    <% if LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+
+
+								    <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).empty? %>
+										    <td>0</td>
+										    <td>0</td>
+										<% else %>
+											<% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, params[:type], 
+													params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+													params[:customer_modern]).each do |a| %>
+										    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+										    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+											<% end %>
+								    <% end %>
+						    </tr>
+						  <% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<% end %>
 	<% end %>
-<% end %>
 <% end %>
 
 

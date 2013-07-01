@@ -34,28 +34,28 @@ $(document).ready(function(){
     }).attr('readonly','readonly');
 
 		$('#customer_monthly').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true
     });
 
 		$('#customer_monthly2').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true
     });
 
 		$('#customer_by_store').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true
     });
 
 		$('#group_by_size_comparison').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -119,7 +119,6 @@ $(document).ready(function(){
     });
 
 		$('#monthly_comparison').dataTable({
-        bJQueryUI: true,
         iDisplayLength: 30,
         bRetrieve: true,
         "bPaginate": false,
@@ -156,7 +155,7 @@ $(document).ready(function(){
 			});
 
 		$('#group_by_customer').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -202,7 +201,7 @@ $(document).ready(function(){
     });
 
 		$('#weekly_report_sales').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -262,7 +261,7 @@ $(document).ready(function(){
     });
 
 		$('#weekly_report_sales_total').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -318,7 +317,7 @@ $(document).ready(function(){
     });
 
 		$('#yearly_report_sales_total').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -356,7 +355,7 @@ $(document).ready(function(){
     });
 
 		$('#classic_weekly_sales_report').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -398,7 +397,7 @@ $(document).ready(function(){
 
     $('#table_year').dataTable( {
         sPaginationType: "full_numbers",
-        bJQueryUI: true,
+        
         iDisplayLength: 20,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
@@ -458,7 +457,7 @@ $(document).ready(function(){
 
 		$('#group_by_cabang_2').dataTable({
         sPaginationType: "full_numbers",
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -526,7 +525,7 @@ $(document).ready(function(){
     });
 
     $('#group_by_cabang').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
@@ -599,7 +598,7 @@ $(document).ready(function(){
 
     $('#table_year_elite').dataTable({
         sPaginationType: "full_numbers",
-        bJQueryUI: true,
+        
         iDisplayLength: 20,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
@@ -652,7 +651,7 @@ $(document).ready(function(){
     });
     $('#table_year_elite_month_and_year').dataTable({
         sPaginationType: "full_numbers",
-        bJQueryUI: true,
+        
         iDisplayLength: 20,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
@@ -690,7 +689,7 @@ $(document).ready(function(){
     });
 
 		$('#group_by_cabang_total').dataTable({
-        bJQueryUI: true,
+        
         bPaginate: false,
 				bFilter: false
 		});
@@ -764,7 +763,7 @@ $(document).ready(function(){
     });
 
     $('#table_control_branch').dataTable({
-        bJQueryUI: true,
+        
         iDisplayLength: -1
     });
 
