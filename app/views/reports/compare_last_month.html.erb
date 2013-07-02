@@ -52,7 +52,11 @@
 				<div class="offset7">
 					<div class="block-content collapse in">
 						<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-							reports_first_filter_path, {:class => "btn btn-primary"} %> 
+							reports_second_filter_path, {:class => "btn btn-primary"} %> or change your 
+							<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare by</a>
+							<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<%= render 'group_compare' %>
+							</div>
 						</label>
 					</div>
 				</div>
@@ -175,7 +179,11 @@
 			<div class="offset7">
 				<div class="block-content collapse in">
 					<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-						reports_first_filter_path, {:class => "btn btn-primary"} %> 
+						reports_second_filter_path, {:class => "btn btn-primary"} %> or change your 
+						<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare By</a>
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<%= render 'group_compare' %>
+						</div>
 					</label>
 				</div>
 			</div>
@@ -298,7 +306,11 @@
 			<div class="offset7">
 				<div class="block-content collapse in">
 					<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-						reports_first_filter_path, {:class => "btn btn-primary"} %> 
+						reports_second_filter_path, {:class => "btn btn-primary"} %> or change your 
+						<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare by</a>
+						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<%= render 'group_compare' %>
+						</div>
 					</label>
 				</div>
 			</div>

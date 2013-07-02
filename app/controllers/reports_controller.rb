@@ -1,4 +1,14 @@
 class ReportsController < ApplicationController
+	
+	def group_compare
+		session[:group_by] = params[:group] if params[:group].present?
+		session[:compare_type] = params[:compare] if params[:compare].present?
+		redirect_to reports_through_path if session[:group_by].present? || session[:compare_type].present?
+	end
+
+	def group
+		redirect_to reports_through_path(session[:group_by] = params[:group])
+	end
 
 	def compare_current_year
 		compare_last_month
@@ -15,7 +25,8 @@ class ReportsController < ApplicationController
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
-				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern]).group(params[:group_by])
+				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
+				.group(params[:group_by])
 		end
 	end
 
