@@ -26,7 +26,7 @@ class ReportsController < ApplicationController
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
 				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-				.not_equal_with_nosj.group(params[:group_by])
+				.not_equal_with_nosj.without_acessoris(params[:brand]).group(params[:group_by])
 		end
 	end
 
@@ -209,7 +209,7 @@ class ReportsController < ApplicationController
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
 				.brand_size(params[:size_type]).customer_modern(params[:customer_modern])
-				.not_equal_with_nosj.customer_modern_all(params[:customer_modern])
+				.not_equal_with_nosj.without_acessoris(params[:brand]).customer_modern_all(params[:customer_modern])
 		end 
 	end	
 
@@ -221,7 +221,7 @@ class ReportsController < ApplicationController
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
 				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-				.not_equal_with_nosj.group(params[:group_by])
+				.not_equal_with_nosj.without_acessoris(params[:brand]).group(params[:group_by])
 		end
 	end
 
