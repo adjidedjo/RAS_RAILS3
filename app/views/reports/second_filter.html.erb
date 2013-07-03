@@ -12,8 +12,8 @@
 						</div>
 						<div class="block-content collapse in">
  							<fieldset>
-								<%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date"  %>
-								<%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date" %>
+								<%= text_field_tag 'from', session[:from].nil? ? nil : session[:from], :placeholder => "From Date"  %>
+								<%= text_field_tag 'to', session[:to].nil? ? nil : session[:to], :placeholder => "To Date" %>
  							</fieldset>
 						</div>
 					</div>
@@ -31,7 +31,7 @@
 						<div class="block-content collapse in">
  							<fieldset>
 								<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-									params[:cabang_id]), :prompt => 'Select Branch' %>
+									session[:cabang_id]), :prompt => 'Select Branch' %>
 
 								<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
 									:prompt => 'Select Brand' %>
@@ -171,7 +171,8 @@
 			$.ajax({
 				url: "<%= update_reports_article_path %>",
 				data: {
-					type_id : $('#type_id').val()
+					type_id : $('#type_id').val(),
+					merk_id : $('#merk_id').val()
 					},
 				dataType: "script"
 			});
