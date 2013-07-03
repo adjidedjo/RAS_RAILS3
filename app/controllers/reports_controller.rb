@@ -194,6 +194,9 @@ class ReportsController < ApplicationController
 		if params[:size] == 'T'
 			redirect_to reports_size_special_path
 		end
+		if params[:size] == 'P'
+			redirect_to reports_size_standard_path
+		end
 	end
 
 	def first_filter
