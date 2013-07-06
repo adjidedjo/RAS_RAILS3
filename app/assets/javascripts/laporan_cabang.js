@@ -37,14 +37,38 @@ $(document).ready(function(){
         
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        bRetrieve: true
+        bRetrieve: true,
+				sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+								"sFileName": "*.xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
     });
 
 		$('#customer_monthly2').dataTable({
         
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        bRetrieve: true
+        bRetrieve: true,
+				sDom: '<"H"Tfrl>t<"F"ip>',
+        bRetrieve: true,
+        oTableTools: {
+            sSwfPath: "/copy_csv_xls.swf",
+            aButtons: [
+            {
+                "sExtends": "xls",
+								"sFileName": "*.xls",
+                "sButtonText": "Export to Excel"
+            }
+            ]
+        }
     });
 
 		$('#customer_by_store').dataTable({
