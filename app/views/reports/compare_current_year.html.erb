@@ -531,7 +531,7 @@
 						<tbody>
 							<% @customerstore.each do |laporan|	 %>
 						    <tr>
-								  <td><%= laporan.customer %></td>
+								  <td><%= laporan.kodebrg %></td>
 
 						      <!-- January -->
 								    <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
