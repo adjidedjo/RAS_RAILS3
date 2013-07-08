@@ -353,7 +353,7 @@
 								<% if params[:group_by] == 'customer' %>
 						    	<td><%= laporan.customer %></td>
 								<% elsif params[:group_by] == 'kodeartikel' %>
-						    	<td><%= laporan.kodeartikel.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
+						    	<td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
 								<% else %>
 						    	<td><%= laporan.kodebrg %></td>
 								<% end %>

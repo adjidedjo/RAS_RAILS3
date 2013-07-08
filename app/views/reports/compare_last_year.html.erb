@@ -323,7 +323,7 @@
 						<tbody>
 							<% @customerstore.each do |laporan| %>
 								<tr>
-								  <td scope="row"><%= Artikel.artikel_name(laporan.kodeartikel).first.Produk %></th>
+								  <td scope="row"><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></th>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.year), (params[:to].to_date - 1.year), 
 											laporan.cabang, params[:type], 
 											params[:brand], laporan.kodeartikel, params[:fabric], params[:size], params[:customer], params[:size_type], 

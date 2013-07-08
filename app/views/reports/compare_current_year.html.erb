@@ -723,7 +723,7 @@
 						<tbody>
 							<% @customerstore.each do |laporan| %>
 						    <tr>
-						    	<td><%= Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
+						    	<td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
 
 						      <!-- January -->
 								    <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, params[:type], 
@@ -848,7 +848,7 @@
 						<tbody>
 							<% @customerstore.each do |laporan|	 %>
 						    <tr>
-								  <td><%= Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
+								  <td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
 
 						      <!-- January -->
 								    <% if LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, params[:type], 
