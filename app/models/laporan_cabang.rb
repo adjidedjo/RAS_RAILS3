@@ -143,7 +143,7 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.growth(last, current)
-		((current - last) / last) * 100
+		(Float(current - last) / last * 100)
 		rescue ZeroDivisionError
    		0
 	end
