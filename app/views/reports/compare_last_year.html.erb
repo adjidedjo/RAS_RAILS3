@@ -62,51 +62,55 @@
 				</div>
 			</div>
 			<br />
-			<table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
-				<thead>
-				  <tr>
-				    <th rowspan="3">Customer</th>
-				    <th colspan="6">Comparison</th>
-				  </tr>
-				  <tr>
-				    <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
-				    <th colspan="2"><%= params[:to].to_date.year  %></th>
-						<th colspan="2">Growth</th>
-				  </tr>
-				  <tr>
-					<% (1..3).each do |a| %>
-				    <th>QTY</th>
-				    <th>Value</th>
-					<% end %>
-				  </tr>
-				</thead>
-				<tfoot>
-				</tfoot>
-				<tbody>
-				  <% @customerstore.each do |laporan| %>
-				    <tr>
-				      <th scope="row"><%= laporan.customer %></th>
-								<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.year), (params[:to].to_date - 1.year), 
-									laporan.cabang, params[:type], 
-									params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
-									params[:customer_modern]).each do |a| %>
-									<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-		            	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-		            	<td><%= currency(@value_last) %></td>
-								<% end %>
-								<% LaporanCabang.analysis_customer_last_year(params[:from], params[:to], laporan.cabang, params[:type], 
-									params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type],
-									params[:customer_modern]).each do |a| %>
-									<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-		            	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-		            	<td><%= currency(@value_current) %></td>
-								<% end %>
-								<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
-								<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
-				    </tr>
-				  <% end %>
-				</tbody>
-			</table>
+			<div class="row-fluid">
+				<div class="block-content collapse in">
+					<table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
+						<thead>
+							<tr>
+								<th rowspan="3">Customer</th>
+								<th colspan="6">Comparison</th>
+							</tr>
+							<tr>
+								<th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+								<th colspan="2"><%= params[:to].to_date.year  %></th>
+								<th colspan="2">Growth</th>
+							</tr>
+							<tr>
+							<% (1..3).each do |a| %>
+								<th>QTY</th>
+								<th>Value</th>
+							<% end %>
+							</tr>
+						</thead>
+						<tfoot>
+						</tfoot>
+						<tbody>
+							<% @customerstore.each do |laporan| %>
+								<tr>
+								  <td scope="row"><%= laporan.customer %></th>
+										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.year), (params[:to].to_date - 1.year), 
+											laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
+											params[:customer_modern]).each do |a| %>
+											<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+						        	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+						        	<td><%= currency(@value_last) %></td>
+										<% end %>
+										<% LaporanCabang.analysis_customer_last_year(params[:from], params[:to], laporan.cabang, params[:type], 
+											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type],
+											params[:customer_modern]).each do |a| %>
+											<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+						        	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+						        	<td><%= currency(@value_current) %></td>
+										<% end %>
+										<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+										<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<% end %>
 	<% end %>
 <% end %>
@@ -201,7 +205,7 @@
 						<tbody>
 							<% @customerstore.each do |laporan| %>
 								<tr>
-								  <th scope="row"><%= laporan.kodebrg %></th>
+								  <td scope="row"><%= laporan.kodebrg %></th>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.year), (params[:to].to_date - 1.year), 
 											laporan.cabang, params[:type], 
 											params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
@@ -319,17 +323,17 @@
 						<tbody>
 							<% @customerstore.each do |laporan| %>
 								<tr>
-								  <th scope="row"><%= Artikel.artikel_name(params[:article]).first.Produk %></th>
+								  <td scope="row"><%= Artikel.artikel_name(laporan.kodeartikel).first.Produk %></th>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.year), (params[:to].to_date - 1.year), 
 											laporan.cabang, params[:type], 
-											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+											params[:brand], laporan.kodeartikel, params[:fabric], params[:size], params[:customer], params[:size_type], 
 											params[:customer_modern]).each do |a| %>
 											<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
 										<% LaporanCabang.analysis_customer_last_year(params[:from], params[:to], laporan.cabang, params[:type], 
-											params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+											params[:brand], laporan.kodeartikel, params[:fabric], params[:size], params[:customer], params[:size_type], 
 											params[:customer_modern]).each do |a| %>
 											<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>

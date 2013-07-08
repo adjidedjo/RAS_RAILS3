@@ -101,7 +101,7 @@
 									<% else %>
 								  	<td><%= laporan.kodebrg %></td>
 									<% end %>
-								  <th scope="row"><%= laporan.kota %></th>
+								  <td scope="row"><%= laporan.kota %></th>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 											laporan.cabang, params[:type], 
 											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
@@ -230,7 +230,7 @@
 								<% else %>
 						    	<td><%= laporan.kodebrg %></td>
 								<% end %>
-						    <th scope="row"><%= laporan.kota %></th>
+						    <td scope="row"><%= laporan.kota %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 										laporan.cabang, params[:type], 
 										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
@@ -353,14 +353,14 @@
 								<% if params[:group_by] == 'customer' %>
 						    	<td><%= laporan.customer %></td>
 								<% elsif params[:group_by] == 'kodeartikel' %>
-						    	<td><%= Artikel.artikel_name(params[:article]).first.Produk %></td>
+						    	<td><%= laporan.kodeartikel.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
 								<% else %>
 						    	<td><%= laporan.kodebrg %></td>
 								<% end %>
-						    <th scope="row"><%= laporan.kota %></th>
+						    <td scope="row"><%= laporan.kota %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 										laporan.cabang, params[:type], 
-										params[:brand], params[:article], params[:fabric], params[:size], params[:customer], params[:size_type], 
+										params[:brand], laporan.kodeartikel, params[:fabric], params[:size], params[:customer], params[:size_type], 
 										params[:customer_modern]).each do |a| %>
 										<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 				          	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
