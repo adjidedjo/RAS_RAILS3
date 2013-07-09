@@ -1,55 +1,83 @@
-<div class="form-div">
-	<%= form_for(@monthly_target, :html => {:class => "well"}) do |f| %>
-  <% if @monthly_target.errors.any? %>
-		<div id="error_explanation">
-		  <div class="alert alert-error">
-		    The form contains <%= pluralize(@monthly_target.errors.count, "error") %>.
+<div class="row-fluid">
+		<div class="span3">
+		  <!-- block -->
+		  <div class="block">
+		    <div class="navbar navbar-inner block-header">
+		      <div class="muted pull-left">Monthly Target Parameters</div>
+		      <div class="pull-right"><span class="badge badge-info"></span>
+
+		      </div>
+		    </div>
+		    <div class="block-content collapse in">
+					<%= form_for(@monthly_target) do |f| %>
+						<% if @monthly_target.errors.any? %>
+							<div id="error_explanation">
+								<div class="alert alert-error">
+									The form contains <%= pluralize(@monthly_target.errors.count, "error") %>.
+								</div>
+								<ul>
+								<% @monthly_target.errors.full_messages.each do |msg| %>
+									<li>* <%= msg %></li>
+								<% end %>
+								</ul>
+							</div>
+						<% end %>
+	 					<fieldset>
+							<%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+							<%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+							<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
+							<%= f.text_field "customer", :placeholder => 'Insert Customer Name' if session[:monthly_target_type] != 'branch' %>
+	 					</fieldset>
+		    </div>
 		  </div>
-		  <ul>
-		  <% @monthly_target.errors.full_messages.each do |msg| %>
-		    <li>* <%= msg %></li>
-		  <% end %>
-		  </ul>
+		  <!-- /block -->
+			</div>
+					<div class="span8">
+						<!-- block -->
+						<div class="block">
+							<div class="navbar navbar-inner block-header">
+								<div class="muted pull-left">Monthly Target Input</div>
+								<div class="pull-right"><span class="badge badge-info"></span>
+
+								</div>
+							</div>
+							<div class="block-content collapse in">
+	 							<fieldset>
+									<%= f.fields_for :months do |month| %>
+		  							<%= month.text_field :january, :placeholder => "January" %>
+		  							<%= month.text_field :february, :placeholder => "February" %>
+		  							<%= month.text_field :march, :placeholder => "March" %>
+		  							<%= month.text_field :april, :placeholder => "April" %>
+		  							<%= month.text_field :may, :placeholder => "May" %>
+		  							<%= month.text_field :june, :placeholder => "June" %>
+		  							<%= month.text_field :july, :placeholder => "July" %>
+		  							<%= month.text_field :august, :placeholder => "August" %>
+		  							<%= month.text_field :september, :placeholder => "September" %>
+		  							<%= month.text_field :october, :placeholder => "October" %>
+		  							<%= month.text_field :november, :placeholder => "November" %>
+		  							<%= month.text_field :december, :placeholder => "December" %>
+									<% end %>
+	 							</fieldset>
+							</div>
+						</div>
+						<!-- /block -->
+					</div>
+				</div>
+</div>
+<div class="row-fluid">
+	<div class="offset4">
+		<div class="span5">
+ 			<!-- block -->
+				<div class="block">
+					<div class="block-content collapse in">
+						<div class="pull-right">
+							<%= link_to 'Back', monthly_targets_path, :class => "btn btn-info" %>
+							<%= submit_tag "Create", :class => "btn btn-primary" %>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<!-- /block -->
 		</div>
-	<% end %>
-		<legend>Monthly Target</legend>
-			<div class="control-group">
-		  	<%= f.label :branch %>
-				<div class="controls">
-					<%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
-				</div>
-			</div>
-
-			<div class="control-group">
-		  	<%= f.label :brand_id %>
-				<div class="controls">
-					<%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
-				</div>
-			</div>
-
-			<div class="control-group">
-		  	<%= f.label :total %>
-				<div class="controls">
-					<%= f.number_field :total %>
-				</div>
-			</div>
-
-		  <div class="control-group">
-		  	<%= f.label :month %>
-				<div class="controls">
-					<%= f.date_select :target_month, :discard_day => true, :discard_year => true, :prompt => { :month => 'Select month' } %>
-				</div>
-			</div>
-
-			<div class="control-group">
-		  	<%= f.label :year %>
-				<div class="controls">
-					<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
-				</div>
-			</div>
-			
-			<div class="controls">
-				<%= submit_tag "Create", :class => "btn btn-primary" %>
-		  </div>
-	<% end %>
+	</div>
 </div>

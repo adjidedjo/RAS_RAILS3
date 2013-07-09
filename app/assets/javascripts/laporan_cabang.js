@@ -23,6 +23,12 @@ $(document).ready(function(){
     $('#to').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');
+    $('#from_period').datepicker({
+        dateFormat: 'yy-mm-dd'
+    }).attr('readonly','readonly');
+    $('#to_period').datepicker({
+        dateFormat: 'yy-mm-dd'
+    }).attr('readonly','readonly');
     $('#week').datepicker({
         dateFormat: 'yy-mm-dd'
     }).attr('readonly','readonly');

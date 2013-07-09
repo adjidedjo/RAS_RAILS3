@@ -7,6 +7,7 @@
 		  <thead>
 		    <tr>
 		      <th rowspan="3">Customer</th>
+		      <th rowspan="3">City</th>
 		      <th colspan="6">Comparison</th>
 		    </tr>
 		    <tr>
@@ -27,6 +28,7 @@
 		    <% @customerstore.each do |laporan| %>
 		      <tr>
 		        <th scope="row"><%= laporan.customer %></th>
+		        <th scope="row"><%= laporan.kota %></th>
 							<% LaporanCabang.customer_by_store(@from_last_month, @to_last_month, laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
 								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
               	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>

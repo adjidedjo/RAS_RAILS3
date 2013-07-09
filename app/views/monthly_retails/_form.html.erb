@@ -1,0 +1,36 @@
+<%= form_for(@monthly_retail) do |f| %>
+  <% if @monthly_retail.errors.any? %>
+    <div id="error_explanation">
+
+      <ul>
+      <% @monthly_retail.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :cabang_id %>
+    <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+  </div>
+  <div class="field">
+    <%= f.label :brand_id %>
+    <%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+  </div>
+  <div class="field">
+    <%= f.label :customer %>
+    <%= f.text_field 'customer' %>
+  </div>
+  <div class="field">
+		<%= f.label :period %>
+    <%= f.text_field 'from_period', :placeholder => "From Date", :id => 'from'  %>
+		<%= f.text_field 'to_period', :placeholder => "To Date", :id => 'to' %>
+  </div>
+  <div class="field">
+    <%= f.label :total %>
+    <%= f.text_field :total %>
+  </div>
+	<div class="pull-left"><%= link_to 'Back', monthly_retails_path, :class => "btn btn-primary" %></div>
+  <div class="pull-right"><%= submit_tag "Create", :class => "btn btn-primary" %></div>
+<% end %>

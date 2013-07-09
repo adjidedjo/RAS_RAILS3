@@ -44,7 +44,7 @@
 					<%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
 					<%= menu_divider %>
 						<%= drop_down "Target" do %>
-		 					<%= menu_item "Monthly", monthly_targets_path %>
+		 					<%= menu_item "Monthly", targets_monthly_target_type_path %>
 		  				<%= menu_item "Yearly", yearly_targets_path %>
 						<% end %>
 						<%= drop_down "Sales Reports" do %>

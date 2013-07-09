@@ -1,8 +1,16 @@
 class MonthlyTargetsController < ApplicationController
+
+	def report_type
+		
+	end
   # GET /monthly_targets
   # GET /monthly_targets.json
   def index
-    @monthly_targets = MonthlyTarget.all
+		if session[:monthly_target_channel] != 'retail' && session[:monthly_target_type] != 'branch'
+    	@monthly_targets = MonthlyTarget.where("customer is not null")
+		else
+    	@monthly_targets = MonthlyTarget.where(:customer => nil)
+		end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -25,6 +33,7 @@ class MonthlyTargetsController < ApplicationController
   # GET /monthly_targets/new.json
   def new
     @monthly_target = MonthlyTarget.new
+		@monthly_target.months.build
 
     respond_to do |format|
       format.html # new.html.erb

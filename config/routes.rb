@@ -1,5 +1,13 @@
 Rain::Application.routes.draw do
 
+  resources :monthly_retails
+
+  get "targets/monthly_target_type"
+
+  get "targets/monthly_target_channel"
+
+  get "targets/monthly_target_customer"
+
   get "reports/size_special"
 	get "reports/size_standard"
   get "reports/customer_modern"
@@ -33,11 +41,8 @@ Rain::Application.routes.draw do
 	#get "reports/index"
 	resources :user_steps
   resources :yearly_targets
-
   resources :monthly_targets
-
   resources :targets
-
   resources :store_maps
 
   devise_for :users

@@ -1,0 +1,51 @@
+<div class="row-fluid">
+	<div class="span3">
+	  <!-- block -->
+	  <div class="block">
+	    <div class="navbar navbar-inner block-header">
+		    <div class="muted pull-left"><%= @monthly_retail.customer %> Monthly Target</div>
+		    <div class="pull-right"><span class="badge badge-info"></span>
+
+		    </div>
+		   </div>
+		 	 <div class="block-content collapse in">
+				<p id="notice"><%= notice %></p>
+
+				<p>
+					<b>Customer:</b>
+					<%= @monthly_retail.customer %>
+				</p>
+
+				<p>
+					<b>Cabang:</b>
+					<%= Cabang.find_by_id(@monthly_retail.cabang_id).Cabang.gsub(/Cabang/,'') %>
+				</p>
+
+				<p>
+					<b>Brand:</b>
+					<%= Merk.find_by_id(@monthly_retail.brand_id).Merk %>
+				</p>
+
+				<p>
+					<b>From period:</b>
+					<%= @monthly_retail.from_period.strftime('%d %B %Y') %>
+				</p>
+
+				<p>
+					<b>To period:</b>
+					<%= @monthly_retail.to_period.strftime('%d %B %Y') %>
+				</p>
+
+				<p>
+					<b>Total:</b>
+					<%= currency(@monthly_retail.total) %>
+				</p>
+
+
+				<%= link_to 'Edit', edit_monthly_retail_path(@monthly_retail), :class => "btn btn-primary" %>
+				<%= link_to 'Back', monthly_retails_path, :class => "btn btn-primary" %>
+		</div>
+		<!-- /block -->
+	</div>
+	</div>
+</div>
