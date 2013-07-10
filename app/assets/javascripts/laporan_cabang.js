@@ -43,7 +43,6 @@ $(document).ready(function(){
         
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-        bRetrieve: true,
         bRetrieve: true
     });
 
