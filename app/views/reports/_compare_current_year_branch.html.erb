@@ -28,14 +28,6 @@
 				                <th>Group</th>
 				              </tr>
 				            </thead>
-											<tfoot>
-												<tr>
-													<th scope="row">Total</th>
-													<% (1..12).each do  %>
-														<td></td>
-													<% end %>
-												</tr>
-											</tfoot>
 				            <tbody>
 						          <tr>
 								        <td><%= Merk.merk_name(brand).first.Merk %></td>
@@ -106,6 +98,12 @@
 						  </tr>
 						</thead>
 						<tfoot>
+							<tr>
+								<th scope="row">Total</th>
+								<% (1..12).each do  %>
+									<td></td>
+								<% end %>
+							</tr>
 						</tfoot>
 						<tbody>
 							<% @customerstore.each do |laporan| %>
@@ -231,6 +229,12 @@
 						  </tr>
 						</thead>
 						<tfoot>
+							<tr>
+								<th scope="row">Total</th>
+								<% (1..12).each do  %>
+									<td></td>
+								<% end %>
+							</tr>
 						</tfoot>
 						<tbody>
 							<% @customerstore.each do |laporan|	 %>
