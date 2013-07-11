@@ -71,6 +71,7 @@
 						<thead>
 							<tr>
 								<th rowspan="3">Customer</th>
+								<th rowspan="3">City</th>
 								<th colspan="6">Comparison</th>
 							</tr>
 							<tr>
@@ -88,7 +89,7 @@
 						<tfoot>
 							<tr>
 								<th scope="row">Total</th>
-								<% (1..6).each do  %>
+								<% (1..7).each do  %>
 									<td></td>
 								<% end %>
 							</tr>
@@ -97,6 +98,7 @@
 							<% @customerstore.each do |laporan| %>
 								<tr>
 								  <td scope="row"><%= laporan.customer %></th>
+								  <td scope="row"><%= laporan.kota %></th>
 										<% LaporanCabang.analysis_customer_last_year((from.to_date - 1.year), (to.to_date - 1.year), 
 											laporan.cabang, type, 
 											brand, article, fabric, size, laporan.customer, size_type, 

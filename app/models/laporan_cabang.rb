@@ -16,7 +16,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
 	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) if artikel.present?}
-	scope :customer, lambda {|customer, customer_modern| where("customer like ?", %(#{customer}%)) if customer.present? && customer_modern == nil }
+	scope :customer, lambda {|customer, customer_modern| where("customer like ?", %(#{customer})) if customer.present? && customer_modern == nil }
 	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
 	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
@@ -38,7 +38,7 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.customer_monthly(month, year,branch, type, brand, article, fabric, size, customer, size_type, customer_modern)
-		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
+		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2, kota")
 			.search_by_month_and_year(month, year).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern)

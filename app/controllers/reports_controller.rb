@@ -21,7 +21,7 @@ class ReportsController < ApplicationController
 	def compare_last_month
 		unless params[:from].nil? && params[:to].nil?
 			@customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
-				cabang_id, kodekain")
+				cabang_id, kodekain, kota")
 				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
 				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
 				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer], params[:customer_modern])
