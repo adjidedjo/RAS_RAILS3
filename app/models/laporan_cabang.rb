@@ -34,15 +34,15 @@ class LaporanCabang < ActiveRecord::Base
 			.between_date_sales(from, to).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern).customer_modern_all(customer_modern)
-			.brand_size(size_type)
+			.brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
 	end
 
 	def self.customer_monthly(month, year,branch, type, brand, article, fabric, size, customer, size_type, customer_modern)
 		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
 			.search_by_month_and_year(month, year).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
-			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern).customer_modern_all(customer_modern)
-			.brand_size(size_type)
+			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern)
+			.customer_modern_all(customer_modern).brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
 	end
 
 	def self.customer_by_store(from, to, customer, cabang, merk)
