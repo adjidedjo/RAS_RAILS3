@@ -181,26 +181,26 @@ $(document).ready(function(){
 
             for ( var i=0 ; i<aaData.length ; i++ )
             {
-                iTotalQty2012 += parseCurrency(aaData[i][2])*1;
-                iTotalValue2012 += parseCurrency(aaData[i][3])*1;
+                iTotalQty2012 += parseCurrency(aaData[i][1])*1;
+                iTotalValue2012 += parseCurrency(aaData[i][2])*1;
 
-                iTotalQty2013 += parseCurrency(aaData[i][4])*1;
-                iTotalValue2013 += parseCurrency(aaData[i][5])*1;
+                iTotalQty2013 += parseCurrency(aaData[i][3])*1;
+                iTotalValue2013 += parseCurrency(aaData[i][4])*1;
 
-                iTotalQtyGrowth += parseCurrency(aaData[i][6])*1;
-                iTotalValueGrowth += parseCurrency(aaData[i][7])*1;
+                iTotalQtyGrowth += parseCurrency(aaData[i][5])*1;
+                iTotalValueGrowth += parseCurrency(aaData[i][6])*1;
             }
 
             /* Modify the footer row to match what we want */
             var nCells = nRow.getElementsByTagName('td');
-            nCells[1].innerHTML = addCommas(parseInt(iTotalQty2012))
-            nCells[2].innerHTML = addCommas(parseInt(iTotalValue2012))
+            nCells[0].innerHTML = addCommas(parseInt(iTotalQty2012))
+            nCells[1].innerHTML = addCommas(parseInt(iTotalValue2012))
 
-            nCells[3].innerHTML = addCommas(parseInt(iTotalQty2013))
-            nCells[4].innerHTML = addCommas(parseInt(iTotalValue2013))
+            nCells[2].innerHTML = addCommas(parseInt(iTotalQty2013))
+            nCells[3].innerHTML = addCommas(parseInt(iTotalValue2013))
 
-            nCells[5].innerHTML = addCommas(parseInt(iTotalQtyGrowth))
-            nCells[6].innerHTML = addCommas(parseInt(iTotalValueGrowth))
+            nCells[4].innerHTML = addCommas(parseInt(iTotalQtyGrowth))
+            nCells[5].innerHTML = addCommas(parseInt(iTotalValueGrowth))
 
         }
     });
