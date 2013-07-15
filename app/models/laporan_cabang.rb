@@ -15,7 +15,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :brand, lambda {|brand| where("kodebrg like ?", %(__#{brand}%)) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
-	scope :artikel, lambda {|artikel| where("kodeartikel like ?", artikel) if artikel.present?}
+	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
 	scope :customer, lambda {|customer, customer_modern| where("customer like ?", %(#{customer})) if customer.present? && customer_modern == nil }
 	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
@@ -37,10 +37,10 @@ class LaporanCabang < ActiveRecord::Base
 			.brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
 	end
 
-	def self.customer_monthly(month, year,branch, type, brand, article, fabric, size, customer, size_type, customer_modern)
+	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern)
 		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2, kota")
 			.search_by_month_and_year(month, year).search_by_branch(branch)
-			.search_by_type(type).brand(brand).kode_barang_like(article)
+			.search_by_type(type).brand(brand).artikel(article).kode_barang(kodebrg)
 			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern)
 			.customer_modern_all(customer_modern).brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
 	end
