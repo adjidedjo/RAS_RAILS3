@@ -1,5 +1,7 @@
 class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
+	attr_accessible *column_names
+
   belongs_to :cabang
 	belongs_to :brand
 
@@ -7,53 +9,66 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
 # scope for monthly/monthly
-	scope :search_by_branch, lambda {|branch| where(:cabang_id => branch) if branch.present? }
-	scope :search_by_type, lambda {|type| where("kodejenis like ?", %(#{type}%)) if type.present? }
+	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
+	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%))
-	scope :brand, lambda {|brand| where("kodebrg like ?", %(__#{brand}%)) if brand.present?}
+	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
 	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
-	scope :customer, lambda {|customer, customer_modern| where("customer like ?", %(#{customer})) if customer.present? && customer_modern == nil }
+	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
 	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
 	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
-	scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
+	#scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
 	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
 	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
 	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ? or customer like ?", "ES%", 'SHOWROOM%', 
+		'SOGO%') if parameter == 'all'}
+	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ? and customer not like ?", "ES%", 'SHOWROOM%', 
 		'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
 
-	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern)
+	def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)
+		select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
+					sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar")
+			.between_date_sales(from, to).search_by_branch(branch)
+			.search_by_type(type).brand(brand).kode_barang_like(article)
+			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
+			.brand_size(size_type).not_equal_with_nosj.customer_retail_all(customer_all_retail).group(group)
+	end
+
+	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern,
+		customer_all_retail)
 		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
 			.between_date_sales(from, to).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
-			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern).customer_modern_all(customer_modern)
-			.brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
+			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
+			.brand_size(size_type).not_equal_with_nosj.customer_retail_all(customer_all_retail)
 	end
 
-	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern)
+	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
+		customer_all_retail)
 		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2, kota")
 			.search_by_month_and_year(month, year).search_by_branch(branch)
 			.search_by_type(type).brand(brand).artikel(article).kode_barang(kodebrg)
-			.fabric(fabric).size_length(size).customer(customer, customer_modern).customer_modern(customer_modern)
-			.customer_modern_all(customer_modern).brand_size(size_type).not_equal_with_nosj.without_acessoris(brand)
+			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
+			.customer_modern_all(customer_modern).brand_size(size_type).customer_retail_all(customer_all_retail).not_equal_with_nosj
 	end
 
-	def self.customer_by_store(from, to, customer, cabang, merk)
+	def self.customer_by_store(from, to, customer, cabang, merk, customer_all_retail)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
-			.search_by_branch(cabang).brand(merk).not_equal_with_nosj
+			.search_by_branch(cabang).brand(merk).not_equal_with_nosj.customer_retail_all(customer_all_retail)
 	end
 
-	def self.monthly_report(month, branch, type, kode_brand, year, product_type)
+	def self.monthly_report(month, branch, type, kode_brand, year, product_type, customer_all_retail)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
 			.search_by_branch(branch)
-			.search_by_type(type).search_by_article(kode_brand).not_equal_with_nosj
+			.search_by_type(type).search_by_article(kode_brand).not_equal_with_nosj.customer_retail_all(customer_all_retail)
 	end
 
 	def self.total_on_merk(merk, from, to)

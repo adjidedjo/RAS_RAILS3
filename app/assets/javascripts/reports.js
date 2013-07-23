@@ -1,4 +1,68 @@
 $(document).ready(function(){
+	 	$('#cabang_id').multiselect({
+			buttonClass: 'btn',
+			buttonWidth: 'auto',
+			buttonContainer: '<div class="btn-group" />',
+			maxHeight: 400,
+			buttonText: function(options) {
+				if (options.length == 0) {
+					return 'None selected <b class="caret"></b>';
+				}
+				else if (options.length > 1) {
+					return options.length + ' selected <b class="caret"></b>';
+				}
+				else {
+					var selected = '';
+					options.each(function() {
+					selected += $(this).text() + ', ';
+				});
+					return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+				}
+			}
+		});
+	 	$('#merk_id').multiselect({
+			buttonClass: 'btn',
+			buttonWidth: 'auto',
+			buttonContainer: '<div class="btn-group" />',
+			maxHeight: 400,
+			buttonText: function(options) {
+				if (options.length == 0) {
+					return 'None selected <b class="caret"></b>';
+				}
+				else if (options.length > 1) {
+					return options.length + ' selected <b class="caret"></b>';
+				}
+				else {
+					var selected = '';
+					options.each(function() {
+					selected += $(this).text() + ', ';
+				});
+					return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+				}
+			}
+		});
+	 	$('#type_id').multiselect({
+			buttonClass: 'btn',
+			buttonWidth: 'auto',
+			buttonContainer: '<div class="btn-group" />',
+			maxHeight: 400,
+			buttonText: function(options) {
+				if (options.length == 0) {
+					return 'None selected <b class="caret"></b>';
+				}
+				else if (options.length > 1) {
+					return options.length + ' selected <b class="caret"></b>';
+				}
+				else {
+					var selected = '';
+					options.each(function() {
+					selected += $(this).text() + ', ';
+				});
+					return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
+				}
+			}
+		});
+		
     // Add a tabletool to export to pdf, excel and csv
     $('#detail_report').dataTable({
 				"bScrollCollapse": true,

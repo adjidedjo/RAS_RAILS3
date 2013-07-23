@@ -10,6 +10,7 @@
  *= require dataTables/extras/TableTools_JUI
  *= require bootstrap
  *= require bootstrap-responsive
+ %= require bootstrap-multiselect
  *= require_tree .
 */
 

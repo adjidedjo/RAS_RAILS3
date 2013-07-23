@@ -3,7 +3,8 @@
   	<% unless params[:from].empty? %>
 			<%= render 'compare_current_year_customer', :from => params[:from], :group_by => params[:group_by],
 				:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern] %>
+				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], 
+				:customer_all_retail => params[:customer_all_retail], :customer => params[:customer], :branch => params[:branch] %>
 		<% end %>
 	<% end %>
 <% end %>
@@ -13,7 +14,8 @@
 		<% unless params[:from].empty? %>
 			<%= render 'compare_current_year_kodebrg', :from => params[:from], :group_by => params[:group_by],
 				:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern] %>
+				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], 
+				:customer_all_retail => params[:customer_all_retail], :customer => params[:customer], :branch => params[:branch] %>
 		<% end %>
 	<% end %>
 <% end %>
@@ -23,7 +25,8 @@
 		<% unless params[:from].empty? %>
 			<%= render 'compare_current_year_article', :from => params[:from], :group_by => params[:group_by],
 				:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], :customer => params[:customer] %>
+				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], :customer => params[:customer], 
+				:customer_all_retail => params[:customer_all_retail], :branch => params[:branch] %>
 		<% end %>
 	<% end %>
 <% end %>
@@ -33,7 +36,8 @@
 		<% unless params[:from].empty? %>
 			<%= render 'compare_current_year_branch', :from => params[:from], :group_by => params[:group_by],
 				:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], :customer => params[:customer] %>
+				:size_type => params[:size_type], :size => params[:size], :customer_modern => params[:customer_modern], :customer => params[:customer], 
+				:customer_all_retail => params[:customer_all_retail], :branch => params[:branch] %>
 		<% end %>
 	<% end %>
 <% end %>

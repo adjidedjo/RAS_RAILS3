@@ -1,5 +1,11 @@
 Rain::Application.routes.draw do
 
+  resources :sales_imports
+
+  get "report_imports/new"
+
+  get "report_imports/create"
+
   resources :monthly_retails
 
   get "targets/monthly_target_type"
@@ -23,6 +29,7 @@ Rain::Application.routes.draw do
   get "reports/modern_market"
   get "reports/group"
 	get "reports/group_compare"
+	get "reports/group_last_month"
 
   resources :users_mails
 

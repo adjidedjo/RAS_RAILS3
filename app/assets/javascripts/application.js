@@ -9,6 +9,7 @@
 //= require jquery-ui
 //= require highcharts
 //= require twitter/bootstrap
+//= require bootstrap-multiselect
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/extras/TableTools

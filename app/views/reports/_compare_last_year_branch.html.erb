@@ -30,8 +30,8 @@
 				            </thead>
 				            <tbody>
 						          <tr>
-								        <td><%= Merk.merk_name(brand).first.Merk %></td>
-								        <td><%= type.nil? ? "" : Product.product_name(type).first.Namaroduk %></td>
+								        <td><%= brand.nil? ? "" : brand %></td>
+								        <td><%= type.nil? ? "" : type %></td>
 								        <td><%= article.nil? ? "" : Artikel.artikel_name(article).first.Produk %></td>
 								        <td><%= fabric.nil? ? "" : Kain.kain_name_from_code(fabric).first.NamaKain %></td>
 												<% if size_type == 'T' %>
@@ -108,13 +108,13 @@
 								<tr>
 								  <td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></th>
 										<% LaporanCabang.analysis_customer_last_year((from.to_date - 1.year), (to.to_date - 1.year), 
-											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern).each do |a| %>
+											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
 											<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
 										<% LaporanCabang.analysis_customer_last_year(from, to, 
-											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern).each do |a| %>
+											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
 											<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
 						        	<td><%= currency(@value_current) %></td>

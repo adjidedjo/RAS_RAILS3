@@ -29,8 +29,8 @@
                 </thead>
                 <tbody>
 		              <tr>
-				            <td><%= Merk.merk_name(params[:brand]).first.Merk %></td>
-				            <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
+				            <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
+				            <td><%= params[:type].nil? ? "" : params[:type] %></td>
 				            <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
 				            <td><%= params[:group_by] %></td>
 		              </tr>
@@ -45,7 +45,7 @@
 		<div class="row-fluid">
 			<div class="offset6">
 				<label>If you want to repeat your filter, please click New Filter button <%= link_to 'New Filter', 
-					reports_second_filter_path, {:class => "btn btn-primary"} %>
+					reports_first_filter_path, {:class => "btn btn-primary"} %>
 				</label>
 			</div>
 		</div>

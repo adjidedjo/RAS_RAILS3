@@ -49,32 +49,8 @@
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="offset7">
-					<div class="block-content collapse in">
-						<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-							reports_first_filter_path, {:class => "btn btn-primary"} %> or change your 
-							<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare by</a>
-							<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								<%= render 'group_last_month' %>
-							</div>
-						</label>
-					</div>
-				</div>
-			</div>
-			<div class="row-fluid">
 				<div class="block-content collapse in">
-					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric]),
-							:size_type => params[:size_type], 
-							:class=>"btn btn-info" %>
-					</label>
-				</div>
-			</div>
-			<br />
-			<div class="row-fluid">
-				<div class="block-content collapse in">
-					<table border="1" id="compare_last" class="display" cellspacing="0" cellpadding="3" width="100%">
+					<table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
 						<thead>
 							<tr>
 									<% if params[:group_by] == 'customer' %>
@@ -100,13 +76,6 @@
 							</tr>
 						</thead>
 						<tfoot>
-							<tr>
-								<th scope="row">Total</th>
-								<% (1..7).each do  %>
-									<td></td>
-								<% end %>
-							</tr>
-						</tfoot>
 						</tfoot>
 						<tbody>
 							<% @customerstore.each do |laporan| %>
@@ -195,32 +164,8 @@
 				</div>
 			</div>
 		<div class="row-fluid">
-			<div class="offset7">
-				<div class="block-content collapse in">
-					<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-						reports_first_filter_path, {:class => "btn btn-primary"} %> or change your 
-						<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare By</a>
-						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<%= render 'group_last_month' %>
-						</div>
-					</label>
-				</div>
-			</div>
-		</div>
-			<div class="row-fluid">
-				<div class="block-content collapse in">
-					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-							:size_type => params[:size_type]), 
-							:class=>"btn btn-info" %>
-					</label>
-				</div>
-			</div>
-		<br />
-		<div class="row-fluid">
 			<div class="block-content collapse in">
-				<table border="1" id="compare_last" class="display" cellspacing="0" cellpadding="3" width="100%">
+				<table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
 					<thead>
 						<tr>
 								<% if params[:group_by] == 'customer' %>
@@ -230,6 +175,7 @@
 								<% else %>
 						    	<th rowspan="3">Items Code</th>
 								<% end %>
+						  <th rowspan="3">City</th>
 						  <th colspan="6">Comparison</th>
 						</tr>
 						<tr>
@@ -245,12 +191,6 @@
 						</tr>
 					</thead>
 					<tfoot>
-						<tr>
-							<th scope="row">Total</th>
-							<% (1..6).each do  %>
-								<td></td>
-							<% end %>
-						</tr>
 					</tfoot>
 					<tbody>
 						<% @customerstore.each do |laporan| %>
@@ -262,6 +202,7 @@
 								<% else %>
 						    	<td><%= laporan.kodebrg %></td>
 								<% end %>
+						    <td scope="row"><%= laporan.kota %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 										laporan.cabang, params[:type], 
 										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
@@ -336,30 +277,6 @@
 				</div>
 			</div>
 		<div class="row-fluid">
-			<div class="offset7">
-				<div class="block-content collapse in">
-					<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-						reports_first_filter_path, {:class => "btn btn-primary"} %> or change your 
-						<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare by</a>
-						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<%= render 'group_last_month' %>
-						</div>
-					</label>
-				</div>
-			</div>
-		</div>
-			<div class="row-fluid">
-				<div class="block-content collapse in">
-					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric]),
-							:size_type => params[:size_type], 
-							:class=>"btn btn-info" %>
-					</label>
-				</div>
-			</div>
-		<br />
-		<div class="row-fluid">
 			<div class="block-content collapse in">
 				<table border="1" id="standard_analyze" class="display" cellspacing="0" cellpadding="3" width="100%">
 					<thead>
@@ -371,6 +288,7 @@
 								<% else %>
 						    	<th rowspan="3">Items Code</th>
 								<% end %>
+						  <th rowspan="3">City</th>
 						  <th colspan="6">Comparison</th>
 						</tr>
 						<tr>
@@ -397,6 +315,7 @@
 								<% else %>
 						    	<td><%= laporan.kodebrg %></td>
 								<% end %>
+						    <td scope="row"><%= laporan.kota %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 										laporan.cabang, params[:type], 
 										params[:brand], laporan.kodeartikel, params[:fabric], params[:size], params[:customer], params[:size_type], 
@@ -468,29 +387,6 @@
 						</div>
 						<!-- /block -->
 					</div>
-				</div>
-			</div>
-		<div class="row-fluid">
-			<div class="offset7">
-				<div class="block-content collapse in">
-					<label>If you want to repeat your filter, please click <%= link_to 'New Filter', 
-						reports_first_filter_path, {:class => "btn btn-primary"} %> or change your 
-						<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Group & Compare by</a>
-						<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<%= render 'group_last_month' %>
-						</div>
-					</label>
-				</div>
-			</div>
-		</div>
-			<div class="row-fluid">
-				<div class="block-content collapse in">
-					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-							:size_type => params[:size_type]), 
-							:class=>"btn btn-info" %>
-					</label>
 				</div>
 			</div>
 		<br />

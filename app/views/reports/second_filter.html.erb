@@ -28,24 +28,22 @@
 
 						  </div>
 						</div>
-						<div class="block-content collapse in">
+						<br />
  							<fieldset>
 								<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-									session[:cabang_id]), :prompt => 'Select Branch' %>
+									session[:cabang_id]), :class => 'multiselect', :multiple => true %>
 
-								<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), 
-									:prompt => 'Select Brand' %>
-
-								<%= collection_select(nil, :type_id, @type, :id, :Namaroduk, {:include_blank => true, 
-									:prompt => 'Select a Product'}, {:id => 'type_id'})  %>
-
-								<%= collection_select(nil, :article_id, @article, :id, :Produk, {:include_blank => true, 
+								<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.Merk]}, 
+									params[:merk_id]), :class => 'multiselect', :multiple => true %>
+								
+								<%= collection_select(nil, :type_id, @type, :KodeProduk, :Namaroduk, {}, {:id => 'type_id', :class => 'multiselect', :multiple => true})  %>
+								<br /><br />
+								<%= collection_select(nil, :article_id, @article, :KodeCollection, :Produk, {:include_blank => true, 
 									:prompt => 'Select an Article'}, {:id => 'article_id'}) %>
 
-								<%= collection_select(nil, :fabric_id, @fabric, :id, :NamaKain, {:include_blank => true, 
+								<%= collection_select(nil, :fabric_id, @fabric, :KodeKain, :NamaKain, {:include_blank => true, 
 									:prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
  							</fieldset>
-						</div>
 					</div>
 					<!-- /block -->
 				</div>
@@ -91,13 +89,13 @@
 						<div class="block-content collapse in">
  							<fieldset>
 							 	<label class="radio">
-									<%= radio_button_tag 'customer', 'modern' %> Modern <br />
+									<%= radio_button_tag 'customer_channel', 'modern' %> Modern <br />
 								</label>
 							 	<label class="radio">
-									<%= radio_button_tag 'customer', 'retail' %> Retail
+									<%= radio_button_tag 'customer_channel', 'retail' %> Retail
 								</label>
 							 	<label class="radio">
-									<%= radio_button_tag 'customer', 'all', true %> All
+									<%= radio_button_tag 'customer_channel', 'all', true %> All
 								</label>
  							</fieldset>
 						</div>
@@ -153,15 +151,6 @@
 
 <script>
 	$(document).ready(function() {
-		$('#merk_id').change(function() {
-			$.ajax({
-				url: "<%= update_reports_type_path %>",
-				data: {
-					merk_id : $('#merk_id').val()
-					},
-				dataType: "script"
-			});
-		});
 
 		$('#article_id').change(function() {
 			$.ajax({
