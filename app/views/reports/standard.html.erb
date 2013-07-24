@@ -68,6 +68,8 @@
 				      	<th>Customers</th>
 							<% elsif params[:group_by] == 'kodeartikel' %>
 				      	<th>Article</th>
+							<% elsif params[:group_by] == 'cabang_id' %>
+				      	<th>Branchs</th>
 							<% else %>
 				      	<th>Items Code</th>
 						    <th>Article</th>
@@ -88,6 +90,8 @@
 				        	<td><%= laporan.customer %></td>
 								<% elsif params[:group_by] == 'kodeartikel' %>
 				        	<td><%= laporan.namaartikel %></td>
+								<% elsif params[:group_by] == 'cabang_id' %>
+				        	<td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
 								<% else %>
 				        	<td><%= laporan.kodebrg %></td>
 						      <td><%= laporan.namaartikel %></td>
