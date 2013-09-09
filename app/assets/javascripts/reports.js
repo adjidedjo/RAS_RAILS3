@@ -84,7 +84,7 @@ $(document).ready(function(){
     });
     
     $('#quick_report').dataTable({
-        iDisplayLength: 10,
+        iDisplayLength: 50,
         bRetrieve: true,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
