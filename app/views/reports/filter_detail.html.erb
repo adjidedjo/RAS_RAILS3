@@ -1,26 +1,26 @@
 <div class="form-div">
-<%= form_tag reports_filter_detail_path, :method => 'get' do %>
- <fieldset>
-			<legend>Sales Report</legend>
-			<label>Article</label>
-			<%= select_tag 'artikel_id', options_for_select(Artikel.get_artikel_by_brand(params[:brand], params[:type]).collect {|a| [a.Produk, a.KodeCollection]}), 
-				:prompt => 'Select Article' %>
-			<br />
-			<button type="submit" class="btn btn-primary">Next</button>
-		</fieldset>
-<% end %>
+  <%= form_tag reports_filter_detail_path, :method => 'get' do %>
+    <fieldset>
+      <legend>Sales Report</legend>
+      <label>Article</label>
+      <%= select_tag 'artikel_id', options_for_select(Artikel.get_artikel_by_brand(params[:brand], params[:type]).collect {|a| [a.Produk, a.KodeCollection]}), 
+        :prompt => 'Select Article' %>
+      <br />
+      <button type="submit" class="btn btn-primary">Next</button>
+    </fieldset>
+  <% end %>
 </div>
 
 <script>
-	$(document).ready(function() {
-		$('#artikel_id').change(function() {
-			$.ajax({
-				url: "<%= update_kain_path %>",
-				data: {
-					artikel_id : $('#artikel_id').val()
-					},
-				dataType: "script"
-			});
-		});
-	});
+  $(document).ready(function() {
+    $('#artikel_id').change(function() {
+      $.ajax({
+        url: "<%= update_kain_path %>",
+        data: {
+          artikel_id : $('#artikel_id').val()
+        },
+        dataType: "script"
+      });
+    });
+  });
 </script>

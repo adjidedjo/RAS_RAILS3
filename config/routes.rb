@@ -30,6 +30,11 @@ Rain::Application.routes.draw do
   get "reports/group"
 	get "reports/group_compare"
 	get "reports/group_last_month"
+	get "reports/quick_view"
+	get "reports/quick_view_report"
+	get "reports/quick_view_monthly"
+	get "reports/quick_view_monthly_process"
+	get "reports/quick_view_monthly_result"
 
   resources :users_mails
 

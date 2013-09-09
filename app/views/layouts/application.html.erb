@@ -36,56 +36,52 @@
     <%= favicon_link_tag 'logo_ras1.jpg', :rel => 'shortcut icon' %>
   </head>
   <body>
-		 	<%= nav_bar :fixed => :top, :brand => "Royal Abadi Sejahtera" do %>	
-			<% if current_user %>
-				<%= menu_group do %>
-					<%#= menu_item "Stock", stock_index_path %>
-					<%= menu_item "Control", laporan_cabang_control_branches_sales_path %>
-					<%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
-					<%= menu_divider %>
-						<%= drop_down "Target" do %>
-		 					<%= menu_item "Monthly", targets_monthly_target_type_path %>
-		  				<%= menu_item "Yearly", yearly_targets_path %>
-						<% end %>
-						<%= drop_down "Sales Reports" do %>
-		 					<%= menu_item "Analysis", reports_first_filter_path %>
-		  				<%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
-					 		<%#= menu_item "Monthly", monthly_monthly_path %>
-					 		<%#= menu_item "Brand", laporan_cabang_search_path %>
-					 		<%#= menu_item "Brand Detail", "#" %>
-						<% end %>
-					<% end %>
-					<%= menu_group :pull => :right do %>
-						<%#= menu_item "Notification", edit_users_mail_path(current_user) %>
-						<%= menu_item "Log Out", destroy_user_session_path %>
-					<% end %>
-				<% else %>
-					<%= menu_group :pull => :right do %>
-					<%= menu_item "Sign In", new_user_session_path %>
-					<%= menu_item "Sign Up", new_user_registration_path %>
-				<% end %>
-			<% end %>
-		<% end %>
+    <%= nav_bar :fixed => :top, :brand => "Royal Abadi Sejahtera" do %>	
+      <% if current_user %>
+        <%= menu_group do %>
+          <%= menu_item "Control", laporan_cabang_control_branches_sales_path %>
+          <%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
+          <%= menu_divider %>
+          <%= drop_down "Target" do %>
+            <%= menu_item "Monthly", targets_monthly_target_type_path %>
+            <%= menu_item "Yearly", yearly_targets_path %>
+          <% end %>
+          <%= drop_down "Sales Reports" do %>
+            <%= menu_item "Analysis", reports_first_filter_path %>
+            <%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>
+            <%= menu_item "Quick View", reports_quick_view_path %>
+          <% end %>
+        <% end %>
+        <%= menu_group :pull => :right do %>
+          <%= menu_item "Log Out", destroy_user_session_path %>
+        <% end %>
+      <% else %>
+        <%= menu_group :pull => :right do %>
+          <%= menu_item "Sign In", new_user_session_path %>
+          <%= menu_item "Sign Up", new_user_registration_path %>
+        <% end %>
+      <% end %>
+    <% end %>
 
     <div class="container">
-			<div class="content">
-				<div class="wrapper">
-				  <div class="proper-content">
-					  <div class="row">
-            	<%= bootstrap_flash %>
-					    <%= yield %>
-						</div>
-					</div>
-				<div class="push"></div>						
-			 </div>
-			 <div class="footer-wrapper">
-			   <div class="container">
-				   <p class="muted credit">Copyright &copy; 2013 <%= link_to "Royal Abadi Sejahtera", "http://royalabadisejahtera.com/ras/", 
-						:target => "_blank" %></a></p>
-				 </div>
-			 </div>
-			</div>
-		 </div> <!-- /container -->
+      <div class="content">
+        <div class="wrapper">
+          <div class="proper-content">
+            <div class="row">
+              <%= bootstrap_flash %>
+              <%= yield %>
+            </div>
+          </div>
+          <div class="push"></div>						
+        </div>
+        <div class="footer-wrapper">
+          <div class="container">
+            <p class="muted credit">Copyright &copy; 2013 <%= link_to "Royal Abadi Sejahtera", "http://royalabadisejahtera.com/ras/", 
+                :target => "_blank" %></a></p>
+          </div>
+        </div>
+      </div>
+    </div> <!-- /container -->
 
     <!-- Javascripts
     ================================================== -->

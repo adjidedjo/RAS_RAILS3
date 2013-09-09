@@ -1,178 +1,178 @@
-	<div class="container-fluid">
-	<%= form_tag reports_second_filter_path, :method => 'get' do %>
-		<div class="row-fluid">
-				<div class="span3">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Date</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+<div class="container-fluid">
+  <%= form_tag reports_second_filter_path, :method => 'get' do %>
+    <div class="row-fluid">
+      <div class="span3">
+        <!-- block -->
+        <div class="block">
+          <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">Date</div>
+            <div class="pull-right"><span class="badge badge-info"></span>
 
-						  </div>
-						</div>
-						<div class="block-content collapse in">
- 							<fieldset>
-								<%= text_field_tag 'from', session[:from].nil? ? nil : session[:from], :placeholder => "From Date"  %>
-								<%= text_field_tag 'to', session[:to].nil? ? nil : session[:to], :placeholder => "To Date" %>
- 							</fieldset>
-						</div>
-					</div>
-					<!-- /block -->
-				</div>
-				<div class="span8">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Product</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+            </div>
+          </div>
+          <div class="block-content collapse in">
+            <fieldset>
+              <%= text_field_tag 'from', session[:from].nil? ? nil : session[:from], :placeholder => "From Date"  %>
+              <%= text_field_tag 'to', session[:to].nil? ? nil : session[:to], :placeholder => "To Date" %>
+            </fieldset>
+          </div>
+        </div>
+        <!-- /block -->
+      </div>
+      <div class="span8">
+        <!-- block -->
+        <div class="block">
+          <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">Product</div>
+            <div class="pull-right"><span class="badge badge-info"></span>
 
-						  </div>
-						</div>
-						<br />
- 							<fieldset>
-								<%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-									session[:cabang_id]), :class => 'multiselect', :multiple => true %>
+            </div>
+          </div>
+          <br />
+          <fieldset>
+            <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+              session[:cabang_id]), :class => 'multiselect', :multiple => true %>
 
-								<%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.Merk]}, 
-									params[:merk_id]), :class => 'multiselect', :multiple => true %>
-								
-								<%= collection_select(nil, :type_id, @type, :KodeProduk, :Namaroduk, {}, {:id => 'type_id', :class => 'multiselect', :multiple => true})  %>
-								<br /><br />
-								<%= collection_select(nil, :article_id, @article, :KodeCollection, :Produk, {:include_blank => true, 
-									:prompt => 'Select an Article'}, {:id => 'article_id'}) %>
+            <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.Merk]}, 
+              params[:merk_id]), :class => 'multiselect', :multiple => true %>
 
-								<%= collection_select(nil, :fabric_id, @fabric, :KodeKain, :NamaKain, {:include_blank => true, 
-									:prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
- 							</fieldset>
-					</div>
-					<!-- /block -->
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span3">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Size</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+            <%= collection_select(nil, :type_id, @type, :KodeProduk, :Namaroduk, {}, {:id => 'type_id', :class => 'multiselect', :multiple => true})  %>
+            <br /><br />
+            <%= collection_select(nil, :article_id, @article, :KodeCollection, :Produk, {:include_blank => true, 
+                :prompt => 'Select an Article'}, {:id => 'article_id'}) %>
 
-						  </div>
-						</div>
-						<div class="block-content collapse in">
- 							<fieldset>
-							 	<label class="radio">
-  								<%= radio_button_tag 'size', 'S' %> Standard <br />
-								</label>
-							 	<label class="radio">
-  								<%= radio_button_tag 'size', 'T' %> Special
-								</label>
-							 	<label class="radio">
-									<%= radio_button_tag 'size', 'P', true %> Display
-								</label>
-							 	<label class="radio">
-  								<%= radio_button_tag 'size', 'all', true %> All
-								</label>
- 							</fieldset>
-						</div>
-					</div>
-					<!-- /block -->
-				</div>
-				<div class="span3">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Channel Customer</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+            <%= collection_select(nil, :fabric_id, @fabric, :KodeKain, :NamaKain, {:include_blank => true, 
+                :prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
+          </fieldset>
+        </div>
+        <!-- /block -->
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3">
+        <!-- block -->
+        <div class="block">
+          <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">Size</div>
+            <div class="pull-right"><span class="badge badge-info"></span>
 
-						  </div>
-						</div>
-						<div class="block-content collapse in">
- 							<fieldset>
-							 	<label class="radio">
-									<%= radio_button_tag 'customer_channel', 'modern' %> Modern <br />
-								</label>
-							 	<label class="radio">
-									<%= radio_button_tag 'customer_channel', 'retail' %> Retail
-								</label>
-							 	<label class="radio">
-									<%= radio_button_tag 'customer_channel', 'all', true %> All
-								</label>
- 							</fieldset>
-						</div>
-					</div>
-					<!-- /block -->
-				</div>
-		<% unless session[:type_report] == 'detail' %>
-					<div class="span5">
-						<!-- block -->
-						<div class="block">
-							<div class="navbar navbar-inner block-header">
-								<div class="muted pull-left">Grouping</div>
-								<div class="pull-right"><span class="badge badge-info"></span>
+            </div>
+          </div>
+          <div class="block-content collapse in">
+            <fieldset>
+              <label class="radio">
+                <%= radio_button_tag 'size', 'S' %> Standard <br />
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'size', 'T' %> Special
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'size', 'P', true %> Display
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'size', 'all', true %> All
+              </label>
+            </fieldset>
+          </div>
+        </div>
+        <!-- /block -->
+      </div>
+      <div class="span3">
+        <!-- block -->
+        <div class="block">
+          <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">Channel Customer</div>
+            <div class="pull-right"><span class="badge badge-info"></span>
 
-								</div>
-							</div>
-							<div class="block-content collapse in">
-	 							<fieldset>
-								 	<label class="radio">
-										<%= radio_button_tag 'group', 'kodebrg' %> Item Code <br />
-									</label>
-								 	<label class="radio">
-										<%= radio_button_tag 'group', 'customer', true %> Customer <br />
-									</label>
-								 	<label class="radio">
-										<%= radio_button_tag 'group', 'kodeartikel' %> Article
-									</label>
-								 	<label class="radio">
-										<%= radio_button_tag 'group', 'cabang_id' %> Branch
-									</label>
-	 							</fieldset>
-							</div>
-						</div>
-						<!-- /block -->
-					</div>
-			</div>
-		<% end %>
-		<div class="row-fluid">
-			<div class="offset4">
-				<div class="span5">
-					<!-- block -->
-					<div class="block">
-						<div class="block-content collapse in">
-							<div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
-						</div>
-					</div>
-					<!-- /block -->
-				</div>
-			</div>
-		</div>
-	<% end %>
+            </div>
+          </div>
+          <div class="block-content collapse in">
+            <fieldset>
+              <label class="radio">
+                <%= radio_button_tag 'customer_channel', 'modern' %> Modern <br />
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'customer_channel', 'retail' %> Retail
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'customer_channel', 'all', true %> All
+              </label>
+            </fieldset>
+          </div>
+        </div>
+        <!-- /block -->
+      </div>
+      <% unless session[:type_report] == 'detail' %>
+        <div class="span5">
+          <!-- block -->
+          <div class="block">
+            <div class="navbar navbar-inner block-header">
+              <div class="muted pull-left">Grouping</div>
+              <div class="pull-right"><span class="badge badge-info"></span>
+
+              </div>
+            </div>
+            <div class="block-content collapse in">
+              <fieldset>
+                <label class="radio">
+                  <%= radio_button_tag 'group', 'kodebrg' %> Item Code <br />
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'group', 'customer', true %> Customer <br />
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'group', 'kodeartikel' %> Article
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'group', 'cabang_id' %> Branch
+                </label>
+              </fieldset>
+            </div>
+          </div>
+          <!-- /block -->
+        </div>
+      </div>
+    <% end %>
+    <div class="row-fluid">
+      <div class="offset4">
+        <div class="span5">
+          <!-- block -->
+          <div class="block">
+            <div class="block-content collapse in">
+              <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+            </div>
+          </div>
+          <!-- /block -->
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <script>
-/*
-	$(document).ready(function() {
+  /*
+        $(document).ready(function() {
 
-		$('#article_id').change(function() {
-			$.ajax({
-				url: "<%= update_reports_kain_path %>",
-				data: {
-					artikel_id : $('#article_id').val()
-					},
-				dataType: "script"
-			});
-		});
+                $('#article_id').change(function() {
+                        $.ajax({
+                                url: "<%= update_reports_kain_path %>",
+                                data: {
+                                        artikel_id : $('#article_id').val()
+                                        },
+                                dataType: "script"
+                        });
+                });
 
-		$('#type_id').change(function() {
-			$.ajax({
-				url: "<%= update_reports_article_path %>",
-				data: {
-					type_id : $('#type_id').val(),
-					merk_id : $('#merk_id').val()
-					},
-				dataType: "script"
-			});
-		});
-	});
-*/
+                $('#type_id').change(function() {
+                        $.ajax({
+                                url: "<%= update_reports_article_path %>",
+                                data: {
+                                        type_id : $('#type_id').val(),
+                                        merk_id : $('#merk_id').val()
+                                        },
+                                dataType: "script"
+                        });
+                });
+        });
+   */
 </script>

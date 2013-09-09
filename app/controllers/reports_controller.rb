@@ -1,4 +1,24 @@
 class ReportsController < ApplicationController
+  
+  def quick_view_monthly_result
+    compare_last_month
+  end
+  
+  def quick_view_monthly_process
+    redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
+    :from => 3.month.ago, :to => Date.today)
+  end
+  
+  def quick_view_monthly
+  end
+  
+  def quick_view_report
+    redirect_to laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) if params[:quick_view] == 'weekly'
+    redirect_to reports_quick_view_monthly_path if params[:quick_view] == 'monthly'
+  end
+  
+  def quick_view
+  end
 
 	def group_last_month
 		session[:compare_type] = params[:compare] if params[:compare].present?
@@ -27,11 +47,11 @@ class ReportsController < ApplicationController
 		unless params[:from].nil? && params[:to].nil?
 			@customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
 				cabang_id, kodekain, kota")
-				.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
-				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-				.brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-				.not_equal_with_nosj.group(params[:group_by]).customer_retail_all(params[:customer_all_retail])
+      .between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
+      .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
+      .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+      .brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
+      .not_equal_with_nosj.group(params[:group_by]).customer_retail_all(params[:customer_all_retail])
 		end
 	end
 
@@ -224,10 +244,10 @@ class ReportsController < ApplicationController
 	def detail
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
-				.search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
-				.size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-				.brand_size(params[:size_type]).customer_modern(params[:customer_modern])
-				.not_equal_with_nosj.customer_modern_all(params[:customer_modern])
+      .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
+      .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
+      .brand_size(params[:size_type]).customer_modern(params[:customer_modern])
+      .not_equal_with_nosj.customer_modern_all(params[:customer_modern])
 		end 
 	end	
 

@@ -7,7 +7,7 @@ class Cabang < ActiveRecord::Base
   has_many :yearly_target
 
   def self.get_id
-    find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 18, 19, 20, 22)
+    find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 18, 19, 20, 22, 23, 24)
   end
 
   def self.get_id_to_7

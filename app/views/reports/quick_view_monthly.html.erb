@@ -1,0 +1,40 @@
+<div class="row-fluid">
+  <div class="offset4">
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Select Brand</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag reports_quick_view_monthly_process_path, :method => 'get' do %>
+            <fieldset>
+              <label class="radio">
+                <%= check_box_tag 'quick_view_brand[]', 'Non Serenity' %> Elite
+              </label>
+              <label class="radio">
+                <%= check_box_tag 'quick_view_brand[]', 'Serenity' %> Serenity
+              </label>
+              <label class="radio">
+                <%= check_box_tag 'quick_view_brand[]', 'Lady Americana' %> Lady Americana
+              </label>
+              <label class="radio">
+                <%= check_box_tag 'quick_view_brand[]', 'Classic' %> Classic
+              </label>
+              <label class="radio">
+                <%= check_box_tag 'quick_view_brand[]', 'Royal' %> Royal
+              </label>
+            </fieldset>
+            <br />
+            <div class="pull-right"><button type="submit" class="btn btn-primary">Process</button></div>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+  </div>
+</div>
+
