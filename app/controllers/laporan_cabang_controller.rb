@@ -129,14 +129,14 @@ class LaporanCabangController < ApplicationController
 	end
 
 	def update_kain
-	# updates artists and songs based on genre selected
-	# map to name and id for use in our options_for_select
+    # updates artists and songs based on genre selected
+    # map to name and id for use in our options_for_select
 		@fabric = Kain.get_kain_name(params[:artikel_id]).map{|a| [a.NamaKain, a.KodeKain]}.insert(0, "Select Fabric")
 	end
 
 	def update_article
-	# updates artists and songs based on genre selected
-	# map to name and id for use in our options_for_select
+    # updates artists and songs based on genre selected
+    # map to name and id for use in our options_for_select
 		@article = Artikel.get_name(params[:type_id]).map{|a| [a.Produk, a.KodeCollection]}.insert(0, "Select Article")
 	end
 
@@ -148,8 +148,8 @@ class LaporanCabangController < ApplicationController
 		@fabric = Kain.all
 		unless params[:from].nil? && params[:to].nil? 
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:cabang_id])
-				.search_by_type(params[:type_id]).brand(params[:merk_id]).kode_barang_like(params[:article_id]).fabric(params[:fabric])
-				.brand_size(params[:size])
+      .search_by_type(params[:type_id]).brand(params[:merk_id]).kode_barang_like(params[:article_id]).fabric(params[:fabric])
+      .brand_size(params[:size])
 		end  
 	end
 
@@ -244,43 +244,43 @@ class LaporanCabangController < ApplicationController
 	end
 
 	def calculation_date_weekly_report(date)
-			@first_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek, 1)
-			@last_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek, 7)
+    @first_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek, 1)
+    @last_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek, 7)
 
-			@first_day_week_2 = Date.commercial(date.year, date.beginning_of_month.cweek + 1, 1)
-			@last_day_week_2 = Date.commercial(date.year, date.beginning_of_month.cweek + 1, 7)
+    @first_day_week_2 = Date.commercial(date.year, date.beginning_of_month.cweek + 1, 1)
+    @last_day_week_2 = Date.commercial(date.year, date.beginning_of_month.cweek + 1, 7)
 
-			@first_day_week_3 = Date.commercial(date.year, date.beginning_of_month.cweek + 2, 1)
-			@last_day_week_3 = Date.commercial(date.year, date.beginning_of_month.cweek + 2, 7)
+    @first_day_week_3 = Date.commercial(date.year, date.beginning_of_month.cweek + 2, 1)
+    @last_day_week_3 = Date.commercial(date.year, date.beginning_of_month.cweek + 2, 7)
 
-			@first_day_week_4 = Date.commercial(date.year, date.beginning_of_month.cweek + 3, 1)
-			@last_day_week_4 = Date.commercial(date.year, date.beginning_of_month.cweek + 3, 7)
+    @first_day_week_4 = Date.commercial(date.year, date.beginning_of_month.cweek + 3, 1)
+    @last_day_week_4 = Date.commercial(date.year, date.beginning_of_month.cweek + 3, 7)
 
-			@first_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 1)
-			@last_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 7)
+    @first_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 1)
+    @last_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 7)
 
-			@first_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 1)
-			@last_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 7)
+    @first_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 1)
+    @last_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 7)
 
-			@last_year_last_day_week = Date.commercial(date.year - 1, date.end_of_month.cweek, 7)
+    @last_year_last_day_week = Date.commercial(date.year - 1, date.end_of_month.cweek, 7)
 	end
 
 	def calculation_date_compare_year(periode, date)
-			@this_week_on_current_year_first_day = Date.commercial(periode.year, periode.cweek, 1)
-			@this_week_on_current_year_last_day = Date.commercial(periode.year, periode.cweek, 7)
+    @this_week_on_current_year_first_day = Date.commercial(periode.year, periode.cweek, 1)
+    @this_week_on_current_year_last_day = Date.commercial(periode.year, periode.cweek, 7)
 
-			@this_week_on_last_year_first_day = Date.commercial(1.year.ago(periode).year, periode.cweek, 1)
-			@this_week_on_last_year_last_day = Date.commercial(1.year.ago(periode).year, periode.cweek, 7)
+    @this_week_on_last_year_first_day = Date.commercial(1.year.ago(periode).year, periode.cweek, 1)
+    @this_week_on_last_year_last_day = Date.commercial(1.year.ago(periode).year, periode.cweek, 7)
 
-			@last_week_on_current_year_first_day = Date.commercial(periode.year, periode.cweek - 1, 1)
-			@last_week_on_current_year_last_day = Date.commercial(periode.year, periode.cweek - 1, 7)
+    @last_week_on_current_year_first_day = Date.commercial(periode.year, periode.cweek - 1, 1)
+    @last_week_on_current_year_last_day = Date.commercial(periode.year, periode.cweek - 1, 7)
 
-			@last_week_on_last_year_first_day = Date.commercial(1.year.ago(periode).year, periode.cweek - 1, 1)
-			@last_week_on_last_year_last_day = Date.commercial(1.year.ago(periode).year, periode.cweek - 1, 7)
+    @last_week_on_last_year_first_day = Date.commercial(1.year.ago(periode).year, periode.cweek - 1, 1)
+    @last_week_on_last_year_last_day = Date.commercial(1.year.ago(periode).year, periode.cweek - 1, 7)
 
-      @this_week_on_current_year = (date.to_date - 6.days).to_date
-      @this_week_on_last_year = 1.year.ago(date.to_date - 6.days).to_date
-      @last_week_on_current_year = 1.weeks.ago(date.to_date - 6.days).to_date
-      @last_week_on_last_year = 1.year.ago(1.weeks.ago(date.to_date - 6.days)).to_date
+    @this_week_on_current_year = (date.to_date - 6.days).to_date
+    @this_week_on_last_year = 1.year.ago(date.to_date - 6.days).to_date
+    @last_week_on_current_year = 1.weeks.ago(date.to_date - 6.days).to_date
+    @last_week_on_last_year = 1.year.ago(1.weeks.ago(date.to_date - 6.days)).to_date
 	end
 end

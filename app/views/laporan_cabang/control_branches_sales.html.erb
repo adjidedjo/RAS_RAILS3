@@ -1,17 +1,17 @@
 <div class="form-div">
-	<%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Control Branches Sales</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %>
-			<%= label_tag 'Category' %>
-			<%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe,
-      :prompt => "--Select Category--", :include_blank => false %><br />
-			<%= submit_tag "Search", :class => "btn btn-primary" %>
-		</fieldset>
-	<% end %>
+  <%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get', :html => {:class => "well"} do %>
+    <fieldset>
+      <legend>Control Branches Sales</legend>
+      <label>From</label>
+      <%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+      <label>To</label>
+      <%= text_field_tag 'to', nil, :placeholder => "To Date" %>
+      <%= label_tag 'Category' %>
+      <%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe,
+        :prompt => "--Select Category--", :include_blank => false %><br />
+      <%= submit_tag "Search", :class => "btn btn-primary" %>
+    </fieldset>
+  <% end %>
 </div>
 
 <br />
@@ -26,20 +26,9 @@
           <th colspan="14">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
         </tr>
         <tr>
-          <th>Bandung</th>
-          <th>Narogong</th>
-          <th>Bali</th>
-          <th>Medan</th>
-          <th>Surabaya</th>
-          <th>Semarang</th>
-          <th>Cirebon</th>
-          <th>Yogyakarta</th>
-          <th>Palembang</th>
-          <th>Lampung</th>
-          <th>Meruya</th>
-          <th>Makasar</th>
-          <th>Pekanbaru</th>
-          <th>Jember</th>
+          <% Cabang.get_id.each do |cabang| %>
+            <th><%= cabang.Cabang.gsub(/Cabang/,'') %></th>
+          <% end %>
         </tr>
       </thead>
       <tfoot>
