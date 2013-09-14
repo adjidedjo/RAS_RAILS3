@@ -45,6 +45,15 @@ class ReportsController < ApplicationController
 
 	def compare_last_month
 		unless params[:from].nil? && params[:to].nil?
+      if ((params[:to].to_date.month - params[:from].to_date.month + 1) - 6) <= 0
+        @month_devided = params[:from].to_date.month..params[:to].to_date.month
+      else
+        rsult_month = (params[:to].to_date.month - params[:from].to_date.month + 1) - 6
+        @month_devided = params[:from].to_date.month..(params[:from].to_date.month + 5)
+        @over_month = (params[:to].to_date.month - rsult_month + 1)..params[:to].to_date.month
+      end
+      @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
+      @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
 			@customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
 				cabang_id, kodekain, kota")
       .between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])

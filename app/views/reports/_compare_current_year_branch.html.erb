@@ -83,15 +83,12 @@
           <th rowspan="3">Branch</th>
         </tr>
         <tr>
-          <th colspan="2">January</th>
-          <th colspan="2">February</th>
-          <th colspan="2">March</th>
-          <th colspan="2">April</th>
-          <th colspan="2">May</th>
-          <th colspan="2">June</th>
+          <% @month_devided.each do |month|  %>
+            <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
+          <% end %>
         </tr>
         <tr>
-          <% (1..6).each do %>
+          <% @month_devided.each do %>
             <th>Qty</th>
             <th>Value</th>
           <% end %>
@@ -100,7 +97,8 @@
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..12).each do  %>
+          <% @month_devided.each do  %>
+            <td></td>
             <td></td>
           <% end %>
         </tr>
@@ -109,94 +107,21 @@
         <% @customerstore.each do |laporan| %>
           <tr>
             <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
+            <% @month_devided.each do |month| %>
 
-            <!-- January -->
-            <% if LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(1, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(2, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(3, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(4, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(5, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(6, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <!-- January -->
+              <% if LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, type, 
+                  brand, article, nil, fabric, size, customer, size_type, 
+                  customer_modern, customer_all_retail).empty? %>
+                <td>0</td>
+                <td>0</td>
+              <% else %>
+                <% LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, type, 
+                  brand, article, nil, fabric, size, customer, size_type, 
+                  customer_modern, customer_all_retail).each do |a| %>
+                  <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                  <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+                <% end %>
               <% end %>
             <% end %>
           </tr>
@@ -206,133 +131,60 @@
   </div>
 </div>
 </br>
-<div class="row-fluid">
-  <div class="block-content collapse in">
-    <table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
-      <thead>
-        <tr>
-          <th rowspan="3">Customer</th>
-        </tr>
-        <tr>
-          <th colspan="2">July</th>
-          <th colspan="2">August</th>
-          <th colspan="2">September</th>
-          <th colspan="2">October</th>
-          <th colspan="2">November</th>
-          <th colspan="2">December</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..12).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% @customerstore.each do |laporan|	 %>
+<% if (params[:to].to_date.month - params[:from].to_date.month + 1) > 6  %>
+  <div class="row-fluid">
+    <div class="block-content collapse in">
+      <table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+        <thead>
           <tr>
-            <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
-
-            <!-- January -->
-            <% if LaporanCabang.customer_monthly(7,Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(7, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(8, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(9, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(9,Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(10, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(11,Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(11, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
-            <% end %>
-
-
-            <% if LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).empty? %>
-              <td>0</td>
-              <td>0</td>
-            <% else %>
-              <% LaporanCabang.customer_monthly(12, Date.today.year, laporan.cabang, type, 
-                brand, article, nil, fabric, size, customer, size_type, 
-                customer_modern, customer_all_retail).each do |a| %>
-                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-              <% end %>
+            <th rowspan="3">Branch</th>
+          </tr>
+          <tr>
+            <% @over_month.each do |month|  %>
+              <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
             <% end %>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <tr>
+            <% @over_month.each do %>
+              <th>Qty</th>
+              <th>Value</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th scope="row">Total</th>
+            <% @over_month.each do  %>
+              <td></td>
+              <td></td>
+            <% end %>
+          </tr>
+        </tfoot>
+        <tbody>
+          <% @customerstore.each do |laporan| %>
+            <tr>
+              <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
+              <% @over_month.each do |month| %>
+
+                <!-- January -->
+                <% if LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, type, 
+                    brand, article, nil, fabric, size, customer, size_type, 
+                    customer_modern, customer_all_retail).empty? %>
+                  <td>0</td>
+                  <td>0</td>
+                <% else %>
+                  <% LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, type, 
+                    brand, article, nil, fabric, size, customer, size_type, 
+                    customer_modern, customer_all_retail).each do |a| %>
+                    <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                    <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+<% end %>

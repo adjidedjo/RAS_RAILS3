@@ -1,8 +1,6 @@
 class LaporanCabang < ActiveRecord::Base
   set_table_name "tblaporancabang"
-  attr_accessible :cabang_id, :kodebrg, :tanggalsj, :nofaktur, :customer, :salesman, :namabrg, :jenisbrgdisc, :kodejenis,	:jenisbrg,
-		:namaartikel, :namakain, :panjang, :lebar, :jumlah, :hargasatuan, :hargabruto, 
-		:diskon1, :diskon2, :diskon3, :totalnetto1, :totalnetto2, :kota, :harganetto1, :harganetto2
+  attr_accessible *column_names
 
   belongs_to :cabang
 	belongs_to :brand
