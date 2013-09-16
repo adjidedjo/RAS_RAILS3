@@ -71,7 +71,7 @@
 <br />
 <div class="row-fluid">
   <div class="block-content collapse in">
-    <table id="customer_monthly" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+    <table id="cus_compare" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
       <thead>
         <tr>
           <th rowspan="3">Article</th>
@@ -89,13 +89,6 @@
         </tr>
       </thead>
       <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% @month_devided.each do  %>
-            <td></td>
-            <td></td>
-          <% end %>
-        </tr>
       </tfoot>
       <tbody>
         <% @customerstore.each do |laporan| %>
@@ -128,7 +121,7 @@
 <% if (params[:to].to_date.month - params[:from].to_date.month + 1) > 6  %>
   <div class="row-fluid">
     <div class="block-content collapse in">
-      <table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+      <table id="cus_compare2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
         <thead>
           <tr>
             <th rowspan="3">Article</th>
@@ -146,13 +139,6 @@
           </tr>
         </thead>
         <tfoot>
-          <tr>
-            <th scope="row">Total</th>
-            <% @over_month.each do  %>
-              <td></td>
-              <td></td>
-            <% end %>
-          </tr>
         </tfoot>
         <tbody>
           <% @customerstore.each do |laporan|	 %>
