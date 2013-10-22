@@ -46,6 +46,7 @@
             <%= menu_item "Monthly", targets_monthly_target_type_path %>
             <%= menu_item "Yearly", yearly_targets_path %>
           <% end %>
+          <%= menu_item "Stock", stock_index_path %>
           <%= drop_down "Sales Reports" do %>
             <%= menu_item "Analysis", reports_first_filter_path %>
             <%= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => Date.today) %>

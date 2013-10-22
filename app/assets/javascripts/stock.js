@@ -63,30 +63,6 @@ $(document).ready(function(){
 
     $('#stock').dataTable({
         sPaginationType: "bootstrap",
-        iDisplayLength: 30,
-    }).columnFilter({
-        sPlaceHolder: "head:before",
-        aoColumns: [
-				{
-            sSelector: "#cabang",
-            type: "checkbox"
-        },
-				{
-            sSelector: "#jenis",
-            type: "checkbox"
-        },
-        {
-            sSelector: "#brand",
-            type: "checkbox"
-        },
-        {
-            sSelector: "#artikel",
-            type: "checkbox"
-        },
-        {
-            sSelector: "#kain",
-            type: "checkbox"
-        }
-        ]
+        iDisplayLength: 100,
     });
 });
