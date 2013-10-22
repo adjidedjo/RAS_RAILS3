@@ -12,7 +12,7 @@
           </div>
           <div class="block-content collapse in">
             <fieldset>
-              <%= text_field_tag 'date', session[:from].nil? ? nil : session[:from], :placeholder => "Date"  %>
+              <%= text_field_tag 'date', params[:date].nil? ? nil : params[:date], :placeholder => "Date"  %>
             </fieldset>
           </div>
         </div>
