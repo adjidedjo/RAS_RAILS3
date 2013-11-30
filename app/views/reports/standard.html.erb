@@ -28,6 +28,8 @@
                     <th>Fabric</th>
                     <th>Size</th>
                     <th>Group</th>
+                    <th>Group</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -38,6 +40,7 @@
                     <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
                     <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
                     <td><%= params[:group_by] %></td>
+                    <td><%= params[:branch] %></td>
                   </tr>
                 </tbody>
               </table>
@@ -58,6 +61,16 @@
         </label>
       </div>
     </div>
+		<div class="row-fluid">
+			<div class="block-content collapse in">
+				<label>
+					<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
+						:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
+						:size_type => params[:size_type], :branch => params[:branch]), 
+						:class=>"btn btn-info" %>
+				</label>
+			</div>
+		</div>
     <br />
     <div class="row-fluid">
       <div class="block-content collapse in">
@@ -70,15 +83,27 @@
                 <th>Article</th>
               <% elsif params[:group_by] == 'cabang_id' %>
                 <th>Branchs</th>
+		            <% Cabang.get_id.each do |cabang_name| %>
+				        	<% @laporancabang.where(cabang_id: cabang_name, kodebrg: laporan.kodebrg).each do |back| %>
+				        		<% raise back.empty?.inspect %>
+				        		<% if back.nil? %>
+				        			<td>0</td>
+				        		<% else %>				        		
+				        			<td><%= back.sum_jumlah.nil? ? 0 : back.sum_jumlah %></td>
+				        		<% end %>
+				         	<% end %>
+		            <% end %>
               <% else %>
                 <th>Items Code</th>
+                <th>Brand</th>
                 <th>Article</th>
                 <th>Fabric</th>
                 <th>Length</th>
                 <th>Width</th>
               <% end %>
-              <th>Qty</th>
-              <th>Amount</th>
+              <% Cabang.get_id.each do |cabang_name| %>
+              	<th><%= cabang_name.Cabang.gsub(/Cabang/,'') %></th>
+              <% end %>
             </tr>
           </thead>
           <tfoot>
@@ -94,13 +119,21 @@
                   <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
                 <% else %>
                   <td><%= laporan.kodebrg %></td>
+                  <td><%= laporan.jenisbrgdisc %></td>
                   <td><%= laporan.namaartikel %></td>
                   <td><%= laporan.namakain %></td>
                   <td><%= laporan.panjang %></td>
                   <td><%= laporan.lebar %></td>
                 <% end %>
-                <td><%= currency(laporan.sum_jumlah.to_i) %></td>
-                <td><%= currency(laporan.sum_harga.to_i) %></td>
+		            <% Cabang.get_id.each do |cabang_name| %>
+		            	<% if @laporancabang.where(cabang_id: cabang_name, kodebrg: laporan.kodebrg).empty? %>
+		            		<td>0</td>
+		            	<% else %>
+		            		<% @laporancabang.where(cabang_id: cabang_name, kodebrg: laporan.kodebrg).each do |uah| %>
+		            			<td><%= uah.sum_jumlah %></td>
+		            	  <% end %> 	
+		            	<% end %>
+		            <% end %>
               </tr>
             <% end %>
           </tbody>

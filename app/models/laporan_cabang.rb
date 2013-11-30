@@ -35,7 +35,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)
 		select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
-					sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar")
+					sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar, jumlah, id, jenisbrgdisc")
 			.between_date_sales(from, to).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
