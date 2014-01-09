@@ -45,17 +45,17 @@ class ReportsController < ApplicationController
 
 	def compare_last_month
 		unless params[:from].nil? && params[:to].nil?
-      if ((params[:to].to_date.month - params[:from].to_date.month + 1) - 6) <= 0
-        @month_devided = params[:from].to_date.month..params[:to].to_date.month
-      else
-        rsult_month = (params[:to].to_date.month - params[:from].to_date.month + 1) - 6
-        @month_devided = params[:from].to_date.month..(params[:from].to_date.month + 5)
-        @over_month = (params[:to].to_date.month - rsult_month + 1)..params[:to].to_date.month
-      end
-      @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
-      @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
-			@customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
-				cabang_id, kodekain, kota, jenisbrgdisc, namaartikel, namakain, panjang, lebar")
+    if (params[:from].to_date..params[:to].to_date).to_a.group_by(&:month).count <= 6
+      @month_devided = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+    else
+      @rsult_month = params[:from].to_date + 5.months
+      @month_devided = (params[:from].to_date..@rsult_month).to_a.group_by { |t| t.beginning_of_month }
+      @over_month = ((@rsult_month + 1.month)..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+    end
+    @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
+    @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
+			 @customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
+     cabang_id, kodekain, kota, jenisbrgdisc, namaartikel, namakain, panjang, lebar")
       .between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
       .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
       .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
