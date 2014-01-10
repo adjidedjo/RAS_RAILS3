@@ -48,6 +48,7 @@ class ReportsController < ApplicationController
     if (params[:from].to_date..params[:to].to_date).to_a.group_by(&:month).count <= 6
       @month_devided = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
     else
+      @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
       @rsult_month = params[:from].to_date + 5.months
       @month_devided = (params[:from].to_date..@rsult_month).to_a.group_by { |t| t.beginning_of_month }
       @over_month = ((@rsult_month + 1.month)..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
