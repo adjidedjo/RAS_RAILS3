@@ -13,6 +13,7 @@
           <div class="span5">
             <!-- block -->
             <div class="block">
+              <h3>NOTE: Data per bulan akan valid setelah tanggal 20 pada bulan selanjutnya, data sementara di upload oleh masing masing cabang</h3>
               <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Search Parameters</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
@@ -58,45 +59,33 @@
                 <th rowspan="3">City</th>
               </tr>
               <tr>
-                <% @month_devided.each do |month|  %>
-                  <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
+                <% @all_month_xls.each do |month, sales|  %>
+                  <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @month_devided.each do %>
+                <% @all_month_xls.each do |month, sales| %>
                   <th>Qty</th>
-                  <th>Value</th>
                 <% end %>
               </tr>
             </thead>
             <tfoot>
-              <tr>
-                <th scope="row">Total</th>
-                <% @month_devided.each do  %>
-                  <td></td>
-                  <td></td>
-                <% end %>
-              </tr>
             </tfoot>
             <tbody>
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= laporan.customer %></td>
                   <td><%= laporan.kota.nil? ? "" : laporan.kota %></td>
-                  <% @month_devided.each do |month| %>
-
-                    <!-- January -->
-                    <% if LaporanCabang.customer_monthly(month, Date.today.year, params[:branch], params[:type], 
+                  <% @all_month_xls.each do |month, sales| %>
+                    <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], laporan.customer, params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
                       <td>0</td>
-                      <td>0</td>
                     <% else %>
-                      <% LaporanCabang.customer_monthly(month, Date.today.year, params[:branch], params[:type], 
+                      <% LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], laporan.customer, params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).each do |a| %>
                         <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                        <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
                       <% end %>
                     <% end %>
                   <% end %>
@@ -106,66 +95,6 @@
           </table>
         </div>
       </div>
-      </br>
-      <% if (params[:to].to_date.month - params[:from].to_date.month + 1) > 6  %>
-        <div class="row-fluid">
-          <div class="block-content collapse in">
-            <table id="customer_compare2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
-              <thead>
-                <tr>
-                  <th rowspan="3">Customer</th>
-                  <th rowspan="3">City</th>
-                </tr>
-                <tr>
-                  <% @over_month.each do |month|  %>
-                    <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
-                  <% end %>
-                </tr>
-                <tr>
-                  <% @over_month.each do %>
-                    <th>Qty</th>
-                    <th>Value</th>
-                  <% end %>
-                </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th scope="row">Total</th>
-                  <% @over_month.each do  %>
-                    <td></td>
-                    <td></td>
-                  <% end %>
-                </tr>
-              </tfoot>
-              <tbody>
-                <% @customerstore.each do |laporan|	 %>
-                  <tr>
-                    <td><%= laporan.customer %></td>
-                    <td><%= laporan.kota.nil? ? "" : laporan.kota %></td>
-                    <% @over_month.each do |month| %>
-
-                      <!-- January -->
-                      <% if LaporanCabang.customer_monthly(7, Date.today.year, params[:branch], params[:type], 
-                        params[:brand], params[:article], nil, params[:fabric], params[:size], laporan.customer, params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).empty? %>
-                        <td>0</td>
-                        <td>0</td>
-                      <% else %>
-                        <% LaporanCabang.customer_monthly(7, Date.today.year, params[:branch], params[:type], 
-                        params[:brand], params[:article], nil, params[:fabric], params[:size], laporan.customer, params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).each do |a| %>
-                          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-                        <% end %>
-                      <% end %>
-                    <% end %>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>
@@ -185,6 +114,7 @@
           <div class="span5">
             <!-- block -->
             <div class="block">
+              <h3>NOTE: Data per bulan akan valid setelah tanggal 20 pada bulan selanjutnya, data sementara di upload oleh masing masing cabang</h3>
               <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Search Parameters</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
@@ -240,12 +170,12 @@
                 <th rowspan="3">Width</th>
               </tr>
               <tr>
-                <% (1..12).each do |month|  %>
-                  <th><%= (Date::MONTHNAMES[month]) %></th>
+                <% @all_month_xls.each do |month, sales|  %>
+                  <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @month_devided.each do %>
+                <% @all_month_xls.each do |month, sales| %>
                   <th>Qty</th>
                 <% end %>
               </tr>
@@ -254,20 +184,20 @@
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= laporan.kodebrg %></td>
-						      <td><%= laporan.jenisbrgdisc %></td>
-						      <td><%= laporan.namaartikel %></td>
-						      <td><%= laporan.namakain %></td>
-						      <td><%= laporan.panjang %></td>
-						      <td><%= laporan.lebar %></td>
-                  <% (1..12).each do |month| %>
+						            <td><%= laporan.jenisbrgdisc %></td>
+						            <td><%= laporan.namaartikel %></td>
+						            <td><%= laporan.namakain %></td>
+						            <td><%= laporan.panjang %></td>
+						            <td><%= laporan.lebar %></td>
+                  <% @all_month_xls.each do |month, sales| %>
 
                     <!-- January -->
-                    <% if LaporanCabang.customer_monthly(month, Date.today.year, params[:branch], params[:type], 
+                    <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         nil, nil, laporan.kodebrg, nil, nil, nil, params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
                       <td>0</td>
                     <% else %>
-                      <% LaporanCabang.customer_monthly(month, Date.today.year, params[:branch], params[:type], 
+                      <% LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         nil, nil, laporan.kodebrg, nil, nil, nil, params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).each do |a| %>
                         <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
@@ -299,6 +229,7 @@
           <div class="span5">
             <!-- block -->
             <div class="block">
+              <h3>NOTE: Data per bulan akan valid setelah tanggal 20 pada bulan selanjutnya, data sementara di upload oleh masing masing cabang</h3>
               <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Search Parameters</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
@@ -343,44 +274,32 @@
                 <th rowspan="3">Article</th>
               </tr>
               <tr>
-                <% @month_devided.each do |month|  %>
-                  <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
+                <% @all_month_xls.each do |month, sales|  %>
+                  <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @month_devided.each do %>
+                <% @all_month_xls.each do |month, sales| %>
                   <th>Qty</th>
-                  <th>Value</th>
                 <% end %>
               </tr>
             </thead>
             <tfoot>
-              <tr>
-                <th scope="row">Total</th>
-                <% @month_devided.each do  %>
-                  <td></td>
-                  <td></td>
-                <% end %>
-              </tr>
             </tfoot>
             <tbody>
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
-                  <% @month_devided.each do |month| %>
-
-                    <!-- January -->
-                    <% if LaporanCabang.customer_monthly(month, Date.today.year, params[:branch], params[:type], 
+                  <% @all_month_xls.each do |month, sales| %>
+                    <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], laporan.kodeartikel, nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
                       <td>0</td>
-                      <td>0</td>
                     <% else %>
-                      <% LaporanCabang.customer_monthly(month,Date.today.year, params[:branch], params[:type], 
+                      <% LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], laporan.kodeartikel, nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).each do |a| %>
                         <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                        <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
                       <% end %>
                     <% end %>
                   <% end %>
@@ -390,67 +309,10 @@
           </table>
         </div>
       </div>
-      </br>
-      <% if (params[:to].to_date.month - params[:from].to_date.month + 1) > 6  %>
-        <div class="row-fluid">
-          <div class="block-content collapse in">
-            <table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
-              <thead>
-                <tr>
-                  <th rowspan="3">Article</th>
-                </tr>
-                <tr>
-                  <% @over_month.each do |month|  %>
-                    <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
-                  <% end %>
-                </tr>
-                <tr>
-                  <% @over_month.each do %>
-                    <th>Qty</th>
-                    <th>Value</th>
-                  <% end %>
-                </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th scope="row">Total</th>
-                  <% @over_month.each do  %>
-                    <td></td>
-                    <td></td>
-                  <% end %>
-                </tr>
-              </tfoot>
-              <tbody>
-                <% @customerstore.each do |laporan|	 %>
-                  <tr>
-                    <td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
-                    <% @over_month.each do |month| %>
-
-                      <!-- January -->
-                      <% if LaporanCabang.customer_monthly(7, Date.today.year, params[:branch], params[:type], 
-                        params[:brand], laporan.kodeartikel, nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).empty? %>
-                        <td>0</td>
-                        <td>0</td>
-                      <% else %>
-                        <% LaporanCabang.customer_monthly(7, Date.today.year, params[:branch], params[:type], 
-                        params[:brand], laporan.kodeartikel, nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).each do |a| %>
-                          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-                        <% end %>
-                      <% end %>
-                    <% end %>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>
+
 <% if params[:group_by] == 'cabang_id' %>
   <% unless params[:from].nil? %>
     <% unless params[:from].empty? %>
@@ -466,6 +328,7 @@
           <div class="span5">
             <!-- block -->
             <div class="block">
+              <h3>NOTE: Data per bulan akan valid setelah tanggal 20 pada bulan selanjutnya, data sementara di upload oleh masing masing cabang</h3>
               <div class="navbar navbar-inner block-header">
                 <div class="muted pull-left">Search Parameters</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
@@ -516,44 +379,32 @@
                 <th rowspan="3">Branch</th>
               </tr>
               <tr>
-                <% @month_devided.each do |month|  %>
-                  <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
+                <% @all_month_xls.each do |month, sales|  %>
+                  <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @month_devided.each do %>
+                <% @all_month_xls.each do |month, sales| %>
                   <th>Qty</th>
-                  <th>Value</th>
                 <% end %>
               </tr>
             </thead>
             <tfoot>
-              <tr>
-                <th scope="row">Total</th>
-                <% @month_devided.each do  %>
-                  <td></td>
-                  <td></td>
-                <% end %>
-              </tr>
             </tfoot>
             <tbody>
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
-                  <% @month_devided.each do |month| %>
-
-                    <!-- January -->
-                    <% if LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, params[:type], 
+                  <% @all_month_xls.each do |month, sales| %>
+                    <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
                       <td>0</td>
-                      <td>0</td>
                     <% else %>
-                      <% LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, params[:type], 
+                      <% LaporanCabang.customer_monthly(month.month, month.year, laporan.cabang, params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).each do |a| %>
                         <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                        <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
                       <% end %>
                     <% end %>
                   <% end %>
@@ -563,66 +414,6 @@
           </table>
         </div>
       </div>
-      </br>
-      <% if (params[:to].to_date.month - params[:from].to_date.month + 1) > 6  %>
-        <div class="row-fluid">
-          <div class="block-content collapse in">
-            <table id="customer_monthly2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
-              <thead>
-                <tr>
-                  <th rowspan="3">Branch</th>
-                </tr>
-                <tr>
-                  <% @over_month.each do |month|  %>
-                    <th colspan="2"><%= (Date::MONTHNAMES[month]) %></th>
-                  <% end %>
-                </tr>
-                <tr>
-                  <% @over_month.each do %>
-                    <th>Qty</th>
-                    <th>Value</th>
-                  <% end %>
-                </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th scope="row">Total</th>
-                  <% @over_month.each do  %>
-                    <td></td>
-                    <td></td>
-                  <% end %>
-                </tr>
-              </tfoot>
-              <tbody>
-                <% @customerstore.each do |laporan| %>
-                  <tr>
-                    <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
-                    <% @over_month.each do |month| %>
-
-                      <!-- January -->
-                      <% if LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, params[:type], 
-                        params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).empty? %>
-                        <td>0</td>
-                        <td>0</td>
-                      <% else %>
-                        <% LaporanCabang.customer_monthly(month, Date.today.year, laporan.cabang, params[:type], 
-                        params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
-                        params[:customer_modern], params[:customer_all_retail]).each do |a| %>
-                          <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                          <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-                        <% end %>
-                      <% end %>
-                    <% end %>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>
-
-
