@@ -32,6 +32,8 @@ gem 'gmaps4rails'
 gem 'wicked'
 gem 'hpricot'
 gem 'premailer-rails'
+gem 'fb_graph'
+gem 'roo'
 
 gem 'roadie'
 gem 'whenever', :require => false
