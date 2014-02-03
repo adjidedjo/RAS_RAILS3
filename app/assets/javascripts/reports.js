@@ -238,54 +238,7 @@ $(document).ready(function(){
     
     $('#quick_report').dataTable({
         iDisplayLength: 50,
-        bRetrieve: true,
-        "fnFooterCallback": function ( nRow, aaData ) {
-            /*
-             * Calculate the total market share for all browsers in this table (ie inc. outside
-             * the pagination)
-             */
-
-            var iTotalQtyJanuary = 0;
-            var iTotalValueJanuary = 0;
-
-            var iTotalQtyFebruary = 0;
-            var iTotalValueFebruary = 0;
-
-            var iTotalQtyMarch = 0;
-            var iTotalValueMarch = 0;
-
-            var iTotalQtyApril = 0;
-            var iTotalValueApril = 0;
-
-            for ( var i=0 ; i<aaData.length ; i++ )
-            {
-                iTotalQtyJanuary += parseCurrency(aaData[i][1])*1;
-                iTotalValueJanuary += parseCurrency(aaData[i][2])*1;
-
-                iTotalQtyFebruary += parseCurrency(aaData[i][3])*1;
-                iTotalValueFebruary += parseCurrency(aaData[i][4])*1;
-
-                iTotalQtyMarch += parseCurrency(aaData[i][5])*1;
-                iTotalValueMarch += parseCurrency(aaData[i][6])*1;
-
-                iTotalQtyApril += parseCurrency(aaData[i][7])*1;
-                iTotalValueApril += parseCurrency(aaData[i][8])*1;
-            }
-
-            /* Modify the footer row to match what we want */
-            var nCells = nRow.getElementsByTagName('td');
-            nCells[0].innerHTML = addCommas(parseInt(iTotalQtyJanuary))
-            nCells[1].innerHTML = addCommas(parseInt(iTotalValueJanuary))
-
-            nCells[2].innerHTML = addCommas(parseInt(iTotalQtyFebruary))
-            nCells[3].innerHTML = addCommas(parseInt(iTotalValueFebruary))
-
-            nCells[4].innerHTML = addCommas(parseInt(iTotalQtyMarch))
-            nCells[5].innerHTML = addCommas(parseInt(iTotalValueMarch))
-
-            nCells[6].innerHTML = addCommas(parseInt(iTotalQtyApril))
-            nCells[7].innerHTML = addCommas(parseInt(iTotalValueApril))
-        }
+        bRetrieve: true
     });
 		
     $('#customer_compare').dataTable({
