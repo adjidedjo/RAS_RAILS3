@@ -33,6 +33,7 @@ module Rain
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.enforce_available_locales = false
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -43,9 +44,12 @@ module Rain
 
     # Enable the asset pipeline
     config.assets.enabled = true
-		config.assets.initialize_on_precompile = false
+		  config.assets.initialize_on_precompile = true
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    BootstrapNavbar.configure do |config|
+      config.bootstrap_version = '3.0.0'
+    end
   end
 end
