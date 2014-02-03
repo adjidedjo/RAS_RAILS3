@@ -231,10 +231,10 @@ class LaporanCabangController < ApplicationController
 		@week3 = 0
 		@week4 = 0
 		@week5 = 0
-		unless params[:periode_week].nil? || params[:periode_week].nil?
-     	@periode = params[:periode_week].to_date
-			calculation_date_weekly_report(@periode)
-    end
+		unless params[:periode_week].nil?
+    @periode = params[:periode_week].to_date
+		  calculation_date_weekly_report(@periode)
+  end
 
 		respond_to do |format|
       format.html
@@ -259,8 +259,8 @@ class LaporanCabangController < ApplicationController
     @first_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 1)
     @last_day_week_5 = Date.commercial(date.year, date.beginning_of_month.cweek + 4, 7)
 
-    @first_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 1)
-    @last_day_last_month_week = Date.commercial(date.year, date.cweek - 5, 7)
+    @first_day_last_month_week = Date.commercial(date.year, date.beginning_of_month.cweek - 5, 1)
+    @last_day_last_month_week = Date.commercial(date.year, date.beginning_of_month.cweek - 5, 7)
 
     @last_year_last_day_week = Date.commercial(date.year - 1, date.end_of_month.cweek, 7)
 	end
