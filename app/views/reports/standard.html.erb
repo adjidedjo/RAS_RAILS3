@@ -84,8 +84,7 @@
               <% elsif params[:group_by] == 'cabang_id' %>
                 <th>Branchs</th>
 		            <% Cabang.get_id.each do |cabang_name| %>
-				        	<% @laporancabang.where(cabang_id: cabang_name, kodebrg: laporan.kodebrg).each do |back| %>
-				        		<% raise back.empty?.inspect %>
+				        	<% @laporancabang.where(cabang_id: cabang_name).each do |back| %>
 				        		<% if back.nil? %>
 				        			<td>0</td>
 				        		<% else %>				        		
