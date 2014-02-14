@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
   
   def quick_view_monthly_process
     redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
-    :from => 3.month.ago, :to => Date.today)
+    :from => 3.month.ago.to_date, :to => Date.today.to_date)
   end
   
   def quick_view_monthly
@@ -47,6 +47,7 @@ class ReportsController < ApplicationController
 		unless params[:from].nil? && params[:to].nil?
     if (params[:from].to_date..params[:to].to_date).to_a.group_by(&:month).count <= 6
       @month_devided = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+      @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
     else
       @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
       @rsult_month = params[:from].to_date + 5.months
