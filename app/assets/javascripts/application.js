@@ -6,13 +6,12 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui
+//= require jquery_ui.core
 //= require highcharts
 //= require twitter/bootstrap
 //= require bootstrap-multiselect
-//= require dataTables/jquery.dataTables
-//= require dataTables/jquery.dataTables.bootstrap
-//= require dataTables/extras/TableTools
-//= require dataTables/extras/ZeroClipboard
+//= require jquery.dataTables
+//= require jquery.dataTables.bootstrap
+//= require TableTools
 //= require jquery.dataTables.columnFilter
 //= require_tree .

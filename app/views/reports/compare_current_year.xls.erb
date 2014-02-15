@@ -59,12 +59,12 @@
                 <th rowspan="3">City</th>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales|  %>
+                <% @month_devided.each do |month, sales|  %>
                   <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales| %>
+                <% @month_devided.each do |month, sales| %>
                   <th>Qty</th>
                 <% end %>
               </tr>
@@ -76,7 +76,7 @@
                 <tr>
                   <td><%= laporan.customer %></td>
                   <td><%= laporan.kota.nil? ? "" : laporan.kota %></td>
-                  <% @all_month_xls.each do |month, sales| %>
+                  <% @month_devided.each do |month, sales| %>
                     <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], laporan.customer, params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
@@ -170,12 +170,12 @@
                 <th rowspan="3">Width</th>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales|  %>
+                <% @month_devided.each do |month, sales|  %>
                   <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales| %>
+                <% @month_devided.each do |month, sales| %>
                   <th>Qty</th>
                 <% end %>
               </tr>
@@ -189,7 +189,7 @@
 						            <td><%= laporan.namakain %></td>
 						            <td><%= laporan.panjang %></td>
 						            <td><%= laporan.lebar %></td>
-                  <% @all_month_xls.each do |month, sales| %>
+                  <% @month_devided.each do |month, sales| %>
 
                     <!-- January -->
                     <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
@@ -274,12 +274,12 @@
                 <th rowspan="3">Article</th>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales|  %>
+                <% @month_devided.each do |month, sales|  %>
                   <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales| %>
+                <% @month_devided.each do |month, sales| %>
                   <th>Qty</th>
                 <% end %>
               </tr>
@@ -290,7 +290,7 @@
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= Artikel.artikel_name(laporan.kodeartikel).first.nil? ? "" : Artikel.artikel_name(laporan.kodeartikel).first.Produk %></td>
-                  <% @all_month_xls.each do |month, sales| %>
+                  <% @month_devided.each do |month, sales| %>
                     <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], laporan.kodeartikel, nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
@@ -379,12 +379,12 @@
                 <th rowspan="3">Branch</th>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales|  %>
+                <% @month_devided.each do |month, sales|  %>
                   <th><%= month.strftime('%B') %></th>
                 <% end %>
               </tr>
               <tr>
-                <% @all_month_xls.each do |month, sales| %>
+                <% @month_devided.each do |month, sales| %>
                   <th>Qty</th>
                 <% end %>
               </tr>
@@ -395,7 +395,7 @@
               <% @customerstore.each do |laporan| %>
                 <tr>
                   <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
-                  <% @all_month_xls.each do |month, sales| %>
+                  <% @month_devided.each do |month, sales| %>
                     <% if LaporanCabang.customer_monthly(month.month, month.year, params[:branch], params[:type], 
                         params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
                         params[:customer_modern], params[:customer_all_retail]).empty? %>
