@@ -83,14 +83,16 @@
                 <th>Article</th>
               <% elsif params[:group_by] == 'cabang_id' %>
                 <th>Branchs</th>
-		            <% Cabang.get_id.each do |cabang_name| %>
-				        	<% @laporancabang.where(cabang_id: cabang_name).each do |back| %>
-				        		<% if back.nil? %>
-				        			<td>0</td>
-				        		<% else %>				        		
-				        			<td><%= back.sum_jumlah.nil? ? 0 : back.sum_jumlah %></td>
-				        		<% end %>
 				         	<% end %>
+            </tr>
+            <tr>
+		            <% Cabang.get_id.each do |cabang_name| %>
+				        	 <% @laporancabang.where(cabang_id: cabang_name).each do |back| %>
+				        		  <% if back.nil? %>
+				        			   <td>0</td>
+				        		  <% else %>				        		
+				        			   <td><%= back.sum_jumlah.nil? ? 0 : back.sum_jumlah %></td>
+				        		  <% end %>
 		            <% end %>
               <% else %>
                 <th>Items Code</th>

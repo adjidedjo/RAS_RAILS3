@@ -51,12 +51,10 @@
     <table id="quick_report" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
       <thead>
         <tr>
-          <th rowspan="3">Branch</th>
-        </tr>
-        <tr>
-          <th><%= 3.month.ago.strftime("%B") %></th>
-          <th><%= 2.month.ago.strftime("%B") %></th>
-          <th><%= 1.month.ago.strftime("%B") %></th>
+          <th rowspan="2">Branch</th>
+          <% (1..3).each do |no| %>
+            <th><%= no.month.ago.strftime("%B") %></th>
+          <% end %>
           <th><%= Date.today.strftime("%B") %></th>
         </tr>
         <tr>
@@ -70,8 +68,8 @@
       <tbody>
         <% @customerstore.each do |laporan| %>
           <tr>
-            <td><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
-
+            <td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
+ 
             <!-- January -->
             <% if LaporanCabang.customer_monthly(3.month.ago.month, 3.month.ago.year, laporan.cabang, nil, 
                 params[:brand], nil, nil, nil, nil, nil, nil, 
