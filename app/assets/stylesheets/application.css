@@ -6,7 +6,7 @@
  *= require bootstrap
  *= require bootstrap-responsive
  *= require bootstrap-multiselect
- *= require_tree ../../../vendor/assets/stylesheets
+ *= require vendor
  *= require_tree .
 */
 
