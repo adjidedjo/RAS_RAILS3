@@ -84,7 +84,7 @@
         </tr>
         <tr>
           <% @month_devided.each do |month, sales|  %>
-            <th colspan="2"><%= month.strftime('%B') %></th>
+            <th><%= month.strftime('%B') %></th>
           <% end %>
         </tr>
         <tr>
@@ -131,7 +131,7 @@
           </tr>
           <tr>
             <% @over_month.each do |month, sales|  %>
-              <th colspan="2"><%= month.strftime('%B') %></th>
+              <th><%= month.strftime('%B') %></th>
             <% end %>
           </tr>
           <tr>
