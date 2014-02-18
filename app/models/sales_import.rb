@@ -37,7 +37,7 @@ class SalesImport
     header = spreadsheet.row(1)
     (2..spreadsheet.last_row).map do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
-      product = LaporanCabang.find_by_nosj_and_kodebrg_and_customer_and_jumlah_and_cabang_id(row["nosj"],row["kodebrg"],row["customer"],row["jumlah"],row["cabang_id"]) || LaporanCabang.new
+      product = LaporanCabang.find_by_nosj_and_kodebrg_and_customer_and_cabang_id(row["nosj"],row["kodebrg"],row["customer"],row["cabang_id"]) || LaporanCabang.new
       #product = LaporanCabang.where("nofaktur like ? and kodebrg like ? and cabang_id = ?", row["nofaktur"], row["kodebrg"], row["cabang_id"]) || LaporanCabang.new
       product.attributes = row.to_hash.slice(*LaporanCabang.accessible_attributes)
       product
