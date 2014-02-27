@@ -1,0 +1,42 @@
+<h1>Index of Incentive</h1>
+<div class="form-div">
+  <%= form_tag incentive_index_path, :method => 'get', :html => {:class => "well"} do %>
+    <fieldset>
+      <legend>pilih insentif untuk jabatan yang ingin ditampilkan</legend>
+      <label>Jabatan</label>
+      <%= select_tag 'jabatan', "<option>Cabang</option><option>Sales</option>".html_safe,
+        :prompt => "--Select Category--", :include_blank => false %><br />
+      <%= submit_tag "Search", :class => "btn btn-primary" %>
+    </fieldset>
+  <% end %>
+</div>
+
+<br />
+<div class="clear"></div>
+
+<% unless params[:jabatan].nil? %>
+  <% unless params[:jabatan].empty? %>
+    <table id="table_control_branch" class="display">
+      <thead>
+        <tr>
+          <th rowspan="2">Nama</th>
+          <th colspan="14">Data Target dan Pencapaian</th>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @sales.each do |sales| %>
+          <tr>
+            <th scope="row"><%= sales.nama %></th>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
+<script>
+  $('#table_control_branch').dataTable({
+    iDisplayLength: -1
+  });
+</script>
