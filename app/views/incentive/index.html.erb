@@ -16,7 +16,7 @@
 
 <% unless params[:jabatan].nil? %>
   <% unless params[:jabatan].empty? %>
-    <table id="table_control_branch" class="display">
+    <table id="incentive" class="display">
       <thead>
         <tr>
           <th rowspan="2">Nama</th>
@@ -36,7 +36,7 @@
   <% end %>
 <% end %>
 <script>
-  $('#table_control_branch').dataTable({
+  $('#incentive').dataTable({
     iDisplayLength: -1
   });
 </script>
