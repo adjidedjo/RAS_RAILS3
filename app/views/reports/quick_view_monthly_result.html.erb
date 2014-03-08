@@ -38,10 +38,6 @@
 <div class="row-fluid">
   <div class="block-content collapse in">
     <label>
-      <%#= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-        :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-        :size_type => params[:size_type]), 
-        :class=>"btn btn-info" %>
     </label>
   </div>
 </div>
@@ -52,10 +48,10 @@
       <thead>
         <tr>
           <th rowspan="2">Branch</th>
+          <th colspan="2"><%= 3.month.ago.strftime("%B") + " " + 3.month.ago.strftime("%Y") %></th>
+          <th colspan="2"><%= 2.month.ago.strftime("%B") + " " + 2.month.ago.strftime("%Y") %></th>
+          <th colspan="2"><%= 1.month.ago.strftime("%B") + " " + 1.month.ago.strftime("%Y") %></th>
           <th colspan="2"><%= Date.today.strftime("%B") + " " + Date.today.strftime("%Y") %></th>
-          <% (1..3).each do |no| %>
-            <th colspan="2"><%= no.month.ago.strftime("%B") + " " + no.month.ago.strftime("%Y") %></th>
-          <% end %>
         </tr>
         <tr>
           <% (1..4).each do %>
@@ -71,7 +67,7 @@
           <tr>
             <td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
  
-            <!-- January -->
+
             <% if LaporanCabang.customer_monthly(3.month.ago.month, 3.month.ago.year, laporan.cabang, nil, 
                 params[:brand], nil, nil, nil, nil, nil, nil, 
                 nil, nil).empty? %>
@@ -115,7 +111,6 @@
                 <td><%= a.sum_harganetto2.nil? ? "0" : number_with_delimiter(a.sum_harganetto2.to_i, delimiter: ".") %></td>
               <% end %>
             <% end %>
-
 
             <% if LaporanCabang.customer_monthly(Date.today.month, Date.today.year, laporan.cabang, params[:type], 
                 params[:brand], params[:article], nil, params[:fabric], params[:size], params[:customer], params[:size_type], 
