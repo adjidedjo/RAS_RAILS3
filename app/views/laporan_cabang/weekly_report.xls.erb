@@ -71,7 +71,7 @@
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,@week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
 
 
@@ -96,7 +96,7 @@
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,@week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
         </tr>
       <% end %>
@@ -170,7 +170,7 @@
 	          	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,@week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
 
 					<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
@@ -185,10 +185,10 @@
 					<% end %>
 					<td><%= @week2 == 0 ? 0 : number_to_percentage((((@week1 - @week2) / @week2) * 100),
 						:precision => 0) rescue ZeroDivisionError 0 %></td>
-					<% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
+					<% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).empty? %>
 							<td>0</td>
 					<% else %>
-						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |monthly_target| %>
+						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).each do |monthly_target| %>
 							<td><%= currency(monthly_target.total.to_i) %></td>
 						<% end %>
 					<% end %>
@@ -309,7 +309,7 @@
           	<% @week_last = week.sum_harganetto2.nil? ? 0 : week.sum_harganetto2 %>
           	<td><%= currency(@week_last) %></td>
 					<% end %>
-					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,
+					<td><%= @week_last == 0 ? 0 : number_to_percentage(LaporanCabang.comparison_week(@week1, @week2, @week3, @week4,@week5,
 						@week_last, get_week_number, @periode), :precision => 0) %></td>
         </tr>
       <% end %>
