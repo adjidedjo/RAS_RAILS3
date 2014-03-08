@@ -320,7 +320,7 @@
 		              </thead>
 		              <tbody>
 				            <tr>
-						          <td><%= params[:brand].nil? ? "" : Merk.merk_name(params[:brand]).first.Merk %></td>
+						          <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
 						          <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
 						          <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
 						          <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
@@ -455,7 +455,7 @@
 		              </thead>
 		              <tbody>
 				            <tr>
-						          <td><%= params[:brand].nil? ? "" : Merk.merk_name(params[:brand]).first.Merk %></td>
+						          <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
 						          <td><%= params[:type].nil? ? "" : Product.product_name(params[:type]).first.Namaroduk %></td>
 						          <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
 						          <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
