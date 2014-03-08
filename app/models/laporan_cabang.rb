@@ -32,6 +32,11 @@ class LaporanCabang < ActiveRecord::Base
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
+ scope :kodejenis, where("kodejenis in ('km','sa','sb')")
+
+	def self.total_on_merk_monthly(merk, month, year, cabang)
+  select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year).not_equal_with_nosj.brand(merk).search_by_branch(cabang).kodejenis
+	end
 
 	def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)
 		select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
@@ -44,7 +49,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern,
 		customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
+		select("sum(jumlah) as sum_jumlah, customer")
 			.between_date_sales(from, to).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
@@ -53,7 +58,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
 		customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2, kota")
+		select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
 			.search_by_month_and_year(month, year).search_by_branch(branch)
 			.search_by_type(type).brand(brand).artikel(article).kode_barang(kodebrg)
 			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
@@ -61,18 +66,18 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.customer_by_store(from, to, customer, cabang, merk, customer_all_retail)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
+		select("sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
 			.search_by_branch(cabang).brand(merk).not_equal_with_nosj.customer_retail_all(customer_all_retail)
 	end
 
 	def self.monthly_report(month, branch, type, kode_brand, year, product_type, customer_all_retail)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
+		select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
 			.search_by_branch(branch)
 			.search_by_type(type).search_by_article(kode_brand).not_equal_with_nosj.customer_retail_all(customer_all_retail)
 	end
 
 	def self.total_on_merk(merk, from, to)
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+		find(:all, :select => "sum(jumlah) as sum_jumlah",
 			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and kodejenis not like ?",
 			from, to, %(__#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{merk}%)])
 	end
