@@ -1,16 +1,3 @@
-<div class="form-div">
-	<%= form_tag laporan_cabang_index_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Annual Weekly Sales Report</legend>
-			<%= label_tag 'Periode' %>
-    <%= text_field_tag 'periode_week', nil, :class => "input_form" %><br />
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</fieldset>
-	<% end %>
-</div>
-<br />
-<div style="clear:both;"></div>
-
 <% unless params[:periode_week].nil? || params[:periode_week].empty? %>
 	<div class="row-fluid">
 		<div class="block-content collapse in">
