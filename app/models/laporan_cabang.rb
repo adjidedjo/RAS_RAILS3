@@ -49,7 +49,7 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern,
 		customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer")
+		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
 			.between_date_sales(from, to).search_by_branch(branch)
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
