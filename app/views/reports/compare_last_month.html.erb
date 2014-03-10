@@ -64,8 +64,7 @@
 			<div class="row-fluid">
 				<div class="block-content collapse in">
 					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric]),
+						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by], :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric]),
 							:size_type => params[:size_type], 
 							:class=>"btn btn-info" %>
 					</label>
@@ -128,7 +127,7 @@
 						        	<td><%= @qty_last %></td>
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
-										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
+										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date), (params[:to].to_date), 
 											laporan.cabang, params[:type], 
 											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
 											params[:customer_modern], params[:customer_all_retail]).each do |a| %>

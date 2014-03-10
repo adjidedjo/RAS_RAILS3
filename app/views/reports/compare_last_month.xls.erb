@@ -97,7 +97,7 @@
 						        	<td><%= @qty_last %></td>
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
-										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
+										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date), (params[:to].to_date), 
 											laporan.cabang, params[:type], 
 											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
 											params[:customer_modern], params[:customer_all_retail]).each do |a| %>
@@ -207,7 +207,6 @@
                   <% else %>
                     <td><%= laporan.kodebrg %></td>
                   <% end %>
-                  <td scope="row"><%= laporan.kota %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 										laporan.cabang, params[:type], 
 										params[:brand], laporan.kodebrg, nil, nil, nil, params[:size_type], 
