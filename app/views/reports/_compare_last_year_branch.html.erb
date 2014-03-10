@@ -67,9 +67,7 @@
 			<div class="row-fluid">
 				<div class="block-content collapse in">
 					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-							:size_type => params[:size_type]), 
+						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by], :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric], :size_type => params[:size_type], :branch => params[:branch]), 
 							:class=>"btn btn-info" %>
 					</label>
 				</div>
@@ -108,13 +106,12 @@
 								<tr>
 								  <td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></th>
 										<% LaporanCabang.analysis_customer_last_year((from.to_date - 1.year), (to.to_date - 1.year), 
-											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
+											branch, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
 											<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
-										<% LaporanCabang.analysis_customer_last_year(from, to, 
-											laporan.cabang, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
+										<% LaporanCabang.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, customer_all_retail).each do |a| %>
 											<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
 						        	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
 						        	<td><%= currency(@value_current) %></td>
