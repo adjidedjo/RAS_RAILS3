@@ -214,9 +214,7 @@
 			<div class="row-fluid">
 				<div class="block-content collapse in">
 					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by],
-							:to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric],
-							:size_type => params[:size_type]), 
+						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by], :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric], :size_type => params[:size_type], :branch => params[:branch]), 
 							:class=>"btn btn-info" %>
 					</label>
 				</div>
