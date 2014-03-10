@@ -64,7 +64,7 @@
 			<div class="row-fluid">
 				<div class="block-content collapse in">
 					<label>
-						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by], :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric]),
+						<%= link_to 'Export to Excel', url_for(:format => 'xls', :from => params[:from], :group_by => params[:group_by], :to => params[:to], :brand => params[:brand], :type => params[:type], :article => params[:article], :fabric => params[:fabric], :branch => params[:branch]),
 							:size_type => params[:size_type], 
 							:class=>"btn btn-info" %>
 					</label>
@@ -119,7 +119,7 @@
 									<% end %>
 								  <td scope="row"><%= laporan.kota %></th>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
-											laporan.cabang, params[:type], 
+											params[:branch], params[:type], 
 											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
 											params[:customer_modern], params[:customer_all_retail]).each do |a| %>
 											<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
@@ -128,7 +128,7 @@
 						        	<td><%= currency(@value_last) %></td>
 										<% end %>
 										<% LaporanCabang.analysis_customer_last_year((params[:from].to_date), (params[:to].to_date), 
-											laporan.cabang, params[:type], 
+											params[:branch], params[:type], 
 											params[:brand], params[:article], params[:fabric], params[:size], laporan.customer, params[:size_type], 
 											params[:customer_modern], params[:customer_all_retail]).each do |a| %>
 											<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
