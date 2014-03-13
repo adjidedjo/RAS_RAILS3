@@ -15,7 +15,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%))
 	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
-	scope :brand_size, lambda {|brand_size| where("kodebrg like ?", %(___________#{brand_size}%)) if brand_size.present?}
+	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
 	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
 	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
