@@ -77,7 +77,7 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.total_on_merk(merk, from, to)
-		find(:all, :select => "sum(jumlah) as sum_jumlah",
+		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
 			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and kodejenis not like ?",
 			from, to, %(__#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{merk}%)])
 	end
@@ -258,7 +258,7 @@ class LaporanCabang < ActiveRecord::Base
 
   def self.sum_of_brand(cabang, merk, from, to)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to)
-			.search_by_branch(cabang).brand(merk).not_equal_with_nosj.without_acessoris(merk)
+			.search_by_branch(cabang).brand(merk).not_equal_with_nosj
   end
 
 	def self.sum_by_value_merk(cabang, merk, from, to)
@@ -424,23 +424,23 @@ class LaporanCabang < ActiveRecord::Base
 
   #calculate week for classic brand
   def self.weekly_sum_last_week_on_last_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and kodebrg like ?",
-        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, %(__#{jenis}%) ]).to_i
+    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
+        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_last_week_on_current_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and kodebrg like ?",
-        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, %(__#{jenis}%) ]).to_i
+    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
+        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_week_on_last_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and kodebrg like ?",
-        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, %(__#{jenis}%) ]).to_i
+    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
+        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, jenis ]).to_i
   end
 
   def self.weekly_sum_week_on_current_year(first_day, last_day, jenis)
-    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and kodebrg like ?",
-        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, %(__#{jenis}%) ]).to_i
+    sum(:harganetto2, :conditions => ["nosj not like ? and nosj not like ? and tanggalsj between ? and ? and jenisbrgdisc like ?",
+        %(#{'SJB'}%), %(#{'SJY'}%), first_day, last_day, jenis ]).to_i
   end
 
 end
