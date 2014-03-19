@@ -13,7 +13,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
-	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%))
+	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%))
 	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
