@@ -250,7 +250,7 @@ class LaporanCabang < ActiveRecord::Base
 	end
 
 	def self.weekly_total_sum_value(cat, from, to)
-		find(:all, :select => "sum(jumlah) as sum_harganetto2",
+		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
 			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
 			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%)])
 	end
