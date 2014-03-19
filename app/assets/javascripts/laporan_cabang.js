@@ -343,8 +343,11 @@ $(document).ready(function(){
         iDisplayLength: 30,
         aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
         bRetrieve: true,
-				"bAutoWidth": false,
+				    "bAutoWidth": false,
         "bPaginate": false,
+        "sScrollX": "100%",
+		      "sScrollXInner": "110%",
+		      "bScrollCollapse": true,
         "fnFooterCallback": function ( nRow, aaData ) {
             /*
              * Calculate the total market share for all browsers in this table (ie inc. outside
