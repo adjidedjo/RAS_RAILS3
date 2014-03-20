@@ -337,33 +337,32 @@ $(document).ready(function(){
 
         }
     });
-
-		$('#weekly_report_sales').dataTable({  
+  $('#weekly_report_sales').dataTable({
     iDisplayLength: 30,
     "sScrollX": "100%",
-		  "sScrollXInner": "150%",
-		  "bScrollCollapse": true
+    "sScrollXInner": "150%",
+    "bScrollCollapse": true
   });
 
-		$('#weekly_report_sales_total').dataTable({
+  $('#weekly_report_sales_total').dataTable({
     iDisplayLength: 30,
-    aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-    bRetrieve: true,
-    "bPaginate": false
+    "sScrollX": "100%",
+    "sScrollXInner": "150%",
+    "bScrollCollapse": true
   });
 
-		$('#yearly_report_sales_total').dataTable({
+  $('#yearly_report_sales_total').dataTable({
     iDisplayLength: 30,
-    aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-    bRetrieve: true,
-    "bPaginate": false,
+    "sScrollX": "100%",
+    "sScrollXInner": "150%",
+    "bScrollCollapse": true
   });
 
-		$('#classic_weekly_sales_report').dataTable({ 
+  $('#classic_weekly_sales_report').dataTable({
     iDisplayLength: 30,
-    aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
-    bRetrieve: true,
-    "bPaginate": false,
+    "sScrollX": "100%",
+    "sScrollXInner": "150%",
+    "bScrollCollapse": true
   });
 
     $('#table_year').dataTable( {
