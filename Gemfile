@@ -14,14 +14,14 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'commonjs'
   gem 'therubyracer'
+  gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+  gem 'jquery-ui-rails'
 end
 
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'jquery_datepicker'
 gem 'rails_bootstrap_navbar'
 gem "twitter-bootstrap-rails"
-gem 'jquery-datatables-rails'
 gem 'will_paginate'
 gem 'execjs'
 gem 'devise'
@@ -30,7 +30,6 @@ gem 'gmaps4rails'
 gem 'wicked'
 gem 'hpricot'
 gem 'premailer-rails'
-gem 'fb_graph'
 gem 'roo'
 
 gem 'roadie'

@@ -9,8 +9,6 @@
 //= require highcharts
 //= require twitter/bootstrap
 //= require bootstrap-multiselect
-//= require jquery.dataTables
-//= require jquery.dataTables.bootstrap
-//= require TableTools
+//= require dataTables/jquery.dataTables
 //= require jquery.dataTables.columnFilter
 //= require_tree .
