@@ -1,6 +1,6 @@
 <% unless params[:periode_week].nil? || params[:periode_week].empty? %>
 	<div class="row-fluid">
-		<div class="block-content collapse in">
+		<div>
 			<table id="weekly_report_sales" class="pretty">
 				<p>WEEKLY SALES REPORT</p>
 				<p>Week <%= params[:periode_week].to_date.cweek %>, <%= @periode.strftime('%B %Y')  %></p><br />
@@ -44,12 +44,6 @@
 				  </tr>
 				</thead>
 				<tfoot>
-				  <tr>
-				    <th scope="row">Total</th>
-				    <% (1..14).each do  %>
-				      <td></td>
-				    <% end %>
-				  </tr>
 				</tfoot>
 				<tbody>
 				  <% @cabang_get_id.each do |cabang| %>
@@ -151,12 +145,6 @@
 				  </tr>
 				</thead>
 				<tfoot>
-				  <tr>
-				    <th scope="row">Total</th>
-				    <% (1..12).each do  %>
-				      <td></td>
-				    <% end %>
-				  </tr>
 				</tfoot>
 				<tbody>
 				  <% @cabang_get_id.each do |cabang| %>
@@ -241,12 +229,6 @@
 					</tr>
 				</thead>
 				<tfoot>
-				  <tr>
-				    <th scope="row">Total</th>
-				    <% (1..5).each do  %>
-				      <td></td>
-				    <% end %>
-				  </tr>
 				</tfoot>
 				<tbody>
 				  <% @cabang_get_id.each do |cabang| %>
@@ -308,12 +290,6 @@
 					</tr>
 				</thead>
 				<tfoot>
-				  <tr>
-				    <th scope="row">Total</th>
-				    <% (1..6).each do  %>
-				      <td></td>
-				    <% end %>
-				  </tr>
 				</tfoot>
 				<tbody>
 				  <% @cabang_get_id.each do |cabang| %>
