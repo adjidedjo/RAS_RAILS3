@@ -194,7 +194,7 @@
 				      	<td><%= @week2 %></td>
 							<% end %>
 							<td><%= @week2 == 0 ? 0 : number_to_percentage((((@week1 - @week2) / @week2) * 100),
-								:precision => 0) rescue ZeroDivisionError 0 %></td>
+								:precision => 0) rescue 0 %></td>
 							<% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).empty? %>
 									<td>0</td>
 							<% else %>
@@ -245,11 +245,11 @@
 								<% @week2 = week.sum_jumlah.nil? ? 0 : week.sum_jumlah %>
 				      	<td><%= @week2 %></td>
 							<% end %>
-							<td><%= @week2 == 0 ? 0 : number_to_percentage((((@week2 - @week1) / @week1) * 100),
-								:precision => 0) rescue ZeroDivisionError 0 %></td>
-							<% if YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
-									<td>0</td>
-							<% else %>
+       <td><%= @week2 == 0 ? 0 : number_to_percentage((((@week2 - @week1) / @week1) * 100),
+        :precision => 0) rescue 0 %></td>
+       <% if YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
+         <td>0</td>
+       <% else %>
 								<% YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |yearly_target| %>
 									<td><%= currency(yearly_target.total.to_i) %></td>
 								<% end %>
@@ -333,7 +333,7 @@
 	<div class="row-fluid">
 		<div class="offset3">
 			<div class="block-content collapse in">
-				<label>There are some reports that you may want to show, please click the button below
+				<label>Please click button below to show report comparison between week on the last year
 				</label>
 			</div>
 		</div>
