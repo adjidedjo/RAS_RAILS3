@@ -184,12 +184,12 @@
 							<% end %>
 
 							<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
-							@periode.beginning_of_month, @periode.end_of_month).each do |month| %>
+							1.month.ago.beginning_of_month, 1.month.ago.end_of_month).each do |month| %>
 								<% @week1 = month.sum_jumlah.nil? ? 0 : month.sum_jumlah %>
 				      	<td><%= @week1 %></td>
 							<% end %>
 							<% laporan_cabang_by_cabang.weekly_total_sum_value(["Non Serenity", "Serenity"],
-							1.month.ago.beginning_of_month, 1.month.ago.end_of_month).each do |month| %>
+							2.month.ago.beginning_of_month, 2.month.ago.end_of_month).each do |month| %>
 								<% @week2 = month.sum_jumlah.nil? ? 0 : month.sum_jumlah %>
 				      	<td><%= @week2 %></td>
 							<% end %>
