@@ -431,7 +431,7 @@
             </tfoot>
 						<% @customerstore.each do |laporan| %>
 						  <tr>
-								<td scope="row"><%= Cabang.find_by_id(params[:branch]).Cabang.gsub(/Cabang/,'') %></th>
+								<td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></th>
 									<% LaporanCabang.analysis_customer_last_year((params[:from].to_date - 1.month), (params[:to].to_date - 1.month), 
 									 laporan.cabang, params[:type], params[:brand], nil, params[:fabric], 
 										params[:size], params[:customer], params[:size_type], 
