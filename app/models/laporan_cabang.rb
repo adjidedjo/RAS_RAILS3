@@ -191,9 +191,9 @@ class LaporanCabang < ActiveRecord::Base
 
 # brand by merk
 
-	def self.get_brand_size(artikel, merk_id, size, from, to)
+	def self.get_brand_size(artikel, size, month, year)
 		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
-			.between_date_sales(from, to).not_equal_with_nosj
+			.search_by_month_and_year(month,year).not_equal_with_nosj
 	end
 
 # monthly by customer
@@ -245,14 +245,14 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.weekly_sum_value(cat, from, to)
 		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
-			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%)])
+			:conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
 	end
 
 	def self.weekly_total_sum_value(cat, from, to)
 		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
-			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%)])
+			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
 	end
 # ----------
 
