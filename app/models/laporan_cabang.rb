@@ -25,14 +25,13 @@ class LaporanCabang < ActiveRecord::Base
 	#scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
 	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
 	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
-	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ? or customer like ?", "ES%", 'SHOWROOM%', 
-		'SOGO%') if parameter == 'all'}
-	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ? and customer not like ?", "ES%", 'SHOWROOM%', 
-		'SOGO%') if parameter == 'all'}
+	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
+	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
 	scope :sum_amount, lambda {sum("harganetto2")}
- scope :kodejenis, where("kodejenis in ('km','sa','sb')")
+ scope :main_category, where("kodejenis in ('km','sa','sb','st')")
+ scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
 
 	def self.total_on_merk_monthly(merk, month, year, cabang)
   select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year).not_equal_with_nosj.brand(merk).search_by_branch(cabang).kodejenis
@@ -54,6 +53,11 @@ class LaporanCabang < ActiveRecord::Base
 			.search_by_type(type).brand(brand).kode_barang_like(article)
 			.fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
 			.brand_size(size_type).not_equal_with_nosj.customer_retail_all(customer_all_retail)
+	end
+
+	def self.customer_quick_monthly(month, year, branch, brand)
+		select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
+			.search_by_month_and_year(month, year).search_by_branch(branch).not_equal_with_nosj.brand(brand).withou_mm
 	end
 
 	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
@@ -245,14 +249,14 @@ class LaporanCabang < ActiveRecord::Base
 
 	def self.weekly_sum_value(cat, from, to)
 		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
-			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
+			:conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and customer not like ? and customer not like ?",
+			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%),"ES%",'SOGO%'])
 	end
 
 	def self.weekly_total_sum_value(cat, from, to)
 		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
-			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
+			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?  and customer not like ? and customer not like ?",
+			cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%),"ES%",'SOGO%'])
 	end
 # ----------
 
