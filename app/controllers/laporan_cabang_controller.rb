@@ -158,7 +158,7 @@ class LaporanCabangController < ApplicationController
     #   find a week for report weekly
     unless params[:periode].nil? || params[:periode].nil?
      	@periode = params[:periode].to_date
-			calculation_date_compare_year(@periode, params[:periode])
+			   calculation_date_compare_year(@periode, params[:periode])
     end
   end
 
