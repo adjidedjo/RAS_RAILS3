@@ -23,10 +23,13 @@
 							</div>
 						<% end %>
 	 					<fieldset>
-							<%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
-							<%= f.select(:brand_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
-							<%= f.date_select :target_year, :discard_day => true, :discard_month => true, :prompt => { :year => 'Select year' } %>
-							<%= f.text_field "customer", :placeholder => 'Insert Customer Name' if session[:monthly_target_type] != 'branch' %>
+							  <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+							  <%= f.select(:merk_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+							  <%= select_year(Date.today, :start_year => Time.now.year, :end_year => Time.now.year - 4, field_name: 'target_year') %>
+							  <%= f.text_field "customer", 
+           :placeholder => 'Insert Customer Name' %>
+         <%= f.text_field "sales", :placeholder => 'Insert Sales' %>
+         <%= f.text_field "sales_counter", :placeholder => 'Insert Sales Counter' %>
 	 					</fieldset>
 		    </div>
 		  </div>
@@ -43,20 +46,18 @@
 							</div>
 							<div class="block-content collapse in">
 	 							<fieldset>
-									<%= f.fields_for :months do |month| %>
-		  							<%= month.text_field :january, :placeholder => "January" %>
-		  							<%= month.text_field :february, :placeholder => "February" %>
-		  							<%= month.text_field :march, :placeholder => "March" %>
-		  							<%= month.text_field :april, :placeholder => "April" %>
-		  							<%= month.text_field :may, :placeholder => "May" %>
-		  							<%= month.text_field :june, :placeholder => "June" %>
-		  							<%= month.text_field :july, :placeholder => "July" %>
-		  							<%= month.text_field :august, :placeholder => "August" %>
-		  							<%= month.text_field :september, :placeholder => "September" %>
-		  							<%= month.text_field :october, :placeholder => "October" %>
-		  							<%= month.text_field :november, :placeholder => "November" %>
-		  							<%= month.text_field :december, :placeholder => "December" %>
-									<% end %>
+		  					  <%= f.text_field :januari, :placeholder => "January" %>
+		  							<%= f.text_field :februari, :placeholder => "February" %>
+		  							<%= f.text_field :maret, :placeholder => "March" %>
+		  							<%= f.text_field :april, :placeholder => "April" %>
+		  							<%= f.text_field :mei, :placeholder => "May" %>
+		  							<%= f.text_field :juni, :placeholder => "June" %>
+		  							<%= f.text_field :juli, :placeholder => "July" %>
+		  							<%= f.text_field :agustus, :placeholder => "August" %>
+		  							<%= f.text_field :september, :placeholder => "September" %>
+		  							<%= f.text_field :oktober, :placeholder => "October" %>
+		  							<%= f.text_field :november, :placeholder => "November" %>
+		  							<%= f.text_field :desember, :placeholder => "December" %>
 	 							</fieldset>
 							</div>
 						</div>

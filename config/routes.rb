@@ -17,7 +17,7 @@ Rain::Application.routes.draw do
   get "targets/monthly_target_customer"
 
   get "reports/size_special"
-	 get "reports/size_standard"
+  get "reports/size_standard"
   get "reports/customer_modern"
   get "reports/customer_retail"
   get "reports/first_filter"
@@ -47,6 +47,8 @@ Rain::Application.routes.draw do
   get "monthly/monthly"
 
   get "pages/home"
+  get "monthly_targets/target_filter"
+  get "monthly_targets/view_target"
 
 	#resources :reports
 	#get "reports/type"

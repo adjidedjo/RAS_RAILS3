@@ -1,16 +1,22 @@
 class MonthlyTargetsController < ApplicationController
 
-	def report_type
-		
-	end
+  def target_filter
+    @date = Date.today
+    @months = []
+    (0..11).each do |m|
+      @months << [@date.next_month(m).strftime("%b %Y"), @date.next_month(m)]
+    end
+    redirect_to monthly_targets_view_target_path(request.query_parameters) unless params[:targets].nil?
+	 end
+
+  def view_target
+   @targets = MonthlyTarget.get_target(params[:cabang_id], params[:merk_id], params[:month_year])
+  end
+
   # GET /monthly_targets
   # GET /monthly_targets.json
   def index
-		if session[:monthly_target_channel] != 'retail' && session[:monthly_target_type] != 'branch'
-    	@monthly_targets = MonthlyTarget.where("customer is not null")
-		else
-    	@monthly_targets = MonthlyTarget.where(:customer => nil)
-		end
+    @monthly_targets = MonthlyTarget.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -33,8 +39,11 @@ class MonthlyTargetsController < ApplicationController
   # GET /monthly_targets/new.json
   def new
     @monthly_target = MonthlyTarget.new
-		@monthly_target.months.build
-
+    @date = Date.today
+    @months = []
+    (0..11).each do |m|
+      @months << [@date.next_month(m).strftime("%Y"), @date.next_month(m)]
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @monthly_target }
@@ -50,6 +59,7 @@ class MonthlyTargetsController < ApplicationController
   # POST /monthly_targets.json
   def create
     @monthly_target = MonthlyTarget.new(params[:monthly_target])
+    @monthly_target.target_year = params[:date][:target_year]
 
     respond_to do |format|
       if @monthly_target.save

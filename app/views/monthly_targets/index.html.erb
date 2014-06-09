@@ -1,43 +1,45 @@
 <div class="row-fluid">
-	<div class="block-content collapse in">
-		<% if session[:monthly_target_channel] != 'retail' && session[:monthly_target_type] != 'branch' %>
-			<div class="offset3">
-				<h2>Monthly Targets <%= session[:monthly_target_channel].capitalize %> Channel </h2>
-			</div>
-			<% else %>
-			<div class="offset4">
-				<h2>Monthly Targets</h2>
-			</div>
-		<% end %>
-	</div>
+  <div class="block-content collapse in">
+    <% if session[:monthly_target_channel] != 'retail' && session[:monthly_target_type] != 'branch' %>
+      <div class="offset3">
+        <h2>Monthly Targets <%= session[:monthly_target_channel].capitalize %> Channel </h2>
+      </div>
+    <% else %>
+      <div class="offset4">
+        <h2>Monthly Targets</h2>
+      </div>
+    <% end %>
+  </div>
 </div>
 <div class="row-fluid">
-	<div class="block-content collapse in">
-		<table id="monthly_target"  border="1" class="display" cellspacing="0" cellpadding="3">
-			<thead>
-				<tr>
-					<th>Cabang</th>
-					<th>Brand</th>
-					<th>Year</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-		<% @monthly_targets.each do |monthly_target| %>
-			<tbody>
-				<tr>
-					<td>
-						<%= link_to Cabang.find_by_id(monthly_target.cabang_id).Cabang.gsub(/Cabang/,''), monthly_target_path(monthly_target) %>
-					</td>
-					<td><%= Merk.find_by_id(monthly_target.brand_id).Merk %></td>
-					<td><%= monthly_target.target_year.strftime('%Y') %></td>
-					<td><%= link_to 'Edit', edit_monthly_target_path(monthly_target), {:class => "btn btn-info"} %></td>
-					<td><%= link_to 'Delete', monthly_target, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
-				</tr>
-			</tbody>
-		<% end %>
-		</table>
-	</div>
+  <div class="block-content collapse in">
+    <table id="monthly_target"  border="1" class="display" cellspacing="0" cellpadding="3">
+      <thead>
+        <tr>
+          <th>Cabang</th>
+          <th>Brand</th>
+          <th>Salesmen</th>
+          <th>Year</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <% @monthly_targets.each do |monthly_target| %>
+        <tbody>
+          <tr>
+            <td>
+              <%= link_to Cabang.find_by_id(monthly_target.cabang_id).Cabang.gsub(/Cabang/,''), monthly_target_path(monthly_target) %>
+            </td>
+            <td><%= Merk.find_by_id(monthly_target.merk_id).Merk %></td>
+            <td><%= monthly_target.sales %></td>
+            <td><%= monthly_target.target_year %></td>
+            <td><%= link_to 'Edit', edit_monthly_target_path(monthly_target), {:class => "btn btn-info"} %></td>
+            <td><%= link_to 'Delete', monthly_target, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
+          </tr>
+        </tbody>
+      <% end %>
+    </table>
+  </div>
 </div>
 
 <br />
