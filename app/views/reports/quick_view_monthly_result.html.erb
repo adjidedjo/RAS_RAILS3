@@ -62,19 +62,19 @@
           <% end %>
         </tr>
       </thead>
-        <tfoot>
-          <tr>
-            <th scope="row">Total</th>
-            <% (1..8).each do  %>
-              <td></td>
-            <% end %>
-          </tr>
-        </tfoot>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..8).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
       <tbody>
         <% @customerstore.each do |laporan| %>
           <tr>
             <td scope="row"><%= Cabang.find_by_id(laporan.cabang).Cabang.gsub(/Cabang/,'') %></td>
- 
+
 
             <% if LaporanCabang.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.cabang, params[:brand]).empty? %>
               <td>0</td>
@@ -88,12 +88,12 @@
 
 
             <% if LaporanCabang.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.cabang,
-params[:brand]).empty? %>
+                params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
               <% LaporanCabang.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.cabang,
-params[:brand]).each do |a| %>
+                params[:brand]).each do |a| %>
                 <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                 <td><%= a.sum_harganetto2.nil? ? "0" : number_with_delimiter(a.sum_harganetto2.to_i, delimiter: ".") %></td>
               <% end %>
@@ -101,24 +101,24 @@ params[:brand]).each do |a| %>
 
 
             <% if LaporanCabang.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.cabang,
-params[:brand]).empty? %>
+                params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
               <% LaporanCabang.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.cabang,
-params[:brand]).each do |a| %>
+                params[:brand]).each do |a| %>
                 <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                 <td><%= a.sum_harganetto2.nil? ? "0" : number_with_delimiter(a.sum_harganetto2.to_i, delimiter: ".") %></td>
               <% end %>
             <% end %>
 
             <% if LaporanCabang.customer_quick_monthly(Date.today.month, Date.today.year, laporan.cabang,
-params[:brand]).empty? %>
+                params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
               <% LaporanCabang.customer_quick_monthly(Date.today.month, Date.today.year, laporan.cabang,
-params[:brand]).each do |a| %>
+                params[:brand]).each do |a| %>
                 <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                 <td><%= a.sum_harganetto2.nil? ? "0" : number_with_delimiter(a.sum_harganetto2.to_i, delimiter: ".") %></td>
               <% end %>

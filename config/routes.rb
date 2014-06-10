@@ -49,6 +49,7 @@ Rain::Application.routes.draw do
   get "pages/home"
   get "monthly_targets/target_filter"
   get "monthly_targets/view_target"
+  get "monthly_targets/view_target_sales"
 
 	#resources :reports
 	#get "reports/type"

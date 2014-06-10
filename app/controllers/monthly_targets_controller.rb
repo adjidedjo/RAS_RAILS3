@@ -3,14 +3,22 @@ class MonthlyTargetsController < ApplicationController
   def target_filter
     @date = Date.today
     @months = []
-    (0..11).each do |m|
-      @months << [@date.next_month(m).strftime("%b %Y"), @date.next_month(m)]
+    0.downto(-3).each do |m|
+      @months << [@date.months_since(m).strftime("%b %Y"), @date.next_month(m)]
     end
-    redirect_to monthly_targets_view_target_path(request.query_parameters) unless params[:targets].nil?
-	 end
+    if params[:targets] == 'branch'
+      redirect_to monthly_targets_view_target_path(request.query_parameters) unless params[:month_year].nil?
+    else
+      redirect_to monthly_targets_view_target_sales_path(request.query_parameters) unless params[:month_year].nil?
+    end
+  end
+  
+  def view_target_sales
+    @targets_sales = MonthlyTarget.get_target_by_sales(params[:cabang_id], params[:merk_id], params[:month_year])
+  end
 
   def view_target
-   @targets = MonthlyTarget.get_target(params[:cabang_id], params[:merk_id], params[:month_year])
+    @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
   end
 
   # GET /monthly_targets
@@ -20,7 +28,7 @@ class MonthlyTargetsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @monthly_targets }
+      format.json { render json: @monthly_targets } == nil
     end
   end
 

@@ -26,6 +26,37 @@ select{
     font-weight: inherit;
     margin-right: 12px;
 }
+
+#select-weekly{
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin-right: 12px;
+    margin-left: 10px;
+}
+
+#date_month{
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin-right: 12px;
+    margin-left: 10px;
+}
+
+#date_year{
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin-right: 12px;
+    margin-left: 10px;
+}
+
+.weekly_button {
+  float: right;
+  margin-right: 9px;
+  margin-top: -18px;
+}
+
 .button_store_map {
     background: none repeat scroll 0 0 #0099CC;
     border-radius: 15px 15px 15px 15px;

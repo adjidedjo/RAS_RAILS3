@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <%= form_tag monthly_targets_target_filter_path, :method => 'get' do |f| %>
+    <div class="row-fluid">
+      <div class="span3">
+        <!-- block -->
+        <div class="block">
+          <div class="navbar navbar-inner block-header">
+            <div class="muted pull-left">Filter for View Target vs Sales</div>
+            <div class="pull-right"><span class="badge badge-info"></span>
+
+            </div>
+          </div>
+          <fieldset style="margin:10px">
+            <label>View Target by</label>
+            <fieldset style="margin-left:5px">
+              <label class="radio">
+                <%= radio_button_tag 'targets', 'branch' %> Branch
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'targets', 'sales' %> Sales
+              </label>
+            </fieldset>
+            <%= label_tag 'Branch' %>
+            <%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}),
+              :prompt=>"Select Branch"  %><br /><br />
+            <%= label_tag 'Merk' %>
+            <%= select_tag 'merk_id', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}),
+              :prompt=>"Select Merk" %><br /><br />
+            <%= label_tag 'Month' %>
+            <%= select_tag "month_year", options_for_select(@months), :prompt=>"Select Month Year" %><br /><br />
+            <%= text_field_tag "customer", 
+              :placeholder => 'Insert Customer Name' if session[:monthly_target_type] != 'branch' %>
+            <div class="pull-right"><button type="submit" class="btn btn-primary">View</button></div>
+          </fieldset>
+        </div>
+        <!-- /block -->
+      </div>
+    </div>
+  <% end %>
+</div>

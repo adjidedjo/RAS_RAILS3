@@ -1,7 +1,6 @@
 $(document).ready(function(){
-
-	$('#monthly_target').dataTable({
-		bJQueryUI: false
-	});
-
+  $('#monthly_target').dataTable({
+    iDisplayLength: 10,
+    bRetrieve: true
+  });
 });

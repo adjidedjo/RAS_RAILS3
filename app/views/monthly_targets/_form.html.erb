@@ -1,84 +1,84 @@
 <div class="row-fluid">
-		<div class="span3">
-		  <!-- block -->
-		  <div class="block">
-		    <div class="navbar navbar-inner block-header">
-		      <div class="muted pull-left">Monthly Target Parameters</div>
-		      <div class="pull-right"><span class="badge badge-info"></span>
+  <div class="span3">
+    <!-- block -->
+    <div class="block">
+      <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">Monthly Target Parameters</div>
+        <div class="pull-right"><span class="badge badge-info"></span>
 
-		      </div>
-		    </div>
-		    <div class="block-content collapse in">
-					<%= form_for(@monthly_target) do |f| %>
-						<% if @monthly_target.errors.any? %>
-							<div id="error_explanation">
-								<div class="alert alert-error">
-									The form contains <%= pluralize(@monthly_target.errors.count, "error") %>.
-								</div>
-								<ul>
-								<% @monthly_target.errors.full_messages.each do |msg| %>
-									<li>* <%= msg %></li>
-								<% end %>
-								</ul>
-							</div>
-						<% end %>
-	 					<fieldset>
-							  <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
-							  <%= f.select(:merk_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
-							  <%= select_year(Date.today, :start_year => Time.now.year, :end_year => Time.now.year - 4, field_name: 'target_year') %>
-							  <%= f.text_field "customer", 
-           :placeholder => 'Insert Customer Name' %>
-         <%= f.text_field "sales", :placeholder => 'Insert Sales' %>
-         <%= f.text_field "sales_counter", :placeholder => 'Insert Sales Counter' %>
-	 					</fieldset>
-		    </div>
-		  </div>
-		  <!-- /block -->
-			</div>
-					<div class="span8">
-						<!-- block -->
-						<div class="block">
-							<div class="navbar navbar-inner block-header">
-								<div class="muted pull-left">Monthly Target Input</div>
-								<div class="pull-right"><span class="badge badge-info"></span>
+        </div>
+      </div>
+      <div class="block-content collapse in">
+        <%= form_for(@monthly_target) do |f| %>
+          <% if @monthly_target.errors.any? %>
+            <div id="error_explanation">
+              <div class="alert alert-error">
+                The form contains <%= pluralize(@monthly_target.errors.count, "error") %>.
+              </div>
+              <ul>
+                <% @monthly_target.errors.full_messages.each do |msg| %>
+                  <li>* <%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          <fieldset>
+            <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+            <%= f.select(:merk_id, Merk.all.collect {|a| [a.Merk, a.id]}) %>
+            <%= select_year(Date.today, :start_year => Time.now.year, :end_year => Time.now.year - 4, field_name: 'target_year') %>
+            <%= f.text_field "customer", 
+              :placeholder => 'Insert Customer Name' %>
+            <%= f.text_field "sales", :placeholder => 'Insert Sales' %>
+            <%= f.text_field "sales_counter", :placeholder => 'Insert Sales Counter' %>
+          </fieldset>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+    <div class="span8">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Monthly Target Input</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
 
-								</div>
-							</div>
-							<div class="block-content collapse in">
-	 							<fieldset>
-		  					  <%= f.text_field :januari, :placeholder => "January" %>
-		  							<%= f.text_field :februari, :placeholder => "February" %>
-		  							<%= f.text_field :maret, :placeholder => "March" %>
-		  							<%= f.text_field :april, :placeholder => "April" %>
-		  							<%= f.text_field :mei, :placeholder => "May" %>
-		  							<%= f.text_field :juni, :placeholder => "June" %>
-		  							<%= f.text_field :juli, :placeholder => "July" %>
-		  							<%= f.text_field :agustus, :placeholder => "August" %>
-		  							<%= f.text_field :september, :placeholder => "September" %>
-		  							<%= f.text_field :oktober, :placeholder => "October" %>
-		  							<%= f.text_field :november, :placeholder => "November" %>
-		  							<%= f.text_field :desember, :placeholder => "December" %>
-	 							</fieldset>
-							</div>
-						</div>
-						<!-- /block -->
-					</div>
-				</div>
-</div>
-<div class="row-fluid">
-	<div class="offset4">
-		<div class="span5">
- 			<!-- block -->
-				<div class="block">
-					<div class="block-content collapse in">
-						<div class="pull-right">
-							<%= link_to 'Back', monthly_targets_path, :class => "btn btn-info" %>
-							<%= submit_tag "Create", :class => "btn btn-primary" %>
-						</div>
-					</div>
-				</div>
-				<% end %>
-			<!-- /block -->
-		</div>
-	</div>
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <fieldset>
+            <%= f.text_field :januari, :placeholder => "January" %>
+            <%= f.text_field :februari, :placeholder => "February" %>
+            <%= f.text_field :maret, :placeholder => "March" %>
+            <%= f.text_field :april, :placeholder => "April" %>
+            <%= f.text_field :mei, :placeholder => "May" %>
+            <%= f.text_field :juni, :placeholder => "June" %>
+            <%= f.text_field :juli, :placeholder => "July" %>
+            <%= f.text_field :agustus, :placeholder => "August" %>
+            <%= f.text_field :september, :placeholder => "September" %>
+            <%= f.text_field :oktober, :placeholder => "October" %>
+            <%= f.text_field :november, :placeholder => "November" %>
+            <%= f.text_field :desember, :placeholder => "December" %>
+          </fieldset>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+  </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset4">
+      <div class="span5">
+        <!-- block -->
+        <div class="block">
+          <div class="block-content collapse in">
+            <div class="pull-right">
+              <%= link_to 'Back', monthly_targets_path, :class => "btn btn-info" %>
+              <%= submit_tag "Create", :class => "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <!-- /block -->
+    </div>
+  </div>
 </div>
