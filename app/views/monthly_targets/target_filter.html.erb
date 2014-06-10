@@ -28,8 +28,6 @@
               :prompt=>"Select Merk" %><br /><br />
             <%= label_tag 'Month' %>
             <%= select_tag "month_year", options_for_select(@months), :prompt=>"Select Month Year" %><br /><br />
-            <%= text_field_tag "customer", 
-              :placeholder => 'Insert Customer Name' if session[:monthly_target_type] != 'branch' %>
             <div class="pull-right"><button type="submit" class="btn btn-primary">View</button></div>
           </fieldset>
         </div>
