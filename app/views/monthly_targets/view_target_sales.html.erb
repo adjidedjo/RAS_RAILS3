@@ -46,7 +46,7 @@
 <br />
 <div class="row-fluid">
   <div class="block-content collapse in">
-    <table id="monthly_target" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+    <table id="monthly_target_sales" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
       <thead>
         <tr>
           <th rowspan="2">Salesman</th>
@@ -61,7 +61,7 @@
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..2).each do  %>
+          <% (1..3).each do  %>
             <td></td>
           <% end %>
         </tr>
@@ -72,9 +72,9 @@
             <% search_target = params[:month_year].to_date.strftime("%B").downcase %>
             <td scope="row"><%= target.sales %></td>
             <td><%= Cabang.find_by_id(target.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
-            <td><%= target.send("#{search_target.to_sym}") %></td>
+            <td><%= target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %></td>
             <% LaporanCabang.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
-              <td><%= reached_sales.sum_jumlah %></td>
+              <td><%= reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
             <% end %>
           </tr>
         <% end %>
