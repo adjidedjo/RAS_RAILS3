@@ -14,7 +14,14 @@ class Merk < ActiveRecord::Base
     tabel = Merk.all
   end
 
-  def self.merk_all
-    Merk.all
+  def self.merk_all(current_user)
+    if current_user.user_brand == "Admin"
+      Merk.all
+    elsif current_user.user_brand == "Elite"
+      Merk.where("Merk in (?)", ["Non Serenity","Serenity"])
+    else
+      Merk.where("Merk like ?", current_user.user_brand)
+    end
+    #current_user.user_brand == "Admin" ? Merk.all : Merk.where("Merk like ?", current_user.user_brand)
   end
 end

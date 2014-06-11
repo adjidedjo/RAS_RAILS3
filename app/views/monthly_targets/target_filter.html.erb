@@ -20,13 +20,13 @@
                 <%= radio_button_tag 'targets', 'sales' %> Sales
               </label>
             </fieldset>
-            <%= label_tag 'Branch' %>
+            <%= label_tag 'Select a Branch' %>
             <%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}),
               :prompt=>"Select Branch"  %><br /><br />
-            <%= label_tag 'Merk' %>
-            <%= select_tag 'merk_id', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}),
+            <%= label_tag 'Select a Merk' %>
+            <%= select_tag 'merk_id', options_for_select(@merk.collect {|a| [a.Merk, a.Merk]}),
               :prompt=>"Select Merk" %><br /><br />
-            <%= label_tag 'Month' %>
+            <%= label_tag 'Select Month and Year' %>
             <%= select_tag "month_year", options_for_select(@months), :prompt=>"Select Month Year" %><br /><br />
             <div class="pull-right"><button type="submit" class="btn btn-primary">View</button></div>
           </fieldset>

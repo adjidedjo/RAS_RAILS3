@@ -214,7 +214,7 @@ class ReportsController < ApplicationController
 
 	def second_filter
 		@branch = Cabang.get_id
-		@brand = Merk.merk_all
+		@brand = Merk.merk_all(current_user)
 		@type = Product.all
 		@article = Artikel.group(:Produk)
 		@fabric = Kain.all

@@ -2,6 +2,7 @@ class MonthlyTargetsController < ApplicationController
 
   def target_filter
     @date = Date.today
+    @merk = Merk.merk_all(current_user)
     @months = []
     0.downto(-3).each do |m|
       @months << [@date.months_since(m).strftime("%b %Y"), @date.next_month(m)]
