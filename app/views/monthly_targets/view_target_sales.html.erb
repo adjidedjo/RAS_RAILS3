@@ -56,12 +56,13 @@
         <tr>
           <th>Target</th>
           <th>Sales</th>
+          <th>%</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..3).each do  %>
+          <% (1..4).each do  %>
             <td></td>
           <% end %>
         </tr>
@@ -72,10 +73,11 @@
             <% search_target = params[:month_year].to_date.strftime("%B").downcase %>
             <td scope="row"><%= target.sales %></td>
             <td><%= Cabang.find_by_id(target.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
-            <td><%= target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %></td>
+            <td><%= @target = target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %></td>
             <% LaporanCabang.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
-              <td><%= reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
+              <td><%= @sales = reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
             <% end %>
+              <td><%= number_to_percentage(LaporanCabang.growth(@target, @sales), :precision => 2) %></td>
           </tr>
         <% end %>
       </tbody>

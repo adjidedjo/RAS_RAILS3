@@ -55,12 +55,13 @@
         <tr>
           <th>Target</th>
           <th>Sales</th>
+          <th>%</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
           <th scope="row">Total</th>
-          <% (1..2).each do  %>
+          <% (1..3).each do  %>
             <td></td>
           <% end %>
         </tr>
@@ -69,10 +70,11 @@
         <% @targets.each do |target| %>
           <tr>
             <td scope="row"><%= Cabang.find_by_id(target[0]).Cabang.gsub(/Cabang/,'') %></td>
-            <td><%= target[1].nil? ? 0 : target[1] %></td>
+            <td><%= @var_target = target[1].nil? ? 0 : target[1] %></td>
             <% LaporanCabang.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
-              <td><%= reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
+              <td><%= @var_sales = reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
             <% end %>
+            <td><%= number_to_percentage(LaporanCabang.growth(@var_target, @var_sales), :precision => 2)  %></td>
           </tr>
         <% end %>
       </tbody>
