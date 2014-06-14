@@ -1,10 +1,10 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-		<br />
+    <br />
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Report by Brand Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
     <table cellpadding='0' cellspacing='0' border='0' width='100%'  id="group_by_cabang" class="display" ">
-      <thead>
+           <thead>
         <tr>
           <th rowspan="3">Brand</th>
         </tr>
@@ -29,102 +29,102 @@
         </tr>
       </tfoot>
       <tbody>
-				<% Merk.all.each do |merk| %>
+        <% Merk.all.each do |merk| %>
           <tr>
-          	<% if merk.Merk == current_user.user_brand %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% elsif current_user.user_brand == "Admin" %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% else %>
-		          <td><%= merk.Merk %></td>
-		        <% end %>
+            <% if merk.Merk == current_user.user_brand %>
+              <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
+                  :from => params[:from], :to => params[:to]) %></td>
+            <% elsif current_user.user_brand == "Admin" %>
+              <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
+                  :from => params[:from], :to => params[:to]) %></td>
+            <% else %>
+              <td><%= merk.Merk %></td>
+            <% end %>
 
             <!-- Bandung -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(2, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(2, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Narogong -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(3, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(3, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Bali -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(4, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(4, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Medan -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(5, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(5, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Surabaya -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(7, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(7, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Semarang -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(8, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(8, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Cirebon -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(9, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+              <% LaporanCabang.sum_of_brand(9, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
-		</br>
-		<table cellpadding='0' cellspacing='0' border='0' width='100%'  id="group_by_cabang_2" class="display" ">
-      <thead>
+    </br>
+    <table cellpadding='0' cellspacing='0' border='0' width='100%'  id="group_by_cabang_2" class="display" ">
+           <thead>
         <tr>
           <th rowspan="3">Brand</th>
         </tr>
@@ -151,88 +151,88 @@
       <tbody>
         <% Merk.all.each do |merk| %>
           <tr>
-          	<% if merk.Merk == current_user.user_brand %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% elsif current_user.user_brand == "Admin" %>
-		          <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
-		          	:from => params[:from], :to => params[:to]) %></td>
-		        <% else %>
-		          <td><%= merk.Merk %></td>
-		        <% end %>
+            <% if merk.Merk == current_user.user_brand %>
+              <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
+                  :from => params[:from], :to => params[:to]) %></td>
+            <% elsif current_user.user_brand == "Admin" %>
+              <td><%= link_to merk.Merk, laporan_cabang_group_by_merk_path(:merk_id => merk.IdMerk,
+                  :from => params[:from], :to => params[:to]) %></td>
+            <% else %>
+              <td><%= merk.Merk %></td>
+            <% end %>
 
             <!-- Yogyakarta -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(10, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(10, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Palembang -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(11, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(11, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Lampung -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(13, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(13, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Makasar -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(19, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(19, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Pekanbaru -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(20, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(20, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
             <!-- Jember -->
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.sum_of_brand(22, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
-		          	params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.sum_of_brand(22, current_user.user_brand.slice(0) == "A" ? merk.IdMerk : current_user.user_brand.slice(0),
+                params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
-		</br>
-		<table id="group_by_cabang_total" class="display">
+    </br>
+    <table id="group_by_cabang_total" class="display">
       <thead>
         <tr>
           <th rowspan="2">Brand</th>
@@ -240,7 +240,7 @@
         </tr>
         <tr>
           <th>Qty</th>
-        	<th>Value</th>
+          <th>Value</th>
         </tr>
       </thead>
       <tfoot>
@@ -248,31 +248,31 @@
       <tbody>
         <% Merk.all.each do |merk| %>
           <tr>
-		        <td><%= merk.Merk %></td>
+            <td><%= merk.Merk %></td>
             <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.total_on_merk(merk.IdMerk, params[:from], params[:to]).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
+              <% LaporanCabang.total_on_merk(merk.IdMerk, params[:from], params[:to]).each do |a| %>
+                <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+                <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+              <% end %>
             <% else %>
-            	<td>0</td>
-            	<td>0</td>
+              <td>0</td>
+              <td>0</td>
             <% end %>
           </tr>
         <% end %>
       </tbody>
     </table>
-		</br>
-		<div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
-		<div class="offset5">
-		 <div class="form-inline">
-				<%= link_to "Compare", laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), 
-					:method => :get, :class=>"btn btn-info" %>
-			</div>
-		</div>
-		<br />
-		<label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
-			:to => params[:to]), :class=>"btn btn-info" %>
-		</label>
+    </br>
+    <div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
+    <div class="offset5">
+      <div class="form-inline">
+        <%= link_to "Compare", laporan_cabang_monthly_comparison_path(:from => params[:from], :to => params[:to] ), 
+          :method => :get, :class=>"btn btn-info" %>
+      </div>
+    </div>
+    <br />
+    <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], 
+        :to => params[:to]), :class=>"btn btn-info" %>
+    </label>
   <% end %>
 <% end %>

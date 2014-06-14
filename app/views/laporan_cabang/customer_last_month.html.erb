@@ -1,55 +1,55 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-		<br />
-<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Customer Comparison  Report by Month</i></h2>
+    <br />
+    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Customer Comparison  Report by Month</i></h2>
     <br /><br />
-		<table id="customer_monthly" class="pretty">
-		  <thead>
-		    <tr>
-		      <th rowspan="3">Customer</th>
-		      <th rowspan="3">City</th>
-		      <th colspan="6">Comparison</th>
-		    </tr>
-		    <tr>
-		      <th colspan="2"><%= (params[:to].to_date - 1.month).strftime('%B')  %></th>
-		      <th colspan="2"><%= params[:to].to_date.strftime('%B')  %></th>
-					<th colspan="2">Growth</th>
-		    </tr>
-		    <tr>
-				<% (1..3).each do |a| %>
-		      <th>QTY</th>
-		      <th>Value</th>
-				<% end %>
-		    </tr>
-		  </thead>
-		  <tfoot>
-		  </tfoot>
-		  <tbody>
-		    <% @customerstore.each do |laporan| %>
-		      <tr>
-		        <th scope="row"><%= laporan.customer %></th>
-		        <th scope="row"><%= laporan.kota %></th>
-							<% LaporanCabang.customer_by_store(@from_last_month, @to_last_month, laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
-								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-              	<td><%= currency(@value_last) %></td>
-							<% end %>
-							<% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
-								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-              	<td><%= currency(@value_current) %></td>
-							<% end %>
-							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
-							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
-		      </tr>
-		    <% end %>
-		  </tbody>
-		</table>
-	<% end %>
+    <table id="customer_monthly" class="pretty">
+      <thead>
+        <tr>
+          <th rowspan="3">Customer</th>
+          <th rowspan="3">City</th>
+          <th colspan="6">Comparison</th>
+        </tr>
+        <tr>
+          <th colspan="2"><%= (params[:to].to_date - 1.month).strftime('%B')  %></th>
+          <th colspan="2"><%= params[:to].to_date.strftime('%B')  %></th>
+          <th colspan="2">Growth</th>
+        </tr>
+        <tr>
+          <% (1..3).each do |a| %>
+            <th>QTY</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @customerstore.each do |laporan| %>
+          <tr>
+            <th scope="row"><%= laporan.customer %></th>
+            <th scope="row"><%= laporan.kota %></th>
+            <% LaporanCabang.customer_by_store(@from_last_month, @to_last_month, laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
+              <% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              <td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              <td><%= currency(@value_last) %></td>
+            <% end %>
+            <% LaporanCabang.customer_by_store(params[:from], params[:to], laporan.customer, laporan.cabang, params[:merk_id]).each do |a| %>
+              <% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              <td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              <td><%= currency(@value_current) %></td>
+            <% end %>
+            <td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+            <td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 <% end %>
 <br />
 <div class="clear"></div>
 <div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>
+    :merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

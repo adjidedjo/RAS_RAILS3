@@ -69,8 +69,8 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
+    </br>
+    <table border="1" id="group_by_cabang_2" class="display">
       <thead>
         <tr>
           <th rowspan="3"><%= Merk.merk_name(params[:merk_id]).first.Merk %> Categories	</th>
@@ -134,21 +134,21 @@
       </tbody>
     </table>
   <% end %>
-	</br>
+  </br>
   <div class="offset3"><label>There are some reports that you may want to show, please click the button below</label></div>
   <div class="offset4">
-	 <div class="form-inline">
-			<%= link_to "Customer", laporan_cabang_group_by_merk_customer_path(:merk_id => params[:merk_id],:from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-			<%= link_to "Size", laporan_cabang_group_by_merk_size_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-     	<%= link_to "Type", laporan_cabang_group_by_merk_type_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
-     	<%= link_to "Compare", laporan_cabang_group_categories_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
-				:to => params[:to]), :method => :get,	:class=>"btn btn-info" %>
-		</div>
-	</div>
+    <div class="form-inline">
+      <%= link_to "Customer", laporan_cabang_group_by_merk_customer_path(:merk_id => params[:merk_id],:from => params[:from], 
+        :to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
+      <%= link_to "Size", laporan_cabang_group_by_merk_size_path(:merk_id => params[:merk_id], :from => params[:from], 
+        :to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
+      <%= link_to "Type", laporan_cabang_group_by_merk_type_path(:merk_id => params[:merk_id], :from => params[:from], 
+        :to => params[:to] ), :method => :get, :class=>"btn btn-info" %>
+      <%= link_to "Compare", laporan_cabang_group_categories_comparison_path(:merk_id => params[:merk_id], :from => params[:from], 
+        :to => params[:to]), :method => :get,	:class=>"btn btn-info" %>
+    </div>
+  </div>
 <% end %>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>
+    :merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

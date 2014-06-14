@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
   
   def quick_view_monthly_process
     redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
-    :from => 3.month.ago.to_date, :to => Date.today.to_date)
+      :from => 3.month.ago.to_date, :to => Date.today.to_date)
   end
   
   def quick_view_monthly
@@ -45,18 +45,18 @@ class ReportsController < ApplicationController
 
 	def compare_last_month
 		unless params[:from].nil? && params[:to].nil?
-    if (params[:from].to_date..params[:to].to_date).to_a.group_by(&:month).count <= 6
-      @month_devided = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
-      @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
-    else
-      @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
-      @rsult_month = params[:from].to_date + 5.months
-      @month_devided = (params[:from].to_date..@rsult_month).to_a.group_by { |t| t.beginning_of_month }
-      @over_month = ((@rsult_month + 1.month)..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
-    end
-    @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
-    @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
-			 @customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
+      if (params[:from].to_date..params[:to].to_date).to_a.group_by(&:month).count <= 6
+        @month_devided = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+        @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+      else
+        @all_month_xls = (params[:from].to_date..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+        @rsult_month = params[:from].to_date + 5.months
+        @month_devided = (params[:from].to_date..@rsult_month).to_a.group_by { |t| t.beginning_of_month }
+        @over_month = ((@rsult_month + 1.month)..params[:to].to_date).to_a.group_by { |t| t.beginning_of_month }
+      end
+      @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
+      @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
+      @customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
      cabang_id, kodekain, kota, jenisbrgdisc, namaartikel, namakain, panjang, lebar")
       .between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
       .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])

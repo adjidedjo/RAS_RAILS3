@@ -31,10 +31,10 @@
         <th rowspan="2">%</th>
       </tr>
       <tr>
-         <th><%= @last_week_on_last_year_first_day.strftime('%d') %>-<%= @last_week_on_last_year_last_day.strftime('%d %b') %></th>
-         <th><%= @last_week_on_current_year_first_day.strftime('%d') %>-<%= @last_week_on_current_year_last_day.strftime('%d %b') %></th>
-         <th><%= @this_week_on_last_year_first_day.strftime('%d') %> - <%= @this_week_on_last_year_last_day.strftime('%d %b')  %></th>
-         <th><%= @this_week_on_current_year_first_day.strftime('%d') %> - <%= @this_week_on_current_year_last_day.strftime('%d %b')  %></th>
+        <th><%= @last_week_on_last_year_first_day.strftime('%d') %>-<%= @last_week_on_last_year_last_day.strftime('%d %b') %></th>
+        <th><%= @last_week_on_current_year_first_day.strftime('%d') %>-<%= @last_week_on_current_year_last_day.strftime('%d %b') %></th>
+        <th><%= @this_week_on_last_year_first_day.strftime('%d') %> - <%= @this_week_on_last_year_last_day.strftime('%d %b')  %></th>
+        <th><%= @this_week_on_current_year_first_day.strftime('%d') %> - <%= @this_week_on_current_year_last_day.strftime('%d %b')  %></th>
       </tr>
     </thead>
     <tfoot>
@@ -99,10 +99,10 @@
       </tr>
       <tr>
         <% (1..2).each do |loop| %>
-        	<th><%= @last_week_on_last_year_first_day.strftime('%d') %>-<%= @last_week_on_last_year_last_day.strftime('%d %b') %></th>
-         	<th><%= @last_week_on_current_year_first_day.strftime('%d') %>-<%= @last_week_on_current_year_last_day.strftime('%d %b') %></th>
-         	<th><%= @this_week_on_last_year_first_day.strftime('%d') %> - <%= @this_week_on_last_year_last_day.strftime('%d %b')  %></th>
-         	<th><%= @this_week_on_current_year_first_day.strftime('%d') %> - <%= @this_week_on_current_year_last_day.strftime('%d %b')  %></th>
+          <th><%= @last_week_on_last_year_first_day.strftime('%d') %>-<%= @last_week_on_last_year_last_day.strftime('%d %b') %></th>
+          <th><%= @last_week_on_current_year_first_day.strftime('%d') %>-<%= @last_week_on_current_year_last_day.strftime('%d %b') %></th>
+          <th><%= @this_week_on_last_year_first_day.strftime('%d') %> - <%= @this_week_on_last_year_last_day.strftime('%d %b')  %></th>
+          <th><%= @this_week_on_current_year_first_day.strftime('%d') %> - <%= @this_week_on_current_year_last_day.strftime('%d %b')  %></th>
         <% end %>
       </tr>
     </thead>
@@ -185,20 +185,20 @@
           <td><%= yearly_last_year_elite.to_i == 0 && yearly_current_year_elite.to_i == 0 ? 0 : percentage(cabang.laporan_cabang.get_percentage(yearly_last_year_elite.gsub(/\./, ''), yearly_current_year_elite.gsub(/\./, ''))) %></td>
 
           <% if MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).empty? %>
-							<td>0</td>
-					<% else %>
-						<% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).each do |monthly_target| %>
-							<td><%= currency(monthly_target.total.to_i) %></td>
-						<% end %>
-					<% end %>
+            <td>0</td>
+          <% else %>
+            <% MonthlyTarget.get_monthly_target(2, cabang.id, @periode.strftime('%m'), @periode.strftime('%Y')).each do |monthly_target| %>
+              <td><%= currency(monthly_target.total.to_i) %></td>
+            <% end %>
+          <% end %>
           <td></td>
           <% if YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).empty? %>
-							<td>0</td>
-					<% else %>
-						<% YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |yearly_target| %>
-							<td><%= currency(yearly_target.total.to_i) %></td>
-						<% end %>
-					<% end %>
+            <td>0</td>
+          <% else %>
+            <% YearlyTarget.get_yearly_target(2, cabang.id, @periode.beginning_of_month.to_date).each do |yearly_target| %>
+              <td><%= currency(yearly_target.total.to_i) %></td>
+            <% end %>
+          <% end %>
           <td></td>
         </tr>
       <% end %>

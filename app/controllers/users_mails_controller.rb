@@ -35,8 +35,8 @@ class UsersMailsController < ApplicationController
   # GET /users_mails/1/edit
   def edit
     @users_mail = UsersMail.find(params[:id])
-		rescue
-			redirect_to new_users_mail_path(:user_id => params[:id])
+  rescue
+    redirect_to new_users_mail_path(:user_id => params[:id])
   end
 
   # POST /users_mails

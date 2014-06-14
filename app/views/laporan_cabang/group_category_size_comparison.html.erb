@@ -1,14 +1,14 @@
 <div class="form-div">
-	<%= form_tag laporan_cabang_group_category_size_comparison_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report</legend>
-			<%= label_tag 'From' %>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<%= label_tag 'To' %>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<button type="submit" class="btn btn-primary">Search</button>
-		</fieldset>
-	<% end %>
+  <%= form_tag laporan_cabang_group_category_size_comparison_path, :method => 'get', :html => {:class => "well"} do %>
+    <fieldset>
+      <legend>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report</legend>
+      <%= label_tag 'From' %>
+      <%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+      <%= label_tag 'To' %>
+      <%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </fieldset>
+  <% end %>
 </div>
 
 <br />
@@ -16,60 +16,60 @@
 
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-		<br />
-<h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+    <br />
+    <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(params[:merk_id]).first.Merk %> Size Comparison Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br /><br />
-		<table id="monthly_comparison" class="pretty">
-		  <thead>
-		    <tr>
-		      <th rowspan="3">Size</th>
-		      <th colspan="6">Comparison</th>
-		    </tr>
-		    <tr>
-		      <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
-		      <th colspan="2"><%= params[:to].to_date.year  %></th>
-					<th colspan="2">Growth</th>
-		    </tr>
-		    <tr>
-				<% (1..3).each do |a| %>
-		      <th>QTY</th>
-		      <th>Value</th>
-				<% end %>
-		    </tr>
-		  </thead>
-		  <tfoot>
-		    <tr>
-		      <th scope="row">Total</th>
-		      <% (1..6).each do  %>
-		        <td></td>
-		      <% end %>
-		    </tr>
-		  </tfoot>
-		  <tbody>
-		    <% ["90","100","120","160", "180", "200", "Tanggung"].each do |size| %>
-		      <tr>
-		        <th scope="row"><%= size %></th>
-							<% LaporanCabang.category_size_comparison(params[:merk_id], size, @from_last_year, @to_last_year).each do |a| %>
-								<% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-              	<td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-              	<td><%= currency(@value_last) %></td>
-							<% end %>
-							<% LaporanCabang.category_size_comparison(params[:merk_id], size, params[:from], params[:to]).each do |a| %>
-								<% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
-              	<td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
-              	<td><%= currency(@value_current) %></td>
-							<% end %>
-							<td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
-							<td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
-		      </tr>
-		    <% end %>
-		  </tbody>
-		</table>
-	<% end %>
+    <table id="monthly_comparison" class="pretty">
+      <thead>
+        <tr>
+          <th rowspan="3">Size</th>
+          <th colspan="6">Comparison</th>
+        </tr>
+        <tr>
+          <th colspan="2"><%= (params[:to].to_date - 1.years).year  %></th>
+          <th colspan="2"><%= params[:to].to_date.year  %></th>
+          <th colspan="2">Growth</th>
+        </tr>
+        <tr>
+          <% (1..3).each do |a| %>
+            <th>QTY</th>
+            <th>Value</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..6).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% ["90","100","120","160", "180", "200", "Tanggung"].each do |size| %>
+          <tr>
+            <th scope="row"><%= size %></th>
+            <% LaporanCabang.category_size_comparison(params[:merk_id], size, @from_last_year, @to_last_year).each do |a| %>
+              <% @value_last = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              <td><%= @qty_last = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              <td><%= currency(@value_last) %></td>
+            <% end %>
+            <% LaporanCabang.category_size_comparison(params[:merk_id], size, params[:from], params[:to]).each do |a| %>
+              <% @value_current = a.sum_harganetto2.nil? ? 0 : a.sum_harganetto2 %>
+              <td><%= @qty_current = a.sum_jumlah.nil? ? 0 : a.sum_jumlah.to_i %></td>
+              <td><%= currency(@value_current) %></td>
+            <% end %>
+            <td><%= number_to_percentage(LaporanCabang.growth(@qty_last, @qty_current), :precision => 2) %></td>
+            <td><%= number_to_percentage(LaporanCabang.growth(@value_last, @value_current), :precision => 2) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 <% end %>
 <br />
 <div class="clear"></div>
 <div class="offset3"><label>To return to the previous page, please click the back button on the browser</label></div>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>
+    :merk_id => params[:merk_id]), :class=>"btn btn-info" %></label>

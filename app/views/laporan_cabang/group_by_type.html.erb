@@ -1,14 +1,14 @@
 <div class="form-div">
-	<%= form_tag laporan_cabang_group_by_type_path, :method => 'get', :html => {:class => "well"} do %>
-		<fieldset>
-			<legend>Sales Report by Type</legend>
-			<label>From</label>
-			<%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-			<label>To</label>
-			<%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
-			<%= submit_tag "Search", :class => "btn btn-primary" %>
-		</fieldset>
-	<% end %>
+  <%= form_tag laporan_cabang_group_by_type_path, :method => 'get', :html => {:class => "well"} do %>
+    <fieldset>
+      <legend>Sales Report by Type</legend>
+      <label>From</label>
+      <%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+      <label>To</label>
+      <%= text_field_tag 'to', nil, :placeholder => "To Date" %><br />
+      <%= submit_tag "Search", :class => "btn btn-primary" %>
+    </fieldset>
+  <% end %>
 </div>
 
 <br />
@@ -87,8 +87,8 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
+    </br>
+    <table border="1" id="group_by_cabang_2" class="display">
       <thead>
         <tr>
           <th rowspan="3">Category</th>
@@ -156,11 +156,11 @@
 <br />
 <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
 <div class="offset5">
- <div class="form-inline">
-  <%= link_to "Compare", laporan_cabang_monthly_type_comparison_path(:from => params[:from], :to => params[:to] ), 
-	 :method => :get, :class=>"btn btn-info" %>
- </div>
+  <div class="form-inline">
+    <%= link_to "Compare", laporan_cabang_monthly_type_comparison_path(:from => params[:from], :to => params[:to] ), 
+      :method => :get, :class=>"btn btn-info" %>
+  </div>
 </div>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to]), 
-	:class=>"btn btn-info" %></label>
+    :class=>"btn btn-info" %></label>

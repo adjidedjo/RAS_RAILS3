@@ -1,6 +1,6 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-		<br />
+    <br />
     <h2 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales Report by Category Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
     <br />
     <br />
@@ -71,8 +71,8 @@
         <% end %>
       </tbody>
     </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
+    </br>
+    <table border="1" id="group_by_cabang_2" class="display">
       <thead>
         <tr>
           <th rowspan="3">Category</th>
@@ -140,11 +140,11 @@
 <br />
 <div class="offset3"><label>If you want to compare these results with last year, please click the button below</label></div>
 <div class="offset5">
- <div class="form-inline">
-  <%= link_to "Compare", laporan_cabang_monthly_category_comparison_path(:user_brand => current_user.user_brand, :from => params[:from], 
-		:to => params[:to]), :method => :get, :class=>"btn btn-info" %></p>
- </div>
+  <div class="form-inline">
+    <%= link_to "Compare", laporan_cabang_monthly_category_comparison_path(:user_brand => current_user.user_brand, :from => params[:from], 
+      :to => params[:to]), :method => :get, :class=>"btn btn-info" %></p>
+  </div>
 </div>
 <br />
 <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to], 
-	:user_brand => current_user.user_brand), :class=>"btn btn-info" %></label>
+    :user_brand => current_user.user_brand), :class=>"btn btn-info" %></label>

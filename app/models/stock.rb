@@ -8,7 +8,7 @@ class Stock < ActiveRecord::Base
   scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
-# scope for monthly/monthly
+  # scope for monthly/monthly
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("kodebrg like ?", %(#{type}%)) if type.present? }
 	scope :search_by_article, lambda { |article| where("kodebrg like ?", %(__#{article}%)) if article.present?}
@@ -28,7 +28,7 @@ class Stock < ActiveRecord::Base
 
 	def self.check_stock(tanggal, branch, brand, type, article, fabric, size)
 		select("kodebrg, cabang_id, namabrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade")
-			.control_stock(tanggal).search_by_branch(branch).brand(brand).search_by_type(type).search_by_article(article).fabric(fabric)
+    .control_stock(tanggal).search_by_branch(branch).brand(brand).search_by_type(type).search_by_article(article).fabric(fabric)
 	end
 
 	def self.find_barang_id(barang_id, cabang)
@@ -43,6 +43,6 @@ class Stock < ActiveRecord::Base
   def self.get_size_qty(kodebrg, cabang, date, size)
   	find(:all, :select => "kodebrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade",
   		:conditions => ["kodebrg like ? and kodebrg not like ? and cabang_id = ? and tanggal = ?", %(#{kodebrg + size}%), %(%#{'T'}%),
-  		cabang, date])
+        cabang, date])
   end
 end

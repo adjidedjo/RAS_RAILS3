@@ -7,7 +7,7 @@ class StoreMapsController < ApplicationController
 			marker.infowindow render_to_string(:partial => "/store_maps/infowindow", :locals => { :city => city})
 		  marker.title "#{city.address}"
 		  marker.picture({:width => 32,
-                    :height => 32})
+          :height => 32})
     end
   end
 
