@@ -1,33 +1,33 @@
 <div class="row-fluid">
   <div class="offset4">
-		<div class="span5">
-		  <!-- block -->
-		  <div class="block">
-		    <div class="navbar navbar-inner block-header">
-		      <div class="muted pull-left">Compare Type</div>
-		      <div class="pull-right"><span class="badge badge-info"></span>
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Compare Type</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
 
-		      </div>
-		    </div>
-		    <div class="block-content collapse in">
-		      <%= form_tag reports_compare_type_path, :method => 'get' do %>
-					 <fieldset>
-					 	<label class="radio">
-							<%= radio_button_tag 'compare', 'last_month' %> Last Month
-						</label>
-					 	<label class="radio">
-							<%= radio_button_tag 'compare', 'last_year' %> Last Year
-						</label>
-					 	<label class="radio">
-							<%= radio_button_tag 'compare', 'year' %> Month
-						</label>
-					 </fieldset>
-					 <br />
-					 <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
-					<% end %>
-		    </div>
-		  </div>
-		  <!-- /block -->
-		</div>
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag reports_compare_type_path, :method => 'get' do %>
+            <fieldset>
+              <label class="radio">
+                <%= radio_button_tag 'compare', 'last_month' %> Last Month
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'compare', 'last_year' %> Last Year
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'compare', 'year' %> Month
+              </label>
+            </fieldset>
+            <br />
+            <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
   </div>
 </div>

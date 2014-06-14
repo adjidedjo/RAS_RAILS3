@@ -1,51 +1,51 @@
 <h2 style="font-size: 20px; position: absolute; left: 344px;"><i>Under Size Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-  <br /><br />
-		<div class="offset4">
-			<div class="form-inline">
-		    <label id="cabang"></label>
-		    <label id="jenis"></label>
-		    <label id="brand"></label>
-		    <label id="artikel"></label>
-		    <label id="kain"></label>
-		    <label id="Panjang"></label>
-		    <label id="Lebar"></label>
-			</div>
-		</div>
-  <table id="special_size" class="display">
-    <thead>
-      <tr>
-        <th>Cabang</th>
-        <th>Jenis</th>
-        <th>Brand</th>
-        <th>Artikel</th>
-        <th>Kain</th>
-        <th>Panjang</th>
-        <th>Lebar</th>
-        <th>Freestock</th>
-        <th>Bufferstock</th>
-        <th>Realstock</th>
-      </tr>
-    </thead>
-    <tfoot>
-    </tfoot>
-    <tbody>
-      <% @get_stock.map do |stock| %>
-				<% if stock.kodebrg.slice(11) == "T" %>
-		      <tr>
-						<th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
-		        <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
-		        <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
-		        <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
-		        <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
-		        <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
-		        <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
-		        <th scope="row"><%= stock.freestock %></th>
-		        <th scope="row"><%= stock.bufferstock %></th>
-		        <th scope="row"><%= stock.realstock %></th>
-		        <th scope="row"><%= stock.realstockservice %></th>
-		        <th scope="row"><%= stock.realstockdowngrade %></th>
-		      </tr>
-				<% end %>
+<br /><br />
+<div class="offset4">
+  <div class="form-inline">
+    <label id="cabang"></label>
+    <label id="jenis"></label>
+    <label id="brand"></label>
+    <label id="artikel"></label>
+    <label id="kain"></label>
+    <label id="Panjang"></label>
+    <label id="Lebar"></label>
+  </div>
+</div>
+<table id="special_size" class="display">
+  <thead>
+    <tr>
+      <th>Cabang</th>
+      <th>Jenis</th>
+      <th>Brand</th>
+      <th>Artikel</th>
+      <th>Kain</th>
+      <th>Panjang</th>
+      <th>Lebar</th>
+      <th>Freestock</th>
+      <th>Bufferstock</th>
+      <th>Realstock</th>
+    </tr>
+  </thead>
+  <tfoot>
+  </tfoot>
+  <tbody>
+    <% @get_stock.map do |stock| %>
+      <% if stock.kodebrg.slice(11) == "T" %>
+        <tr>
+          <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
+          <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
+          <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
+          <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
+          <th scope="row"><%= Kain.kain_name(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name(stock.kodebrg.slice(6..10)).first.nil? %></th>
+          <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
+          <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
+          <th scope="row"><%= stock.freestock %></th>
+          <th scope="row"><%= stock.bufferstock %></th>
+          <th scope="row"><%= stock.realstock %></th>
+          <th scope="row"><%= stock.realstockservice %></th>
+          <th scope="row"><%= stock.realstockdowngrade %></th>
+        </tr>
       <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>

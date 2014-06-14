@@ -1,88 +1,88 @@
 <div class="row-fluid">
-	<div class="span3">
-	  <!-- block -->
-	  <div class="block">
-	    <div class="navbar navbar-inner block-header">
-		    <div class="muted pull-left">Monthly <%= Cabang.find_by_id(@monthly_target.cabang_id).Cabang.gsub(/Cabang/,'') %> Target </div>
-		    <div class="pull-right"><span class="badge badge-info"></span>
+  <div class="span3">
+    <!-- block -->
+    <div class="block">
+      <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">Monthly <%= Cabang.find_by_id(@monthly_target.cabang_id).Cabang.gsub(/Cabang/,'') %> Target </div>
+        <div class="pull-right"><span class="badge badge-info"></span>
 
-		    </div>
-		   </div>
-		 	 <div class="block-content collapse in">
+        </div>
+      </div>
+      <div class="block-content collapse in">
 
-				<p id="notice"><%= notice %></p>
+        <p id="notice"><%= notice %></p>
 
-				<p>
-					<b>Cabang:</b>
-					<%= Cabang.find_by_id(@monthly_target.cabang_id).Cabang.gsub(/Cabang/,'') %>
-				</p>
+        <p>
+          <b>Cabang:</b>
+          <%= Cabang.find_by_id(@monthly_target.cabang_id).Cabang.gsub(/Cabang/,'') %>
+        </p>
 
-				<p>
-					<b>Brand:</b>
-					<%= Merk.find_by_id(@monthly_target.brand_id).Merk %>
-				</p>
-				<% unless @monthly_target.customer.nil? %>
-					<p>
-						<b>Customer:</b>
-						<%= @monthly_target.customer %>
-					</p>
-				<% end %>
+        <p>
+          <b>Brand:</b>
+          <%= Merk.find_by_id(@monthly_target.brand_id).Merk %>
+        </p>
+        <% unless @monthly_target.customer.nil? %>
+          <p>
+            <b>Customer:</b>
+            <%= @monthly_target.customer %>
+          </p>
+        <% end %>
 
-				<% Month.where(:monthly_target_id => @monthly_target.id).each do |month| %>
-					<p>
-						<b>January:</b>
-						<%= currency(month.january) %>
-					</p>
-					<p>
-						<b>February:</b>
-						<%= currency(month.february) %>
-					</p>
-					<p>
-						<b>March:</b>
-						<%= currency(month.march) %>
-					</p>
-					<p>
-						<b>April:</b>
-						<%= currency(month.april) %>
-					</p>
-					<p>
-						<b>May:</b>
-						<%= currency(month.may) %>
-					</p>
-					<p>
-						<b>June:</b>
-						<%= currency(month.june) %>
-					</p>
-					<p>
-						<b>July:</b>
-						<%= currency(month.july) %>
-					</p>
-					<p>
-						<b>August:</b>
-						<%= currency(month.august) %>
-					</p>
-					<p>
-						<b>September:</b>
-						<%= currency(month.september) %>
-					</p>
-					<p>
-						<b>October:</b>
-						<%= currency(month.october) %>
-					</p>
-					<p>
-						<b>November:</b>
-						<%= currency(month.november) %>
-					</p>
-					<p>
-						<b>December:</b>
-						<%= currency(month.december) %>
-					</p>
-				<% end %>
-				<%= link_to 'Edit', edit_monthly_target_path(@monthly_target), :class => "btn btn-primary" %>
-				<%= link_to 'Back', monthly_targets_path, :class => "btn btn-primary" %>
-			</div>
-		</div>
-		<!-- /block -->
-	</div>
-	</div>
+        <% Month.where(:monthly_target_id => @monthly_target.id).each do |month| %>
+          <p>
+            <b>January:</b>
+            <%= currency(month.january) %>
+          </p>
+          <p>
+            <b>February:</b>
+            <%= currency(month.february) %>
+          </p>
+          <p>
+            <b>March:</b>
+            <%= currency(month.march) %>
+          </p>
+          <p>
+            <b>April:</b>
+            <%= currency(month.april) %>
+          </p>
+          <p>
+            <b>May:</b>
+            <%= currency(month.may) %>
+          </p>
+          <p>
+            <b>June:</b>
+            <%= currency(month.june) %>
+          </p>
+          <p>
+            <b>July:</b>
+            <%= currency(month.july) %>
+          </p>
+          <p>
+            <b>August:</b>
+            <%= currency(month.august) %>
+          </p>
+          <p>
+            <b>September:</b>
+            <%= currency(month.september) %>
+          </p>
+          <p>
+            <b>October:</b>
+            <%= currency(month.october) %>
+          </p>
+          <p>
+            <b>November:</b>
+            <%= currency(month.november) %>
+          </p>
+          <p>
+            <b>December:</b>
+            <%= currency(month.december) %>
+          </p>
+        <% end %>
+        <%= link_to 'Edit', edit_monthly_target_path(@monthly_target), :class => "btn btn-primary" %>
+        <%= link_to 'Back', monthly_targets_path, :class => "btn btn-primary" %>
+      </div>
+    </div>
+    <!-- /block -->
+  </div>
+</div>
 </div>

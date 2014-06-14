@@ -1,25 +1,25 @@
 <div class="modal-header">
-	<%= form_tag reports_group_path, :method => 'get' do %>
-		<div class="block">
-			<div class="navbar navbar-inner block-header">
-				<div class="muted pull-left">Group by</div>
-				<div class="pull-right"><span class="badge badge-info"></span>
-				</div>
-			</div>
-			<div class="block-content collapse in">
-			<fieldset>
-			 	<label class="radio">
-					<%= radio_button_tag 'group', 'kodebrg', params[:group_by] == 'kodebrg' ? true : false %> Item Code <br />
-				</label>
-			 	<label class="radio">
-					<%= radio_button_tag 'group', 'customer', params[:group_by] == 'customer' ? true : false %> Customer <br />
-				</label>
-			 	<label class="radio">
-					<%= radio_button_tag 'group', 'kodeartikel', params[:group_by] == 'kodeartikel' ? true : false %> Article
-				</label>
-			</fieldset>
-			<div class="pull-right"><button type="submit" class="btn btn-primary">Done</button></div>
-			</div>
-		</div>
-	<% end %>
+  <%= form_tag reports_group_path, :method => 'get' do %>
+    <div class="block">
+      <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">Group by</div>
+        <div class="pull-right"><span class="badge badge-info"></span>
+        </div>
+      </div>
+      <div class="block-content collapse in">
+        <fieldset>
+          <label class="radio">
+            <%= radio_button_tag 'group', 'kodebrg', params[:group_by] == 'kodebrg' ? true : false %> Item Code <br />
+          </label>
+          <label class="radio">
+            <%= radio_button_tag 'group', 'customer', params[:group_by] == 'customer' ? true : false %> Customer <br />
+          </label>
+          <label class="radio">
+            <%= radio_button_tag 'group', 'kodeartikel', params[:group_by] == 'kodeartikel' ? true : false %> Article
+          </label>
+        </fieldset>
+        <div class="pull-right"><button type="submit" class="btn btn-primary">Done</button></div>
+      </div>
+    </div>
+  <% end %>
 </div>

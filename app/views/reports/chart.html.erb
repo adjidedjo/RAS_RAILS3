@@ -1,29 +1,29 @@
 <div class="offset1" padding-top="30px">
-	<div id="orders_chart" style="width: 900px; height: 500px;"></div>
+  <div id="orders_chart" style="width: 900px; height: 500px;"></div>
 </div>
 <script type="text/javascript" charset="utf-8">
   $(function () {
     new Highcharts.Chart({
-		  chart: { renderTo: 'orders_chart' },
-		  title: { text: 'Monthly Sales' },
-		  xAxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
-		  yAxis: {
-		    title: { text: 'Total' }
-		  },
-		  tooltip: {},
-		  series: [
-			<% (1..12).each do |month| %>
-				<% LaporanCabang.select("sum(jumlah) as sum_jumlah").month(5).year(2013).search_by_branch(session[:branch])
-						.search_by_type(session[:type]).brand(session[:brand]).kode_barang_like(session[:article]).fabric(session[:fabric])
-						.size_length(session[:size]).customer_analyze(session[:customer]).brand_size(session[:size_type]).each do |brand| %>
-				{
-					name: "<%= brand.sum_jumlah %>",
-				  data: 12
-				},
-				<% end %>
-			<% end %>
-			]
-		});
+      chart: { renderTo: 'orders_chart' },
+      title: { text: 'Monthly Sales' },
+      xAxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
+      yAxis: {
+        title: { text: 'Total' }
+      },
+      tooltip: {},
+      series: [
+<% (1..12).each do |month| %>
+  <% LaporanCabang.select("sum(jumlah) as sum_jumlah").month(5).year(2013).search_by_branch(session[:branch])
+  .search_by_type(session[:type]).brand(session[:brand]).kode_barang_like(session[:article]).fabric(session[:fabric])
+  .size_length(session[:size]).customer_analyze(session[:customer]).brand_size(session[:size_type]).each do |brand| %>
+            {
+              name: "<%= brand.sum_jumlah %>",
+              data: 12
+            },
+  <% end %>
+<% end %>
+      ]
+    });
   });
 </script>

@@ -1,108 +1,108 @@
 <% unless params[:from].nil? %>
   <% unless params[:from].empty? %>
-	<div class="row-fluid">
-		<div class="offset4">
-				<div class="block-content collapse in">
-					<h2 style="font-size: 17px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
-				</div>
-		</div>
-		<div class="row-fluid">
-			<div class="offset0">
-				<div class="span5">
-					<!-- block -->
-					<div class="block">
-						<div class="navbar navbar-inner block-header">
-						  <div class="muted pull-left">Search Parameters</div>
-						  <div class="pull-right"><span class="badge badge-info"></span>
+    <div class="row-fluid">
+      <div class="offset4">
+        <div class="block-content collapse in">
+          <h2 style="font-size: 17px;"><i>Sales Detail Report Period <%= params[:from].to_date.strftime("%e %B %Y") %> - <%= params[:to].to_date.strftime("%e %B %Y") %></i></h2>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="offset0">
+          <div class="span5">
+            <!-- block -->
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Search Parameters</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
 
-						  </div>
-						</div>
-						<div class="block-content collapse in">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Brand</th>
-                    <th>Type</th>
-                    <th>Size</th>
-                    <th>Group</th>
-                  </tr>
-                </thead>
-                <tbody>
-		              <tr>
-				            <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
-				            <td><%= params[:type].nil? ? "" : params[:type] %></td>
-				            <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
-				            <td><%= params[:group_by] %></td>
-		              </tr>
-                </tbody>
-              </table>
-						</div>
-					</div>
-					<!-- /block -->
-				</div>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="offset6">
-				<label>If you want to repeat your filter, please click New Filter button <%= link_to 'New Filter', 
-					reports_first_filter_path, {:class => "btn btn-primary"} %>
-				</label>
-			</div>
-		</div>
-		<br />
-		<div class="row-fluid">
-		  <table border="1" id="detail_report" class="display">
-		    <thead>
-		      <tr>
-		        <th>Cabang</th>
-		        <th>No SJ</th>
-		        <th>Tanggal Faktur</th>
-		        <th>No Faktur</th>
-		        <th>No SO</th>
-		        <th>Customers</th>
-		        <th>Market</th>
-		        <th>Salesman</th>
-		        <th>Artikel</th>
-		        <th>Kain</th>
-		        <th>Panjang</th>
-		        <th>Lebar</th>
-		        <th>Kode Barang</th>
-		        <th>Qty</th>
-		        <th>Harga</th>
-		      </tr>
-		    </thead>
-		    <tfoot>
-		    </tfoot>
-		    <tbody>
-		      <% @laporancabang.each do |laporan| %>
-		        <tr>
-		          <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
-		          <td><%= laporan.nosj %></td>
-		          <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
-		          <td><%= laporan.nofaktur %></td>
-		          <td><%= laporan.noso %></td>
-		          <td><%= laporan.customer %></td>
-		          <% if ( laporan.customer =~ /\bES\b/ ) %>
-		            <td>ES</td>
-		          <% elsif ( laporan.customer =~ /\bSOGO\b/ ) %>
-		            <td>SOGO</td>
-		          <% elsif ( laporan.customer =~ /\bSHOWROOM\b/ ) %>
-		            <td>SHOWROOM</td>
-		          <% else %>
-		            <td>Retail</td>
-		          <% end %>
-		          <td><%= laporan.salesman %></td>
-		          <td><%= laporan.namaartikel %></td>
-		          <td><%= laporan.namakain %></td>
-		          <td><%= laporan.panjang %></td>
-		          <td><%= laporan.lebar %></td>
-		          <td><%= laporan.kodebrg %></td>
-		          <td><%= laporan.jumlah.to_i %></td>
-		          <td><%= currency(laporan.harganetto2.to_i) %></td>
-		        </tr>
-		      <% end %>
-		    </tbody>
-		  </table>
-		</div>
-	<% end %>
-<% end %>
+                </div>
+              </div>
+              <div class="block-content collapse in">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Brand</th>
+                      <th>Type</th>
+                      <th>Size</th>
+                      <th>Group</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
+                      <td><%= params[:type].nil? ? "" : params[:type] %></td>
+                      <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
+                      <td><%= params[:group_by] %></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /block -->
+          </div>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="offset6">
+          <label>If you want to repeat your filter, please click New Filter button <%= link_to 'New Filter', 
+              reports_first_filter_path, {:class => "btn btn-primary"} %>
+          </label>
+        </div>
+      </div>
+      <br />
+      <div class="row-fluid">
+        <table border="1" id="detail_report" class="display">
+          <thead>
+            <tr>
+              <th>Cabang</th>
+              <th>No SJ</th>
+              <th>Tanggal Faktur</th>
+              <th>No Faktur</th>
+              <th>No SO</th>
+              <th>Customers</th>
+              <th>Market</th>
+              <th>Salesman</th>
+              <th>Artikel</th>
+              <th>Kain</th>
+              <th>Panjang</th>
+              <th>Lebar</th>
+              <th>Kode Barang</th>
+              <th>Qty</th>
+              <th>Harga</th>
+            </tr>
+          </thead>
+          <tfoot>
+          </tfoot>
+          <tbody>
+            <% @laporancabang.each do |laporan| %>
+              <tr>
+                <td><%= laporan.cabang.Cabang.gsub(/Cabang/, "") %></td>
+                <td><%= laporan.nosj %></td>
+                <td><%= laporan.tanggalfaktur.strftime("%d-%m-%Y") %></td>
+                <td><%= laporan.nofaktur %></td>
+                <td><%= laporan.noso %></td>
+                <td><%= laporan.customer %></td>
+                <% if ( laporan.customer =~ /\bES\b/ ) %>
+                  <td>ES</td>
+                <% elsif ( laporan.customer =~ /\bSOGO\b/ ) %>
+                  <td>SOGO</td>
+                <% elsif ( laporan.customer =~ /\bSHOWROOM\b/ ) %>
+                  <td>SHOWROOM</td>
+                <% else %>
+                  <td>Retail</td>
+                <% end %>
+                <td><%= laporan.salesman %></td>
+                <td><%= laporan.namaartikel %></td>
+                <td><%= laporan.namakain %></td>
+                <td><%= laporan.panjang %></td>
+                <td><%= laporan.lebar %></td>
+                <td><%= laporan.kodebrg %></td>
+                <td><%= laporan.jumlah.to_i %></td>
+                <td><%= currency(laporan.harganetto2.to_i) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  <% end %>

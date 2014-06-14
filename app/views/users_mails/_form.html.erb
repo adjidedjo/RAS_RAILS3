@@ -1,43 +1,43 @@
 <div class="form-div">
-	<%= form_for(@users_mail, :html => {:class => "form-div"}) do |f| %>
-  <% if @users_mail.errors.any? %>
-		<div id="error_explanation">
-		  <div class="alert alert-error">
-		    The form contains <%= pluralize(@user_mail.errors.count, "error") %>.
-		  </div>
-		  <ul>
-		  <% @users_mail.errors.full_messages.each do |msg| %>
-		    <li>* <%= msg %></li>
-		  <% end %>
-		  </ul>
-		</div>
-	<% end %>
-	<div class="control-group">
-		<div class="controls">
-   		<%= f.hidden_field :user_id, :value => current_user.id %>
-  	</div>
-  </div>
-	<div class="control-group">
-		<label class="control-label">Schedule</label>
-		<div class="controls">
-   		<%= f.select :schedule, options_for_select(["Monthly", "Weekly"]), :class => "input_login"  %>
-  	</div>
-  </div>
-	<div class="control-group">
-		<label class="control-label">Brand</label>
-		<div class="controls">
-   		<%= f.select :brand, options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), :prompt => 'Select Brand' %>
-  	</div>
-  </div>
-	<div class="control-group">
-		<label class="control-label">Cabang</label>
-		<div class="controls">
-   		<%= f.select :cabang_id, options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, 
-				params[:cabang_id]), :prompt => 'Select Branch' %>
-  	</div>
-  </div>
+  <%= form_for(@users_mail, :html => {:class => "form-div"}) do |f| %>
+    <% if @users_mail.errors.any? %>
+      <div id="error_explanation">
+        <div class="alert alert-error">
+          The form contains <%= pluralize(@user_mail.errors.count, "error") %>.
+        </div>
+        <ul>
+          <% @users_mail.errors.full_messages.each do |msg| %>
+            <li>* <%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="control-group">
+      <div class="controls">
+        <%= f.hidden_field :user_id, :value => current_user.id %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Schedule</label>
+      <div class="controls">
+        <%= f.select :schedule, options_for_select(["Monthly", "Weekly"]), :class => "input_login"  %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Brand</label>
+      <div class="controls">
+        <%= f.select :brand, options_for_select(Merk.merk_all.collect {|a| [a.Merk, a.IdMerk]}, params[:merk_id]), :prompt => 'Select Brand' %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Cabang</label>
+      <div class="controls">
+        <%= f.select :cabang_id, options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, 
+          params[:cabang_id]), :prompt => 'Select Branch' %>
+      </div>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "Create", :class => "btn btn-primary" %>
-  </div>
-<% end %>
+    <div class="actions">
+      <%= f.submit "Create", :class => "btn btn-primary" %>
+    </div>
+  <% end %>

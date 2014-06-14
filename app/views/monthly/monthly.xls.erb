@@ -1,228 +1,228 @@
-    <h2 style="font-size: 17px; position: absolute; left: 450px;"><i>Sales Monthly Report by Brand</i></h2>
-    <br /><br />
-    <table id="monthly" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Brand</th>
-        </tr>
-        <tr>
-					<th colspan="2">January</th>
-					<th colspan="2">February</th>
-					<th colspan="2">March</th>
-					<th colspan="2">April</th>
-					<th colspan="2">May</th>
-					<th colspan="2">June</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-				<% Merk.all.each do |merk| %>
-          <tr>
-		        <td><%= merk.Merk %></td>
+<h2 style="font-size: 17px; position: absolute; left: 450px;"><i>Sales Monthly Report by Brand</i></h2>
+<br /><br />
+<table id="monthly" class="display">
+  <thead>
+    <tr>
+      <th rowspan="3">Brand</th>
+    </tr>
+    <tr>
+      <th colspan="2">January</th>
+      <th colspan="2">February</th>
+      <th colspan="2">March</th>
+      <th colspan="2">April</th>
+      <th colspan="2">May</th>
+      <th colspan="2">June</th>
+    </tr>
+    <tr>
+      <% (1..6).each do %>
+        <th>Qty</th>
+        <th>Value</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tfoot>
+  </tfoot>
+  <tbody>
+    <% Merk.all.each do |merk| %>
+      <tr>
+        <td><%= merk.Merk %></td>
 
-            <!-- January -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(1, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- February -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(2, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- March -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(3, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- April -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(4, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- May -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(5, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- June -->
-						<% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(6, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table id="monthly2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3">Brand</th>
-        </tr>
-        <tr>
-					<th colspan="2">July</th>
-					<th colspan="2">August</th>
-					<th colspan="2">September</th>
-					<th colspan="2">October</th>
-					<th colspan="2">November</th>
-					<th colspan="2">December</th>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
+        <!-- January -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(1, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
           <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% Merk.all.each do |merk| %>
-          <tr>
-		        <td><%= merk.Merk %></td>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- February -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(2, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- March -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(3, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- April -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(4, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- May -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(5, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- June -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(6, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</br>
+<table id="monthly2" class="display">
+  <thead>
+    <tr>
+      <th rowspan="3">Brand</th>
+    </tr>
+    <tr>
+      <th colspan="2">July</th>
+      <th colspan="2">August</th>
+      <th colspan="2">September</th>
+      <th colspan="2">October</th>
+      <th colspan="2">November</th>
+      <th colspan="2">December</th>
+    </tr>
+    <tr>
+      <% (1..6).each do %>
+        <th>Qty</th>
+        <th>Value</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tfoot>
+  </tfoot>
+  <tbody>
+    <% Merk.all.each do |merk| %>
+      <tr>
+        <td><%= merk.Merk %></td>
 
-            <!-- July -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(7, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- August -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(8, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- September -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(9, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- October -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(10, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- November -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(11, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-            <!-- December -->
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.monthly_report(12, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
-							 Date.today.year).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		           	<td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-          </tr>
+        <!-- July -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(7, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
         <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table id="group_by_cabang_total" class="display">
-      <thead>
-        <tr>
-          <th rowspan="2">Brand</th>
-          <th colspan="2">Total</th>
-        </tr>
-        <tr>
-          <th>Qty</th>
-        	<th>Value</th>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% Merk.all.each do |merk| %>
-          <tr>
-		        <td><%= merk.Merk %></td>
-            <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
-		          <% LaporanCabang.total_on_merk(merk.Merk, Date.today.beginning_of_year.to_date, Date.today).each do |a| %>
-		            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-		            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-		          <% end %>
-            <% else %>
-            	<td>0</td>
-            	<td>0</td>
-            <% end %>
-          </tr>
+        <!-- August -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(8, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
         <% end %>
-      </tbody>
-    </table>
+        <!-- September -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(9, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- October -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(10, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- November -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(11, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+        <!-- December -->
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.monthly_report(12, current_user.user_brand.slice(0) == "A" ? merk.Merk : current_user.user_brand.slice(0),
+            Date.today.year).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</br>
+<table id="group_by_cabang_total" class="display">
+  <thead>
+    <tr>
+      <th rowspan="2">Brand</th>
+      <th colspan="2">Total</th>
+    </tr>
+    <tr>
+      <th>Qty</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tfoot>
+  </tfoot>
+  <tbody>
+    <% Merk.all.each do |merk| %>
+      <tr>
+        <td><%= merk.Merk %></td>
+        <% if current_user.user_brand == merk.Merk || current_user.user_brand.slice(0) == "A" %>
+          <% LaporanCabang.total_on_merk(merk.Merk, Date.today.beginning_of_year.to_date, Date.today).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
+          <% end %>
+        <% else %>
+          <td>0</td>
+          <td>0</td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

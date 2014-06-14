@@ -1,161 +1,161 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Report</title>
-  <style type="text/css">
-  body, td { color:#000000; font-size:10px; font-family:Verdana,Helvetica,Arial; }
-  .divider { background-color:#555555; height:2px; }
-  .episode h2 { margin-top:0; margin-bottom:8px; font-size:12px; }
-  .episode p { margin:8px 0; }
-  .episode img { border:solid 1px #777777; }
-  .episode .duration { font-size:11px;color:#555555; }
-  #footer { font-size:11px; color:#555555; }
-  #footer a { color:#555555;}
-  </style>
-</head>
-<body>
-<% if (@user.users_mail.first.schedule == 'Monthly') %>
-	<% @from = (Date.today - 1).beginning_of_month %>
-	<% @to = Date.today - 1 %>
-<% else %>
-	<% @from = Date.today - 7 %>
-	<% @to = Date.today - 1 %>
-<% end %>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Report</title>
+    <style type="text/css">
+      body, td { color:#000000; font-size:10px; font-family:Verdana,Helvetica,Arial; }
+      .divider { background-color:#555555; height:2px; }
+      .episode h2 { margin-top:0; margin-bottom:8px; font-size:12px; }
+      .episode p { margin:8px 0; }
+      .episode img { border:solid 1px #777777; }
+      .episode .duration { font-size:11px;color:#555555; }
+      #footer { font-size:11px; color:#555555; }
+      #footer a { color:#555555;}
+    </style>
+  </head>
+  <body>
+    <% if (@user.users_mail.first.schedule == 'Monthly') %>
+      <% @from = (Date.today - 1).beginning_of_month %>
+      <% @to = Date.today - 1 %>
+    <% else %>
+      <% @from = Date.today - 7 %>
+      <% @to = Date.today - 1 %>
+    <% end %>
     <br />	
-			<h3 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Brand Type Report Period <%= @from.strftime("%e %B %Y") %> - <%= @to.strftime("%e %B %Y") %></i></h2>
-    </form>
-    <br />
-    <table border="1">
-      <thead>
-        <tr>
-          <th rowspan="3"><%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Type</th>
-        </tr>
-        <tr>
-          <% @cabang_get_id_to_7.each do |cabang| %>
-            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% (1..7).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..14).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% @product.each do |product| %>
-          <tr>
-            <td><%= product.Namaroduk %></td>
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 2, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Narogong -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 3, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Bali -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 4, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Medan -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 5, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Surabaya -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 7, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Semarang -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 8, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Cirebon -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 9, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-          </tr>
+    <h3 style="font-size: 17px; position: absolute; left: 350px;"><i>Sales <%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Brand Type Report Period <%= @from.strftime("%e %B %Y") %> - <%= @to.strftime("%e %B %Y") %></i></h2>
+  </form>
+  <br />
+  <table border="1">
+    <thead>
+      <tr>
+        <th rowspan="3"><%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Type</th>
+      </tr>
+      <tr>
+        <% @cabang_get_id_to_7.each do |cabang| %>
+          <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
         <% end %>
-      </tbody>
-    </table>
-		</br>
-		<table border="1" id="group_by_cabang_2" class="display">
-      <thead>
-        <tr>
-          <th rowspan="3"><%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Type</th>
-        </tr>
-        <tr>
-          <% @cabang_get_id_to_22.each do |cabang| %>
-            <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
-          <% end %>
-        </tr>
-        <tr>
-          <% (1..6).each do %>
-            <th>Qty</th>
-            <th>Value</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th scope="row">Total</th>
-          <% (1..12).each do  %>
-            <td></td>
-          <% end %>
-        </tr>
-      </tfoot>
-      <tbody>
-        <% @product.each do |product| %>
-          <tr>
-            <td><%= product.Namaroduk %></td>
-            <!-- Yogyakarta -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 10, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Palembang -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 11, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Lampung -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 13, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Makasar -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 19, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Pekanbaru -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 20, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-            <!-- Jember -->
-            <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 22, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
-              <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-              <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
-            <% end %>
-          </tr>
+      </tr>
+      <tr>
+        <% (1..7).each do %>
+          <th>Qty</th>
+          <th>Value</th>
         <% end %>
-      </tbody>
-    </table>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..14).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @product.each do |product| %>
+        <tr>
+          <td><%= product.Namaroduk %></td>
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 2, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Narogong -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 3, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Bali -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 4, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Medan -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 5, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Surabaya -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 7, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Semarang -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 8, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Cirebon -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 9, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  </br>
+  <table border="1" id="group_by_cabang_2" class="display">
+    <thead>
+      <tr>
+        <th rowspan="3"><%= Merk.merk_name(@user.users_mail.first.brand).first.Merk %> Type</th>
+      </tr>
+      <tr>
+        <% @cabang_get_id_to_22.each do |cabang| %>
+          <th colspan="2"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+        <% end %>
+      </tr>
+      <tr>
+        <% (1..6).each do %>
+          <th>Qty</th>
+          <th>Value</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th scope="row">Total</th>
+        <% (1..12).each do  %>
+          <td></td>
+        <% end %>
+      </tr>
+    </tfoot>
+    <tbody>
+      <% @product.each do |product| %>
+        <tr>
+          <td><%= product.Namaroduk %></td>
+          <!-- Yogyakarta -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 10, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Palembang -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 11, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Lampung -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 13, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Makasar -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 19, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Pekanbaru -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 20, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+          <!-- Jember -->
+          <% LaporanCabang.sum_of_brand_type(@user.users_mail.first.brand, 22, product.KodeProduk, @from.to_date, @to.to_date).each do |a| %>
+            <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
+            <td><%= a.sum_harganetto2.nil? ? "0" : number_to_currency(a.sum_harganetto2, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </body>
 </html>

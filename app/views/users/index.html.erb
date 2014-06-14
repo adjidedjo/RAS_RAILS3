@@ -1,28 +1,28 @@
 <div class="offset4">
-	<h2>Listing Users</h2>
+  <h2>Listing Users</h2>
 </div>
 
 <table id="user" class="display">
-	<thead>
-		<tr>
-		  <th>Email</th>
-		  <th>Username</th>
-		  <th>Approved</th>
-		  <th>Role</th>
-		  <th></th>
-		  <th></th>
-		</tr>
-	</thead>
-<% @users.each do |user| %>
-	<tbody>
-		<tr>
-		  <td><%= user.email %></td>
-		  <td><%= user.username %></td>
-		  <td><%= user.approved == false ? "Not approved" : "Approved" %></td>
-		  <td><%= user.user_brand %></td>
-		  <td><%= link_to 'Edit', edit_user_path(user), {:class => "btn btn-info"} %></td>
-		  <td><%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
-		</tr>
-	</tbody>
-<% end %>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Approved</th>
+      <th>Role</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <% @users.each do |user| %>
+    <tbody>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.username %></td>
+        <td><%= user.approved == false ? "Not approved" : "Approved" %></td>
+        <td><%= user.user_brand %></td>
+        <td><%= link_to 'Edit', edit_user_path(user), {:class => "btn btn-info"} %></td>
+        <td><%= link_to 'Destroy', user, confirm: 'Are you sure?', method: :delete, :class => "btn btn-danger" %></td>
+      </tr>
+    </tbody>
+  <% end %>
 </table>

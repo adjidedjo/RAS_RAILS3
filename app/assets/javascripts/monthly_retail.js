@@ -1,14 +1,14 @@
 $(document).ready(function(){
- // Datepicker
+  // Datepicker
   $('#from').datepicker({
-  	 dateFormat: 'yy-mm-dd'
+    dateFormat: 'yy-mm-dd'
   }).attr('readonly','readonly');
   $('#to').datepicker({
-     dateFormat: 'yy-mm-dd'
+    dateFormat: 'yy-mm-dd'
   }).attr('readonly','readonly');
 
-	$('#monthly_retail').dataTable({
-		bJQueryUI: false
-	});
+  $('#monthly_retail').dataTable({
+    bJQueryUI: false
+  });
 
 });

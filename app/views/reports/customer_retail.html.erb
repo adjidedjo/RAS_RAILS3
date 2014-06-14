@@ -1,28 +1,28 @@
 <div class="row-fluid">
   <div class="offset4">
-		<div class="span5">
-		  <!-- block -->
-		  <div class="block">
-		    <div class="navbar navbar-inner block-header">
-		      <div class="muted pull-left">Customer Retail</div>
-		      <div class="pull-right"><span class="badge badge-info"></span>
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Customer Retail</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
 
-		      </div>
-		    </div>
-		    <div class="block-content collapse in">
-		      <%= form_tag reports_customer_retail_path, :method => 'get' do %>
-						<fieldset>
-							<%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], 
-								:placeholder => "Customer Retail"  %>
-					 	<label class="radio">
-							<%= radio_button_tag 'customer_retail', 'all' %> All
-						</label>
-						 <br />
-						 <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
-					<% end %>
-		    </div>
-		  </div>
-		  <!-- /block -->
-		</div>
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag reports_customer_retail_path, :method => 'get' do %>
+            <fieldset>
+              <%= text_field_tag 'customer_retail', params[:customer_retail].nil? ? nil : params[:customer_retail], 
+                :placeholder => "Customer Retail"  %>
+              <label class="radio">
+                <%= radio_button_tag 'customer_retail', 'all' %> All
+              </label>
+              <br />
+              <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+            <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
   </div>
 </div>

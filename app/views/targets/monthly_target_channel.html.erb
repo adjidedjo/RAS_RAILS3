@@ -1,36 +1,36 @@
 <div class="row-fluid">
   <div class="offset4">
-		<div class="span5">
-		  <!-- block -->
-		  <div class="block">
-		    <div class="navbar navbar-inner block-header">
-		      <div class="muted pull-left">Monthly Target Channel</div>
-		      <div class="pull-right"><span class="badge badge-info"></span>
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Monthly Target Channel</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
 
-		      </div>
-		    </div>
-		    <div class="block-content collapse in">
-		      <%= form_tag targets_monthly_target_channel_path, :method => 'get' do %>
-						<fieldset>
-							<label class="radio">
-							  <%= radio_button_tag 'monthly_target_channel', 'modern_market' %> Modern Market
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'monthly_target_channel', 'showroom' %> Showroom
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'monthly_target_channel', 'retail' %> Retail
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'monthly_target_channel', 'project' %> Project
-							</label>
-						 </fieldset>
-						 <br />
-						 <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
-					<% end %>
-		    </div>
-		  </div>
-		  <!-- /block -->
-		</div>
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag targets_monthly_target_channel_path, :method => 'get' do %>
+            <fieldset>
+              <label class="radio">
+                <%= radio_button_tag 'monthly_target_channel', 'modern_market' %> Modern Market
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'monthly_target_channel', 'showroom' %> Showroom
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'monthly_target_channel', 'retail' %> Retail
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'monthly_target_channel', 'project' %> Project
+              </label>
+            </fieldset>
+            <br />
+            <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
   </div>
 </div>

@@ -1,36 +1,36 @@
 <div class="row-fluid">
   <div class="offset4">
-		<div class="span5">
-		  <!-- block -->
-		  <div class="block">
-		    <div class="navbar navbar-inner block-header">
-		      <div class="muted pull-left">Customer Modern</div>
-		      <div class="pull-right"><span class="badge badge-info"></span>
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Customer Modern</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
 
-		      </div>
-		    </div>
-		    <div class="block-content collapse in">
-		      <%= form_tag reports_customer_modern_path, :method => 'get' do %>
-						<fieldset>
-						 	<label class="radio">
-								<%= radio_button_tag 'customer_modern', 'SOGO' %> SOGO
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'customer_modern', 'ES' %> ES
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'customer_modern', 'SHOWROOM' %> SHOWROOM
-							</label>
-						 	<label class="radio">
-								<%= radio_button_tag 'customer_modern', 'all' %> All
-							</label>
-						 </fieldset>
-						 <br />
-						 <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
-					<% end %>
-		    </div>
-		  </div>
-		  <!-- /block -->
-		</div>
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag reports_customer_modern_path, :method => 'get' do %>
+            <fieldset>
+              <label class="radio">
+                <%= radio_button_tag 'customer_modern', 'SOGO' %> SOGO
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'customer_modern', 'ES' %> ES
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'customer_modern', 'SHOWROOM' %> SHOWROOM
+              </label>
+              <label class="radio">
+                <%= radio_button_tag 'customer_modern', 'all' %> All
+              </label>
+            </fieldset>
+            <br />
+            <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
   </div>
 </div>

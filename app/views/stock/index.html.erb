@@ -74,121 +74,121 @@
         </div>
         <!-- /block -->
       </div>
-    <div class="row-fluid">
-      <div class="offset4">
-        <div class="span5">
-          <!-- block -->
-          <div class="block">
-            <div class="block-content collapse in">
-              <div class="pull-right"><button type="submit" class="btn btn-primary">Search</button></div>
-            </div>
-          </div>
-          <!-- /block -->
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <br />
-  <div style="clear:both;"></div>
-
-  <% unless params[:date].nil? %>
-    <h2 style="font-size: 20px; position: absolute; left: 350px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-    <br /><br />
-    <br />
-    <div class="row-fluid">
-      <div class="offset0">
-        <div class="span5">
-          <!-- block -->
-          <div class="block">
-            <div class="navbar navbar-inner block-header">
-              <div class="muted pull-left">Search Parameters</div>
-              <div class="pull-right"><span class="badge badge-info"></span>
-
+      <div class="row-fluid">
+        <div class="offset4">
+          <div class="span5">
+            <!-- block -->
+            <div class="block">
+              <div class="block-content collapse in">
+                <div class="pull-right"><button type="submit" class="btn btn-primary">Search</button></div>
               </div>
             </div>
-            <div class="block-content collapse in">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Branch</th>
-                    <th>Brand</th>
-                    <th>Type</th>
-                    <th>Article</th>
-                    <th>Fabric</th>
-                    <th>Size</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><%= params[:cabang_id].nil? ? "All" : params[:cabang_id] %></td>
-                    <td><%= params[:brand].nil? ? "All" : params[:brand] %></td>
-                    <td><%= params[:type].nil? ? "All" : params[:type] %></td>
-                    <td><%= params[:article].nil? ? "All" : Artikel.artikel_name(params[:article]).first.Produk %></td>
-                    <td><%= params[:fabric].nil? ? "All" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
-										<td>
-											<% if params[:size] == 'T' %>
-											  <%= 'Special Size' %>
-											<% elsif params[:size] == 'P' %>
-											  <%= 'Display' %>
-											<% elsif params[:size] == 'S' %>
-											  <%= 'Standard' %>
-											<% else %>
-											  <%= 'All' %>
-											<% end %>
-										</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <!-- /block -->
           </div>
-          <!-- /block -->
         </div>
       </div>
-    </div>
-    <table id="stock" class="display">
-      <thead>
-        <tr>
-          <th>Cabang</th>
-          <th>Jenis</th>
-          <th>Brand</th>
-          <th>Artikel</th>
-          <th>Kain</th>
-          <th>Panjang</th>
-          <th>Lebar</th>
-          <th>Freestock</th>
-          <th>Bufferstock</th>
-          <th>Realstock</th>
-          <th>Service</th>
-          <th>Downgrade</th>
-        </tr>
-      </thead>
-      <tfoot>
-      </tfoot>
-      <tbody>
-        <% @get_stock.map do |stock| %>
-          <% unless stock.kodebrg.slice(11) == "T" %>
-            <tr>
-              <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
-              <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
-              <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
-              <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
-              <th scope="row"><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></th>
-              <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
-              <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
-              <th scope="row"><%= stock.freestock %></th>
-              <th scope="row"><%= stock.bufferstock %></th>
-              <th scope="row"><%= stock.realstock %></th>
-              <th scope="row"><%= stock.realstockservice %></th>
-              <th scope="row"><%= stock.realstockdowngrade %></th>
-            </tr>
-          <% end %>
-        <% end %>
-      </tbody>
-    </table>
+    <% end %>
+
     <br />
-    <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], 
-        :cabang_id => params[:cabang_id]), :class=>"btn btn-info" %>
-    </label>
-  <% end %>
-</div>
+    <div style="clear:both;"></div>
+
+    <% unless params[:date].nil? %>
+      <h2 style="font-size: 20px; position: absolute; left: 350px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+      <br /><br />
+      <br />
+      <div class="row-fluid">
+        <div class="offset0">
+          <div class="span5">
+            <!-- block -->
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Search Parameters</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
+
+                </div>
+              </div>
+              <div class="block-content collapse in">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Branch</th>
+                      <th>Brand</th>
+                      <th>Type</th>
+                      <th>Article</th>
+                      <th>Fabric</th>
+                      <th>Size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><%= params[:cabang_id].nil? ? "All" : params[:cabang_id] %></td>
+                      <td><%= params[:brand].nil? ? "All" : params[:brand] %></td>
+                      <td><%= params[:type].nil? ? "All" : params[:type] %></td>
+                      <td><%= params[:article].nil? ? "All" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+                      <td><%= params[:fabric].nil? ? "All" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+                      <td>
+                        <% if params[:size] == 'T' %>
+                          <%= 'Special Size' %>
+                        <% elsif params[:size] == 'P' %>
+                          <%= 'Display' %>
+                        <% elsif params[:size] == 'S' %>
+                          <%= 'Standard' %>
+                        <% else %>
+                          <%= 'All' %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /block -->
+          </div>
+        </div>
+      </div>
+      <table id="stock" class="display">
+        <thead>
+          <tr>
+            <th>Cabang</th>
+            <th>Jenis</th>
+            <th>Brand</th>
+            <th>Artikel</th>
+            <th>Kain</th>
+            <th>Panjang</th>
+            <th>Lebar</th>
+            <th>Freestock</th>
+            <th>Bufferstock</th>
+            <th>Realstock</th>
+            <th>Service</th>
+            <th>Downgrade</th>
+          </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+          <% @get_stock.map do |stock| %>
+            <% unless stock.kodebrg.slice(11) == "T" %>
+              <tr>
+                <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
+                <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
+                <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
+                <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
+                <th scope="row"><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></th>
+                <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
+                <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
+                <th scope="row"><%= stock.freestock %></th>
+                <th scope="row"><%= stock.bufferstock %></th>
+                <th scope="row"><%= stock.realstock %></th>
+                <th scope="row"><%= stock.realstockservice %></th>
+                <th scope="row"><%= stock.realstockdowngrade %></th>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+      <br />
+      <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], 
+          :cabang_id => params[:cabang_id]), :class=>"btn btn-info" %>
+      </label>
+    <% end %>
+  </div>

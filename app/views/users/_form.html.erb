@@ -1,49 +1,49 @@
 <div class="form-div">
-	<%= form_for(@user, :html => {:class => "form-div"}) do |f| %>
-  <% if @user.errors.any? %>
-		<div id="error_explanation">
-		  <div class="alert alert-error">
-		    The form contains <%= pluralize(@user.errors.count, "error") %>.
-		  </div>
-		  <ul>
-		  <% @user.errors.full_messages.each do |msg| %>
-		    <li>* <%= msg %></li>
-		  <% end %>
-		  </ul>
-		</div>
-	<% end %>
-		<div class="control-group">
-			<label class="control-label" for="inputEmail">Email</label>
-			<div class="controls">
-				<%= f.email_field :email, :autofocus => true, :id => "inputEmail", :placeholder => "Email" %>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="inputEmail">Username</label>
-			<div class="controls">
-				<%= f.text_field :username, :autofocus => true, :id => "inputEmail", :placeholder => "Username" %>
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="controls">
-			</div>
-		<div class="control-group">
-			<div class="controls">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="checkbox">Approved</label>
-			<div class="controls">
-				<%= f.select :approved, [['Approved', true], ['Not Approved', false]] %></div>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="checkbox">Roles</label>
-			<div class="controls">
-				<%= f.select :user_brand, options_for_select(["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand"]),
-		  	:include_blank => "Select One", :class => "input_login" %></div><br />	
-				<%= submit_tag "Create", :class => "btn btn-primary" %>
-			</div>
-		</div>
-	<% end %>
+  <%= form_for(@user, :html => {:class => "form-div"}) do |f| %>
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+        <div class="alert alert-error">
+          The form contains <%= pluralize(@user.errors.count, "error") %>.
+        </div>
+        <ul>
+          <% @user.errors.full_messages.each do |msg| %>
+            <li>* <%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">Email</label>
+      <div class="controls">
+        <%= f.email_field :email, :autofocus => true, :id => "inputEmail", :placeholder => "Email" %>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inputEmail">Username</label>
+      <div class="controls">
+        <%= f.text_field :username, :autofocus => true, :id => "inputEmail", :placeholder => "Username" %>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+      </div>
+      <div class="control-group">
+        <div class="controls">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="checkbox">Approved</label>
+        <div class="controls">
+          <%= f.select :approved, [['Approved', true], ['Not Approved', false]] %></div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="checkbox">Roles</label>
+      <div class="controls">
+        <%= f.select :user_brand, options_for_select(["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand"]),
+          :include_blank => "Select One", :class => "input_login" %></div><br />	
+      <%= submit_tag "Create", :class => "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
 </div>
