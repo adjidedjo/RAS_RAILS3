@@ -15,6 +15,7 @@ Rain::Application.routes.draw do
   get "targets/monthly_target_channel"
 
   get "targets/monthly_target_customer"
+  get "reports/summary_of_sales"
 
   get "reports/size_special"
   get "reports/size_standard"

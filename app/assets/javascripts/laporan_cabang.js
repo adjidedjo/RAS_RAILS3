@@ -722,6 +722,35 @@ $(document).ready(function(){
         
     iDisplayLength: -1
   });
+  $('#table_total').dataTable({
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    autoWidth: false,
+    bJQueryUI: true,
+    iDisplayLength: -1
+  });
+  $('#table_total2').dataTable({
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    bJQueryUI: true,
+    iDisplayLength: -1
+  });
+  $('#table_grand_total').dataTable({
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    autoWidth: false,
+    iDisplayLength: -1
+  });
+  $('#table_grand_total2').dataTable({
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    iDisplayLength: -1
+  });
+  
 
   function parseCurrency( num ) {
     return parseFloat( num.replace(/\./g, '') );

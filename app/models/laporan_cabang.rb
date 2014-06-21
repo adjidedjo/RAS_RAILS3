@@ -29,7 +29,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
-	scope :sum_amount, lambda {sum("harganetto2")}
+	scope :sum_amount, select("sum(harganetto2) as sum_harganetto2")
   scope :main_category, where("kodejenis in ('km','sa','sb','st')")
   scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
   scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}
@@ -44,7 +44,7 @@ class LaporanCabang < ActiveRecord::Base
   end
 
 	def self.total_on_merk_monthly(merk, month, year, cabang)
-    select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year).not_equal_with_nosj.brand(merk).search_by_branch(cabang).kodejenis
+    select("sum(jumlah) as sum_jumlah sum(harganetto2) as sum_harganetto2").search_by_month_and_year(month, year).not_equal_with_nosj.brand(merk).search_by_branch(cabang).kodejenis
 	end
 
 	def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)

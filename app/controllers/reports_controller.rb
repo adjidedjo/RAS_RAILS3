@@ -1,4 +1,11 @@
 class ReportsController < ApplicationController
+  skip_before_filter :authenticate_user!, :only => :summary_of_sales
+  
+  def summary_of_sales
+		@cabang_get_id = Cabang.get_id
+    @cabang_7 = Cabang.get_id_to_7
+    @cabang_24 = Cabang.get_id_to_22
+  end
   
   def quick_view_monthly_result
     compare_last_month
