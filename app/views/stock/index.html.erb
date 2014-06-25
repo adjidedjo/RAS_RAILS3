@@ -87,15 +87,20 @@
           </div>
         </div>
       </div>
-    <% end %>
+    </div>
+  <% end %>
+</div>
 
-    <br />
-    <div style="clear:both;"></div>
+<div style="clear:both;"></div>
 
+<div class="row-fluid">
+  <div class="block-content collapse in">
     <% unless params[:date].nil? %>
-      <h2 style="font-size: 20px; position: absolute; left: 350px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-      <br /><br />
-      <br />
+      <div class="row-fluid">
+        <div class="offset4">
+          <h2 style="font-size: 20px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
+        </div>
+      </div>
       <div class="row-fluid">
         <div class="offset0">
           <div class="span5">
@@ -167,22 +172,20 @@
         </tfoot>
         <tbody>
           <% @get_stock.map do |stock| %>
-            <% unless stock.kodebrg.slice(11) == "T" %>
-              <tr>
-                <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
-                <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
-                <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
-                <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
-                <th scope="row"><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></th>
-                <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
-                <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
-                <th scope="row"><%= stock.freestock %></th>
-                <th scope="row"><%= stock.bufferstock %></th>
-                <th scope="row"><%= stock.realstock %></th>
-                <th scope="row"><%= stock.realstockservice %></th>
-                <th scope="row"><%= stock.realstockdowngrade %></th>
-              </tr>
-            <% end %>
+            <tr>
+              <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
+              <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
+              <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
+              <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
+              <th scope="row"><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></th>
+              <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
+              <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
+              <td><%= stock.freestock %></td>
+              <td><%= stock.bufferstock %></td>
+              <td><%= stock.realstock %></td>
+              <td><%= stock.realstockservice %></td>
+              <td><%= stock.realstockdowngrade %></td>
+            </tr>
           <% end %>
         </tbody>
       </table>
@@ -192,3 +195,4 @@
       </label>
     <% end %>
   </div>
+</div>

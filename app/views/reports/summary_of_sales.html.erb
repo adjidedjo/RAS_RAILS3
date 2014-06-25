@@ -52,7 +52,7 @@
         <h3 style="font-size: 25px;"><i>Grand Total</i></h3>
       </div>
       <div class="span3">
-        <h3 style="font-size: 25px;"><%= currency(LaporanCabang.sum_amount.search_by_type(["KM","DV","HB","KB","SA","SB"]).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj.first.sum_harganetto2) %></h3>
+        <h3 style="font-size: 25px;"><%= currency(@grand_total) %></h3>
       </div>
     </div>
   </div>
