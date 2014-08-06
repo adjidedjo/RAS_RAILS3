@@ -19,20 +19,20 @@ only screen and (max-width: 760px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
 
   /* Force table to not be like tables anymore */
-  table#stock, table#stock thead, table#stock tbody, table#stock th, table#stock td, table#stock tr { 
+  table, thead, tbody, th, td, tr { 
     display: block; 
   }
 
   /* Hide table headers (but not display: none;, for accessibility) */
-  table#stock thead tr { 
+  thead tr { 
     position: absolute;
     top: -9999px;
     left: -9999px;
   }
 
-  table#stock tr { border: 1px solid #ccc; }
+  tr { border: 1px solid #ccc; }
 
-  table#stock td { 
+  td { 
     /* Behave  like a "row" */
     border: none;
     border-bottom: 1px solid #eee; 
@@ -40,7 +40,7 @@ only screen and (max-width: 760px),
     padding-left: 50%; 
   }
 
-  table#stock td:before { 
+  td:before { 
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
@@ -50,6 +50,21 @@ only screen and (max-width: 760px),
     padding-right: 10px; 
     white-space: nowrap;
   }
+
+  /*
+  Label the data
+  */
+  td:nth-of-type(1):before { content: "First Name"; }
+  td:nth-of-type(2):before { content: "Last Name"; }
+  td:nth-of-type(3):before { content: "Job Title"; }
+  td:nth-of-type(4):before { content: "Favorite Color"; }
+  td:nth-of-type(5):before { content: "Wars of Trek?"; }
+  td:nth-of-type(6):before { content: "Porn Name"; }
+  td:nth-of-type(7):before { content: "Date of Birth"; }
+  td:nth-of-type(8):before { content: "Dream Vacation City"; }
+  td:nth-of-type(9):before { content: "GPA"; }
+  td:nth-of-type(10):before { content: "Arbitrary Data"; }
+}
 
 table#table_total td {
   padding: 12px 20px;
@@ -73,9 +88,9 @@ div#grand_total {
 #error_explanation {
   color: #f00;
   ul {
-    list-style: none;
-    margin: 0 0 18px 0;
-  }
+  list-style: none;
+  margin: 0 0 18px 0;
+}
 }
 
 .field_with_errors {
@@ -84,45 +99,45 @@ div#grand_total {
 }
 
 .navbar .brand { 
-	max-height: 40px; 
-	overflow: visible;
-	padding-top: 0;
-	padding-bottom: 0; 
+  max-height: 40px; 
+  overflow: visible;
+  padding-top: 0;
+  padding-bottom: 0; 
 }
 
 html, body, .container, .content {
-	height: 100%;
-	font-size:11px;
+  height: 100%;
+  font-size:11px;
 }
- 
+
 .container,.content {
-	position: relative;
+  position: relative;
 }
- 
+
 .proper-content {
-	padding-top: 40px; /* >= navbar height */
+  padding-top: 40px; /* >= navbar height */
 }
- 
+
 .wrapper {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -50px; /* same as the footer */
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -50px; /* same as the footer */
 }
- 
+
 .push {
-	height: 50px; /* same as the footer */
+  height: 50px; /* same as the footer */
 }
 .footer-wrapper {
-	position: relative;
-	height: 50px;
-	padding-top: 100px;
+  position: relative;
+  height: 50px;
+  padding-top: 100px;
 }
 
 .form-inline .control-label{
-	/* text-align:right; */
-	text-align:center;
-	background-color:#ffa;
+  /* text-align:right; */
+  text-align:center;
+  background-color:#ffa;
 }
 
 .form-filter {
@@ -132,13 +147,13 @@ html, body, .container, .content {
   background-color: #fff;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-          box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	position: relative;
-	float: left;
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  position: relative;
+  float: left;
 }
 
 .form-div {
@@ -148,13 +163,13 @@ html, body, .container, .content {
   background-color: #fff;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-          box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	position: relative;
-	float: left;
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  position: relative;
+  float: left;
 }
 
 /* User sign in and sign forms. */
@@ -163,11 +178,11 @@ html, body, .container, .content {
   padding: 19px 24px 29px;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
 }
 .border-form-div .form-signin-heading,
 .border-form-div .checkbox {
