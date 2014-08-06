@@ -173,13 +173,13 @@
         <tbody>
           <% @get_stock.map do |stock| %>
             <tr>
-              <th scope="row"><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></th>
-              <th scope="row"><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></th>
-              <th scope="row"><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></th>
-              <th scope="row"><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></th>
-              <th scope="row"><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></th>
-              <th scope="row"><%= stock.kodebrg.slice(12..14) %></th>
-              <th scope="row"><%= stock.kodebrg.slice(15..17) %></th>
+              <td><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+              <td><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></td>
+              <td><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></td>
+              <td><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></td>
+              <td><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></td>
+              <td><%= stock.kodebrg.slice(12..14) %></td>
+              <td><%= stock.kodebrg.slice(15..17) %></td>
               <td><%= stock.freestock %></td>
               <td><%= stock.bufferstock %></td>
               <td><%= stock.realstock %></td>
