@@ -54,6 +54,16 @@ only screen and (max-width: 760px),
   /*
   Label the data
   */
+  table#stock td:nth-of-type(1):before { content: "First Name"; }
+  table#stock td:nth-of-type(2):before { content: "Last Name"; }
+  table#stock td:nth-of-type(3):before { content: "Job Title"; }
+  table#stock td:nth-of-type(4):before { content: "Favorite Color"; }
+  table#stock td:nth-of-type(5):before { content: "Wars of Trek?"; }
+  table#stock td:nth-of-type(6):before { content: "Porn Name"; }
+  table#stock td:nth-of-type(7):before { content: "Date of Birth"; }
+  table#stock td:nth-of-type(8):before { content: "Dream Vacation City"; }
+  table#stock td:nth-of-type(9):before { content: "GPA"; }
+  table#stock td:nth-of-type(10):before { content: "Arbitrary Data"; }
 }
 
 table#table_total td {
