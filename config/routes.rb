@@ -1,5 +1,7 @@
 Rain::Application.routes.draw do
 
+  get "docs/index"
+
   get "incentive/index"
 
   resources :sales_imports
