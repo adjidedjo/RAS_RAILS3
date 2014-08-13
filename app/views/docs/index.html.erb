@@ -1,0 +1,115 @@
+<h4>Sales Analytic Application</h4><br />
+<h5>Menu Control</h5>	
+<blockquote>
+  <p>Digunakan untuk mengontrol upload data stock dan penjualan setiap cabang. Upload penting dilakukan cabang setiap hari agar data penjualan dan stock bisa terupdate setiap hari. </p>
+  <a href='javascript:void(0)' data-collapse><i class='icon-chevron-down'></i> More</a>
+  <blockquote style="display: none;">
+    <h5>From Date</h5>
+    <p>Pilih tanggal awal untuk menampilkan data hasil upload cabang.</p>
+    <h5>To Date</h5>
+    <p>Pilih tanggal akhir untuk menampilkan data hasil upload cabang.</p>
+    <h5>Category</h5>
+    <p>Pilih kategori untuk menampilkan data stock atau penjualan hasil upload cabang.</p>
+  </blockquote>
+</blockquote>
+<h5>Menu Stock</h5>
+<blockquote>
+  <p>Digunakan untuk melihat data stock setiap cabang.</p>
+  <a href='javascript:void(0)' data-collapse><i class='icon-chevron-down'></i>More</a>
+  <blockquote style="display: none;">
+    <h5>Date</h5>
+    <p>Pilih tanggal stock yang akan ditampilkan.</p>
+    <h5>Product</h5>
+    <p>Pilih Cabang, Brand, Jenis, Artikel dan Kain yang akan ditampilkan.</p>
+    <h5>Size</h5>
+    <p>Pilih size dari stock yang akan ditampilkan.</p>
+  </blockquote>
+</blockquote>
+<h5>Menu Target -> Target vs Sales</h5>
+<blockquote>
+  <p>Digunakan untuk melihat data perbandingan antara target dan penjualan. </p>
+  <a href='javascript:void(0)' data-collapse><i class='icon-chevron-down'></i>More</a>
+  <blockquote style="display: none;">
+    <h5>View Target by</h5>
+    <p>Pilih target berdasarkan Branch(Cabang) atau Sales.</p>
+    <h5>Select a Branch</h5>
+    <p>Pilih Cabang yang akan ditampilkan.</p>
+    <h5>Select a Merk</h5>
+    <p>Pilih Merk yang akan ditampilkan.</p>
+    <h5>Select a month and year</h5>
+    <p>Pilih bulan yang akan ditampilkan. Bulan yang tersedia hanya 4 bulan kebelakang dari bulan dan tahun berjalan.</p>
+  </blockquote>
+</blockquote>
+<h5>Menu Sales Reports -> Analysis</h5>
+<blockquote>
+  <p>Digunakan untuk melihat data penjualan sebagai acuan untuk analisa. Di menu ini user diberikan kebebasan untuk memilih brand, cabang, artikel, kain, grup customer dan ukuran.</p>
+  <a href='javascript:void(0)' data-collapse><i class='icon-chevron-down'></i> More</a>
+  <blockquote style="display: none;">
+    <h5>Menu Report Type</h5>
+    <blockquote>
+      <h5>Detail</h5>
+      <p>Pilih menu ini, jika anda menginginkan seluruh field-field yang ada di laporan penjualan di tampilkan.</p>
+      <h5>Compare</h5>
+      <p>Pilih menu ini, jika anda menginginkan seluruh field-field yang ada di laporan penjualan di tampilkan.</p>
+    </blockquote>
+    <h5>Menu Compare Type</h5>
+    <blockquote>
+      <h5>Last Month</h5>
+      <p>Pilih menu ini, jika anda menginginkan perbandingan data penjualan antara tanggal, bulan yang dipilih dengan tanggal dan bulan, bulan lalu.</p>
+      <h5>Last Year</h5>
+      <p>Pilih menu ini, jika anda menginginkan perbandingan data penjualan antara tanggal, tahun yang dipilih dengan tanggal dan tahun, tahun lalu.</p>
+      <h5>Month</h5>
+      <p>Pilih menu ini, jika anda menginginkan perbandingan data penjualan per bulan di bulan berjalan.</p>
+    </blockquote>
+    <h5>Date</h5>
+    <blockquote>
+      <h5>From Date</h5>
+      <p>Pilih tanggal awal dari tanggal penjualan yang akan ditampilkan.</p>
+      <h5>To Date</h5>
+      <p>Pilih tanggal terakhir dari tanggal penjualan yang akan ditampilkan.</p><br />
+      <p>*Jika anda memilih menu Last Month dan Last Year maka data yang ditampilkan sesuai dengan tanggal yang anda pilih.</p>
+      <p>*Jika anda memilih menu Month maka data yang ditampilkan sesuai dengan bulan(bulan-bulan) dari tanggal yang anda pilih.</p>
+    </blockquote>
+    <h5>Produk</h5>
+    <blockquote> more
+      <p>Silahkan pilih data produk yang akan ditampilkan, disini terdapat pilihan untuk Cabang, Brand, Artikel, Kain dan Size.</p>
+    </blockquote>
+    <h5>Channel Customer</h5>
+    <blockquote>
+      <p>Silahkan pilih channel/grup customer yang akan ditampilkan.</p>
+    </blockquote>
+    <h5>Grouping</h5>
+    <blockquote>
+      <p>Silahkan pilih pengelompokan data yang akan ditampikan.</p>
+    </blockquote>
+  </blockquote>
+</pre>
+</blockquote>
+<h5>Menu Sales Reports -> Quick View</h5>
+<blockquote>
+  <p>Digunakan untuk melihat data penjualan per bulan sepanjang tahun berjalan.</p>
+  <a href='javascript:void(0)' data-collapse><i class='icon-chevron-down'></i> More</a>
+  <blockquote style="display: none;">
+    <h5>Menu Report Type</h5>
+    <blockquote>
+      <h5>Weekly</h5>
+      <p>Pilih menu ini, jika anda menginginkan data penjualan ditampilkan per minggu.</p>
+      <h5>Monthly</h5>
+      <p>Pilih menu ini, jika anda menginginkan data penjualan ditampilkan per bulan.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+<script>
+  $(document).ready(function(){
+    $('[data-collapse]').on('click', function(e){
+      _this = this;
+      $(this).next().slideToggle(200, function(){
+        if ($(this).is(':visible')==true){
+          $(_this).html('<i class="icon-chevron-right"></i> Less')
+        }else{
+          $(_this).html('<i class="icon-chevron-down"></i> More')
+        }
+      });
+    });
+  });
+</script>
