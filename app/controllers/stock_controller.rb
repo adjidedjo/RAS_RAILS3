@@ -5,7 +5,7 @@ class StockController < ApplicationController
 	end
 
   def index
-		@branch = Cabang.get_id
+		@branch = Cabang.branch_get_name(current_user)
 		@brand = Merk.merk_all(current_user)
 		@type = Product.all
 		@article = Artikel.group(:Produk)

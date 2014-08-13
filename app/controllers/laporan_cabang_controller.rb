@@ -225,7 +225,7 @@ class LaporanCabangController < ApplicationController
   end
 
 	def weekly_report
-		@cabang_get_id = Cabang.get_id
+		@cabang_get_id = Cabang.branch_get_name(current_user)
 		@week1 = 0
 		@week2 = 0
 		@week3 = 0

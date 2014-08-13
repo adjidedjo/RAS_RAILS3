@@ -13,8 +13,9 @@ class ReportsController < ApplicationController
   end
   
   def quick_view_monthly_process
+    branch = current_user.branch == nil ? nil : current_user.branch
     redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
-      :from => 3.month.ago.to_date, :to => Date.today.to_date)
+      :from => 3.month.ago.to_date, :to => Date.today.to_date, :branch => branch )
   end
   
   def quick_view_monthly
@@ -221,7 +222,7 @@ class ReportsController < ApplicationController
 	end
 
 	def second_filter
-		@branch = Cabang.get_id
+		@branch = Cabang.branch_get_name(current_user)
 		@brand = Merk.merk_all(current_user)
 		@type = Product.all
 		@article = Artikel.group(:Produk)

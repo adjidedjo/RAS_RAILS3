@@ -39,18 +39,22 @@
     <%= nav_bar :fixed => :top, :brand => "Sales Analytics" do %>	
       <% if current_user %>
         <%= menu_group do %>
-          <%= menu_item "Control", laporan_cabang_control_branches_sales_path %>
+          <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.user_brand == 'Admin' %>
           <%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
           <%= menu_divider %>
-          <%= drop_down "Target" do %>
-            <%= menu_item "Monthly", targets_monthly_target_type_path %>
-            <%= menu_item "Target vs Sales", monthly_targets_target_filter_path %>
+          <% unless current_user.sales_stock == 'Stock' %>
+            <%= drop_down "Target" do %>
+              <%= menu_item "Monthly", targets_monthly_target_type_path %>
+              <%= menu_item "Target vs Sales", monthly_targets_target_filter_path %>
+            <% end %>
           <% end %>
-          <%= menu_item "Stock", stock_index_path %>
-          <%= drop_down "Sales Reports" do %>
-            <%= menu_item "Analysis", reports_first_filter_path %>
-        <%#= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
-            <%= menu_item "Quick View", reports_quick_view_path %>
+          <%= menu_item "Stock", stock_index_path unless current_user.sales_stock == 'Sales' %>
+          <% unless current_user.sales_stock == 'Stock' %>
+            <%= drop_down "Sales Reports" do %>
+              <%= menu_item "Analysis", reports_first_filter_path %>
+          <%#= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
+              <%= menu_item "Quick View", reports_quick_view_path %>
+            <% end %>
           <% end %>
         <% end %>
         <%= menu_group :pull => :right do %>
