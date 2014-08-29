@@ -5,6 +5,7 @@ class TmpBrand < ActiveRecord::Base
   scope :brand, lambda {|brand| where("brand in (?)", brand) if brand.present?}
 	
   def self.customer_quick_monthly(month, year, branch, brand)
-    search_by_month_and_year(month, year).search_by_branch(branch).brand(brand)
+    select("sum(qty) as qty, sum(val) as val")
+    .search_by_month_and_year(month, year).search_by_branch(branch).brand(brand)
 	end
 end
