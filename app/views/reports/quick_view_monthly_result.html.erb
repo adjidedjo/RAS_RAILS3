@@ -76,23 +76,23 @@
             <td scope="row"><%= laporan.Cabang.gsub(/Cabang/,'') %></td>
 
 
-            <% if BrandBranch.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).empty? %>
+            <% if SalesBrand.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
-              <% BrandBranch.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).each do |a| %>
+              <% SalesBrand.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).each do |a| %>
                 <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
                 <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
               <% end %>
             <% end %>
 
 
-            <% if BrandBranch.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
+            <% if SalesBrand.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
                 params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
-              <% BrandBranch.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
+              <% SalesBrand.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
                 params[:brand]).each do |a| %>
                 <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
                 <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
@@ -100,12 +100,12 @@
             <% end %>
 
 
-            <% if BrandBranch.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+            <% if SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
                 params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
-              <% BrandBranch.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+              <% SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
                 params[:brand]).each do |a| %>
                 <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
                 <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>

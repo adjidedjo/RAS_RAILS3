@@ -36,12 +36,12 @@
             <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.Merk]}, 
               params[:merk_id]), :class => 'multiselect', :multiple => true %>
 
-            <%= collection_select(nil, :type_id, @type, :KodeProduk, :Namaroduk, {}, {:id => 'type_id', :class => 'multiselect', :multiple => true})  %>
+            <%= collection_select(nil, :type_id, @type, :Namaroduk, :Namaroduk, {}, {:id => 'type_id', :class => 'multiselect', :multiple => true})  %>
             <br /><br />
-            <%= collection_select(nil, :article_id, @article, :KodeCollection, :Produk, {:include_blank => true, 
+            <%= collection_select(nil, :article_id, @article, :Produk, :Produk, {:include_blank => true, 
                 :prompt => 'Select an Article'}, {:id => 'article_id'}) %>
 
-            <%= collection_select(nil, :fabric_id, @fabric, :KodeKain, :NamaKain, {:include_blank => true, 
+            <%= collection_select(nil, :fabric_id, @fabric, :NamaKain, :NamaKain, {:include_blank => true, 
                 :prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
           </fieldset>
         </div>
@@ -114,9 +114,6 @@
             </div>
             <div class="block-content collapse in">
               <fieldset>
-                <label class="radio">
-                  <%= radio_button_tag 'group', 'kodebrg' %> Item Code <br />
-                </label>
                 <label class="radio">
                   <%= radio_button_tag 'group', 'customer', true %> Customer <br />
                 </label>

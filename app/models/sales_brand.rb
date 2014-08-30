@@ -2,7 +2,7 @@ class SalesBrand < ActiveRecord::Base
   
 	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
-  scope :brand, lambda {|brand| where("brand in (?)", brand) if brand.present?}
+  scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	
 	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? }
 	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
@@ -14,6 +14,7 @@ class SalesBrand < ActiveRecord::Base
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :between_date_sales, lambda { |from, to| where("bulan between ? and ?", from, to) if from.present? && to.present? }
+	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	
   def self.customer_quick_monthly(month, year, branch, brand)
     select("sum(qty) as qty, sum(val) as val")

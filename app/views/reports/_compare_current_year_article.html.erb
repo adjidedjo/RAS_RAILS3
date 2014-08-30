@@ -32,7 +32,7 @@
               <tr>
                 <td><%= brand.nil? ? "" : brand %></td>
                 <td><%= type.nil? ? "" : type %></td>
-                <td><%= article.nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
+                <td><%= article.nil? ? "" : params[:artikel] %></td>
                 <td><%= fabric.nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
                 <td><%= size_type == 'T' ? 'Special Size' : 'Standard Size' %></td>
                 <td><%= group_by %></td>
@@ -89,20 +89,20 @@
       <tfoot>
       </tfoot>
       <tbody>
-        <% @customerstore.each do |laporan| %>
+        <% @article.each do |laporan| %>
           <tr>
-            <td><%= laporan.namaartikel %></td>
+            <td><%= laporan.artikel %></td>
             <% @month_devided.each do |month, sales| %>
 
               <!-- January -->
-              <% if LaporanCabang.customer_monthly(month.month, month.year, branch, type, 
-                  brand, laporan.kodeartikel, nil, fabric, size, customer, size_type, 
+              <% if SalesArticle.customer_monthly(month.month, month.year, branch, type, 
+                  brand, laporan.artikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).empty? %>
                 <td>0</td>
                 <td>0</td>
               <% else %>
-                <% LaporanCabang.customer_monthly(month.month, month.year, branch, type, 
-                  brand, laporan.kodeartikel, nil, fabric, size, customer, size_type, 
+                <% SalesArticle.customer_monthly(month.month, month.year, branch, type, 
+                  brand, laporan.artikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).each do |a| %>
                   <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                   <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -139,20 +139,20 @@
         <tfoot>
         </tfoot>
         <tbody>
-          <% @customerstore.each do |laporan|	 %>
+          <% @article.each do |laporan|	 %>
             <tr>
-              <td><%= laporan.namaartikel %></td>
+              <td><%= laporan.artikel %></td>
               <% @over_month.each do |month, sales| %>
 
                 <!-- January -->
-                <% if LaporanCabang.customer_monthly(month.month, month.year, branch, type, 
-                    brand, laporan.kodeartikel, nil, fabric, size, customer, size_type, 
+                <% if SalesArticle.customer_monthly(month.month, month.year, branch, type, 
+                    brand, laporan.artikel, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).empty? %>
                   <td>0</td>
                   <td>0</td>
                 <% else %>
-                  <% LaporanCabang.customer_monthly(month.month, month.year, branch, type, 
-                    brand, laporan.kodeartikel, nil, fabric, size, customer, size_type, 
+                  <% SalesArticle.customer_monthly(month.month, month.year, branch, type, 
+                    brand, laporan.artikel, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).each do |a| %>
                     <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                     <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
