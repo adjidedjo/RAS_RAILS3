@@ -1,5 +1,4 @@
-class TmpBrand < ActiveRecord::Base
-  
+class TmpArticle < ActiveRecord::Base
   scope :between_date_sales, lambda { |from, to| where("bulan between ? and ?", from, to) if from.present? && to.present? }
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }

@@ -47,25 +47,14 @@ class ReportsController < ApplicationController
 	def compare_current_year
 		compare_last_month
     @article = SalesArticle.select("*")
-      .between_date_sales(params[:from].to_date.month, params[:to].to_date.month).search_by_branch(params[:branch])
-      .search_by_type(params[:type]).brand(params[:brand]).fabric(params[:fabric]).artikel(params[:article])
-      .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-      .customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-      .customer_retail_all(params[:customer_all_retail]).group("artikel")
+      .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
+      .search_by_branch(params[:branch]).brand(params[:brand]).group("artikel")
     @customer = SalesCustomer.select("*")
       .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
-      .search_by_branch(params[:branch]).artikel(params[:article])
-      .search_by_type(params[:type]).brand(params[:brand]).fabric(params[:fabric])
-      .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-      .customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-      .customer_retail_all(params[:customer_all_retail]).group("customer")
+      .search_by_branch(params[:branch]).brand(params[:brand]).group("customer")
     @branch = SalesBrand.select("*")
       .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
-      .search_by_branch(params[:branch]).artikel(params[:article])
-      .search_by_type(params[:type]).brand(params[:brand]).fabric(params[:fabric])
-      .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-      .customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-      .customer_retail_all(params[:customer_all_retail]).group("cabang_id")
+      .search_by_branch(params[:branch]).brand(params[:brand]).group("cabang_id")
 	end
 
 	def compare_last_year

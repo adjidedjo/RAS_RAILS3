@@ -99,15 +99,27 @@
           <tr>
             <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
             <% @month_devided.each do |month, sales| %>
+              <% if Date.today.strftime('%d').to_i <= 15 %>
+                <% if month.month == Date.today.strftime('%-m').to_i || month.month == Date.today.strftime('%-m').to_i - 1  %>
+                  <% @model = TmpBrand %>
+                <% else %>
+                  <% @model = SalesBrand %>
+                <% end %>
+              <% else %>
+                <% if month.month == Date.today.strftime('%-m').to_i  %>
+                  <% @model = TmpBrand %>
+                <% else %>
+                  <% @model = SalesBrand %>
+                <% end %>
+              <% end %>
 
-              <!-- January -->
-              <% if SalesBrand.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
+              <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
                   brand, article, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).empty? %>
                 <td>0</td>
                 <td>0</td>
               <% else %>
-                <% SalesBrand.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
+                <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
                   brand, article, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).each do |a| %>
                   <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
@@ -149,15 +161,27 @@
             <tr>
               <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
               <% @over_month.each do |month, sales| %>
+                <% if Date.today.strftime('%d').to_i <= 15 %>
+                  <% if month.month == Date.today.strftime('%-m').to_i || month.month == Date.today.strftime('%-m').to_i - 1  %>
+                    <% @model = TmpBrand %>
+                  <% else %>
+                    <% @model = SalesBrand %>
+                  <% end %>
+                <% else %>
+                  <% if month.month == Date.today.strftime('%-m').to_i  %>
+                    <% @model = TmpBrand %>
+                  <% else %>
+                    <% @model = SalesBrand %>
+                  <% end %>
+                <% end %>
 
-                <!-- January -->
-                <% if SalesBrand.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
+                <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
                     brand, article, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).empty? %>
                   <td>0</td>
                   <td>0</td>
                 <% else %>
-                  <% SalesBrand.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
+                  <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, type, 
                     brand, article, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).each do |a| %>
                     <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
