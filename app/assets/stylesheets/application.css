@@ -10,6 +10,32 @@
  *= require bootstrap-multiselect
  *= require_tree .
 */
+.graph-container {
+  border: 1px solid #CCCCCC;
+  box-shadow: 1px 1px 2px #EEEEEE;
+  margin: 10px 0;
+  padding: 30px;
+  position: relative;
+}
+.graph-container:after {
+  background-color: #EEEEEE;
+  border: 1px solid #CCCCCC;
+  content: "Perbandingan Penjualan antara Bulan Berjalan dan Bulan sebelumnya";
+  display: block;
+  font-size: 12px;
+  left: -1px;
+  padding: 3px 8px;
+  position: absolute;
+  top: -1px;
+}
+.graph-container .caption {
+  text-align: center;
+}
+.graph-container .graph {
+  height: 220px;
+}
+
+
 table#stock td {
   padding: 12px 20px;
 }

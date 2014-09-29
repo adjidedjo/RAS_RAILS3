@@ -1,5 +1,19 @@
 Rain::Application.routes.draw do
 
+  resources :accounting_price_lists do
+    collection do
+      get 'pilihan_brand'
+    end
+  end
+
+  resources :sales_reports
+
+  get "laporan_cabang/new"
+
+  get "accounting/check_faktur"
+  get "accounting/pilihan_brand"
+  get "accounting/faktur"
+
   get "docs/index"
 
   get "incentive/index"
@@ -11,6 +25,8 @@ Rain::Application.routes.draw do
   get "report_imports/create"
 
   resources :monthly_retails
+  resources :laporan_cabangs
+  resources :accounting
 
   get "targets/monthly_target_type"
 
@@ -104,6 +120,7 @@ Rain::Application.routes.draw do
 	get "laporan_cabang/search"
 	get "laporan_cabang/search_detail"
 	get "laporan_cabang/chart"
+	get "reports/chart"
 	get "stock/special_size"
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
@@ -111,6 +128,7 @@ Rain::Application.routes.draw do
 	get 'reports/update_reports_kain', :as => 'update_reports_kain'
 	get 'reports/update_reports_article', :as => 'update_reports_article'
 	get 'reports/update_reports_type', :as => 'update_reports_type'
+	get 'reports/update_chart', :as => 'update_chart'
 	get 'laporan_cabang/update_kain', :as => 'update_kain'
 	get 'laporan_cabang/update_article', :as => 'update_article'
 

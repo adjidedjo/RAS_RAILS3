@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <%= form_for(@sales_report) do |f| %>
+    <div class="block">
+      <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">UPDATE NO FAKTUR</div>
+        <div class="pull-right"><span class="badge badge-info"></span>
+        </div>
+      </div>
+      <div class="block-content collapse in">
+        <fieldset>
+
+          <div class="field">
+            <%= f.label :cabang_id %>
+            <%= f.text_field :cabang_id, :value => branch, readonly: true %>
+          </div>
+          <div class="field">
+            <%= f.label :jenisbrgdisc %>
+            <%= f.text_field :jenisbrgdisc, :value => brand, readonly: true %>
+          </div>
+          <div class="field">
+            <%= f.label :tanggalsj %>
+            <%= f.text_field 'tanggalsj', :placeholder => "Tanggal", :id => 'from', :value => Date.today  %>
+          </div>
+          <div class="field">
+            <%= f.label :nofaktur %>
+            <%= f.text_field :nofaktur, :value => view_nofaktur(brand, branch, date, foo), readonly: true %>
+          </div>
+          <div class="field">
+            <%= f.label :ketppb %>
+            <%= f.text_field :ketppb %>
+          </div>
+          <%= f.hidden_field :tanggal, :value => date %>
+          <div class="pull-left"><%= submit_tag "Create", :class => "btn btn-primary" %></div>
+        <% end %>
+      </fieldset>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
     <![endif]-->
 
-    <%= stylesheet_link_tag "application", "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.8/themes/redmond/jquery-ui.css", :media => "all" %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
 
     <!-- For third-generation iPad with high-resolution Retina display: -->
@@ -41,10 +41,11 @@
         <%= menu_group do %>
           <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.user_brand == 'Admin' %>
           <%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
+          <%= menu_item "Check No Faktur", sales_reports_path if current_user.username == 'adjidedjo' || current_user.username == 'accounting' %>
           <%= menu_divider %>
           <% unless current_user.sales_stock == 'Stock' %>
             <%= drop_down "Target" do %>
-          <%#= menu_item "Monthly", targets_monthly_target_type_path %>
+          <%#= menu_item "Monthly", targets_mNonthly_target_type_path %>
               <%= menu_item "Target vs Sales", monthly_targets_target_filter_path %>
             <% end %>
           <% end %>
