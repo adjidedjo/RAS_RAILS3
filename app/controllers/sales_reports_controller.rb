@@ -10,7 +10,7 @@ class SalesReportsController < ApplicationController
   def index
     unless params[:branch].blank? && params[:brand].blank?
       faktur = SalesReport.select('nofaktur').search_by_month_and_year(params[:date]['month'].to_i, Date.today.year)
-      .brand(brand(params[:brand])).search_by_branch(params[:branch]).no_return.not_equal_with_nofaktur.order("nofaktur ASC").group('nofaktur')
+      .brand(brand(params[:brand])).search_by_branch(params[:branch]).order("nofaktur ASC").group('nofaktur')
       
       unless faktur.empty?
         slice = faktur.map(&:nofaktur)
