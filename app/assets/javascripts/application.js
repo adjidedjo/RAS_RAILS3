@@ -11,4 +11,6 @@
 //= require bootstrap-multiselect
 //= require dataTables/jquery.dataTables
 //= require jquery.dataTables.columnFilter
+//= require jquery.validate
+//= require jquery.tooltipster
 //= require_tree .

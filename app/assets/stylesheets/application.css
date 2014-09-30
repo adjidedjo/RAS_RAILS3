@@ -8,6 +8,7 @@
  *= require bootstrap
  *= require bootstrap-responsive
  *= require bootstrap-multiselect
+ *= require tooltipster
  *= require_tree .
 */
 .graph-container {

@@ -10,15 +10,15 @@
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>
-              <div class="block-content">
+              </div>             
+              <div class="block-content">              
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
-                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select"} %>
+                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
                 </div>               
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'brand', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}, params[:brand]), {:class=>"select"} %>
+                  <%= select_tag 'brand', options_for_select(options_for_tipe, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
                 </div>
                 <div class="control-group">
                   <%= label_tag 'bulan' %>

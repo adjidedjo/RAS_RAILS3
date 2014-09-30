@@ -1,4 +1,11 @@
 module SalesReportsHelper
+  
+  def options_for_tipe
+    ["Non Serenity", "Serenity", "Lady Americana", "Royal", "Classic", "Grand", "Display",
+      "Clearance Sale", "Return"
+    ]
+  end
+  
   def faktur(brand)
     if brand == 'Non Serenity'
       "FKE"
@@ -8,8 +15,14 @@ module SalesReportsHelper
       "FKL"
     elsif brand == 'Royal'
       "FKR"
-    else
+    elsif brand == 'Classic'
       "FKC"
+    elsif brand == 'Clearance Sale'
+      "FKD"
+    elsif brand == 'Display'
+      "FKY"
+    else
+      "RTR"
     end
   end
   
@@ -22,8 +35,14 @@ module SalesReportsHelper
       "L"
     elsif brand == 'Royal'
       "R"
-    else
+    elsif brand == 'Classic'
       "C"
+    elsif brand == 'Clearance Sale'
+      "D"
+    elsif brand == 'Display'
+      "Y"
+    else
+      "R"
     end
   end
   
