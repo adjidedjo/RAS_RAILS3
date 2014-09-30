@@ -41,7 +41,7 @@
         <%= menu_group do %>
           <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.user_brand == 'Admin' %>
           <%= menu_item "Users", users_path if current_user.username == 'adjidedjo' %>
-          <%= menu_item "Check No Faktur", sales_reports_path if current_user.username == 'adjidedjo' || current_user.username == 'accounting' %>
+          <%= menu_item "Check No Faktur", sales_reports_path if current_user.username == 'adjidedjo' || current_user.user_brand == 'accounting' %>
           <%= menu_divider %>
           <% unless current_user.sales_stock == 'Stock' %>
             <%= drop_down "Target" do %>

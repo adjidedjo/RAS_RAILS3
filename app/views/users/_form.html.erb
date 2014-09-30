@@ -1,5 +1,5 @@
 <div class="form-div">
-  <%= form_for(@user, :html => {:class => "form-div"}) do |f| %>
+  <%= form_for(@user, :class => 'new_user') do |f| %>
     <% if @user.errors.any? %>
       <div id="error_explanation">
         <div class="alert alert-error">
@@ -40,7 +40,7 @@
     <div class="control-group">
       <label class="checkbox">Roles</label>
       <div class="controls">
-        <%= f.select :user_brand, ["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand"],
+        <%= f.select :user_brand, ["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand", "Accounting"],
           :include_blank => "All", :class => "input_login" %></div>
     </div>
     <div class="control-group">
