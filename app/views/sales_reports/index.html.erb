@@ -75,9 +75,10 @@
             <tbody>
               <% @sales_reports.each do |laporan| %>
                 <tr>
+                  <% faktur = view_nofaktur(params[:brand], params[:branch], params[:date]['month'], laporan) %>
                   <td><%= Cabang.find(params[:branch]).Cabang.gsub(/Cabang/,'') %></td>
                   <td><%= view_nofaktur(params[:brand], params[:branch], params[:date]['month'], laporan) %></td>
-                  <td><a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Edit</a></td>
+                  <td><a href="#myModal" role="button" class="open-faktur btn btn-primary" data-toggle="modal" data-id="<%= faktur %>">Edit</a></td>
                 </tr>
               <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <%= render 'form', {foo: laporan, brand: params[:brand], branch: params[:branch], date: params[:date]['month']} %>
@@ -90,3 +91,9 @@
     </div>
   <% end %>
 </div>
+
+<script>
+  $(document).on("click", ".open-faktur", function () {
+    $("#sales_report_nofaktur").val($(this).data('id'));
+  });
+</script>

@@ -8,7 +8,6 @@
       </div>
       <div class="block-content collapse in">
         <fieldset>
-
           <div class="field">
             <%= f.label :cabang_id %>
             <%= f.text_field :cabang_id, :value => branch, readonly: true %>
@@ -23,7 +22,7 @@
           </div>
           <div class="field">
             <%= f.label :nofaktur %>
-            <%= f.text_field :nofaktur, :value => view_nofaktur(brand, branch, date, foo), readonly: true %>
+            <%= f.text_field :nofaktur, readonly: true %>
           </div>
           <div class="field">
             <%= f.label :ketppb %>
