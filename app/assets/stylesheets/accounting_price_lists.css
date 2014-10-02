@@ -1,0 +1,85 @@
+#myModal{
+    overflow:hidden;
+}
+body {
+    overflow-y: scroll !important;
+} 
+
+.form-accounting-price-list
+{
+  max-width: 256px;
+  padding: 5px;
+  margin: 0 auto;
+}
+
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+  /* Force table to not be like tables anymore */
+  table, thead, tbody, th, td, tr { 
+    display: block; 
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr { 
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr { border: 1px solid #ccc; }
+
+  td { 
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee; 
+    position: relative;
+    padding-left: 50%;
+  }
+
+  #price_list td:before { 
+    /* Now like a table header */
+    /*position: absolute;*/
+    /* Top/left values mimic padding */
+    top: 7px;
+    left: 6px;
+    width: 45%; 
+    padding-right: 25px; 
+    white-space: nowrap;
+  }
+
+  /*
+  Label the data
+  */
+  #price_list td:nth-of-type(1):before { content: "Branch    :"; }
+  #price_list td:nth-of-type(2):before { content: "No Faktur :"; }
+  #price_list td:nth-of-type(3):before { content: "Name :"; }
+  #price_list td:nth-of-type(4):before { content: "Master Price :"; }
+  #price_list td:nth-of-type(5):before { content: "Report Price :"; }
+  #price_list td:nth-of-type(6):before { content: "Master Upgrade :"; }
+  #price_list td:nth-of-type(7):before { content: "Report Upgrade :"; }
+  #price_list td:nth-of-type(8):before { content: "Size :"; }
+  #price_list td:nth-of-type(9):before { content: "Operation :"; }
+}
+
+.form-accounting
+{
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-accounting .form-control
+{
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.form-accounting .form-control:focus
+{
+  z-index: 2;
+}

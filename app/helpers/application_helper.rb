@@ -1,5 +1,12 @@
 module ApplicationHelper
   
+  def options_for_bulan
+    [[Date::MONTHNAMES[1], 1],[Date::MONTHNAMES[2], 2],[Date::MONTHNAMES[3], 3],
+      [Date::MONTHNAMES[4], 4],[Date::MONTHNAMES[5], 5],[Date::MONTHNAMES[6], 6],
+      [Date::MONTHNAMES[7], 7],[Date::MONTHNAMES[8], 8],[Date::MONTHNAMES[9], 9],
+      [Date::MONTHNAMES[10], 10],[Date::MONTHNAMES[11], 11],[Date::MONTHNAMES[12], 12]]
+  end
+  
   def currency(price)
     number_to_currency(price, :precision => 0, :unit => "", :delimiter => ".")
   end

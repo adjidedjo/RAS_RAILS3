@@ -1,4 +1,8 @@
 module SalesReportsHelper
+    
+  def options_for_tipe_pengecekan
+    ["Harga", "Upgrade"]
+  end
   
   def options_for_tipe
     ["Non Serenity", "Serenity", "Lady Americana", "Royal", "Classic", "Grand", "Display",

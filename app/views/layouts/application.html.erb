@@ -41,7 +41,12 @@
         <%= menu_group do %>
           <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.roles == 'Admin' || current_user.roles == 'Accounting' || current_user.roles == 'SuperHero' %>
           <%= menu_item "Users", users_path if current_user.roles == 'SuperHero' %>
-          <%= menu_item "Check No Faktur", sales_reports_path if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
+          <% if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
+            <%= drop_down "Accounting" do %>    
+              <%= menu_item "Cek No Faktur", sales_reports_path %>
+              <%= menu_item "Cek Master", accounting_price_lists_path %>
+            <% end %>  
+          <% end %>  
           <%= menu_divider %>
           <%= drop_down "Target" do %>
         <%#= menu_item "Monthly", targets_mNonthly_target_type_path %>
