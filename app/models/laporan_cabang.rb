@@ -14,6 +14,8 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%), %(#{'RD'}%))
+	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
+	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
 	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
@@ -32,7 +34,9 @@ class LaporanCabang < ActiveRecord::Base
 	scope :sum_amount, select("sum(harganetto2) as sum_harganetto2")
   scope :main_category, where("kodejenis in ('km','sa','sb','st')")
   scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
-  scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}
+  scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}	
+  scope :between_month_sales, lambda { |from, to| where("month(tanggalsj) between ? and ?", from, to) if from.present? && to.present? }
+
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
     select("sum(jumlah) as sum_jumlah").search_by_month_and_year(date.to_date.month, date.to_date.year)
