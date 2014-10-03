@@ -1,6 +1,15 @@
 class ReportsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => :summary_of_sales
   
+  def chart
+    @sales = TmpBrand.select('cabang_id, merk, qty, val, bulan, tahun').where('bulan = 8')
+    
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+  
   def summary_of_sales
 		@cabang_get_id = Cabang.get_id
     @cabang_7 = Cabang.get_id_to_7
@@ -46,15 +55,15 @@ class ReportsController < ApplicationController
 
 	def compare_current_year
 		compare_last_month
-    @article = SalesArticle.select("*")
-      .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
-      .search_by_branch(params[:branch]).brand(params[:brand]).group("artikel")
-    @customer = SalesCustomer.select("*")
-      .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
-      .search_by_branch(params[:branch]).brand(params[:brand]).group("customer")
-    @branch = SalesBrand.select("*")
-      .between_date_sales(params[:from].to_date.month, params[:to].to_date.month)
-      .search_by_branch(params[:branch]).brand(params[:brand]).group("cabang_id")
+    @article = LaporanCabang.select("*")
+    .between_month_sales(params[:from].to_date.month, params[:to].to_date.month)
+    .search_by_branch(params[:branch]).brand(params[:brand]).group("artikel")
+    @customer = LaporanCabang.select("*")
+    .between_month_sales(params[:from].to_date.month, params[:to].to_date.month)
+    .search_by_branch(params[:branch]).brand(params[:brand]).group("customer")
+    @branch = LaporanCabang.select("*")
+    .between_month_sales(params[:from].to_date.month, params[:to].to_date.month)
+    .search_by_branch(params[:branch]).brand(params[:brand]).group("cabang_id")
 	end
 
 	def compare_last_year
@@ -317,6 +326,10 @@ class ReportsController < ApplicationController
 			:fabric_id => params[:fabric_id], :size => params[:size]) if params[:reports] == "standard"
   end
 
+  def update_chart
+    @chart = params[:merk_id]
+  end
+  
 	def update_reports_type
 		@type = Merk.where("IdMerk in (?)", params[:merk_id]).first.product.map{|a| [a.Namaroduk, a.KodeProduk]}.insert(0, "")
 	end
