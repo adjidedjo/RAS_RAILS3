@@ -91,7 +91,7 @@
       <tbody>
         <% @article.each do |laporan| %>
           <tr>
-            <td><%= laporan.artikel %></td>
+            <td><%= laporan.namaartikel %></td>
             <% @month_devided.each do |month, sales| %>
               <% if Date.today.strftime('%d').to_i <= 15 %>
                 <% if month.month == Date.today.strftime('%-m').to_i || month.month == Date.today.strftime('%-m').to_i - 1  %>
@@ -108,13 +108,13 @@
               <% end %>
 
               <% if @model.customer_monthly(month.month, month.year, branch, type, 
-                  brand, laporan.artikel, nil, fabric, size, customer, size_type, 
+                  brand, laporan.namaartikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).empty? %>
                 <td>0</td>
                 <td>0</td>
               <% else %>
                 <% @model.customer_monthly(month.month, month.year, branch, type, 
-                  brand, laporan.artikel, nil, fabric, size, customer, size_type, 
+                  brand, laporan.namaartikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).each do |a| %>
                   <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                   <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
