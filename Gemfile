@@ -47,6 +47,7 @@ gem 'whenever', :require => false
 gem 'capistrano'
 gem 'capistrano-ext'
 gem 'rvm-capistrano'
+gem 'net-ssh'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
