@@ -21,7 +21,7 @@ class Cabang < ActiveRecord::Base
   end
 
 	def self.get_id_to_22
-    find(11, 13, 19, 20, 22, 23, 24)
+    find(11, 13, 18, 19, 20, 22, 23, 24)
   end
 
 end

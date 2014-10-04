@@ -41,10 +41,10 @@ module Rain
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
-
+    config.action_mailer.raise_delivery_errors = true
     # Enable the asset pipeline
     config.assets.enabled = true
-		  config.assets.initialize_on_precompile = true
+    config.assets.initialize_on_precompile = true
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
