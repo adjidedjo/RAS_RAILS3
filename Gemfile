@@ -31,6 +31,8 @@ gem 'wicked'
 gem 'hpricot'
 gem 'premailer-rails'
 gem 'roo'
+gem "mail"
+gem 'roadie'
 
 gem 'roadie'
 gem 'whenever', :require => false
