@@ -21,6 +21,6 @@
 
 set :output, "#{path}/log/cron.log"
 
-every 5.minutes do # Use any day of the week or :weekend, :weekday
+every 1.minutes do # Use any day of the week or :weekend, :weekday
   runner "UserMailer.report('a').deliver", environment: 'production'
 end
