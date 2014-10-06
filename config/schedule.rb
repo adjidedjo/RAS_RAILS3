@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.day, :at => '4:30 am' do # Use any day of the week or :weekend, :weekday
-  runner "UserMailer.report('a').deliver"
+every 5.minutes do # Use any day of the week or :weekend, :weekday
+  runner "UserMailer.report('a').deliver", environment: 'production'
 end
