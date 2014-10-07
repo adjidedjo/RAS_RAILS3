@@ -1,0 +1,7 @@
+send_email:
+  cron: "*/5 * * * *"
+  queue: cron
+  class: ControlUpload
+  args: "send_mail"
+  description: Calculates stats
+  rails_envs: development, production, staging

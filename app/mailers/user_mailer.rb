@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "elitespringbedmattress@gmail.com"
 
-	def report(user)
+	def report
     email1 = "aji.y@ras.co.id"
     email2 = "adji.el.djo@gmail.com"
     recipients = email1, email2

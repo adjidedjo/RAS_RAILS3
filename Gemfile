@@ -32,10 +32,10 @@ gem 'hpricot'
 gem 'premailer-rails'
 gem 'roo'
 gem "mail"
-gem 'roadie'
 
-gem 'roadie'
-gem 'whenever', :require => false
+gem 'whenever'
+gem 'resque'
+gem 'resque-scheduler', "~> 2.5.5", :require => 'resque_scheduler'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
