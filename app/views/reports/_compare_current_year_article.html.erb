@@ -72,7 +72,7 @@
     <table id="cus_compare" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
       <thead>
         <tr>
-          <th rowspan="3">Cabang ID</th>
+          <th rowspan="3">Cabang</th>
           <th rowspan="3">Brand</th>
           <th rowspan="3">Jenis</th>
           <th rowspan="3">Article</th>
@@ -95,9 +95,9 @@
         <% @article.each do |laporan| %>
           <tr>
             <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
-            <td><%= laporan.jenisbrgdisc %></td>
-            <td><%= laporan.jenisbrg %></td>
-            <td><%= laporan.namaartikel %></td>
+            <td><%= laporan.merk %></td>
+            <td><%= laporan.produk %></td>
+            <td><%= laporan.artikel %></td>
             <% @month_devided.each do |month, sales| %>
               <% if Date.today.strftime('%d').to_i <= 15 %>
                 <% if month.month == Date.today.strftime('%-m').to_i || month.month == Date.today.strftime('%-m').to_i - 1  %>
@@ -113,14 +113,14 @@
                 <% end %>
               <% end %>
 
-              <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.jenisbrg, 
-                  laporan.jenisbrgdisc, laporan.namaartikel, nil, fabric, size, customer, size_type, 
+              <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                  laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).empty? %>
                 <td>0</td>
                 <td>0</td>
               <% else %>
-                <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.jenisbrg, 
-                  laporan.jenisbrgdisc, laporan.namaartikel, nil, fabric, size, customer, size_type, 
+                <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                  laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
                   customer_modern, customer_all_retail).each do |a| %>
                   <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                   <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
@@ -140,6 +140,9 @@
       <table id="cus_compare2" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
         <thead>
           <tr>
+            <th rowspan="3">Cabang</th>
+            <th rowspan="3">Brand</th>
+            <th rowspan="3">Jenis</th>
             <th rowspan="3">Article</th>
           </tr>
           <tr>
@@ -159,6 +162,9 @@
         <tbody>
           <% @article.each do |laporan|	 %>
             <tr>
+              <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+              <td><%= laporan.merk %></td>
+              <td><%= laporan.produk %></td>
               <td><%= laporan.artikel %></td>
               <% @over_month.each do |month, sales| %>
                 <% if Date.today.strftime('%d').to_i <= 15 %>
@@ -176,14 +182,14 @@
                 <% end %>
 
                 <!-- January -->
-                <% if @model.customer_monthly(month.month, month.year, branch, type, 
-                    brand, laporan.artikel, nil, fabric, size, customer, size_type, 
+                <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                    laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).empty? %>
                   <td>0</td>
                   <td>0</td>
                 <% else %>
-                  <% @model.customer_monthly(month.month, month.year, branch, type, 
-                    brand, laporan.artikel, nil, fabric, size, customer, size_type, 
+                  <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                    laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
                     customer_modern, customer_all_retail).each do |a| %>
                     <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                     <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
