@@ -32,8 +32,8 @@
               <tr>
                 <td><%= brand.nil? ? "" : brand %></td>
                 <td><%= type.nil? ? "" : type %></td>
-                <td><%= article.nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
-                <td><%= fabric.nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
+                <td><%= article.nil? ? "" : params[:article] %></td>
+                <td><%= fabric.nil? ? "" : params[:fabric] %></td>
                 <% if size_type == 'T' %>
                   <td>Special Size</td>
                 <% elsif size_type == 'S' %>
