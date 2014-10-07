@@ -7,6 +7,7 @@ class SalesArticle < ActiveRecord::Base
 	scope :artikel, lambda {|artikel| where("artikel like ?", artikel) if artikel.present?}
 	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
 	scope :fabric, lambda {|fabric| where("kain like ?", fabric) unless fabric.nil?}
+	scope :produk, lambda {|produk| where("produk like ?", produk) unless produk.nil?}
 	scope :size_length, lambda {|brand_size| where("ukuran like ?", %(_______________#{brand_size}%)) if brand_size.present?}
 	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
@@ -16,7 +17,7 @@ class SalesArticle < ActiveRecord::Base
       customer_all_retail)
 		select("sum(qty) as sum_jumlah, sum(val) as sum_harganetto2")
     .search_by_month_and_year(month, year).search_by_branch(branch)
-    .search_by_type(type).brand(brand).artikel(article)
+    .search_by_type(type).brand(brand).artikel(article).produk(type)
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
 	end

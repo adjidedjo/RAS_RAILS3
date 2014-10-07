@@ -5,7 +5,7 @@ class LaporanCabang < ActiveRecord::Base
   belongs_to :cabang
 	belongs_to :brand
 
-  scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
+  scope :check_invoices, lambda {|date, jenis| where(:tanggalsj => date, :jenisbrgdisc => jenis).order("tanggalsj desc")}
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   # scope for monthly/monthly
@@ -37,7 +37,8 @@ class LaporanCabang < ActiveRecord::Base
   scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
   scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}	
   scope :between_month_sales, lambda { |from, to| where("month(tanggalsj) between ? and ?", from, to) if from.present? && to.present? }
-
+  scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
+  scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
     select("sum(jumlah) as sum_jumlah").search_by_month_and_year(date.to_date.month, date.to_date.year)

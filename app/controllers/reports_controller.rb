@@ -57,7 +57,8 @@ class ReportsController < ApplicationController
 		compare_last_month
     @article = LaporanCabang.select("*")
     .between_month_sales(params[:from].to_date.month, params[:to].to_date.month).year(params[:from].to_date.year)
-    .search_by_branch(params[:branch]).brand(params[:brand]).not_equal_with_nosj.no_return.group("kodeartikel")
+    .search_by_branch(params[:branch]).brand(params[:brand]).jenisbrg(params[:type]).namaartikel(params[:article])
+    .not_equal_with_nosj.no_return.group("cabang_id, jenisbrgdisc, jenisbrg, kodeartikel")
     @customer = LaporanCabang.select("*")
     .between_month_sales(params[:from].to_date.month, params[:to].to_date.month).year(params[:from].to_date.year)
     .search_by_branch(params[:branch]).brand(params[:brand]).not_equal_with_nosj.no_return.group("customer")
