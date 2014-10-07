@@ -18,10 +18,9 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-
 set :output, "#{path}/log/cron.log"
 env :PATH, ENV['PATH']
 
 every 1.minutes do # Use any day of the week or :weekend, :weekday
-  runner "UserMailer.report('a').deliver", environment: 'production'
+  rake "mailer:upload_control", environment: 'production'
 end
