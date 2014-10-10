@@ -36,6 +36,7 @@ gem "mail"
 gem 'whenever'
 gem 'resque'
 gem 'resque-scheduler', "~> 2.5.5", :require => 'resque_scheduler'
+gem 'resque-web', require: 'resque_web'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
