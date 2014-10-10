@@ -14,8 +14,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'commonjs'
   gem 'therubyracer'
-  gem 'jquery-datatables-rails', '~> 1.12.2'
-  gem 'jquery-ui-rails'
 end
 
 gem 'jquery-rails'
@@ -32,6 +30,8 @@ gem 'hpricot'
 gem 'premailer-rails'
 gem 'roo'
 gem "mail"
+gem 'jquery-datatables-rails', '~> 1.12.2'
+gem 'jquery-ui-rails'
 
 gem 'whenever'
 gem 'resque'
