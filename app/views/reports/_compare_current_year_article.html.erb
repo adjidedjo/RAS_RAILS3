@@ -23,19 +23,15 @@
                 <th>Brand</th>
                 <th>Type</th>
                 <th>Article</th>
-                <th>Fabric</th>
-                <th>Size</th>
                 <th>Group</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><%= brand.nil? ? "" : brand %></td>
-                <td><%= type.nil? ? "" : type %></td>
-                <td><%= article.nil? ? "" : params[:artikel] %></td>
-                <td><%= fabric.nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
-                <td><%= size_type == 'T' ? 'Special Size' : 'Standard Size' %></td>
-                <td><%= group_by %></td>
+                <td><%= brand.nil? ? "" : brand.join(',').to_s %></td>
+                <td><%= type.nil? ? "" : type.join(',').to_s %></td>
+                <td><%= article.nil? ? "" : article %></td>
+                <td>Article</td>
               </tr>
             </tbody>
           </table>
@@ -73,7 +69,6 @@
       <thead>
         <tr>
           <th rowspan="3">Cabang</th>
-          <th rowspan="3">Brand</th>
           <th rowspan="3">Jenis</th>
           <th rowspan="3">Article</th>
         </tr>
@@ -95,38 +90,10 @@
         <% @article.each do |laporan| %>
           <tr>
             <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
-            <td><%= laporan.merk %></td>
             <td><%= laporan.produk %></td>
             <td><%= laporan.artikel %></td>
-            <% @month_devided.each do |month, sales| %>
-              <% if Date.today.strftime('%d').to_i <= 15 %>
-                <% if month.month == Date.today.strftime('%-m').to_i || month.month == Date.today.strftime('%-m').to_i - 1  %>
-                  <% @model = TmpArticle %>
-                <% else %>
-                  <% @model = SalesArticle %>
-                <% end %>
-              <% else %>
-                <% if month.month == Date.today.strftime('%-m').to_i  %>
-                  <% @model = TmpArticle %>
-                <% else %>
-                  <% @model = SalesArticle %>
-                <% end %>
-              <% end %>
-
-              <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
-                  laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
-                  customer_modern, customer_all_retail).empty? %>
-                <td>0</td>
-                <td>0</td>
-              <% else %>
-                <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
-                  laporan.merk, laporan.artikel, nil, fabric, size, customer, size_type, 
-                  customer_modern, customer_all_retail).each do |a| %>
-                  <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
-                  <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
-                <% end %>
-              <% end %>
-            <% end %>
+            <td><%= laporan.sum_jumlah.nil? ? "0" : laporan.sum_jumlah.to_i %></td>
+            <td><%= laporan.sum_harganetto2.nil? ? "0" : currency(laporan.sum_harganetto2) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -141,7 +108,6 @@
         <thead>
           <tr>
             <th rowspan="3">Cabang</th>
-            <th rowspan="3">Brand</th>
             <th rowspan="3">Jenis</th>
             <th rowspan="3">Article</th>
           </tr>
@@ -164,7 +130,6 @@
             <tr>
               <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
               <td><%= laporan.merk %></td>
-              <td><%= laporan.produk %></td>
               <td><%= laporan.artikel %></td>
               <% @over_month.each do |month, sales| %>
                 <% if Date.today.strftime('%d').to_i <= 15 %>

@@ -54,10 +54,10 @@ class ReportsController < ApplicationController
 	end
 
 	def compare_current_year
-		compare_last_month
-    @article = SalesArticle.select("*")
+    compare_last_month
+    @article = SalesArticle.select("sum(qty) as sum_jumlah, sum(val) as sum_harganetto2, cabang_id, merk, produk, artikel")
     .between_date_sales(params[:from].to_date.month, params[:to].to_date.month).year(params[:from].to_date.year)
-    .search_by_branch(params[:branch]).brand(params[:brand]).produk(params[:type]).artikel(params[:article])
+    .search_by_branch(params[:branch]).brand(params[:brand]).produk(params[:type]).artikel(params[:article]).group('cabang_id, merk, produk, artikel')
     @customer = LaporanCabang.select("*")
     .between_month_sales(params[:from].to_date.month, params[:to].to_date.month).year(params[:from].to_date.year)
     .search_by_branch(params[:branch]).brand(params[:brand]).not_equal_with_nosj.no_return.group("customer")
