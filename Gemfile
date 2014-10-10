@@ -14,7 +14,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'commonjs'
   gem 'therubyracer'
-  gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+  gem 'jquery-datatables-rails', '~> 1.12.2'
   gem 'jquery-ui-rails'
 end
 
