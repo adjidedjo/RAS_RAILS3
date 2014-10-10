@@ -261,8 +261,6 @@
                       <th>Brand</th>
                       <th>Type</th>
                       <th>Article</th>
-                      <th>Fabric</th>
-                      <th>Size</th>
                       <th>Group</th>
                     </tr>
                   </thead>
@@ -270,10 +268,8 @@
                     <tr>
                       <td><%= params[:brand].nil? ? "" : params[:brand] %></td>
                       <td><%= params[:type].nil? ? "" : params[:type] %></td>
-                      <td><%= params[:article].nil? ? "" : Artikel.artikel_name(params[:article]).first.Produk %></td>
-                      <td><%= params[:fabric].nil? ? "" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
-                      <td><%= params[:size_type] == 'T' ? 'Special Size' : 'Standard Size' %></td>
-                      <td><%= params[:group_by] %></td>
+                      <td><%= params[:article].nil? ? "" : params[:article] %></td>
+                      <td>Article</td>
                     </tr>
                   </tbody>
                 </table>
@@ -289,6 +285,8 @@
           <table id="customer_monthly" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
             <thead>
               <tr>
+                <th rowspan="3">Cabang</th>
+                <th rowspan="3">Produk</th>
                 <th rowspan="3">Article</th>
               </tr>
               <tr>
@@ -308,6 +306,8 @@
             <tbody>
               <% @article.each do |laporan| %>
                 <tr>
+                  <td><%= Cabang.find_by_id(laporan.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+                  <td><%= laporan.merk %></td>
                   <td><%= laporan.artikel %></td>
                   <% @all_month_xls.each do |month, sales| %>
                     <% if Date.today.strftime('%d').to_i <= 15 %>
@@ -324,14 +324,14 @@
                       <% end %>
                     <% end %>
 
-                    <% if @model.customer_monthly(month.month, month.year, params[:branch], params[:type], 
-                        params[:brand], laporan.artikel, nil, params[:fabric], params[:size], params[:customer], 
+                    <% if @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                        laporan.merk, laporan.artikel, nil, params[:fabric], params[:size], params[:customer], 
                         params[:size_type], params[:customer_modern], params[:customer_all_retail]).empty? %>
                       <td>0</td>
                       <td>0</td>
                     <% else %>
-                      <% @model.customer_monthly(month.month, month.year, params[:branch], params[:type], 
-                        params[:brand], laporan.artikel, nil, params[:fabric], params[:size], params[:customer], 
+                      <% @model.customer_monthly(month.month, month.year, laporan.cabang_id, laporan.produk, 
+                        laporan.merk, laporan.artikel, nil, params[:fabric], params[:size], params[:customer], 
                         params[:size_type], params[:customer_modern], params[:customer_all_retail]).each do |a| %>
                         <td><%= a.sum_jumlah.nil? ? "0" : a.sum_jumlah.to_i %></td>
                         <td><%= a.sum_harganetto2.nil? ? "0" : currency(a.sum_harganetto2) %></td>
