@@ -22,12 +22,20 @@
     <table id="table_control_branch" class="display">
       <thead>
         <tr>
-          <th rowspan="2">Dates</th>
-          <th colspan="14">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
+          <th rowspan="3">Dates</th>
+          <th colspan="35">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
         </tr>
         <tr>
-          <% Cabang.get_id.each do |cabang| %>
-            <th><%= cabang.Cabang.gsub(/Cabang/,'') %></th>
+          <% Cabang.get_id_to_7.each do |cabang| %>
+            <th colspan="4"><%= cabang.Alias %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..8).each do |a| %>
+            <th>E</th>
+            <th>S</th>
+            <th>L</th>
+            <th>R</th>
           <% end %>
         </tr>
       </thead>
@@ -36,10 +44,53 @@
       <tbody>
         <% @dates.each do |date| %>
           <tr>
-            <th scope="row"><%= date.strftime("%e %B %Y") %></th>
-            <% @cabang_get_id.each do |cab| %>
+            <th scope="row"><%= date.strftime("%d/%b/%y") %></th>
+            <% @cabang_get_id_first.each do |cab| %>
               <% if params[:category] == "Penjualan" %>
-                <td><%= cab.laporan_cabang.check_invoices(date).limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Non Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Lady Americana").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Royal").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+              <% else %>
+                <td><%= cab.stock.control_stock(date).order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <table id="table_control_branch2" class="display">
+      <thead>
+        <tr>
+          <th rowspan="3">Dates</th>
+          <th colspan="35">Annual Control <%= params[:category] == "Penjualan" ? "Sales" : "Stock" %> Branches Report</th>
+        </tr>
+        <tr>
+          <% Cabang.get_id_to_22.each do |cabang| %>
+            <th colspan="4"><%= cabang.Alias %></th>
+          <% end %>
+        </tr>
+        <tr>
+          <% (1..8).each do |a| %>
+            <th>E</th>
+            <th>S</th>
+            <th>L</th>
+            <th>R</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @dates.each do |date| %>
+          <tr>
+            <th scope="row"><%= date.strftime("%d/%b/%y") %></th>
+            <% @cabang_get_id_second.each do |cab| %>
+              <% if params[:category] == "Penjualan" %>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Non Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Lady Americana").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, "Royal").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
               <% else %>
                 <td><%= cab.stock.control_stock(date).order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
               <% end %>

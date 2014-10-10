@@ -719,8 +719,19 @@ $(document).ready(function(){
   });
 
   $('#table_control_branch').dataTable({
-        
-    iDisplayLength: -1
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    autoWidth: false,
+    "scrollX": true
+  });
+  
+  $('#table_control_branch2').dataTable({
+    bFilter: false, 
+    bInfo: false,
+    bPaginate: false,
+    autoWidth: false,
+    "scrollX": true
   });
   $('#table_total').dataTable({
     bFilter: false, 

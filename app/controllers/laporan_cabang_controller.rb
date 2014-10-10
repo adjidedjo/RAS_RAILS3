@@ -1,5 +1,5 @@
 class LaporanCabangController < ApplicationController
-
+  
 	def search
 		unless params[:from].nil? && params[:to].nil?
 			unless params[:reports].nil? || params[:merk_id].empty?
@@ -165,6 +165,8 @@ class LaporanCabangController < ApplicationController
   def control_branches_sales
     @dates = params[:from].to_date..params[:to].to_date unless params[:from].nil? && params[:to].nil?
     @cabang_get_id = Cabang.get_id
+    @cabang_get_id_first = Cabang.get_id_to_7
+    @cabang_get_id_second = Cabang.get_id_to_22
   end
 
   def group_by_merk_type
