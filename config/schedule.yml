@@ -1,5 +1,5 @@
 send_email:
-  cron: "0 08 */2 * *"
+  cron: "30 08 * * *"
   queue: cron
   class: ControlUpload
   args: "send_mail"
