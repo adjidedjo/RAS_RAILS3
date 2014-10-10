@@ -3,7 +3,11 @@ class UserMailer < ActionMailer::Base
 
 	def report
     email1 = "aji.y@ras.co.id"
-    email2 = "adji.el.djo@gmail.com"
+    email2 = "ratna.d@ras.co.id"
+    email2 = "irne@ras.co.id"
+    email2 = "frieder@ras.co.id"
+    email2 = "rudy.s@ras.co.id"
+    email2 = "daniel@ras.co.id"
     recipients = email1, email2
 		@dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
