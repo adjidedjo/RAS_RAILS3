@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+      <div class="block-content">
+        <%= form_tag export_excel_accounting_price_lists_path, :method => 'get', :class => "form-accounting" do %>
+          <div class="block">
+            <div class="navbar navbar-inner block-header">
+              <div class="muted pull-left">Select Brand</div>
+              <div class="pull-right"><span class="badge badge-info"></span>
+
+              </div>
+            </div>
+            <div class="block-content">
+              <div class="form-group">
+                <%= label_tag 'cabang' %>
+                <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}), {:class=>"form-control"} %>
+              </div>               
+              <div class="form-group">
+                <%= label_tag 'brand' %>
+                <%= select_tag 'brand', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}), {:class=>"form-control"} %>
+              </div>
+              <div class="form-group">
+                <%= label_tag 'bulan' %>
+                <%= select_month(Date.today, add_month_numbers: true, :class=>"form-control") %>
+              </div>
+              <%= hidden_field_tag 'year', Date.today.year  %>
+              <div class="form-group">
+                <% if params[:year].present? and params[:brand].present? %>
+                  <%= link_to 'Export to Excel', url_for(request.parameters.merge({format: "xls"})),
+                    :class=>"btn btn-info" %>
+                <% else %>
+                  <button type="submit" class="btn btn-primary">Process</button>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>        
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:x="urn:schemas-microsoft-com:office:excel"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Tanggal SJ</Data></Cell>
+        <Cell><Data ss:Type="String">No Faktur</Data></Cell>
+        <Cell><Data ss:Type="String">Customer</Data></Cell>
+        <Cell><Data ss:Type="String">Salesman</Data></Cell>
+        <Cell><Data ss:Type="String">Kode Barang</Data></Cell>
+        <Cell><Data ss:Type="String">Nama Barang</Data></Cell>
+        <Cell><Data ss:Type="String">Brand</Data></Cell>
+        <Cell><Data ss:Type="String">Jenis</Data></Cell>
+        <Cell><Data ss:Type="String">Artikel</Data></Cell>
+        <Cell><Data ss:Type="String">Kain</Data></Cell>
+        <Cell><Data ss:Type="String">Panjang</Data></Cell>
+        <Cell><Data ss:Type="String">Lebar</Data></Cell>
+        <Cell><Data ss:Type="String">Jumlah</Data></Cell>
+        <Cell><Data ss:Type="String">Satuan</Data></Cell>
+        <Cell><Data ss:Type="String">Harga</Data></Cell>
+        <Cell><Data ss:Type="String">Bruto</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 1</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 2</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 3</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 4</Data></Cell>
+        <Cell><Data ss:Type="String">Netto2</Data></Cell>
+        <Cell><Data ss:Type="String">Total Netto2</Data></Cell>
+        <Cell><Data ss:Type="String">Cashback</Data></Cell>
+        <Cell><Data ss:Type="String">Upgrade</Data></Cell>
+        <Cell><Data ss:Type="String">KetPPB</Data></Cell>
+      </Row>
+      <% @export.each do |export| %>
+        <Row>
+          <Cell><Data ss:Type="String"><%= export.tanggalsj %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.nofaktur %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.customer %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.salesman %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.kodebrg %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.namabrg %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.jenisbrgdisc %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.jenisbrg %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.namaartikel %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.namakain %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.panjang %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.lebar %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.jumlah %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.satuan %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.hargasatuan %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.hargabruto %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.diskon1 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.diskon2 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.diskon3 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.diskon4 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.harganetto2 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.totalnetto2 %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.cashback %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.nupgrade %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.ketppb %></Data></Cell>
+        </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>
