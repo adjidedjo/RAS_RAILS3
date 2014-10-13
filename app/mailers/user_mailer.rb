@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "elitespringbedmattress@gmail.com"
+  default from: "Admin Sales Analytic"
 
 	def report
     email1 = "aji.y@ras.co.id"
@@ -13,5 +13,10 @@ class UserMailer < ActionMailer::Base
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
     mail(:to => recipients.join(','), :subject => "Laporan Upload Data Penjualan Harian")
+  end
+  
+  def account_approved(user)
+    @user = User.where("email = ?", user)
+    mail(:to => user, :subject => "Your Account Has Been Approved")
   end
 end
