@@ -3,9 +3,11 @@ require "resque_web"
 Rain::Application.routes.draw do
 
   mount ResqueWeb::Engine => "/resque_web"
+  
   resources :accounting_price_lists do
     collection do
       get 'pilihan_brand'
+      get 'export_excel'
     end
   end
 

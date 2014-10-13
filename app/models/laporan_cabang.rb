@@ -39,6 +39,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :between_month_sales, lambda { |from, to| where("month(tanggalsj) between ? and ?", from, to) if from.present? && to.present? }
   scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
+  scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
     select("sum(jumlah) as sum_jumlah").search_by_month_and_year(date.to_date.month, date.to_date.year)
