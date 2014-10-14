@@ -19,4 +19,9 @@ class UserMailer < ActionMailer::Base
     @user = User.where("email = ?", user)
     mail(:to => user, :subject => "Your Account Has Been Approved")
   end
+  
+  def sign_up(user)
+    @user = User.where("email = ?", user)
+    mail(:to => user, :subject => "Welcome to Sales Analytic")
+  end
 end

@@ -11,7 +11,11 @@ class User < ActiveRecord::Base
   attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :login, 
 		:approved, :user_brand, :branch, :sales_stock
   attr_accessor :login
-
+  after_create :send_welcome_mail
+  
+  def send_welcome_mail
+    UserMailer.sign_up(self.email).deliver
+  end
 
   def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
