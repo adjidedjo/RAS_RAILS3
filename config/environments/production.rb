@@ -61,9 +61,9 @@ Rain::Application.configure do
   config.action_mailer.smtp_settings = {
     :address              => "smtp.gmail.com",
     :port                 => 587,
-    :domain               => 'apapun.id',
-    :user_name            => 'elitespringbedmattress@gmail.com',
-    :password             => 'elitespringbedmattress*123',
+    :domain               => 'gmail.com',
+    :user_name            => 'ras.salesanalytic@gmail.com',
+    :password             => 'Roy@l4b@d!',
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
 end

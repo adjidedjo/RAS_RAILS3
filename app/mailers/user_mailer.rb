@@ -5,7 +5,7 @@ class UserMailer < ActionMailer::Base
     email1 = "aji.y@ras.co.id"
     email2 = "ratna.d@ras.co.id"
     email3 = "irne@ras.co.id"
-    email4 = "frieder@ras.co.id"
+    email4 = "friedermorulak@ras.co.id"
     email5 = "rudy.s@ras.co.id"
     email6 = "daniel@ras.co.id"
     recipients = email1, email2, email3, email4, email5, email6
