@@ -28,9 +28,11 @@ class ControlUpload
   def send_mail
     UserMailer.report.deliver
   end
-
-  def some_other_task
-    # logic here
+  
+  def update_price_list
+    Regional.update_cashback
+    Regional.update_discount
+    Regional.update_special_price
+    Regional.update_upgrade
   end
-
 end

@@ -3,5 +3,14 @@ send_email:
   queue: cron
   class: ControlUpload
   args: "send_mail"
-  description: Calculates stats
+  description: send report upload sales branches
   rails_envs: development, production, staging
+  
+update_price_list:
+  cron: "30 00 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "update_price_list"
+  description: update price list
+  rails_envs: development, production, staging
+  
