@@ -1,8 +1,7 @@
 send_email:
-  cron: "/10 * * * 1-6"
+  cron: "30 08 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "send_mail"
   description: send report upload sales branches
   rails_envs: development, production, staging
-  
