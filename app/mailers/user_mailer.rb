@@ -12,7 +12,7 @@ class UserMailer < ActionMailer::Base
 		@dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
-    mail(:to => recipients.join(','), :subject => "Laporan Upload Data Penjualan Harian")
+    mail(:to => email1, :subject => "Laporan Upload Data Penjualan Harian")
   end
   
   def account_approved(user)
