@@ -8,7 +8,7 @@ send_email:
   
 update_price_list:
   cron: "/5 * * * *"
-  queue: cron2
+  queue: cron
   class: ControlUpload
   args: "update_price_list"
   description: update price list
