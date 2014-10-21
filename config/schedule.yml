@@ -4,4 +4,12 @@ send_email:
   class: ControlUpload
   args: "send_mail"
   description: send report upload sales branches
+  rails_envs: production
+  
+update_price_list:
+  cron: "/5 * * * *"
+  queue: cron2
+  class: ControlUpload
+  args: "update_price_list"
+  description: update price list
   rails_envs: development, production, staging
