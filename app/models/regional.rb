@@ -8,6 +8,15 @@ class Regional < ActiveRecord::Base
   
   before_destroy :set_regional_id
   
+  def self.update_harga
+    @harga = FuturePriceList.where("harga_starting_at = ?", Date.today)
+    
+    @harga.each do |harga|
+      PriceList.where(produk: harga.produk, regional_id: harga.regional_id, jenis: harga.jenis, lebar: harga.lebar).each do |list|
+        list.update_attributes!(:harga => harga.harga)
+      end
+    end
+  end
   
   def self.update_discount
     @discount = FuturePriceList.where("discount_starting_at = ?", Date.today)

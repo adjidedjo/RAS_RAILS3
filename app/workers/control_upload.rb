@@ -30,6 +30,10 @@ class ControlUpload
   end
   
   def update_price_list
+    Regional.update_harga
     Regional.update_discount
+    Regional.update_upgrade
+    Regional.update_cashback
+    Regional.update_special_price
   end
 end
