@@ -7,7 +7,7 @@ send_email:
   rails_envs: production
   
 update_price_list:
-  cron: "/5 * * * *"
+  cron: "01 0 * * *"
   queue: cron
   class: ControlUpload
   args: "update_price_list"
