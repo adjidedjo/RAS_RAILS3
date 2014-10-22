@@ -25,18 +25,6 @@
             </div>
             <% unless @accounting_price_list.nil?  %>
               <div class="field">
-                <%= f.label :upgrade_master %>
-                <%= f.text_field 'upgrade_master', readonly: true  %>
-              </div>
-              <div class="field">
-                <%= f.label :upgrade_laporan %>
-                <%= f.text_field 'upgrade_laporan', readonly: true  %>
-              </div>
-              <div class="field">
-                <%= label_tag :upgrade_seharusnya %>
-                <%= text_field_tag 'upgrade_seharusnya', (@accounting_price_list.upgrade_master.to_i * @accounting_price_list.quantity.to_i), readonly: true  %>
-              </div>
-              <div class="field">
                 <%= f.label :harga_master %>
                 <%= f.text_field 'harga_master', readonly: true  %>
               </div>
@@ -45,15 +33,38 @@
                 <%= f.text_field 'harga_laporan', readonly: true  %>
               </div>
               <div class="field">
-                <%= label_tag :harga_seharusnya %>
-                <%= text_field_tag 'harga_seharusnya', (@accounting_price_list.harga_master.to_i * @accounting_price_list.quantity.to_i), readonly: true  %>
+                <%= f.label :upgrade_master %>
+                <%= f.text_field 'upgrade_master', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :upgrade_laporan %>
+                <%= f.text_field 'upgrade_laporan', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :cashback_master %>
+                <%= f.text_field 'cashback_master', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :cashback_laporan %>
+                <%= f.text_field 'cashback_laporan', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :discount_1_master %>
+                <%= f.text_field 'discount_1_master', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :discount_1_laporan %>
+                <%= f.text_field 'discount_1_laporan', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :discount_2_master %>
+                <%= f.text_field 'discount_2_master', readonly: true  %>
+              </div>
+              <div class="field">
+                <%= f.label :discount_2_laporan %>
+                <%= f.text_field 'discount_2_master', readonly: true  %>
               </div>
             <% end %>
-            <div class="field">
-              <%= f.check_box :checked  %>Checked
-            </div>
-            <br />
-            <div class="pull-left"><%= submit_tag "Update", :class => "btn btn-primary" %></div>
           </fieldset>
         </div>
       <% end %>

@@ -36,4 +36,8 @@ class ControlUpload
     Regional.update_cashback
     Regional.update_special_price
   end
+  
+  def check_reports
+    PriceList.check_report_price_list(Date.today.month, Date.today.year)
+  end
 end

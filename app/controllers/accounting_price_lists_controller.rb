@@ -18,8 +18,7 @@ class AccountingPriceListsController < ApplicationController
   def index
     unless params[:branch].blank? && params[:brand].blank?
       @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month].to_i, Date.today.year)
-      .brand(brand(params[:brand])).search_by_branch(params[:branch]).no_return
-      .not_equal_with_nofaktur.where("checked = ?", false)
+      .brand(brand(params[:brand])).search_by_branch(params[:branch]).where("checked = ?", false)
       @accounting_price_list = AccountingPriceList.new
     end
   end
@@ -94,5 +93,19 @@ class AccountingPriceListsController < ApplicationController
       format.html { redirect_to accounting_price_lists_url }
       format.json { head :ok }
     end
+  end
+  
+  def update_multiple
+    @report = CheckedItemMaster.find(params[:report_ids])
+    @report.each do |repsales|
+      if params[:commit] == 'Checked as customer services'
+        repsales.update_attributes!(:checked => true)
+        repsales.update_attributes!(:customer_services => true)
+      elsif params[:commit] == 'Set all as checked'
+        repsales.update_attributes!(:checked => true)
+      end
+    end
+    flash[:notice] = "Reports Checked"
+    redirect_to accounting_price_lists_path(branch: params[:branch], brand: params[:brand], month: params[:month])
   end
 end

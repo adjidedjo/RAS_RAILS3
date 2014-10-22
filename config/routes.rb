@@ -2,12 +2,27 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  resources :future_price_lists
+
+  resources :regional_branches
+  
+  resources :regionals do
+    collection do
+      get 'remove_cabang'
+      get 'list_cabang'
+      get 'price_list'
+      put 'update_multiple'
+      post 'edit_multiple'
+    end
+  end
+
   mount ResqueWeb::Engine => "/resque_web"
   
   resources :accounting_price_lists do
     collection do
       get 'pilihan_brand'
       get 'export_excel'
+      post 'update_multiple'
     end
   end
 

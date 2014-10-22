@@ -15,7 +15,8 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%), %(#{'RD'}%))
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
-	scope :no_return, where("nofaktur not like ? or nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
+	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
+	scope :no_pengajuan, where("ketppb not like ? and ketppb not like ? ", %(%#{'pengajuan'}%),%(%#{'customer services'}%))
 	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
@@ -40,6 +41,10 @@ class LaporanCabang < ActiveRecord::Base
   scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
+  
+  def self.compare_price_list(bulan, tahun)
+    select("*").search_by_month_and_year(bulan, tahun).no_return.not_equal_with_nofaktur.no_pengajuan
+  end
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
     select("sum(jumlah) as sum_jumlah").search_by_month_and_year(date.to_date.month, date.to_date.year)

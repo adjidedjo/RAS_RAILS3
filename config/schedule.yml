@@ -13,3 +13,11 @@ update_price_list:
   args: "update_price_list"
   description: update price list
   rails_envs: development, production, staging
+
+check_sales_reports:
+  cron: "0 1 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "check_reports"
+  description: check sales_reports
+  rails_envs: development, production, staging
