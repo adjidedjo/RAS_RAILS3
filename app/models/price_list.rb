@@ -12,7 +12,8 @@ class PriceList < ActiveRecord::Base
             merk.first.id, cabreg.id, lap.kodebrg).each do |pricelist|
             customer_services = CheckedItemMaster.where("nofaktur like ? and kodebarang like ? and customer like ? and quantity like ?", lap.nofaktur, lap.kodebrg, lap.customer, lap.jumlah)
             if customer_services.empty?
-              if (lap.hargasatuan != pricelist.harga) || ((lap.nupgrade*lap.jumlah) != pricelist.upgrade)  
+              if (lap.hargasatuan != pricelist.harga) || ((lap.nupgrade*lap.jumlah) != pricelist.upgrade) || 
+                  (lap.cashback != pricelist.cashback) || (lap.diskon1 != pricelist.discount_1) || (lap.diskon2 != pricelist.discount_2)
                 CheckedItemMaster.create(:nofaktur => lap.nofaktur, :tgl_faktur => lap.tanggal, 
                   :kodebarang => lap.kodebrg, :namabarang => lap.namabrg, :cabang_id => lap.cabang_id,
                   :harga_master => pricelist.harga, :harga_laporan => lap.hargasatuan,
