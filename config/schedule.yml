@@ -15,7 +15,7 @@ update_price_list:
   rails_envs: development, production, staging
 
 check_sales_reports:
-  cron: "0 1 * * *"
+  cron: "30 8 * * *"
   queue: cron
   class: ControlUpload
   args: "check_reports"
