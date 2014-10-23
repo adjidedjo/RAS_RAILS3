@@ -1,0 +1,46 @@
+<h3>List Produk</h3>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <%= form_tag edit_multiple_regionals_path, :method => :post, :class => "test" do %>
+      <table id="list_produk" border="1" cellspacing="0" cellpadding="3">
+        <thead>
+          <tr>
+            <th><%= check_box_tag "check_all" %></th>
+            <th>Kode Produk</th>
+            <th>Produk</th>
+            <th>Ukuran</th>
+          </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+          <% @produk.each do |produk| %>
+            <tr>
+              <%= hidden_field_tag 'regional_id', params[:regional_id] %>
+              <%= hidden_field_tag 'brand_id', params[:brand_id] %>
+              <td><%= check_box_tag "produk_ids[]", produk.id %></td>
+              <td><%= produk.jenis %></td>
+              <% artikel = Artikel.where("KodeCollection like ?", produk.produk).first  %>
+              <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+              <td><%= produk.lebar %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <br />
+      <p>
+        <b>Data yang akan dirubah: </b><br />
+      </p>
+      <ul>
+        <%= radio_button_tag(:add, "harga") %> Harga <br />
+        <%= radio_button_tag(:add, "discount") %> Discount <br />
+        <%= radio_button_tag(:add, "upgrade") %> Upgrade <br />
+        <%= radio_button_tag(:add, "cashback") %> Cashback <br />
+        <%= radio_button_tag(:add, "special_price") %> Special Price
+      </ul>
+      <%= submit_tag "Update Checked Product", regional_id: params[:regional_id] %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to 'Back', regionals_path %>

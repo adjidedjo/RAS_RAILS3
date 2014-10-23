@@ -1,0 +1,26 @@
+<%= form_for(@regional) do |f| %>
+  <% if @regional.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@regional.errors.count, "error") %> prohibited this regional from being saved:</h2>
+
+      <ul>
+        <% @regional.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nama %><br />
+    <%= f.text_field :nama %>
+  </div>
+  <div class="field">
+    <%= f.label :brand %><br />
+    <%= f.select 'brand_id', options_for_select(@brand.collect {|a| [a.Merk, a.id]}) %>
+  </div>
+  <br />
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

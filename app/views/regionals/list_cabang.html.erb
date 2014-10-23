@@ -1,0 +1,38 @@
+<p>
+  <b>Nama Regional:</b>
+  <%= @regional.nama %>
+</p>
+
+<h3>List Cabang</h3>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <%= form_tag regional_branches_path, :method => :post do %>
+      <table id="list_cabang" border="1" class="display" cellspacing="0" cellpadding="3">
+        <thead>
+          <tr>
+            <th><%= check_box_tag "check_all" %></th>
+            <th>ID</th>
+            <th>Cabang</th>
+            <th>Alias</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cabang.each do |cabang| %>
+            <tr>
+              <%= hidden_field_tag "regional", @regional.id %>
+              <%= hidden_field_tag "brand_id", @regional.brand_id %>
+              <td><%= check_box_tag "cabang_ids[]", cabang.id %></td>
+              <td><%= cabang.id %></td>
+              <td><%= cabang.Cabang.gsub(/Cabang/,'') %></td>
+              <td><%= cabang.Alias %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <br />
+      <%= submit_tag "Add All Checked To This Regional" %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to 'Back', regionals_path %>

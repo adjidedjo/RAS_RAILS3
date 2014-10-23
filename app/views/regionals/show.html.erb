@@ -1,0 +1,39 @@
+<p>
+  <b>Nama:</b>
+  <%= @regional.nama %>
+</p>
+<p>
+  <b>Brand:</b>
+  <%= Merk.find(@regional.brand_id).Merk %>
+</p>
+
+<p>Cabang-Cabang yang termasuk ke dalam <%= @regional.nama %></p>
+<div class="row-fluid">
+  <div class="block-content collapse in"><table>
+      <table id="list_cabang" border="1" class="display" cellspacing="0" cellpadding="3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cabang</th>
+            <th>Alias</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @regional.cabang.each do |regional_cabang| %>
+            <tr>
+              <td><%= regional_cabang.id %></td>
+              <td><%= regional_cabang.Cabang.gsub(/Cabang/,'') %></td>
+              <td><%= regional_cabang.Alias %></td>
+              <td><%= link_to 'Remove', remove_cabang_regionals_path(:cabang_id => regional_cabang.id, :regional_id => @regional.id), confirm: 'Are you sure?' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
+</div>
+
+<%= link_to 'Update Price List', price_list_regionals_path(regional_id: @regional.id, brand_id: @regional.brand_id) %> |
+<%= link_to 'Add Branch', list_cabang_regionals_path(regional: @regional) %> |
+<%= link_to 'Edit', edit_regional_path(@regional) %> |
+<%= link_to 'Back', regionals_path %>

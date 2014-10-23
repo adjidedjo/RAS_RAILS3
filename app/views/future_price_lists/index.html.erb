@@ -1,0 +1,55 @@
+<h1>Listing future_price_lists</h1>
+
+<table>
+  <tr>
+    <th>Jenis</th>
+    <th>Produk</th>
+    <th>Kain</th>
+    <th>Panjang</th>
+    <th>Lebar</th>
+    <th>Harga</th>
+    <th>Discount 1</th>
+    <th>Discount 2</th>
+    <th>Discount 3</th>
+    <th>Discount 4</th>
+    <th>Upgrade</th>
+    <th>Cashback</th>
+    <th>Special price</th>
+    <th>Start at</th>
+    <th>End at</th>
+    <th>Regional</th>
+    <th>Brand</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @future_price_lists.each do |future_price_list| %>
+  <tr>
+    <td><%= future_price_list.jenis %></td>
+    <td><%= future_price_list.produk %></td>
+    <td><%= future_price_list.kain %></td>
+    <td><%= future_price_list.panjang %></td>
+    <td><%= future_price_list.lebar %></td>
+    <td><%= future_price_list.harga %></td>
+    <td><%= future_price_list.discount_1 %></td>
+    <td><%= future_price_list.discount_2 %></td>
+    <td><%= future_price_list.discount_3 %></td>
+    <td><%= future_price_list.discount_4 %></td>
+    <td><%= future_price_list.upgrade %></td>
+    <td><%= future_price_list.cashback %></td>
+    <td><%= future_price_list.special_price %></td>
+    <td><%= future_price_list.start_at %></td>
+    <td><%= future_price_list.end_at %></td>
+    <td><%= future_price_list.regional_id %></td>
+    <td><%= future_price_list.brand_id %></td>
+    <td><%= link_to 'Show', future_price_list %></td>
+    <td><%= link_to 'Edit', edit_future_price_list_path(future_price_list) %></td>
+    <td><%= link_to 'Destroy', future_price_list, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Future price list', new_future_price_list_path %>

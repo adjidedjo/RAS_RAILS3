@@ -1,0 +1,30 @@
+<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan SJY, SJP, SJV dan SJB</p></h5>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <label>
+    </label>
+  </div>
+</div>
+<br />
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="faktur" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+      <thead>
+        <tr>
+          <th>Branch</th>
+          <th>Faktur <%= Date.today.strftime("%B") + " " + Date.today.strftime("%Y") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @missing_faktur.each do |laporan| %>
+          <tr>
+            <td><%= Cabang.find(2).Cabang.gsub(/Cabang/,'') %></td>
+            <td><%= "FK" + "E"+"-"+"02"+"-"+"14"+"09"+"-"+ laporan.to_s %></td>
+            <td><%= link_to 'Edit',  new_sales_report_path  %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

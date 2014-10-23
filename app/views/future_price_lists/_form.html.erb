@@ -1,0 +1,85 @@
+<%= form_for(@future_price_list) do |f| %>
+  <% if @future_price_list.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@future_price_list.errors.count, "error") %> prohibited this future_price_list from being saved:</h2>
+
+      <ul>
+      <% @future_price_list.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :jenis %><br />
+    <%= f.select :jenis, options_for_select(@jenis.collect{|a| [a.Namaroduk, a.KodeProduk]}) %>
+  </div>
+  <div class="field">
+    <%= f.label :produk %><br />
+    <%= f.text_field :produk %>
+  </div>
+  <div class="field">
+    <%= f.label :kain %><br />
+    <%= f.text_field :kain %>
+  </div>
+  <div class="field">
+    <%= f.label :panjang %><br />
+    <%= f.text_field :panjang %>
+  </div>
+  <div class="field">
+    <%= f.label :lebar %><br />
+    <%= f.text_field :lebar %>
+  </div>
+  <div class="field">
+    <%= f.label :harga %><br />
+    <%= f.text_field :harga %>
+  </div>
+  <div class="field">
+    <%= f.label :discount_1 %><br />
+    <%= f.number_field :discount_1 %>
+  </div>
+  <div class="field">
+    <%= f.label :discount_2 %><br />
+    <%= f.number_field :discount_2 %>
+  </div>
+  <div class="field">
+    <%= f.label :discount_3 %><br />
+    <%= f.number_field :discount_3 %>
+  </div>
+  <div class="field">
+    <%= f.label :discount_4 %><br />
+    <%= f.number_field :discount_4 %>
+  </div>
+  <div class="field">
+    <%= f.label :upgrade %><br />
+    <%= f.text_field :upgrade %>
+  </div>
+  <div class="field">
+    <%= f.label :cashback %><br />
+    <%= f.text_field :cashback %>
+  </div>
+  <div class="field">
+    <%= f.label :special_price %><br />
+    <%= f.text_field :special_price %>
+  </div>
+  <div class="field">
+    <%= f.label :start_at %><br />
+    <%= f.date_select :start_at %>
+  </div>
+  <div class="field">
+    <%= f.label :end_at %><br />
+    <%= f.date_select :end_at %>
+  </div>
+  <div class="field">
+    <%= f.label :regional_id %><br />
+    <%= f.number_field :regional_id %>
+  </div>
+  <div class="field">
+    <%= f.label :brand_id %><br />
+    <%= f.number_field :brand_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
