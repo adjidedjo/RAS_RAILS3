@@ -1,25 +1,30 @@
-<h1>Listing regionals</h1>
-
-<table>
-  <tr>
-    <th>Nama</th>
-    <th>Brand</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @regionals.each do |regional| %>
-  <tr>
-    <td><%= regional.nama %></td>
-    <td><%= Merk.find(regional.brand_id).Merk %></td>
-    <td><%= link_to 'Show', regional %></td>
-    <td><%= link_to 'Edit', edit_regional_path(regional) %></td>
-    <td><%= link_to 'Destroy', regional, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Regional', new_regional_path %>
+<h3>Listing regionals</h3>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="list_cabang" border="1" class="display" cellspacing="0" cellpadding="3">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Brand</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @regionals.each do |regional| %>
+          <tr>
+            <td><%= regional.nama %></td>
+            <td><%= Merk.find(regional.brand_id).Merk %></td>
+            <td><%= link_to 'Show', regional, :class => "btn btn-link" %></td>
+            <td><%= link_to 'Edit', edit_regional_path(regional), :class => "btn btn-link" %></td>
+            <td><%= link_to 'Destroy', regional, confirm: 'Are you sure?', method: :delete, :class => "btn btn-link" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<button type="button" class="btn btn-default btn-lg">
+  <%= link_to 'New Regional', new_regional_path %>
+</button>
