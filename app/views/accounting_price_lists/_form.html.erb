@@ -26,27 +26,27 @@
             <% unless @accounting_price_list.nil?  %>
               <div class="field">
                 <%= f.label :harga_master %>
-                <%= f.text_field 'harga_master', readonly: true  %>
+                <%= f.text_field 'harga_master', readonly: true, value: currency(f.object.harga_master) %>
               </div>
               <div class="field">
                 <%= f.label :harga_laporan %>
-                <%= f.text_field 'harga_laporan', readonly: true  %>
+                <%= f.text_field 'harga_laporan', readonly: true, value: currency(f.object.harga_laporan) %>
               </div>
               <div class="field">
                 <%= f.label :upgrade_master %>
-                <%= f.text_field 'upgrade_master', readonly: true  %>
+                <%= f.text_field 'upgrade_master', readonly: true, value: currency(f.object.upgrade_master) %>
               </div>
               <div class="field">
                 <%= f.label :upgrade_laporan %>
-                <%= f.text_field 'upgrade_laporan', readonly: true  %>
+                <%= f.text_field 'upgrade_laporan', readonly: true, value: currency(f.object.upgrade_laporan) %>
               </div>
               <div class="field">
                 <%= f.label :cashback_master %>
-                <%= f.text_field 'cashback_master', readonly: true  %>
+                <%= f.text_field 'cashback_master', readonly: true, value: currency(f.object.cashback_master) %>
               </div>
               <div class="field">
                 <%= f.label :cashback_laporan %>
-                <%= f.text_field 'cashback_laporan', readonly: true  %>
+                <%= f.text_field 'cashback_laporan', readonly: true, value: currency(f.object.cashback_laporan) %>
               </div>
               <div class="field">
                 <%= f.label :discount_1_master %>

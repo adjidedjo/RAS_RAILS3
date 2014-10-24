@@ -43,7 +43,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
   
   def self.compare_price_list(bulan, tahun)
-    select("*").search_by_month_and_year(bulan, tahun).no_return.not_equal_with_nofaktur.no_pengajuan
+    select("*").search_by_month_and_year(bulan, tahun).no_pengajuan
   end
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
