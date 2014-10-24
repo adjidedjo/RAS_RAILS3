@@ -42,8 +42,9 @@ class LaporanCabang < ActiveRecord::Base
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
   
-  def self.compare_price_list(bulan, tahun)
-    select("*").search_by_month_and_year(bulan, tahun).no_pengajuan
+  def self.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun)
+    select("*").where("month(tanggalsj) between ? and ? and year(tanggalsj) between ? and ?", 
+      bulan_lalu, bulan, tahun_lalu, tahun).no_pengajuan
   end
   
   def self.get_target_by_salesman(branch, date, merk, salesman)
