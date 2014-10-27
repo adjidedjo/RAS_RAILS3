@@ -43,8 +43,8 @@
           <%= menu_item "Users", users_path if current_user.roles == 'SuperHero' %>
           <% if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
             <%= drop_down "Accounting" do %>    
-              <%= menu_item "Cek No Faktur", sales_reports_path %>
-              <%= menu_item "Cek Master", accounting_price_lists_path %>
+              <%= menu_item "Cek NoFaktur Hilang", sales_reports_path %>
+              <%= menu_item "Cek Price List", accounting_price_lists_path %>
               <%= menu_item "Export Laporan", export_excel_accounting_price_lists_path %>
             <% end %>  
           <% end %>  
