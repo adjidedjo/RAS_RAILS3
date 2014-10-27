@@ -1,7 +1,8 @@
 $(document).ready(function(){    
   $('#price_list').dataTable({
     iDisplayLength: 50,
-    bRetrieve: true
+    bRetrieve: true,
+    bAutoWidth: false
   });
     
   $('.form-accounting-faktur select').tooltipster({ 
