@@ -18,7 +18,7 @@ class AccountingPriceListsController < ApplicationController
   def index
     unless params[:branch].blank? && params[:brand].blank?
       @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month].to_i, Date.today.year)
-      .brand(brand(params[:brand])).search_by_branch(params[:branch]).where("checked = ?", false)
+      .brand(brand(params[:brand])).search_by_branch(params[:branch]).where("checked = ?", false).order("nofaktur ASC")
       @accounting_price_list = AccountingPriceList.new
     end
   end
