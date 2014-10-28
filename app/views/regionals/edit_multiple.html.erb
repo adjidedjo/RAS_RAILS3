@@ -1,74 +1,92 @@
-<%= form_for @artikel, :url => update_multiple_regionals_path, :html => { :method => :put } do |form| %>
-  <p>
-    <b>Regional: </b><%= Regional.find(@regional_id).nama %><br />
-  </p>
-  <p>
-    <b>Brand: </b><%= Merk.find(@brand_id).Merk %><br />
-  </p>
-  <p>
-    <b>Product: </b><br />
-  </p>
-  <ul>
-    <% @artikel.each do |artikel| %>
-      <li>
-        <%= artikel.jenis %> : <%= Artikel.where("KodeCollection like ?", artikel.produk).first.Produk %><br />
-        <%= hidden_field_tag "artikel_ids[]", artikel.id %>
-      </li>  
-    <% end %>
-  </ul>
-  <%= hidden_field_tag "regional_id", @regional_id %>
-  <%= hidden_field_tag "brand_id", @brand_id %>
-  <% if params[:add] == "harga" %>
-  <div class="field">
-    <%= form.label :harga %> 
-    <%= form.text_field :harga %>
+<div class="row-fluid">
+  <div class="offset4">
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left"><span class="badge badge-info">Update Price List & Discount</span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_for @artikel, :url => update_multiple_regionals_path, :html => { :method => :put } do |form| %>
+            <p>
+              <b>Regional: </b><%= Regional.find(@regional_id).nama %><br />
+            </p>
+            <p>
+              <b>Brand: </b><%= Merk.find(@brand_id).Merk %><br />
+            </p>
+            <p>
+              <b>Product: </b><br />
+            </p>
+            <ul>
+              <% @artikel.each do |artikel| %>
+                <li>
+                  <%= artikel.jenis %> : <%= Artikel.where("KodeCollection like ?", artikel.produk).first.Produk %><br />
+                  <%= hidden_field_tag "artikel_ids[]", artikel.id %>
+                </li>  
+              <% end %>
+            </ul>
+            <fieldset>
+              <%= hidden_field_tag "regional_id", @regional_id %>
+              <%= hidden_field_tag "brand_id", @brand_id %>
+              <% if params[:add] == "harga" %>
+                <div class="field">
+                  <%= form.label :harga %> 
+                  <%= form.text_field :harga, value: currency(form.object.harga) %>
+                </div>
+                <div class="field">
+                  <%= form.label :harga_starting_at %> 
+                  <%= form.text_field :harga_starting_at %>
+                </div>
+              <% elsif params[:add] == "discount" %>
+                <div class="field">
+                  <%= form.label :discount_1 %> 
+                  <%= form.text_field :discount_1 %>
+                </div>
+                <div class="field">
+                  <%= form.label :discount_2 %> 
+                  <%= form.text_field :discount_2 %>
+                </div>
+                <div class="field">
+                  <%= form.label :discount_starting_at %>
+                  <%= form.text_field :discount_starting_at %>
+                </div>
+              <% elsif params[:add] == "cashback" %>
+                <div class="field">
+                  <%= form.label :cashback %> 
+                  <%= form.text_field :cashback, value: currency(form.object.cashback) %>
+                </div>
+                <div class="field">
+                  <%= form.label :cashback_starting_at %>
+                  <%= form.text_field :cashback_starting_at %>
+                </div>
+              <% elsif params[:add] == "upgrade" %>
+                <div class="field">
+                  <%= form.label :upgrade %> 
+                  <%= form.text_field :upgrade, value: currency(form.object.upgrade) %>
+                </div>
+                <div class="field">
+                  <%= form.label :upgrade_starting_at %>
+                  <%= form.text_field :upgrade_starting_at %>
+                </div>
+              <% else %>
+                <div class="field">
+                  <%= form.label :special_price %> 
+                  <%= form.text_field :special_price, value: currency(form.object.special_price) %>
+                </div>
+                <div class="field">
+                  <%= form.label :special_price_starting_at %>
+                  <%= form.text_field :special_price_starting_at %>
+                </div>
+              <% end %>
+              <br />
+              <div class="pull-right"><button type="submit" class="btn btn-primary">Submit</button></div>
+            </fieldset>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
   </div>
-  <div class="field">
-    <%= form.label :harga_starting_at %> 
-    <%= form.text_field :harga_starting_at %>
-  </div>
-  <% elsif params[:add] == "discount" %>
-  <div class="field">
-    <%= form.label :discount_1 %> 
-    <%= form.text_field :discount_1 %>
-  </div>
-  <div class="field">
-    <%= form.label :discount_2 %> 
-    <%= form.text_field :discount_2 %>
-  </div>
-  <div class="field">
-    <%= form.label :discount_starting_at %>
-    <%= form.text_field :discount_starting_at %>
-  </div>
-  <% elsif params[:add] == "cashback" %>
-  <div class="field">
-    <%= form.label :cashback %> 
-    <%= form.text_field :cashback %>
-  </div>
-  <div class="field">
-    <%= form.label :cashback_starting_at %>
-    <%= form.text_field :cashback_starting_at %>
-  </div>
-  <% elsif params[:add] == "upgrade" %>
-  <div class="field">
-    <%= form.label :upgrade %> 
-    <%= form.text_field :upgrade %>
-  </div>
-  <div class="field">
-    <%= form.label :upgrade_starting_at %>
-    <%= form.text_field :upgrade_starting_at %>
-  </div>
-  <% else %>
-  <div class="field">
-    <%= form.label :special_price %> 
-    <%= form.text_field :special_price %>
-  </div>
-  <div class="field">
-    <%= form.label :special_price_starting_at %>
-    <%= form.text_field :special_price_starting_at %>
-  </div>
-  <% end %>
-  <div class="field">
-    <%= form.submit "Submit" %>
-  </div>
-<% end %>
+</div>

@@ -145,10 +145,28 @@ table#stock td {
   margin-top: 20px;
   padding: 40px 0px 20px 0px;
 }
+@media screen and (min-width: 600px) and (max-width: 800px) {
+  table tr, th, td { 
+    overflow: hidden;
+    width: 100% !important;
+  }
+
+  table#cus_compare2 {
+    table-layout: auto;
+  }
+}
 
 @media 
-only screen and (max-width: 760px),
+only screen and (min-width: 768px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+  table th, td { 
+    overflow: hidden;
+  }
+
+  table {
+    table-layout: auto;
+  }
 
   table#stock tr { border: 1px solid #ccc; }
 
