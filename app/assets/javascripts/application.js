@@ -13,4 +13,5 @@
 //= require jquery.dataTables.columnFilter
 //= require jquery.validate
 //= require jquery.tooltipster
+//= require jquery.bxslider
 //= require_tree .

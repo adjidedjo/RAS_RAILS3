@@ -1,4 +1,14 @@
-$(document).ready(function(){    
+$(document).ready(function(){
+  for ( var i = 0; i < 50; i++ ) {
+    $('#table_total_' + i).dataTable({
+      bFilter: false, 
+      bInfo: false,
+      bPaginate: false,
+      bJQueryUI: true,
+      iDisplayLength: -1
+    });
+  }
+  
   $('#cabang_id').multiselect({
     buttonClass: 'btn',
     buttonWidth: 'auto',

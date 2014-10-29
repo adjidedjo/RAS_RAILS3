@@ -5,6 +5,8 @@ class Cabang < ActiveRecord::Base
   has_many :laporan_cabang
   has_many :monthly_target
   has_many :yearly_target
+  has_many :regional, :through => :regional_branches
+  has_many :regional_branches
   
   scope :branch_name, lambda {|branch| where(:id => branch)}
   
@@ -12,6 +14,10 @@ class Cabang < ActiveRecord::Base
     current_user.branch == nil ? get_id : branch_name(current_user.branch)
   end
 
+  def self.get_id
+    find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 18, 19, 20, 22, 23, 24)
+  end
+  
   def self.get_id
     find(2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 18, 19, 20, 22, 23, 24)
   end
