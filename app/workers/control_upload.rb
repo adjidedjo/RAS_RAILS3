@@ -38,6 +38,8 @@ class ControlUpload
   end
   
   def check_reports
+    PriceList.check_availability_master(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
+    LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_report_price_list(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
   end
 end

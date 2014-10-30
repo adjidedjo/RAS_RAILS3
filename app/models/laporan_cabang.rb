@@ -40,15 +40,28 @@ class LaporanCabang < ActiveRecord::Base
   scope :between_month_sales, lambda { |from, to| where("month(tanggalsj) between ? and ?", from, to) if from.present? && to.present? }
   scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
-  scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
+  scope :month, lambda{|month| where "month(tanggalsj) = ?", month }
+  
+  def self.create_new_artikel_from_report(bulan, tahun)
+    LaporanCabang.where("month(tanggalsj) = ? and year(tanggalsj) = ?", bulan, tahun).each do |lap|
+      if Artikel.where("KodeCollection = ?", lap.kodeartikel).empty?
+        Artikel.create(:KodeBrand => lap.kodeartikel[0,2],:KodeCollection => lap.kodeartikel, 
+          :Produk => lap.namaartikel, :KodeProduk => lap.kodebrg[0,2], :Aktif => 1)
+      end
+      if Kain.where("KodeKain = ?", lap.kodekain).empty?
+        Kain.create(:KodeKain => lap.kodekain,:NamaKain => lap.namakain, 
+          :KodeCollection => lap.kodeartikel, :Aktif => 1)
+      end
+    end
+  end
   
   def self.summary_of_sales(cab, jenis, cabang)
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
   end
   
   def self.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun)
-    select("*").where("month(tanggalsj) between ? and ? and year(tanggalsj) between ? and ?", 
-      bulan_lalu, bulan, tahun_lalu, tahun).no_pengajuan
+    select("*").where("month(tanggalsj) between ? and ? and year(tanggalsj) between ? and ? and kodebrg not like ? and kodebrg not like ?", 
+      bulan_lalu, bulan, tahun_lalu, tahun, %(___________#{'T'}%), %(___________#{'P'}%)).no_pengajuan
   end
   
   def self.get_target_by_salesman(branch, date, merk, salesman)

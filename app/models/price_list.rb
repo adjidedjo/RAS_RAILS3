@@ -1,5 +1,31 @@
 class PriceList < ActiveRecord::Base
   
+  def self.check_availability_master(bulan_lalu, bulan, tahun_lalu, tahun)
+    LaporanCabang.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun).each do |lap|
+      merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
+      unless merk.empty?
+        regional = Cabang.find(lap.cabang_id).regional.find_by_brand_id(merk.first.id)
+        unless regional.nil?
+          price_list = PriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
+          future_price_list = FuturePriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
+          if price_list.empty?
+            PriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
+              :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
+              :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111, 
+              :kode_barang => lap.kodebrg, :nama => lap.namabrg)
+          end
+          if future_price_list.empty?
+            FuturePriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
+              :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
+              :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111,
+              :kode_barang => lap.kodebrg, :nama => lap.namabrg)
+          end
+        end
+      end
+    end
+  end
+  
+  
   def self.check_report_price_list(bulan_lalu, bulan, tahun_lalu, tahun)
     CheckedItemMaster.where("customer_services = ?", false).each do |uncheck|
       uncheck.destroy
