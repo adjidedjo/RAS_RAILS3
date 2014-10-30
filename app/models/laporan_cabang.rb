@@ -33,7 +33,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :sum_jumlah, lambda {sum("jumlah")}
-	scope :sum_amount, select("sum(harganetto2) as sum_harganetto2")
+	scope :sum_amount, select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah")
   scope :main_category, where("kodejenis in ('km','sa','sb','st')")
   scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
   scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}	
@@ -41,6 +41,10 @@ class LaporanCabang < ActiveRecord::Base
   scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month } 
+  
+  def self.summary_of_sales(cab, jenis, cabang)
+    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
+  end
   
   def self.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun)
     select("*").where("month(tanggalsj) between ? and ? and year(tanggalsj) between ? and ?", 

@@ -14,7 +14,10 @@ class ReportsController < ApplicationController
 		@cabang_get_id = Cabang.get_id
     @cabang_7 = Cabang.get_id_to_7
     @cabang_24 = Cabang.get_id_to_22
-    @grand_total = LaporanCabang.sum_amount.search_by_type(["KM","DV","HB","KB","SA","SB"]).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj.first.sum_harganetto2
+    @grand_total_lady = LaporanCabang.summary_of_sales("L", "", "")
+    @grand_total_elite = LaporanCabang.summary_of_sales("E", "", "")
+    @grand_total_royal = LaporanCabang.summary_of_sales("R", "", "")
+    @grand_total_ser = LaporanCabang.summary_of_sales("S", "", "")
   end
   
   def quick_view_monthly_result
