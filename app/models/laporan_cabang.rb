@@ -13,7 +13,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
-	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%), %(#{'RD'}%))
+	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(%#{'RD'}%))
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
 	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
 	scope :no_pengajuan, where("ketppb not like ? and ketppb not like ? ", %(%#{'pengajuan'}%),%(%#{'customer services'}%))
@@ -41,6 +41,111 @@ class LaporanCabang < ActiveRecord::Base
   scope :namaartikel, lambda{|nama| where "namaartikel like ?", %(#{nama}%) } 
   scope :jenisbrg, lambda{|nama| where "jenisbrg in (?)", nama } 
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month }
+  scope :brand_on_kodebarang, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
+  scope :cabang, lambda {|branch| where("cabang_id = ?", branch) if branch.present? }
+  
+  #  background_job
+  def self.sales_by_salesmen(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id, :jenisbrg, :customer, :salesman).each do |lapcab|
+        sales_brand = SalesSalesman.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_sales_and_customer(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.jenisbrg, lapcab.salesman, lapcab.customer)
+        if sales_brand.nil?
+          SalesSalesman.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
+  
+  def self.sales_by_customer(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id, :jenisbrg, :customer).each do |lapcab|
+        sales_brand = SalesCustomer.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_artikel_and_produk_and_customer(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.namaartikel, lapcab.jenisbrg, lapcab.customer)
+        if sales_brand.nil?
+          SalesCustomer.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
+  
+  def self.sales_by_fabric(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id, :jenisbrg, :namaartikel, :namakain).each do |lapcab|
+        sales_brand = SalesFabric.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel_and_kain(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.jenisbrg, lapcab.namaartikel, lapcab.namakain)
+        if sales_brand.nil?
+          SalesFabric.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
+  
+  def self.sales_by_article(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id, :jenisbrg, :namaartikel).each do |lapcab|
+        sales_brand = SalesArticle.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.jenisbrg, lapcab.namaartikel)
+        if sales_brand.nil?
+          SalesArticle.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
+  
+  def self.sales_by_product(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id, :jenisbrg).each do |lapcab|
+        sales_brand = SalesProduct.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.jenisbrg, lapcab.namaartikel)
+        if sales_brand.nil?
+          SalesProduct.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
+  
+  def self.sales_by_brand(bulan, tahun)
+    Merk.all.each do |merk|
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).group(:cabang_id).each do |lapcab|
+        sales_brand = SalesBrand.find_by_bulan_and_tahun_and_cabang_id_and_merk(bulan, tahun, lapcab.cabang_id, merk.Merk)
+        if sales_brand.nil?
+          SalesBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
+      end
+    end
+  end
   
   def self.create_new_artikel_from_report(bulan, tahun)
     LaporanCabang.where("month(tanggalsj) = ? and year(tanggalsj) = ?", bulan, tahun).each do |lap|
@@ -54,6 +159,7 @@ class LaporanCabang < ActiveRecord::Base
       end
     end
   end
+  # end background_job
   
   def self.summary_of_sales(cab, jenis, cabang)
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
@@ -73,256 +179,256 @@ class LaporanCabang < ActiveRecord::Base
     select("sum(jumlah) as sum_jumlah").search_by_month_and_year(date.to_date.month, date.to_date.year).brand(merk).search_by_branch(branch).not_equal_with_nosj.customer_retail_all('all')
   end
 
-	def self.total_on_merk_monthly(merk, month, year, cabang)
+  def self.total_on_merk_monthly(merk, month, year, cabang)
     select("sum(jumlah) as sum_jumlah sum(harganetto2) as sum_harganetto2").search_by_month_and_year(month, year).not_equal_with_nosj.brand(merk).search_by_branch(cabang).kodejenis
-	end
+  end
 
-	def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
+  def self.standard(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern, group, customer_all_retail)
+    select("sum(jumlah) as sum_jumlah, customer, kodebrg, namaartikel, tanggalsj, 
 					sum(harganetto2) as sum_harga, cabang_id, salesman, namakain, panjang, lebar, jumlah, id, jenisbrgdisc")
     .between_date_sales(from, to).search_by_branch(branch)
     .search_by_type(type).brand(brand).kode_barang_like(article)
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
     .brand_size(size_type).not_equal_with_nosj.customer_retail_all(customer_all_retail).group(group)
-	end
+  end
 
-	def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern,
+  def self.analysis_customer_last_year(from, to, branch, type, brand, article, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
+    select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harganetto2")
     .between_date_sales(from, to).search_by_branch(branch)
     .search_by_type(type).brand(brand).kode_barang_like(article)
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern).customer_modern_all(customer_modern)
     .brand_size(size_type).not_equal_with_nosj.customer_retail_all(customer_all_retail)
-	end
+  end
 
-	def self.customer_quick_monthly(month, year, branch, brand)
-		select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
+  def self.customer_quick_monthly(month, year, branch, brand)
+    select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
     .search_by_month_and_year(month, year).search_by_branch(branch).not_equal_with_nosj.brand(brand).withou_mm
-	end
+  end
 
-	def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
+  def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
-		select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
+    select("sum(jumlah) as sum_jumlah, customer, kota, sum(harganetto2) as sum_harganetto2")
     .search_by_month_and_year(month, year).search_by_branch(branch)
     .search_by_type(type).brand(brand).artikel(article).kode_barang(kodebrg)
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
     .customer_modern_all(customer_modern).brand_size(size_type).customer_retail_all(customer_all_retail).not_equal_with_nosj
-	end
+  end
 
-	def self.customer_by_store(from, to, customer, cabang, merk, customer_all_retail)
-		select("sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
+  def self.customer_by_store(from, to, customer, cabang, merk, customer_all_retail)
+    select("sum(jumlah) as sum_jumlah").between_date_sales(from, to).customer(customer)
     .search_by_branch(cabang).brand(merk).not_equal_with_nosj.customer_retail_all(customer_all_retail)
-	end
+  end
 
-	def self.monthly_report(month, branch, type, kode_brand, year, product_type, customer_all_retail)
-		select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
+  def self.monthly_report(month, branch, type, kode_brand, year, product_type, customer_all_retail)
+    select("sum(jumlah) as sum_jumlah").search_by_month_and_year(month, year)
     .search_by_branch(branch)
     .search_by_type(type).search_by_article(kode_brand).not_equal_with_nosj.customer_retail_all(customer_all_retail)
-	end
+  end
 
-	def self.total_on_merk(merk, from, to)
-		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and kodejenis not like ? and nosj not like ? and nosj not like ?",
+  def self.total_on_merk(merk, from, to)
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+      :conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and kodejenis not like ? and nosj not like ? and nosj not like ?",
         from, to, %(__#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{merk}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.total_on(month, merk, year)
+  def self.total_on(month, merk, year)
     where("YEAR(tanggalsj) = ? and MONTH(tanggalsj) = ? and kodebrg like ? and kodejenis not like ?
 		and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", year, month, %(__#{merk}%), %(#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)).sum(:jumlah)
   end
 
   # monthly_comparison by brand
 
-	def self.category_type_comparison(kodebrg, product, from, to)
-  	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+  def self.category_type_comparison(kodebrg, product, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
         from, to, %(%#{product + kodebrg}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.category_size_comparison(kodebrg, size, from, to)
-		if size == 'Tanggung'
-    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+  def self.category_size_comparison(kodebrg, size, from, to)
+    if size == 'Tanggung'
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(%#{kodebrg}%), %(%#{'T'}%),  %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		else
-    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+    else
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and kodebrg like ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(%#{kodebrg}%), %(%#{size}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		end
-	end
+    end
+  end
 
-	def self.category_customer_comparison(kodebrg, customer, from, to)
-		if customer == 'RETAIL'
-    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ? and
+  def self.category_customer_comparison(kodebrg, customer, from, to)
+    if customer == 'RETAIL'
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer not like ? and
 				customer not like ? and customer not like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(%#{kodebrg}%), %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		else
-    	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+    else
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and kodebrg like ? and customer like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(%#{kodebrg}%), %(%#{customer}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		end
-	end
+    end
+  end
 
-	def self.merk_category_comparison(category, from, to)
+  def self.merk_category_comparison(category, from, to)
     find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
+      :conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
         from, to, %(%#{category}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.customer_comparison(customer, from, to)
-		if customer == 'RETAIL'
-	  	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and customer not like ? and
+  def self.customer_comparison(customer, from, to)
+    if customer == 'RETAIL'
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and customer not like ? and
 				customer not like ? and customer not like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(%#{'SHOWROOM'}%), %(%#{'SOGO'}%), %(%#{'ES'}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		else
-	  	find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-				:conditions => ["tanggalsj between ? and ? and customer like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", from, to, %(%#{customer}%), 
+    else
+      find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+        :conditions => ["tanggalsj between ? and ? and customer like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", from, to, %(%#{customer}%), 
           %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		end
-	end
+    end
+  end
 
-	def self.type_comparison(product, from, to)
+  def self.type_comparison(product, from, to)
     find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
+      :conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
         from, to, %(#{product}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.category_comparison(category, from, to)
+  def self.category_comparison(category, from, to)
     find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
+      :conditions => ["tanggalsj between ? and ? and kodebrg like ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", 
         from, to, %(__#{category}%), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.monthly_comparison_brand(from, to, user_brand)
-		if user_brand == "A"
-			select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? 
+  def self.monthly_comparison_brand(from, to, user_brand)
+    if user_brand == "A"
+      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? 
 				and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
           from, to, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		else
-			select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and left(kodebrg, 3) like ?
+    else
+      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where(["tanggalsj between ? and ? and left(kodebrg, 3) like ?
 				and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", from, to, %(__#{user_brand}), %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-		end
-	end
+    end
+  end
 
-	def self.growth(last, current)
-		(Float(current - last) / last * 100)
+  def self.growth(last, current)
+    (Float(current - last) / last * 100)
   rescue ZeroDivisionError
     0
-	end
+  end
 
-	def self.sum_of_brand_type(merk_id, cabang, cat, from, to)
+  def self.sum_of_brand_type(merk_id, cabang, cat, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
+      :conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
         cabang, "#{cat + merk_id}%", %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date, %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
   # brand categories by customer2
 
-	def self.get_value_categories_customer(merk_id, customer, from, to)
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["kodebrg like ? and customer like ? and nosj not like ? and nosj not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
+  def self.get_value_categories_customer(merk_id, customer, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["kodebrg like ? and customer like ? and nosj not like ? and nosj not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
         %(%#{merk_id}%), %(%#{customer}%), %(#{'SJB'}%), %(#{'SJY'}%), from, to, %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.get_value_categories_customer_retail(merk_id, customer, retail, from, to)
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["kodebrg like ? and customer not like ? and customer not like ? and customer not like ?
+  def self.get_value_categories_customer_retail(merk_id, customer, retail, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["kodebrg like ? and customer not like ? and customer not like ? and customer not like ?
 			and nosj not like ? and nosj not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
         %(%#{merk_id}%), %(%#{'SOGO'}%), %(%#{'SHOWROOM'}%), %(%#{'ES'}%), %(#{'SJB'}%), %(#{'SJY'}%), from, to, %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
   # brand by merk
 
-	def self.get_brand_size(artikel, size, month, year)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
+  def self.get_brand_size(artikel, size, month, year)
+    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").artikel(artikel).brand_size(size)
     .search_by_month_and_year(month,year).not_equal_with_nosj
-	end
+  end
 
   # monthly by customer
-	def self.get_value_customer(customer, from, to)
-		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["customer like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", %(%#{customer}%), from, to, 
+  def self.get_value_customer(customer, from, to)
+    find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["customer like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", %(%#{customer}%), from, to, 
         %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.get_value_customer_retail(customer, retail, from, to)
-		find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["customer not like ? and customer not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+  def self.get_value_customer_retail(customer, retail, from, to)
+    find(:all, :select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["customer not like ? and customer not like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
         %(#{customer}%), %(%#{customer}%), from, to, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
   # weekly sales report performance
 
-	def self.comparison_week(week_1, week_2, week_3, week_4, week_5, week_last_month, get_week_number, date)
-		if (date.beginning_of_month.cweek - get_week_number) == 4
-			((week_1 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif ((date.beginning_of_month.cweek + 1) - get_week_number) == 4
-			((week_2 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif ((date.beginning_of_month.cweek + 2) - get_week_number) == 4
- 			((week_3 - week_last_month.to_i) / week_last_month.to_i) * 100
-		elsif ((date.beginning_of_month.cweek + 3) - get_week_number) == 4
- 			((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100 == 4
-		else
-			((week_5 - week_last_month.to_i) / week_last_month.to_i) * 100
-		end
+  def self.comparison_week(week_1, week_2, week_3, week_4, week_5, week_last_month, get_week_number, date)
+    if (date.beginning_of_month.cweek - get_week_number) == 4
+      ((week_1 - week_last_month.to_i) / week_last_month.to_i) * 100
+    elsif ((date.beginning_of_month.cweek + 1) - get_week_number) == 4
+      ((week_2 - week_last_month.to_i) / week_last_month.to_i) * 100
+    elsif ((date.beginning_of_month.cweek + 2) - get_week_number) == 4
+      ((week_3 - week_last_month.to_i) / week_last_month.to_i) * 100
+    elsif ((date.beginning_of_month.cweek + 3) - get_week_number) == 4
+      ((week_4 - week_last_month.to_i) / week_last_month.to_i) * 100 == 4
+    else
+      ((week_5 - week_last_month.to_i) / week_last_month.to_i) * 100
+    end
   rescue ZeroDivisionError
     0
-	end
+  end
 
-	def self.calculation_by_date(from, to)
-		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", from, to, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  def self.calculation_by_date(from, to)
+    find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", from, to, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
+  end
 
-	def self.calculation_by_date_merk(merk_id, from, to)
-		find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
-			:conditions => ["kodebrg like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", %(%#{merk_id}%), 
+  def self.calculation_by_date_merk(merk_id, from, to)
+    find(:all,:select => "sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah",
+      :conditions => ["kodebrg like ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?", %(%#{merk_id}%), 
         from, to, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.get_customers_from_last_year(last_year_date, date_today)
-		find(:all,:select => "customer, cabang_id", :conditions => ["tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
+  def self.get_customers_from_last_year(last_year_date, date_today)
+    find(:all,:select => "customer, cabang_id", :conditions => ["tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?",
         last_year_date, date_today, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.weekly_sum_value(cat, from, to)
-		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and customer not like ? and customer not like ?",
+  def self.weekly_sum_value(cat, from, to)
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+      :conditions => ["jenisbrgdisc = ? and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ? and customer not like ? and customer not like ?",
         cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%),"ES%",'SOGO%'])
-	end
+  end
 
-	def self.weekly_total_sum_value(cat, from, to)
-		find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?  and customer not like ? and customer not like ?",
+  def self.weekly_total_sum_value(cat, from, to)
+    find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
+      :conditions => ["jenisbrgdisc in (?) and tanggalsj between ? and ? and nosj not like ? and nosj not like ? and nosj not like ? and nosj not like ?  and customer not like ? and customer not like ?",
         cat, from.to_date, to.to_date, %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJV'}%), %(#{'SJP'}%),"ES%",'SOGO%'])
-	end
+  end
   # ----------
 
   def self.sum_of_brand(cabang, merk, from, to)
-		select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to)
+    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").between_date_sales(from, to)
     .search_by_branch(cabang).brand(merk).not_equal_with_nosj
   end
 
-	def self.sum_by_value_merk(cabang, merk, from, to)
+  def self.sum_by_value_merk(cabang, merk, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-			:conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? 
+      :conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? 
 			and tanggalsj between ? and ? and kodejenis not like ? and nosj not like ? and nosj not like ?",
         cabang, %(__#{merk}%), %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date, %(#{merk}%), %(#{'SJV'}%), %(#{'SJP'}%)])
-	end
+  end
 
-	def self.sum_of_category(cabang, cat, from, to)
+  def self.sum_of_category(cabang, cat, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
-		  :conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? 
+      :conditions => ["cabang_id = ? and kodebrg like ? and nosj not like ? and nosj not like ? 
 			and tanggalsj between ? and ? and nosj not like ? and nosj not like ?",
         cabang, %(__#{cat}%), %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date, %(#{'SJV'}%), %(#{'SJP'}%)])
   end
 
   # get detail report on index
 
-	def self.get_record(merk_id, from, to, cabang, type_id)
-		merk_id = "Non Serenity" if merk_id == "Elite"
+  def self.get_record(merk_id, from, to, cabang, type_id)
+    merk_id = "Non Serenity" if merk_id == "Elite"
     find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
       :group => "customer, kodebrg", :conditions => ["cabang_id = ? and jenisbrgdisc like ? and nosj not like ? and nosj not like ? 
@@ -330,36 +436,36 @@ class LaporanCabang < ActiveRecord::Base
         from.to_date, to.to_date, %(#{'SJV'}%), %(#{'SJP'}%)])	
   end
   # brand by customer
-	def self.detail_report_with_customer(merk_id, from, to, user, customer)
-		detail_report_with_categories_customer(merk_id, from, to, user, customer) unless merk_id.nil?
-		find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
+  def self.detail_report_with_customer(merk_id, from, to, user, customer)
+    detail_report_with_categories_customer(merk_id, from, to, user, customer) unless merk_id.nil?
+    find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
       :group => "customer, kodebrg", :limit => 5000, :conditions => ["customer REGEXP ? and tanggalsj between ? and ?",
-				%(^#{customer}), from.to_date, to.to_date])
-	end
+        %(^#{customer}), from.to_date, to.to_date])
+  end
 
-	def self.detail_report_with_2_customer(merk_id, from, to, user, customer, customer2)
-		detail_report_with_categories_customer(merk_id, from, to, user, customer) unless merk_id.nil?
-		find(:all, :conditions => ["customer not REGEXP ? and customer not REGEXP ? and customer not like ?
+  def self.detail_report_with_2_customer(merk_id, from, to, user, customer, customer2)
+    detail_report_with_categories_customer(merk_id, from, to, user, customer) unless merk_id.nil?
+    find(:all, :conditions => ["customer not REGEXP ? and customer not REGEXP ? and customer not like ?
 				and tanggalsj between ? and ?", %(^#{customer}), %(^#{customer2}), %(%SHOWROOM%), from.to_date, to.to_date],
       :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
       :group => "customer, kodebrg", :limit => 5000)
-	end
+  end
   # brand categories by customer
-	def self.detail_report_with_categories_customer(merk_id, from, to, user, customer)
-		find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
+  def self.detail_report_with_categories_customer(merk_id, from, to, user, customer)
+    find(:all, :select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
       :group => "customer, kodebrg", :limit => 5000, :conditions => ["kodebrg like ? and customer REGEXP ? and tanggalsj between ? and ?",
-				%(%#{merk_id}%),%(^#{customer}), from.to_date, to.to_date])
-	end
+        %(%#{merk_id}%),%(^#{customer}), from.to_date, to.to_date])
+  end
 
-	def self.detail_report_with_categories_2_customer(merk_id, from, to, user, customer)
-		find(:all,:select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
+  def self.detail_report_with_categories_2_customer(merk_id, from, to, user, customer)
+    find(:all,:select => "tanggalsj, cabang_id, customer, jenisbrgdisc, namabrand, jenisbrg, namaartikel,
         namakain, panjang, lebar, sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
       :group => "customer, kodebrg", :limit => 5000, :conditions => ["kodebrg like ? and customer not REGEXP ? and customer not REGEXP ? and customer not like ?
 				and tanggalsj between ? and ?", %(%#{merk_id}%),%(^#{customer}), %(^#{customer2}), %(#{'SHOWROOM'}%), from.to_date, to.to_date])
-	end
+  end
   # ---------------
 
   def self.query_by_year_and_cabang_id(year, cabang_id)

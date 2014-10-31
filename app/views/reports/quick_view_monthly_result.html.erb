@@ -99,38 +99,24 @@
               <% end %>
             <% end %>
 
-            <% if Date.today.strftime('%d') <= '15' %>
-              <% if TmpBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
-                  params[:brand]).empty? %>
-                <td>0</td>
-                <td>0</td>
-              <% else %>
-                <% TmpBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
-                  params[:brand]).each do |a| %>
-                  <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
-                  <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                <% end %>
-              <% end %>
-            <% else %>
-              <% if SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
-                  params[:brand]).empty? %>
-                <td>0</td>
-                <td>0</td>
-              <% else %>
-                <% SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
-                  params[:brand]).each do |a| %>
-                  <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
-                  <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                <% end %>
-              <% end %>
-            <% end %>
-
-            <% if TmpBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
+            <% if SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
                 params[:brand]).empty? %>
               <td>0</td>
               <td>0</td>
             <% else %>
-              <% TmpBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
+              <% SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+                params[:brand]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+              <% end %>
+            <% end %>
+
+            <% if SalesBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
+                params[:brand]).empty? %>
+              <td>0</td>
+              <td>0</td>
+            <% else %>
+              <% SalesBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
                 params[:brand]).each do |a| %>
                 <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
                 <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
