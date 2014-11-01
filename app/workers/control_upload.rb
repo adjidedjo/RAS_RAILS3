@@ -41,11 +41,11 @@ class ControlUpload
     PriceList.check_availability_master(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_report_price_list(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
-    LaporanCabang.Sales_by_brand(Date.today.month, Date.today.year)  
-    LaporanCabang.Sales_by_product(Date.today.month, Date.today.year)  
-    LaporanCabang.Sales_by_article(Date.today.month, Date.today.year)  
-    LaporanCabang.Sales_by_fabric(Date.today.month, Date.today.year)  
-    LaporanCabang.Sales_by_customer(Date.today.month, Date.today.year)  
-    LaporanCabang.Sales_by_salesmen(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_product(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_article(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_fabric(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_customer(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_salesmen(Date.today.month, Date.today.year)  
   end
 end
