@@ -29,6 +29,10 @@ class ControlUpload
     UserMailer.report.deliver
   end
   
+  def send_mail_previous_month
+    UserMailer.report_previous_month.deliver
+  end
+  
   def update_price_list
     Regional.update_harga
     Regional.update_discount
@@ -47,5 +51,16 @@ class ControlUpload
     LaporanCabang.sales_by_fabric(Date.today.month, Date.today.year)  
     LaporanCabang.sales_by_customer(Date.today.month, Date.today.year)  
     LaporanCabang.sales_by_salesmen(Date.today.month, Date.today.year)  
+    LaporanCabang.sales_by_size(Date.today.month, Date.today.year)  
+  end
+  
+  def check_reports_prev_month
+    LaporanCabang.sales_by_brand(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_product(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
+    LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)
   end
 end
