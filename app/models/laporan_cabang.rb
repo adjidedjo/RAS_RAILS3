@@ -336,6 +336,12 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   rescue ZeroDivisionError
     0
   end
+  
+  def self.growth_sales_target(last, current)
+    (current.to_f / last.to_f) * 100
+  rescue ZeroDivisionError
+    0
+  end
 
   def self.sum_of_brand_type(merk_id, cabang, cat, from, to)
     find(:all, :select => "sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2",
