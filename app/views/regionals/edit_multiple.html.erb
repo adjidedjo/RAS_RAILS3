@@ -22,7 +22,7 @@
             <ul>
               <% @artikel.each do |artikel| %>
                 <li>
-                  <%= artikel.jenis %> : <%= Artikel.where("KodeCollection like ?", artikel.produk).first.Produk %><br />
+                  <%= artikel.jenis %>  <%= Artikel.where("KodeCollection like ?", artikel.produk).first.Produk %>  <%= Kain.where("KodeKain like ?", artikel.kain).first.NamaKain %>  <%= artikel.panjang %> x <%= artikel.lebar %><br />
                   <%= hidden_field_tag "artikel_ids[]", artikel.id %>
                 </li>  
               <% end %>
