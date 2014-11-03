@@ -36,7 +36,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        UserMailer.account_approved(@user.email).deliver
+        UserMailer.account_approved(@user.email).deliver if params[:user][:approved].present?
         format.html { redirect_to users_path, notice: 'User was successfully updated.' }
         format.json { head :ok }
       else

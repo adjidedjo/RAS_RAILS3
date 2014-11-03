@@ -31,11 +31,13 @@
         <div class="controls">
         </div>
       </div>
+      <% if @user.approved == false %>
       <div class="control-group">
         <label class="checkbox">Approved</label>
         <div class="controls">
           <%= f.select :approved, [['Approved', true], ['Not Approved', false]] %></div>
       </div>
+      <% end %>
     </div>
     <div class="control-group">
       <label class="checkbox">Roles</label>

@@ -33,7 +33,7 @@ class UserMailer < ActionMailer::Base
   end
   
   def sign_up(user)
-    @user = User.where("email = ?", user)
+    @user = User.find_by_email(user)
     mail(:to => user, :subject => "Welcome to Sales Analytic")
   end
 end
