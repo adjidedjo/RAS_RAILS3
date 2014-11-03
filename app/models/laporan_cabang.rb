@@ -50,13 +50,13 @@ class LaporanCabang < ActiveRecord::Base
   def self.sales_by_size(bulan, tahun)
     Merk.all.each do |merk|
       select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, 
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).size_standard("S").group(:cabang_id, :jenisbrg, :namaartikel, :lebar).each do |lapcab|
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.brand(merk.Merk).size_standard("S").group(:cabang_id, :jenisbrg, :namaartikel, :lebar).each do |lapcab|
         sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel_and_lebar(bulan, tahun, lapcab.cabang_id, merk.Merk, lapcab.jenisbrg, lapcab.namaartikel, lapcab.lebar)
         if sales_brand.nil?  
           SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain, 
             :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, 
             :customer => lapcab.customer, :sales => lapcab.salesman, :merk => merk.Merk, :produk => lapcab.jenisbrg, 
-            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand)
         else
           sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
         end
