@@ -8,7 +8,6 @@
           <th>Brand</th>
           <th></th>
           <th></th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -18,7 +17,6 @@
             <td><%= Merk.find(regional.brand_id).Merk %></td>
             <td><%= link_to 'Show', regional, :class => "btn btn-link" %></td>
             <td><%= link_to 'Edit', edit_regional_path(regional), :class => "btn btn-link" %></td>
-            <td><%= link_to 'Destroy', regional, confirm: 'Are you sure?', method: :delete, :class => "btn btn-link" %></td>
           </tr>
         <% end %>
       </tbody>

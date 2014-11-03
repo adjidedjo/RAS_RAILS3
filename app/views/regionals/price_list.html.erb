@@ -8,7 +8,8 @@
             <th><%= check_box_tag "check_all" %></th>
             <th>Kode Produk</th>
             <th>Produk</th>
-            <th>Ukuran</th>
+            <th>Panjang</th>
+            <th>Lebar</th>
           </tr>
         </thead>
         <tfoot>
@@ -22,6 +23,7 @@
               <td><%= produk.jenis %></td>
               <% artikel = Artikel.where("KodeCollection like ?", produk.produk).first  %>
               <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+              <td><%= produk.panjang %></td>
               <td><%= produk.lebar %></td>
             </tr>
           <% end %>
