@@ -11,7 +11,7 @@ class PriceList < ActiveRecord::Base
           if price_list.empty?
             PriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
               :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
-              :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111, 
+              :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111, :prev_harga => 11111, 
               :kode_barang => lap.kodebrg, :nama => lap.namabrg)
           end
           if future_price_list.empty?
