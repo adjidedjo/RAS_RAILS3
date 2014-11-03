@@ -132,6 +132,6 @@ class RegionalsController < ApplicationController
   end
   
   def price_list
-    @produk = FuturePriceList.where("brand_id = ? and regional_id = ?", params[:brand_id], params[:regional_id]).group("produk, jenis, panjang, lebar")
+    @produk = FuturePriceList.where("brand_id = ? and regional_id = ?", params[:brand_id], params[:regional_id]).group("produk, kain, jenis, panjang, lebar")
   end
 end
