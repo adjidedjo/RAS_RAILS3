@@ -1,4 +1,18 @@
-$(document).ready(function(){    
+$(document).ready(function(){
+  $('#check_all').click(function(){
+    if(this.checked) {
+      // Iterate each checkbox
+      $(':checkbox').each(function() {
+        this.checked = true;
+      });
+    }
+    else {
+      $(':checkbox').each(function() {
+        this.checked = false;
+      });
+    }
+  });
+  
   $('#price_list').dataTable({
     iDisplayLength: 50,
     bRetrieve: true,
