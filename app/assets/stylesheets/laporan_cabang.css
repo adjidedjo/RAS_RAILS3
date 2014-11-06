@@ -1,0 +1,14 @@
+
+.control-group {
+  margin-bottom: 2px !important;
+}
+
+label{
+  margin-bottom: 2px !important;
+}
+
+label, input, button, select, textarea {
+    font-size: 12px !important;
+    font-weight: normal !important;
+    line-height: 15px !important;
+}
