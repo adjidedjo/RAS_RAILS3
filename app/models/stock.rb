@@ -2,7 +2,7 @@ class Stock < ActiveRecord::Base
   set_table_name "tbstockcabang"
   belongs_to :cabang
   belongs_to :barang
-	scope :control_stock, lambda {|date| where(:tanggal => date)}
+	scope :control_stock, lambda {|date, jenis| where("tanggal = ? and kodebrg like ?", date, %(__#{jenis}%))}
 	scope :check_branch, lambda {|cabang| where(:cabang_id => cabang)}
 
   scope :check_invoices, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
