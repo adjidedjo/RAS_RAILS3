@@ -1,198 +1,119 @@
-<div class="container-fluid">
-  <%= form_tag stock_index_path, :method => 'get', :html => {:class => "well"} do %>
-    <div class="row-fluid">
-      <div class="span3">
-        <!-- block -->
-        <div class="block">
-          <div class="navbar navbar-inner block-header">
-            <div class="muted pull-left">Date</div>
-            <div class="pull-right"><span class="badge badge-info"></span>
-
-            </div>
-          </div>
-          <div class="block-content collapse in">
-            <fieldset>
-              <%= text_field_tag 'date', params[:date].nil? ? nil : params[:date], :placeholder => "Date"  %>
-            </fieldset>
-          </div>
-        </div>
-        <!-- /block -->
-      </div>
-      <div class="span6">
-        <!-- block -->
-        <div class="block">
-          <div class="navbar navbar-inner block-header">
-            <div class="muted pull-left">Product</div>
-            <div class="pull-right"><span class="badge badge-info"></span>
-
-            </div>
-          </div>
-          <br />
-          <fieldset>
-            <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
-              session[:cabang_id]), :class => 'multiselect', :multiple => true %>
-            <br /><br />
-
-            <%= collection_select(nil, :merk_id, @brand, :IdMerk, :Merk, {:prompt => 'Select a Brand'}) %>
-
-            <%= collection_select(nil, :type_id, @type, :KodeProduk, :Namaroduk, {:prompt => 'Select a Type'}) %>
-
-            <%= collection_select(nil, :article_id, @article, :KodeCollection, :Produk, {:include_blank => true, 
-                :prompt => 'Select an Article'}, {:id => 'article_id'}) %>
-
-            <%= collection_select(nil, :fabric_id, @fabric, :KodeKain, :NamaKain, {:include_blank => true, 
-                :prompt => 'Select Fabric'}, {:id => 'fabric_id'}) %> 
-          </fieldset>
-        </div>
-        <!-- /block -->
-      </div>
-      <div class="span3">
-        <!-- block -->
-        <div class="block">
-          <div class="navbar navbar-inner block-header">
-            <div class="muted pull-left">Size</div>
-            <div class="pull-right"><span class="badge badge-info"></span>
-
-            </div>
-          </div>
-          <div class="block-content collapse in">
-            <fieldset>
-              <label class="radio">
-                <%= radio_button_tag 'size', 'S' %> Standard <br />
-              </label>
-              <label class="radio">
-                <%= radio_button_tag 'size', 'T' %> Special
-              </label>
-              <label class="radio">
-                <%= radio_button_tag 'size', 'P', true %> Display
-              </label>
-              <label class="radio">
-                <%= radio_button_tag 'size', 'all', true %> All
-              </label>
-            </fieldset>
-          </div>
-        </div>
-        <!-- /block -->
-      </div>
-      <div class="row-fluid">
-        <div class="offset4">
-          <div class="span5">
-            <!-- block -->
-            <div class="block">
-              <div class="block-content collapse in">
-                <div class="pull-right"><button type="submit" class="btn btn-primary">Search</button></div>
-              </div>
-            </div>
-            <!-- /block -->
-          </div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<div style="clear:both;"></div>
-
-<div class="row-fluid">
-  <div class="block-content collapse in">
-    <% unless params[:date].nil? %>
-      <div class="row-fluid">
-        <div class="offset4">
-          <h2 style="font-size: 20px;"><i>Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="offset0">
-          <div class="span5">
-            <!-- block -->
+<div class="container-fluid" style="height: 10px;">
+  <div class="row">
+    <div class="span3">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="block-content">
+          <%= form_tag stock_index_path, :method => 'get', :html => {:class => "well"} do %>
             <div class="block">
               <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Search Parameters</div>
+                <div class="muted pull-left">Search Different Price List</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>
-              <div class="block-content collapse in">
-                <table id="table_parameter">
-                  <thead>
-                    <tr>
-                      <th>Branch</th>
-                      <th>Brand</th>
-                      <th>Type</th>
-                      <th>Article</th>
-                      <th>Fabric</th>
-                      <th>Size</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><%= params[:cabang_id].nil? ? "All" : params[:cabang_id] %></td>
-                      <td><%= params[:brand].nil? ? "All" : params[:brand] %></td>
-                      <td><%= params[:type].nil? ? "All" : params[:type] %></td>
-                      <td><%= params[:article].nil? ? "All" : Artikel.artikel_name(params[:article]).first.Produk %></td>
-                      <td><%= params[:fabric].nil? ? "All" : Kain.kain_name_from_code(params[:fabric]).first.NamaKain %></td>
-                      <td>
-                        <% if params[:size] == 'T' %>
-                          <%= 'Special Size' %>
-                        <% elsif params[:size] == 'P' %>
-                          <%= 'Display' %>
-                        <% elsif params[:size] == 'S' %>
-                          <%= 'Standard' %>
-                        <% else %>
-                          <%= 'All' %>
-                        <% end %>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              </div>             
+              <div class="block-content">      
+                <div class="control-group">
+                  <%= label_tag 'tanggal' %>
+                  <%= text_field_tag 'date', params[:date].nil? ? nil : params[:date], :placeholder => "Date", :html => {:class => "input-large"}  %>
+                </div>               
+                <div class="control-group">
+                  <%= label_tag 'cabang' %>
+                  <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+                    params[:cabang_id]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'brand' %>
+                  <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, 
+                    params[:merk_id]), {:class => "select",:prompt => 'Select Brand'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'type' %>
+                  <%= select_tag 'type_id', options_for_select(@type.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+                    params[:type_id]), {:class => "select",:prompt => 'Select Type'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'product' %>
+                  <%= select_tag 'article_id', options_for_select(@article.collect {|a| [a.Produk, a.KodeCollection]}, 
+                    params[:merk_id]), {:class => "select", :prompt => 'Select Article'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'kain' %>
+                  <%= select_tag 'kain_id', options_for_select(@fabric.collect {|a| [a.NamaKain, a.KodeKain]}, 
+                    params[:merk_id]), {:class => "select", :prompt => 'Select Kain'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'size' %>
+                  <label class="radio">
+                    <%= radio_button_tag 'size', 'all', true %> All
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'size', 'S' %> Standard <br />
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'size', 'T' %> Special
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'size', 'P' %> Display
+                  </label>
+                </div>
+                <div class="control-group">
+                  <button type="submit" class="btn btn-primary">
+                    <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                  </button>
+                </div>
               </div>
             </div>
-            <!-- /block -->
-          </div>
+          <% end %>        
         </div>
       </div>
-      <table id="stock" class="display">
-        <thead>
-          <tr>
-            <th>Cabang</th>
-            <th>Jenis</th>
-            <th>Brand</th>
-            <th>Artikel</th>
-            <th>Kain</th>
-            <th>Panjang</th>
-            <th>Lebar</th>
-            <th>Freestock</th>
-            <th>Bufferstock</th>
-            <th>Realstock</th>
-            <th>Service</th>
-            <th>Downgrade</th>
-          </tr>
-        </thead>
-        <tfoot>
-        </tfoot>
-        <tbody>
-          <% @get_stock.map do |stock| %>
-            <tr>
-              <td><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
-              <td><%= Product.product_name(stock.kodebrg.slice(0..1)).first.Namaroduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></td>
-              <td><%= Merk.merk_name(stock.kodebrg.slice(2)).first.Merk unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></td>
-              <td><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></td>
-              <td><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></td>
-              <td><%= stock.kodebrg.slice(12..14) %></td>
-              <td><%= stock.kodebrg.slice(15..17) %></td>
-              <td><%= stock.freestock %></td>
-              <td><%= stock.bufferstock %></td>
-              <td><%= stock.realstock %></td>
-              <td><%= stock.realstockservice %></td>
-              <td><%= stock.realstockdowngrade %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <br />
-      <label>Do you want to export to Excel? <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], 
-          :cabang_id => params[:cabang_id]), :class=>"btn btn-info" %>
-      </label>
-    <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="span6">
+  <div class="col-sm-6 col-md-4 col-md-offset-4">
+    <div class="span8" style="padding-top: 25px">
+      <div class="block-content collapse in">
+        <% unless params[:date].nil? %>
+          <table id="stock_a" border="1" class="display responsive no-wrap" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Cabang</th>
+                <th>Brand</th>
+                <th>Jenis</th>
+                <th>Produk</th>
+                <th>Kain</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
+                <th>Free</th>
+                <th>Buffer</th>
+                <th>Real</th>
+                <th>S</th>
+                <th>D</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @get_stock.map do |stock| %>
+                <tr>
+                  <td><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+                  <td><%= brand(Merk.merk_name(stock.kodebrg.slice(2)).first.Merk) unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></td>
+                  <td><%= Product.product_name(stock.kodebrg.slice(0..1)).first.KodeProduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></td>
+                  <td><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></td>
+                  <td><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></td>
+                  <td><%= stock.kodebrg.slice(12..14) %></td>
+                  <td><%= stock.kodebrg.slice(15..17) %></td>
+                  <td><%= stock.freestock %></td>
+                  <td><%= stock.bufferstock %></td>
+                  <td><%= stock.realstock %></td>
+                  <td><%= stock.realstockservice %></td>
+                  <td><%= stock.realstockdowngrade %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="freestock">Freestock</div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

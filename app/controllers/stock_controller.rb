@@ -13,7 +13,7 @@ class StockController < ApplicationController
     @id_cabang = Cabang.get_id
     @get_stock = Stock.check_stock(params[:date], params[:cabang_id], params[:merk_id], params[:type_id], params[:article_id],
       params[:fabric_id], params[:size]) if params[:date].present?
-		@task_months = @get_stock.group_by { |t| [t.kodebrg.slice(0..14), t.cabang_id] } unless params[:date].nil?
+		@task_months = @get_stock.group_by { |t| [t.kodebrg.slice(0..14), t.cabang] } unless params[:date].nil?
   end
 
   def update_kategori

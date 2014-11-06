@@ -30,8 +30,10 @@ gem 'hpricot'
 gem 'premailer-rails'
 gem 'roo'
 gem "mail"
-gem 'jquery-datatables-rails', '~> 1.12.2'
+gem 'jquery-datatables-rails', "~> 1.12.2"
 gem 'jquery-ui-rails'
+gem 'activerecord-sqlserver-adapter'
+gem 'tiny_tds'
 
 gem 'whenever'
 gem 'resque'

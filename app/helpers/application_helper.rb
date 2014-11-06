@@ -1,5 +1,25 @@
 module ApplicationHelper
   
+  def brand(brand)
+    if brand == 'Non Serenity'
+      "E"
+    elsif brand == 'Serenity'
+      "S"
+    elsif brand == 'Lady Americana'
+      "L"
+    elsif brand == 'Royal'
+      "R"
+    elsif brand == 'Classic'
+      "C"
+    elsif brand == 'Clearance Sale'
+      "D"
+    elsif brand == 'Display'
+      "Y"
+    else
+      "R"
+    end
+  end
+  
   def options_for_bulan
     [[Date::MONTHNAMES[1], 1],[Date::MONTHNAMES[2], 2],[Date::MONTHNAMES[3], 3],
       [Date::MONTHNAMES[4], 4],[Date::MONTHNAMES[5], 5],[Date::MONTHNAMES[6], 6],

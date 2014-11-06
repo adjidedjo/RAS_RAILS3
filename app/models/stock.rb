@@ -1,4 +1,6 @@
 class Stock < ActiveRecord::Base
+  self.abstract_class = true
+#  establish_connection "sqlserver"
   set_table_name "tbstockcabang"
   belongs_to :cabang
   belongs_to :barang
@@ -27,8 +29,8 @@ class Stock < ActiveRecord::Base
 	scope :sum_amount, lambda {sum("harganetto2")}
 
 	def self.check_stock(tanggal, branch, brand, type, article, fabric, size)
-		select("kodebrg, cabang_id, namabrg, freestock, bufferstock, realstock, realstockservice, realstockdowngrade")
-    .control_stock(tanggal).search_by_branch(branch).brand(brand).search_by_type(type).search_by_article(article).fabric(fabric)
+		select("*").control_stock(tanggal, brand).search_by_branch(branch).search_by_type(type)
+    .search_by_article(article).fabric(fabric).size_length(size)
 	end
 
 	def self.find_barang_id(barang_id, cabang)
