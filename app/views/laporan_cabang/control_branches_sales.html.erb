@@ -1,15 +1,26 @@
 <div class="form-div">
-  <%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get', :html => {:class => "well"} do %>
+  <%= form_tag laporan_cabang_control_branches_sales_path, :method => 'get', :class => "control_branches" do %>
     <fieldset>
       <legend>Control Branches Sales</legend>
-      <label>From</label>
-      <%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
-      <label>To</label>
-      <%= text_field_tag 'to', nil, :placeholder => "To Date" %>
-      <%= label_tag 'Category' %>
-      <%= select_tag 'category', "<option>Stock</option><option>Penjualan</option>".html_safe,
-        :prompt => "--Select Category--", :include_blank => false %><br />
-      <%= submit_tag "Search", :class => "btn btn-primary" %>
+      <div class="block-content">               
+        <div class="control-group">
+          <%= label_tag 'from' %>
+          <%= text_field_tag 'from', nil, :placeholder => "From Date"  %>
+        </div>
+        <div class="control-group">
+          <%= label_tag 'to' %>
+          <%= text_field_tag 'to', nil, :placeholder => "To Date" %>
+        </div>
+        <div class="control-group">
+          <%= label_tag 'Category' %>
+          <%= select_tag 'category', options_for_select(["Stock", "Penjualan"], params[:category]), {:class => "select", :prompt => 'Select Kategori'} %>
+        </div>
+        <div class="control-group">
+          <button type="submit" class="btn btn-primary">
+            <%= params[:from].blank? ? 'Search' : 'Refine Search' %>
+          </button>
+        </div>
+      </div>
     </fieldset>
   <% end %>
 </div>
@@ -17,8 +28,8 @@
 <br />
 <div class="clear"></div>
 
-<% unless params[:from].nil? %>
-  <% unless params[:from].empty? %>
+<% unless params[:from].nil? || params[:to].nil? || params[:category].nil? %>
+  <% unless params[:from].empty? || params[:to].empty? || params[:category].empty? %>
     <table id="table_control_branch" class="display">
       <thead>
         <tr>

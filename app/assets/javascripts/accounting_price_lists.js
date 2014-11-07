@@ -26,7 +26,25 @@ $(document).ready(function(){
   });
     
   $('.form-accounting-faktur').validate({
-    onclick: false,
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
     rules: {
       month: {
         required: true
@@ -48,16 +66,6 @@ $(document).ready(function(){
       brand:{
         required: "Pilih Brand"
       }
-    },
-    highlight: function (element) {
-      $(element).closest('.control-group').removeClass('success').addClass('error');
-    },
-    errorPlacement: function (error, element) {
-      $(element).tooltipster('update', $(error).text());
-      $(element).tooltipster('show');
-    },
-    success: function (element) {
-      $(element).tooltipster('hide');
     }
   });
 });

@@ -16,6 +16,46 @@ function fnCreateSelect( aData, aSelected )
 }
 
 $(document).ready(function(){
+  
+  $('.control_branches input[type="text"], .control_branches select').tooltipster({ 
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+    
+  $('.control_branches').validate({
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    rules: {
+      from: {
+        required: true
+      },
+      to: {
+        required: true
+      },
+      category: {
+        required: true
+      }
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    }
+  });
+  
   // Datepicker
   $('#from').datepicker({
     dateFormat: 'yy-mm-dd'
