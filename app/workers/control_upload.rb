@@ -55,12 +55,12 @@ class ControlUpload
   end
   
   def check_reports_prev_month
-    LaporanCabang.sales_by_brand(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_product(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)  
-    LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date, 1.month.ago.end_of_month.to_date)
+    LaporanCabang.sales_by_brand(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)  
+    LaporanCabang.sales_by_product(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
   end
 end
