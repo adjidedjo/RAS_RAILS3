@@ -1,4 +1,80 @@
 $(document).ready(function(){
+  $('.quick_view_month input[type="checkbox"]').tooltipster({ 
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+    
+  $('.quick_view_month').validate({
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    rules: {
+      "quick_view_brand[]": {
+        required: true
+      }
+    },
+    messages:{
+      "quick_view_brand[]":{
+        required: "Pilih Minimal 1 Merk"
+      }
+    }
+  });
+  
+  $('.quick_view input[type="radio"]').tooltipster({ 
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+    
+  $('.quick_view').validate({
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    rules: {
+      quick_view: {
+        required: true
+      }
+    },
+    messages:{
+      quick_view:{
+        required: "Pilih Tipe"
+      }
+    }
+  });
+  
   for ( var i = 0; i < 50; i++ ) {
     $('#table_total_' + i).dataTable({
       bFilter: false, 

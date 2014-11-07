@@ -10,14 +10,16 @@
           </div>
         </div>
         <div class="block-content collapse in">
-          <%= form_tag reports_quick_view_report_path, :method => 'get' do %>
+          <%= form_tag reports_quick_view_report_path, :method => 'get', :class => 'quick_view' do %>
             <fieldset>
-              <label class="radio">
-                <%= radio_button_tag 'quick_view', 'weekly' %> Weekly
-              </label>
-              <label class="radio">
-                <%= radio_button_tag 'quick_view', 'monthly' %> Monthly
-              </label>
+              <div class="control-group">
+                <label class="radio">
+                  <%= radio_button_tag 'quick_view', 'weekly' %> Weekly
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'quick_view', 'monthly' %> Monthly
+                </label>
+              </div>
             </fieldset>
             <br />
             <div class="pull-right"><button type="submit" class="btn btn-primary">Next</button></div>
