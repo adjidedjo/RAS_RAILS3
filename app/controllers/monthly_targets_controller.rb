@@ -7,10 +7,9 @@ class MonthlyTargetsController < ApplicationController
     0.downto(-3).each do |m|
       @months << [@date.months_since(m).strftime("%b %Y"), @date.next_month(m)]
     end
-    if params[:targets] == 'branch'
-      redirect_to monthly_targets_view_target_path(request.query_parameters) unless params[:month_year].nil?
-    else
-      redirect_to monthly_targets_view_target_sales_path(request.query_parameters) unless params[:month_year].nil?
+    unless params[:month_year].nil?
+      @targets_sales = MonthlyTarget.get_target_by_sales(params[:cabang_id], params[:merk_id], params[:month_year])
+      @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
     end
   end
   
