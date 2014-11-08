@@ -1,4 +1,55 @@
 $(document).ready(function(){
+  
+  $('.monthly_target input[type="radio"], .monthly_target select').tooltipster({ 
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+    
+  $('.monthly_target').validate({
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    rules: {
+      targets: {
+        required: true
+      },
+      cabang_id: {
+        required: true
+      },
+      month_year: {
+        required: true
+      }
+    },
+    messages:{
+      targets:{
+        required: "Pilih Target "
+      },
+      cabang_id:{
+        required: "Pilih Cabang"
+      },
+      month_year:{
+        required: "Pilih Bulan dan Tahun"
+      }
+    }
+  });
+  
   $('#monthly_target_sales').dataTable({
     iDisplayLength: 10,
     bRetrieve: true,
