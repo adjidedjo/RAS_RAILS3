@@ -114,7 +114,7 @@
                       <% LaporanCabang.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
                         <td><%= @sales = reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
                       <% end %>
-                      <td><%= number_to_percentage(LaporanCabang.growth(@target, @sales), :precision => 2) %></td>
+                      <td><%= number_to_percentage(LaporanCabang.growth_sales_target(@target, @sales), :precision => 2) %></td>
                     </tr>
                   <% end %>
                 </tbody>
