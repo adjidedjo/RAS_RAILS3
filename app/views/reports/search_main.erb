@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+      <div class="block-content">
+        <%= form_tag reports_search_main_path, :method => 'post', :class => "search_sales", :target => "_blank" do %>
+          <div class="block">
+            <div class="navbar navbar-inner block-header">
+              <div class="muted pull-left">Parameter awal pencarian data penjualan</div>
+              <div class="pull-right"><span class="badge badge-info"></span>
+
+              </div>
+            </div>           
+            <div class="block-content">      
+              <div class="control-group">
+                <%= text_field_tag 'from', params[:from].nil? ? nil : params[:date], :placeholder => "From Date", :html => {:class => "input-large"}  %>
+              </div>               
+              <div class="control-group">
+                <%= text_field_tag 'to', params[:to].nil? ? nil : params[:date], :placeholder => "To Date", :html => {:class => "input-large"}  %>
+              </div>               
+              <div class="control-group">
+                <%= label_tag 'cabang' %>
+                <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
+              </div>               
+              <div class="control-group">
+                <%= label_tag 'merek' %>
+                <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
+              </div>
+              <div class="control-group">
+                <label>Berdarkan apa data yang akan ditampilkan?</label>
+                <fieldset style="margin-left:5px">
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'merk' %> Merek
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'tipe' %> Produk
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'artikel' %> Artikel
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'kain' %> Kain
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'ukuran' %> Ukuran
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'customer' %> Toko/Customer
+                  </label>
+                  <label class="radio">
+                    <%= radio_button_tag 'sales', 'salesman' %> Salesman
+                  </label>
+              </div>
+              <div class="control-group">
+                <button type="submit" class="btn btn-primary">
+                  <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                </button>
+              </div>
+            </div>
+          </div>
+        <% end %>        
+      </div>
+    </div>
+  </div>
+</div>

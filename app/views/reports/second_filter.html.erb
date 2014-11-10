@@ -32,7 +32,6 @@
           <fieldset>
             <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
               session[:cabang_id]), :class => 'multiselect', :multiple => true %>
-
             <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.Merk]}, 
               params[:merk_id]), :class => 'multiselect', :multiple => true %>
 

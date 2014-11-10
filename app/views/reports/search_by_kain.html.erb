@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="span3">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="block-content">
+          <%= form_tag reports_search_by_kain_path, :method => 'get', :class => "search_sales" do %>
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Parameter pencarian berdasarkan Kain</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
+
+                </div>
+              </div>             
+              <div class="block-content">
+                <div class="control-group">
+                  <%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date", :html => {:class => "input-large"}  %>
+                </div>               
+                <div class="control-group">
+                  <%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date", :html => {:class => "input-large"}  %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'cabang' %>
+                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
+                </div>               
+                <div class="control-group">
+                  <%= label_tag 'brand' %>
+                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'tipe' %>
+                  <%= select_tag 'produk', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.Namaroduk]}.sort, params[:produk]), {:class=>"select", :prompt => 'Select Product'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'artikel' %>
+                  <%= select_tag 'artikel', options_for_select(Artikel.all.collect {|a| [a.Produk, a.Produk]}.sort, params[:artikel]), {:class=>"select", :prompt => 'Select Article'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'kain' %>
+                  <%= select_tag 'kain', options_for_select(Kain.all.collect {|a| [a.NamaKain, a.NamaKain]}.sort, params[:kain]), {:class=>"select", :prompt => 'Select Fabric'} %>
+                </div>
+                <div class="control-group">
+                  <button type="submit" class="btn btn-primary">
+                    <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>        
+        </div>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="span8" style="padding-top: 25px">
+          <table id="price_list" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+            <thead>
+              <tr>
+                <th>Cabang</th>
+                <th>Merk</th>
+                <th>Produk</th>
+                <th>Artikel</th>
+                <th>Kain</th>
+                <th>Quantity</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @search_by_kain.each do |sbb| %>
+                <tr>
+                  <td><%= Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+                  <td><%= sbb.merk %></td>
+                  <td><%= sbb.produk %></td>
+                  <td><%= sbb.artikel %></td>
+                  <td><%= sbb.kain %></td>
+                  <td><%= currency(sbb.sum_jumlah) %></td>
+                  <td><%= currency(sbb.sum_val) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

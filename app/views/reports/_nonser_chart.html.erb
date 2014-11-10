@@ -1,0 +1,19 @@
+<%= content_tag :div, "", id: "nonser_chart", data: {sales: chart_nonser} %>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    new Morris.Line({
+      element: 'nonser_chart',
+      data: $('#nonser_chart').data('sales'), 
+      xkey: 'merk',
+      ykeys: ['quantity_nonser', 'quantity_last_nonser'],
+      labels: ['Current Month', 'Last Month'],
+      parseTime: false,
+      resize: true,
+      ymin: 0,
+      ymax: 1500,
+      lineColors: ['#0b62a4', '#F07746'],
+      gridTextSize: 10
+    });
+  });
+</script>
