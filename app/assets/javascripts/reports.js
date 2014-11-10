@@ -1,4 +1,43 @@
 $(document).ready(function(){
+  $('.search_sales input[type="text"], .search_sales input[type="radio"]').tooltipster({ 
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+    
+  $('.search_sales').validate({
+    errorPlacement: function (error, element) {
+                        
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+            
+      $(element).data('lastError', newError);
+                            
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    rules: {
+      from: {
+        required: true
+      },
+      to: {
+        required: true
+      },
+      sales: {
+        required: true
+      }
+    }
+  });
+  
   $('.quick_view_month input[type="checkbox"]').tooltipster({ 
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time

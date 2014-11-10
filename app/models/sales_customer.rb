@@ -1,5 +1,5 @@
 class SalesCustomer < ActiveRecord::Base
-	scope :between_date_sales, lambda { |from, to| where("bulan between ? and ?", from, to) if from.present? && to.present? }
+	scope :between_date_sales, lambda { |from_m, to_m, from_y, to_y| where("bulan between ? and ? and tahun between ? and ?", from_m, to_m, from_y, to_y) if from_m.present? && to_m.present? }
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
 	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}

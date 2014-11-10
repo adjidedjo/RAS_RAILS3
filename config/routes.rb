@@ -2,6 +2,12 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  resources :advisories do
+    collection do 
+      get 'laporan_bulanan'
+    end
+  end
+  
   resources :future_price_lists
 
   resources :regional_branches
@@ -76,6 +82,15 @@ Rain::Application.routes.draw do
 	get "reports/quick_view_monthly"
 	get "reports/quick_view_monthly_process"
 	get "reports/quick_view_monthly_result"
+	post "reports/search_main"
+	get "reports/search_main"
+	get "reports/search_by_brand"
+	get "reports/search_by_type"
+	get "reports/search_by_artikel"
+	get "reports/search_by_kain"
+	get "reports/search_by_ukuran"
+	get "reports/search_by_customer"
+	get "reports/search_by_salesman"
 
   resources :users_mails
 

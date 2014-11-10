@@ -1,6 +1,87 @@
 class ReportsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => :summary_of_sales
   
+  def search_by_salesman
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_salesman = SalesSalesman.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
+    .group("cabang_id, merk, produk, customer, sales")
+  end
+  
+  def search_by_customer
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_customer = SalesCustomer.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
+    .group("cabang_id, merk, produk, customer")
+  end
+  
+  def search_by_ukuran
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_kain = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).lebar(params[:lebar])
+    .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain, ukuran")
+  end
+  
+  def search_by_kain
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_kain = SalesFabric.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
+    .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain")
+  end
+  
+  def search_by_artikel
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_artikel = SalesArticle.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
+    .artikel(params[:artikel]).group("cabang_id, merk, produk, artikel")
+  end
+  
+  def search_by_type
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_type = SalesProduct.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).group("cabang_id, merk, produk")
+  end
+  
+  def search_by_brand
+    from_m = params[:from].to_date.month
+    to_m = params[:to].to_date.month
+    from_y = params[:from].to_date.year
+    to_y = params[:to].to_date.year
+    @search_by_brand = SalesBrand.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val")
+    .between_date_sales(from_m, to_m, from_y, to_y).brand(params[:brand]).search_by_branch(params[:branch])
+    .group("cabang_id, merk")
+  end
+  
+  def search_main
+    if params[:from].present? && params[:to].present?
+      redirect_to reports_search_by_brand_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'merk'
+      redirect_to reports_search_by_type_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'tipe'
+      redirect_to reports_search_by_artikel_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'artikel'
+      redirect_to reports_search_by_kain_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'kain'
+      redirect_to reports_search_by_ukuran_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'ukuran'
+      redirect_to reports_search_by_customer_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'customer'
+      redirect_to reports_search_by_salesman_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'salesman'
+    end
+  end
+  
   def chart
     @sales = TmpBrand.select('cabang_id, merk, qty, val, bulan, tahun').where('bulan = 8')
     
