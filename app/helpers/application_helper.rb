@@ -46,6 +46,8 @@ module ApplicationHelper
       "Kasur Busa"
     elsif jenis == "SA"
       "Sorong Atas"
+    elsif jenis == "AC"
+      "Accessoris"
     else
       "Sorong Bawah"
     end

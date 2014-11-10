@@ -10,7 +10,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   # scope for monthly/monthly
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
-	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? }
+	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? and type != "AC" }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
@@ -44,7 +44,10 @@ class LaporanCabang < ActiveRecord::Base
   scope :brand_on_kodebarang, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :cabang, lambda {|branch| where("cabang_id = ?", branch) if branch.present? }
   scope :size_standard, lambda {|size| where("kodebrg like ?", %(___________#{size}%)) if size.present?}
-
+  
+  def self.grand_total_cabang(cabang)
+    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(cabang).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
+  end
   
   #  background_job
   def self.sales_by_size(bulan, tahun)
@@ -167,7 +170,11 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   # end background_job
   
   def self.summary_of_sales(cab, jenis, cabang)
-    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
+    if jenis == "AC"
+      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(#{cab}%_#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
+    else
+      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
+    end
   end
   
   def self.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun)

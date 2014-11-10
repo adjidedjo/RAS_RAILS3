@@ -81,7 +81,46 @@ $(document).ready(function(){
       bInfo: false,
       bPaginate: false,
       bJQueryUI: true,
-      iDisplayLength: -1
+      iDisplayLength: -1,
+      bSort: false,
+      "fnFooterCallback": function ( nRow, aaData ) {
+        /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+        var iTotalQtyElite = 0;
+        var iTotalValElite = 0;
+        var iTotalQtyLady = 0;
+        var iTotalValLady = 0;
+        var iTotalQtyRoyal = 0;
+        var iTotalValRoyal = 0;
+        var iTotalQtySer = 0;
+        var iTotalValSer = 0;
+  
+        for ( var i=0 ; i<aaData.length ; i++ )
+        {
+          iTotalQtyElite += parseCurrency(aaData[i][1])*1;
+          iTotalValElite += parseCurrency(aaData[i][2])*1;
+          iTotalQtyLady += parseCurrency(aaData[i][3])*1;
+          iTotalValLady += parseCurrency(aaData[i][4])*1;
+          iTotalQtyRoyal += parseCurrency(aaData[i][5])*1;
+          iTotalValRoyal += parseCurrency(aaData[i][6])*1;
+          iTotalQtySer += parseCurrency(aaData[i][7])*1;
+          iTotalValSer += parseCurrency(aaData[i][8])*1;
+        }
+
+        /* Modify the footer row to match what we want */
+        var nCells = nRow.getElementsByTagName('td');
+        nCells[0].innerHTML = addCommas(parseInt(iTotalQtyElite))
+        nCells[1].innerHTML = addCommas(parseInt(iTotalValElite))
+        nCells[2].innerHTML = addCommas(parseInt(iTotalQtyLady))
+        nCells[3].innerHTML = addCommas(parseInt(iTotalValLady))
+        nCells[4].innerHTML = addCommas(parseInt(iTotalQtyRoyal))
+        nCells[5].innerHTML = addCommas(parseInt(iTotalValRoyal))
+        nCells[6].innerHTML = addCommas(parseInt(iTotalQtySer))
+        nCells[7].innerHTML = addCommas(parseInt(iTotalValSer))
+
+      }
     });
   }
   
