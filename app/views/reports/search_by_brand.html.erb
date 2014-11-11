@@ -20,12 +20,14 @@
                 </div>
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
-                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
-                </div>               
+                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <br />              
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
+                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), :class => 'multiselect', :multiple => true %>
                 </div>
+                <br />
                 <div class="control-group">
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
@@ -40,7 +42,7 @@
     <div class="span6">
       <div class="col-sm-6 col-md-4 col-md-offset-4">
         <div class="span8" style="padding-top: 25px">
-          <table id="price_list" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+          <table id="search_by_brand" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
             <thead>
               <tr>
                 <th>Cabang</th>
@@ -49,6 +51,14 @@
                 <th>Value</th>
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <th scope="row" style="font-size: 13px; font-weight: bold;"><i>Total</i></th>
+                <% (1..3).each do  %>
+                  <td style="font-size: 13px; background-color: #DFEFFC;"></td>
+                <% end %>
+              </tr>
+            </tfoot>
             <tbody>
               <% @search_by_brand.each do |sbb| %>
                 <tr>

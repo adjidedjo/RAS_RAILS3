@@ -6,30 +6,33 @@
           <%= form_tag reports_search_by_type_path, :method => 'get', :class => "search_sales" do %>
             <div class="block">
               <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Parameter pencarian berdasarkan tipe</div>
+                <div class="muted pull-left">Parameter pencarian berdasarkan Tipe</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>             
+              </div>
               <div class="block-content">
                 <div class="control-group">
                   <%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date", :html => {:class => "input-large"}  %>
-                </div>               
+                </div>
                 <div class="control-group">
                   <%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date", :html => {:class => "input-large"}  %>
                 </div>
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
-                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
-                </div>               
+                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <br />
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
+                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), :class => 'multiselect', :multiple => true %>
                 </div>
+                <br />
                 <div class="control-group">
                   <%= label_tag 'tipe' %>
-                  <%= select_tag 'produk', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.Namaroduk]}, params[:produk]), {:class=>"select", :prompt => 'Select Product'} %>
+                  <%= select_tag 'produk', options_for_select(Product.all.collect {|a| [a.Namaroduk, a.Namaroduk]}, params[:produk]), :class => 'multiselect', :multiple => true %>
                 </div>
+                <br />
                 <div class="control-group">
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
@@ -37,14 +40,14 @@
                 </div>
               </div>
             </div>
-          <% end %>        
+          <% end %>
         </div>
       </div>
     </div>
     <div class="span6">
       <div class="col-sm-6 col-md-4 col-md-offset-4">
         <div class="span8" style="padding-top: 25px">
-          <table id="price_list" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+          <table id="search_by_type" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
             <thead>
               <tr>
                 <th>Cabang</th>
@@ -54,6 +57,14 @@
                 <th>Value</th>
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <th scope="row" style="font-size: 13px; font-weight: bold;"><i>Total</i></th>
+                <% (1..4).each do  %>
+                  <td style="font-size: 13px; background-color: #DFEFFC;"></td>
+                <% end %>
+              </tr>
+            </tfoot>
             <tbody>
               <% @search_by_type.each do |sbb| %>
                 <tr>

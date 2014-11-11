@@ -1,6 +1,6 @@
 class ReportsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => :summary_of_sales
-  
+
   def search_by_salesman
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
@@ -10,7 +10,7 @@ class ReportsController < ApplicationController
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .group("cabang_id, merk, produk, customer, sales")
   end
-  
+
   def search_by_customer
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
@@ -20,37 +20,42 @@ class ReportsController < ApplicationController
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .group("cabang_id, merk, produk, customer")
   end
-  
+
   def search_by_ukuran
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
     from_y = params[:from].to_date.year
     to_y = params[:to].to_date.year
-    @search_by_kain = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    @artikel = Artikel.group("Produk")
+    @kain = Kain.group("NamaKain")
+    @search_by_ukuran = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).lebar(params[:lebar])
     .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain, ukuran")
   end
-  
+
   def search_by_kain
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
     from_y = params[:from].to_date.year
     to_y = params[:to].to_date.year
+    @artikel = Artikel.group("Produk")
+    @kain = Kain.group("NamaKain")
     @search_by_kain = SalesFabric.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain")
   end
-  
+
   def search_by_artikel
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
     from_y = params[:from].to_date.year
     to_y = params[:to].to_date.year
+    @artikel = Artikel.group("Produk")
     @search_by_artikel = SalesArticle.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .artikel(params[:artikel]).group("cabang_id, merk, produk, artikel")
   end
-  
+
   def search_by_type
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
@@ -59,7 +64,7 @@ class ReportsController < ApplicationController
     @search_by_type = SalesProduct.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).group("cabang_id, merk, produk")
   end
-  
+
   def search_by_brand
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
@@ -69,7 +74,7 @@ class ReportsController < ApplicationController
     .between_date_sales(from_m, to_m, from_y, to_y).brand(params[:brand]).search_by_branch(params[:branch])
     .group("cabang_id, merk")
   end
-  
+
   def search_main
     if params[:from].present? && params[:to].present?
       redirect_to reports_search_by_brand_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'merk'
@@ -81,16 +86,16 @@ class ReportsController < ApplicationController
       redirect_to reports_search_by_salesman_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'salesman'
     end
   end
-  
+
   def chart
     @sales = TmpBrand.select('cabang_id, merk, qty, val, bulan, tahun').where('bulan = 8')
-    
+
     respond_to do |format|
       format.html
       format.js
     end
   end
-  
+
   def summary_of_sales
 		@cabang_get_id = Cabang.get_id
     @cabang_7 = Cabang.get_id_to_7
@@ -100,25 +105,25 @@ class ReportsController < ApplicationController
     @grand_total_royal = LaporanCabang.summary_of_sales("R", "", "")
     @grand_total_ser = LaporanCabang.summary_of_sales("S", "", "")
   end
-  
+
   def quick_view_monthly_result
     compare_last_month
   end
-  
+
   def quick_view_monthly_process
     branch = current_user.branch == nil ? nil : current_user.branch
     redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
       :from => 3.month.ago.to_date, :to => Date.today.to_date, :branch => branch )
   end
-  
+
   def quick_view_monthly
   end
-  
+
   def quick_view_report
     redirect_to laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) if params[:quick_view] == 'weekly'
     redirect_to reports_quick_view_monthly_path if params[:quick_view] == 'monthly'
   end
-  
+
   def quick_view
   end
 
@@ -302,13 +307,13 @@ class ReportsController < ApplicationController
 			session[:customer_all_retail] = 'all' if params[:customer_retail] == 'all'
 			redirect_to reports_through_path
 		end
-		
+
 	end
 
 	def size_standard
 		unless params[:size_standard].nil?
 			session[:size_standard] = params[:size_standard] if params[:size_standard].present?
-			redirect_to reports_through_path if session[:customer_channel] == 'all' 
+			redirect_to reports_through_path if session[:customer_channel] == 'all'
 			redirect_to reports_customer_modern_path if session[:customer_channel].present? && session[:customer_channel] == 'modern'
 			redirect_to reports_customer_retail_path if session[:customer_channel].present? && session[:customer_channel] == 'retail'
 		end
@@ -342,7 +347,7 @@ class ReportsController < ApplicationController
 		session[:year] = params[:grad_year] if params[:grad_year].present?
 		if params[:size] == 'all'
 			redirect_to reports_customer_retail_path if params[:customer_channel] == 'retail'
-			redirect_to reports_customer_modern_path if params[:customer_channel] == 'modern' 
+			redirect_to reports_customer_modern_path if params[:customer_channel] == 'modern'
 			redirect_to reports_through_path if params[:customer_channel] == 'all'
 		end
 		if params[:size] == 'S'
@@ -364,20 +369,20 @@ class ReportsController < ApplicationController
 	end
 
 	def detail
-		unless params[:from].nil? && params[:to].nil? 
+		unless params[:from].nil? && params[:to].nil?
 			@laporancabang = LaporanCabang.between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
       .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
       .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
       .brand_size(params[:size_type]).customer_modern(params[:customer_modern])
       .not_equal_with_nosj.customer_modern_all(params[:customer_modern])
-		end 
-	end	
+		end
+	end
 
 	def standard
 		unless params[:from].nil? && params[:to].nil?
-			@laporancabang = LaporanCabang.standard(params[:from], params[:to], params[:branch], 
-				params[:type], params[:brand], params[:article], params[:fabric], 
-				params[:size], params[:customer], params[:size_type], 
+			@laporancabang = LaporanCabang.standard(params[:from], params[:to], params[:branch],
+				params[:type], params[:brand], params[:article], params[:fabric],
+				params[:size], params[:customer], params[:size_type],
 				params[:customer_modern], params[:group_by], params[:customer_all_retail])
 		end
 	end
@@ -385,10 +390,10 @@ class ReportsController < ApplicationController
 	def type
 		redirect_to reports_filter_path unless params[:reports].nil?
   end
-  
+
 	def filter
-		redirect_to reports_filter_detail_path(:reports => params[:reports], :from => params[:from], 
-			:to => params[:to], :brand => params[:merk_id], :branch => params[:cabang_id], 
+		redirect_to reports_filter_detail_path(:reports => params[:reports], :from => params[:from],
+			:to => params[:to], :brand => params[:merk_id], :branch => params[:cabang_id],
 			:type => params[:type_id]) unless params[:from].nil? || params[:to].nil? || params[:reports].nil?
   end
 
@@ -402,10 +407,10 @@ class ReportsController < ApplicationController
 		@type = Product.all
 		@article = Artikel.group(:Produk)
 		@fabric = Kain.all
-		redirect_to reports_detail_path(:from => params[:from], :to => params[:to], :cabang_id => params[:cabang_id], 
+		redirect_to reports_detail_path(:from => params[:from], :to => params[:to], :cabang_id => params[:cabang_id],
 			:type_id => params[:type_id], :merk_id => params[:merk_id], :article_id => params[:article_id],
 			:fabric_id => params[:fabric_id], :size => params[:size]) if params[:reports] == "detail"
-		redirect_to reports_pivot_path(:from => params[:from], :to => params[:to], :cabang_id => params[:cabang_id], 
+		redirect_to reports_pivot_path(:from => params[:from], :to => params[:to], :cabang_id => params[:cabang_id],
 			:type_id => params[:type_id], :merk_id => params[:merk_id], :article_id => params[:article_id],
 			:fabric_id => params[:fabric_id], :size => params[:size]) if params[:reports] == "standard"
   end
@@ -413,7 +418,7 @@ class ReportsController < ApplicationController
   def update_chart
     @chart = params[:merk_id]
   end
-  
+
 	def update_reports_type
 		@type = Merk.where("IdMerk in (?)", params[:merk_id]).first.product.map{|a| [a.Namaroduk, a.KodeProduk]}.insert(0, "")
 	end

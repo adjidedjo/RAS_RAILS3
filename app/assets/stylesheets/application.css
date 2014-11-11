@@ -11,13 +11,13 @@
  *= require tooltipster
  *= require_tree .
 */
-.search_sales
+.search_main
 {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
-.search_sales .form-control
+.search_main .form-control
 {
   position: relative;
   font-size: 16px;
@@ -27,7 +27,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.search_sales .form-control:focus
+.search_main .form-control:focus
 {
   z-index: 2;
 }

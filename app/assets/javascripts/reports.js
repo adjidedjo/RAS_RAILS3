@@ -1,18 +1,234 @@
 $(document).ready(function(){
-  $('.search_sales input[type="text"], .search_sales input[type="radio"]').tooltipster({ 
+  $('#branch').multiselect({
+    numberDisplayed: 1,
+    maxHeight: 200
+  });
+  $('#brand').multiselect({
+    numberDisplayed: 1
+  });
+  $('#artikel').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+  $('#produk').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+  $('#kain').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+  $('#lebar').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1
+  });
+  $('#ukuran').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1
+  });
+
+  $('#search_by_salesman').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][5])*1;
+        iTotalVal += parseCurrency(aaData[i][6])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[4].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[5].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_customer').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][4])*1;
+        iTotalVal += parseCurrency(aaData[i][5])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[3].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_ukuran').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][7])*1;
+        iTotalVal += parseCurrency(aaData[i][8])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[6].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[7].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_kain').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][5])*1;
+        iTotalVal += parseCurrency(aaData[i][6])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[4].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[5].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_artikel').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][4])*1;
+        iTotalVal += parseCurrency(aaData[i][5])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[3].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_type').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][3])*1;
+        iTotalVal += parseCurrency(aaData[i][4])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[2].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[3].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('#search_by_brand').dataTable({
+    iDisplayLength: 50,
+    bRetrieve: true,
+    bAutoWidth: false,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+      var iTotalQty = 0;
+      var iTotalVal = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty += parseCurrency(aaData[i][2])*1;
+        iTotalVal += parseCurrency(aaData[i][3])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[1].innerHTML = addCommas(parseInt(iTotalQty))
+      nCells[2].innerHTML = addCommas(parseInt(iTotalVal))
+
+    }
+  });
+
+  $('.search_main input[type="text"], .search_main input[type="radio"]').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
-  $('.search_sales').validate({
+
+  $('.search_main').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -37,21 +253,60 @@ $(document).ready(function(){
       }
     }
   });
-  
-  $('.quick_view_month input[type="checkbox"]').tooltipster({ 
+
+  $('.search_sales input[type="text"], .search_sales input[type="radio"]').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
-  $('.quick_view_month').validate({
+
+  $('.search_sales').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
+      if(newError !== '' && newError !== lastError){
+        $(element).tooltipster('content', newError);
+        $(element).tooltipster('show');
+      }
+    },
+    success: function (label, element) {
+      $(element).tooltipster('hide');
+      $(element).closest('.control-group').removeClass('error').addClass('success');
+    },
+    highlight: function (element) {
+      $(element).closest('.control-group').removeClass('success').addClass('error');
+    },
+    rules: {
+      from: {
+        required: true
+      },
+      to: {
+        required: true
+      },
+      sales: {
+        required: true
+      }
+    }
+  });
+
+  $('.quick_view_month input[type="checkbox"]').tooltipster({
+    trigger: 'custom', // default is 'hover' which is no good here
+    onlyOne: false,    // allow multiple tips to be open at a time
+    position: 'right'  // display the tips to the right of the element
+  });
+
+  $('.quick_view_month').validate({
+    errorPlacement: function (error, element) {
+
+      var lastError = $(element).data('lastError'),
+      newError = $(error).text();
+
+      $(element).data('lastError', newError);
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -75,21 +330,21 @@ $(document).ready(function(){
       }
     }
   });
-  
-  $('.quick_view input[type="radio"]').tooltipster({ 
+
+  $('.quick_view input[type="radio"]').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
+
   $('.quick_view').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -113,10 +368,10 @@ $(document).ready(function(){
       }
     }
   });
-  
+
   for ( var i = 0; i < 50; i++ ) {
     $('#table_total_' + i).dataTable({
-      bFilter: false, 
+      bFilter: false,
       bInfo: false,
       bPaginate: false,
       bJQueryUI: true,
@@ -135,7 +390,7 @@ $(document).ready(function(){
         var iTotalValRoyal = 0;
         var iTotalQtySer = 0;
         var iTotalValSer = 0;
-  
+
         for ( var i=0 ; i<aaData.length ; i++ )
         {
           iTotalQtyElite += parseCurrency(aaData[i][1])*1;
@@ -162,7 +417,7 @@ $(document).ready(function(){
       }
     });
   }
-  
+
   $('#cabang_id').multiselect({
     buttonClass: 'btn',
     buttonWidth: 'auto',
@@ -226,8 +481,8 @@ $(document).ready(function(){
       }
     }
   });
-    
-		
+
+
   $('#cus_compare').dataTable({
     iDisplayLength: 10,
     bRetrieve: true
@@ -238,7 +493,7 @@ $(document).ready(function(){
   //             */
   //
   //            var iTotalQtyCity = 0;
-  //            
+  //
   //            var iTotalQtyJanuary = 0;
   //            var iTotalValueJanuary = 0;
   //
@@ -259,7 +514,7 @@ $(document).ready(function(){
   //
   //            for ( var i=0 ; i<aaData.length ; i++ )
   //            {
-  //                
+  //
   //                iTotalQtyJanuary += parseCurrency(aaData[i][2])*1;
   //                iTotalValueJanuary += parseCurrency(aaData[i][3])*1;
   //
@@ -282,7 +537,7 @@ $(document).ready(function(){
   /* Modify the footer row to match what we want */
   //            var nCells = nRow.getElementsByTagName('td');
   ////            nCells[1].innerHTML = addCommas(parseInt(iTotalQtyCity))
-  //            
+  //
   ////            nCells[0].innerHTML = addCommas(parseInt(iTotalQtyJanuary))
   //            nCells[1].innerHTML = addCommas(parseInt(iTotalValueJanuary))
   //
@@ -304,7 +559,7 @@ $(document).ready(function(){
   //        }
   });
   $('#cus_compare2').dataTable({
-        
+
     iDisplayLength: 10,
     bRetrieve: true
   //        "fnFooterCallback": function ( nRow, aaData ) {
@@ -313,7 +568,7 @@ $(document).ready(function(){
   //             * the pagination)
   //             */
   //            var iTotalQtyCity = 0;
-  //            
+  //
   //            var iTotalQtyJuly = 0;
   //            var iTotalValueJuly = 0;
   //
@@ -335,7 +590,7 @@ $(document).ready(function(){
   //            for ( var i=0 ; i<aaData.length ; i++ )
   //            {
   ////                iTotalQtyCity += parseCurrency(aaData[i][2])*1;
-  //                
+  //
   //                iTotalQtyJuly += parseCurrency(aaData[i][2])*1;
   //                iTotalValueJuly += parseCurrency(aaData[i][3])*1;
   //
@@ -358,7 +613,7 @@ $(document).ready(function(){
   /* Modify the footer row to match what we want */
   //            var nCells = nRow.getElementsByTagName('td');
   ////            nCells[1].innerHTML = addCommas(parseInt(iTotalQtyCity))
-  //            
+  //
   //            nCells[2].innerHTML = addCommas(parseInt(iTotalQtyJuly))
   //            nCells[3].innerHTML = addCommas(parseInt(iTotalValueJuly))
   //
@@ -379,13 +634,13 @@ $(document).ready(function(){
 
   //        }
   });
-		
+
   // Add a tabletool to export to pdf, excel and csv
   $('#detail_report').dataTable({
     "bScrollCollapse": true,
     "bPaginate": false,
     "bAutoWidth": false,
-    "bInfo": false,  
+    "bInfo": false,
     "bFilter": false,
     sDom: '<"H"Tfrl>t<"F"ip>',
     oTableTools: {
@@ -399,7 +654,7 @@ $(document).ready(function(){
       ]
     }
   });
-    
+
   $('#quick_report').dataTable({
     iDisplayLength: 50,
     bRetrieve: true,
@@ -451,7 +706,7 @@ $(document).ready(function(){
       nCells[7].innerHTML = addCommas(parseInt(iTotalValueMonth4))
     }
   });
-		
+
   $('#customer_compare').dataTable({
     iDisplayLength: 10,
     bRetrieve: true,
@@ -523,7 +778,7 @@ $(document).ready(function(){
   });
 
   $('#customer_compare2').dataTable({
-        
+
     iDisplayLength: 10,
     bRetrieve: true,
     "fnFooterCallback": function ( nRow, aaData ) {
@@ -593,7 +848,7 @@ $(document).ready(function(){
 
     }
   });
-		
+
   $('#compare_last').dataTable({
     iDisplayLength: 30,
     bRetrieve: true,
