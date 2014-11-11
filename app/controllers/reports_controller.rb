@@ -9,6 +9,17 @@ class ReportsController < ApplicationController
     @search_by_salesman = SalesSalesman.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .group("cabang_id, merk, produk, customer, sales")
+
+    if params[:format] == "xls"
+      @search_by_customer = LaporanCabang.between_date_sales(params[:from], params[:to])
+      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_customer
@@ -19,6 +30,17 @@ class ReportsController < ApplicationController
     @search_by_customer = SalesCustomer.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .group("cabang_id, merk, produk, customer")
+
+    if params[:format] == "xls"
+      @search_by_customer = LaporanCabang.between_date_sales(params[:from], params[:to])
+      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_ukuran
@@ -31,6 +53,19 @@ class ReportsController < ApplicationController
     @search_by_ukuran = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).lebar(params[:lebar])
     .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain, ukuran")
+
+    if params[:format] == "xls"
+      @search_by_ukuran = LaporanCabang.between_date_sales(params[:from], params[:to])
+      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+      .search_by_type(params[:produk]).search_by_namaarticle(params[:artikel]).namafabric(params[:kain])
+      .size_standard(params[:ukuran]).lebar(params[:lebar])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_kain
@@ -43,6 +78,18 @@ class ReportsController < ApplicationController
     @search_by_kain = SalesFabric.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain")
+
+    if params[:format] == "xls"
+      @search_by_kain = LaporanCabang.between_date_sales(params[:from], params[:to])
+      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+      .search_by_type(params[:produk]).search_by_namaarticle(params[:artikel]).namafabric(params[:kain])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_artikel
@@ -54,6 +101,18 @@ class ReportsController < ApplicationController
     @search_by_artikel = SalesArticle.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk])
     .artikel(params[:artikel]).group("cabang_id, merk, produk, artikel")
+
+    if params[:format] == "xls"
+      @search_by_artikel = LaporanCabang.between_date_sales(params[:from], params[:to])
+      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+      .search_by_type(params[:produk]).search_by_namaarticle(params[:artikel])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_type
@@ -63,6 +122,16 @@ class ReportsController < ApplicationController
     to_y = params[:to].to_date.year
     @search_by_type = SalesProduct.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).group("cabang_id, merk, produk")
+
+    if params[:format] == "xls"
+      @search_by_type = LaporanCabang.between_date_sales(params[:from], params[:to]).brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_by_brand
@@ -73,6 +142,16 @@ class ReportsController < ApplicationController
     @search_by_brand = SalesBrand.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val")
     .between_date_sales(from_m, to_m, from_y, to_y).brand(params[:brand]).search_by_branch(params[:branch])
     .group("cabang_id, merk")
+
+    if params[:format] == "xls"
+      @search_by_brand = LaporanCabang.between_date_sales(params[:from], params[:to]).brand(params[:brand]).search_by_branch(params[:branch])
+    end
+
+    respond_to do |format|
+      format.html
+      format.xls
+      format.xml
+    end
   end
 
   def search_main

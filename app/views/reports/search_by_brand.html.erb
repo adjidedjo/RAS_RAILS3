@@ -10,11 +10,11 @@
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>             
+              </div>
               <div class="block-content">
                 <div class="control-group">
                   <%= text_field_tag 'from', params[:from].nil? ? nil : params[:from], :placeholder => "From Date", :html => {:class => "input-large"}  %>
-                </div>               
+                </div>
                 <div class="control-group">
                   <%= text_field_tag 'to', params[:to].nil? ? nil : params[:to], :placeholder => "To Date", :html => {:class => "input-large"}  %>
                 </div>
@@ -22,7 +22,7 @@
                   <%= label_tag 'cabang' %>
                   <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), :class => 'multiselect', :multiple => true %>
                 </div>
-                <br />              
+                <br />
                 <div class="control-group">
                   <%= label_tag 'brand' %>
                   <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), :class => 'multiselect', :multiple => true %>
@@ -32,10 +32,12 @@
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
                   </button>
+                  <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to],
+                    :brand => params[:brand], :branch => params[:branch]), :class=>"btn btn-info" %>
                 </div>
               </div>
             </div>
-          <% end %>        
+          <% end %>
         </div>
       </div>
     </div>

@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="span6">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="span8" style="padding-top: 25px">
+          <table id="search_by_brand" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+            <thead>
+              <tr>
+                <th>Cabang</th>
+                <th>No SJ</th>
+                <th>Tanggal SJ</th>
+                <th>No Faktur</th>
+                <th>No So</th>
+                <th>Kode Customer</th>
+                <th>Customer</th>
+                <th>Alamat Kirim</th>
+                <th>Salesman</th>
+                <th>Kode Barang</th>
+                <th>Nama Barang</th>
+                <th>Merk</th>
+                <th>Jenis</th>
+                <th>Series</th>
+                <th>Artikel</th>
+                <th>Kain</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
+                <th>Quantity</th>
+                <th>Harga Satuan</th>
+                <th>Diskon 1</th>
+                <th>Diskon 2</th>
+                <th>Diskon 3</th>
+                <th>Diskon 4</th>
+                <th>Diskon 5</th>
+                <th>Value</th>
+                <th>Cashback</th>
+                <th>Upgrade</th>
+                <th>Ket PPB</th>
+                <th>Kota</th>
+                <th>Jenis Customer</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th scope="row" style="font-size: 13px; font-weight: bold;"><i>Total</i></th>
+                <% (1..3).each do  %>
+                  <td style="font-size: 13px; background-color: #DFEFFC;"></td>
+                <% end %>
+              </tr>
+            </tfoot>
+            <tbody>
+              <% @search_by_artikel.each do |sbb| %>
+                <tr>
+                  <td><%= Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+                  <td><%= sbb.nosj %></td>
+                  <td><%= sbb.tanggalsj %></td>
+                  <td><%= sbb.nofaktur %></td>
+                  <td><%= sbb.noso %></td>
+                  <td><%= sbb.kode_customer %></td>
+                  <td><%= sbb.customer %></td>
+                  <td><%= sbb.alamatkirim %></td>
+                  <td><%= sbb.salesman %></td>
+                  <td><%= sbb.kodebrg %></td>
+                  <td><%= sbb.namabrg %></td>
+                  <td><%= sbb.jenisbrgdisc %></td>
+                  <td><%= sbb.jenisbrg %></td>
+                  <td><%= sbb.namabrand %></td>
+                  <td><%= sbb.namaartikel %></td>
+                  <td><%= sbb.namakain %></td>
+                  <td><%= sbb.panjang %></td>
+                  <td><%= sbb.lebar %></td>
+                  <td><%= sbb.jumlah %></td>
+                  <td><%= currency(sbb.hargasatuan) %></td>
+                  <td><%= sbb.diskon1 %></td>
+                  <td><%= sbb.diskon2 %></td>
+                  <td><%= sbb.diskon3 %></td>
+                  <td><%= sbb.diskon4 %></td>
+                  <td><%= sbb.diskon5 %></td>
+                  <td><%= currency(sbb.harganetto2) %></td>
+                  <td><%= sbb.cashback %></td>
+                  <td><%= sbb.nupgrade %></td>
+                  <td><%= sbb.ketppb %></td>
+                  <td><%= sbb.kota %></td>
+                  <td><%= sbb.Jenis_Customer %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

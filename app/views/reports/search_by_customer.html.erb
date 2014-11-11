@@ -37,6 +37,8 @@
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
                   </button>
+                  <%= link_to 'Export', url_for(:format => 'xls', :from => params[:from], :to => params[:to],
+                    :brand => params[:brand], :branch => params[:branch], :produk => params[:produk]), :class=>"btn btn-info" %>
                 </div>
               </div>
             </div>
