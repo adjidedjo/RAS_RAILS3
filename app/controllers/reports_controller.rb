@@ -56,9 +56,9 @@ class ReportsController < ApplicationController
 
     if params[:format] == "xls"
       @search_by_ukuran = LaporanCabang.between_date_sales(params[:from], params[:to])
-      .brand(params[:brand]).search_by_type(params[:produk]).search_by_branch(params[:branch])
-      .search_by_type(params[:produk]).search_by_namaarticle(params[:artikel]).namafabric(params[:kain])
-      .size_standard(params[:ukuran]).lebar(params[:lebar])
+      .brand(params[:brand]).type(params[:produk]).search_by_branch(params[:branch])
+      .search_by_namaarticle(params[:artikel]).namafabric(params[:kain])
+      .size_st(params[:ukuran]).lebar(params[:lebar])
     end
 
     respond_to do |format|

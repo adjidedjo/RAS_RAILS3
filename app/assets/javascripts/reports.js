@@ -28,10 +28,6 @@ $(document).ready(function(){
     maxHeight: 200,
     numberDisplayed: 1
   });
-  $('#ukuran').multiselect({
-    maxHeight: 200,
-    numberDisplayed: 1
-  });
 
   $('#search_by_salesman').dataTable({
     iDisplayLength: 50,

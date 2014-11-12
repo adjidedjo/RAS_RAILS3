@@ -11,6 +11,7 @@ class LaporanCabang < ActiveRecord::Base
   # scope for monthly/monthly
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? and type != "AC" }
+	scope :type, lambda {|type| where("jenisbrg in (?)", type) if type.present? and type != "AC" }
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
@@ -45,7 +46,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :month, lambda{|month| where "month(tanggalsj) = ?", month }
   scope :brand_on_kodebarang, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :cabang, lambda {|branch| where("cabang_id = ?", branch) if branch.present? }
-  scope :size_standard, lambda {|size| where("kodebrg like ?", %(___________#{size}%)) if size.present?}
+  scope :size_st, lambda {|size| where("kodebrg like ?", %(___________#{size}%)) if size.present?}
   scope :lebar, lambda {|lebar| where("lebar in (?)", lebar) if lebar.present?}
 
   def self.grand_total_cabang(cabang)

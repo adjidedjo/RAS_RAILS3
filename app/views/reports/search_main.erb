@@ -29,29 +29,17 @@
               <br />
               <div class="control-group">
                 <label>Berdarkan apa data yang akan ditampilkan?</label>
-                <fieldset style="margin-left:5px">
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'merk' %> Merek
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'tipe' %> Produk
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'artikel' %> Artikel
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'kain' %> Kain
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'ukuran' %> Ukuran
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'customer' %> Toko/Customer
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'sales', 'salesman' %> Salesman
-                  </label>
+                <label class="radio">
+                  <%= radio_button_tag 'sales', 'ukuran' %> Barang
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'sales', 'customer' %> Toko/Customer
+                </label>
+                <label class="radio">
+                  <%= radio_button_tag 'sales', 'salesman' %> Salesman
+                </label>
               </div>
+              <br />
               <div class="control-group">
                 <button type="submit" class="btn btn-primary">
                   <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>

@@ -6,7 +6,7 @@
           <%= form_tag reports_search_by_ukuran_path, :method => 'get', :class => "search_sales" do %>
             <div class="block">
               <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Parameter pencarian berdasarkan Ukuran</div>
+                <div class="muted pull-left">Parameter pencarian berdasarkan Barang</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
@@ -45,7 +45,7 @@
                 <br />
                 <div class="control-group">
                   <%= label_tag 'ukuran' %>
-                  <%= select_tag 'ukuran', options_for_select(["S", "T"], params[:ukuran]), :class => 'multiselect', :multiple => true %>
+                  <%= select_tag 'ukuran', options_for_select(["S", "T"], params[:ukuran]), :class => 'select', :prompt => "Select Size" %>
                 </div>
                 <br />
                 <div class="control-group">
