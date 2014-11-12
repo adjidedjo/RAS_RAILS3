@@ -5,8 +5,8 @@ class SalesArticle < ActiveRecord::Base
 	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
 	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
-	scope :artikel, lambda {|artikel| where("artikel like ?", artikel) if artikel.present?}
-	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
+	scope :artikel, lambda {|artikel| where("artikel in (?)", artikel) if artikel.present?}
+	scope :customer, lambda {|customer| where("customer in (?)", %(#{customer})) if customer.present? }
 	scope :fabric, lambda {|fabric| where("kain like ?", fabric) if fabric.present?}
 	scope :produk, lambda {|produk| where("produk like ?", produk) if produk.present?}
 	scope :size_length, lambda {|brand_size| where("ukuran like ?", %(_______________#{brand_size}%)) if brand_size.present?}
