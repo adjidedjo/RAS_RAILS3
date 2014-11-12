@@ -36,19 +36,19 @@
     <%= favicon_link_tag 'logo_ras1.jpg', :rel => 'shortcut icon' %>
   </head>
   <body>
-    <%= nav_bar :fixed => :top, :brand => "Sales Analytics" do %>	
+    <%= nav_bar :fixed => :top, :brand => "Sales Analytics" do %>
       <% if current_user %>
         <%= menu_group do %>
           <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.roles == 'Admin' || current_user.roles == 'Accounting' || current_user.roles == 'SuperHero' %>
           <%= menu_item "Users", users_path if current_user.roles == 'SuperHero' %>
           <% if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
-            <%= drop_down "Accounting" do %>    
+            <%= drop_down "Accounting" do %>
               <%= menu_item "Update Regional & Price List", regionals_path %>
               <%= menu_item "Cek NoFaktur Hilang", sales_reports_path %>
               <%= menu_item "Cek Price List", accounting_price_lists_path %>
               <%= menu_item "Export Laporan", export_excel_accounting_price_lists_path %>
-            <% end %>  
-          <% end %>  
+            <% end %>
+          <% end %>
           <%= menu_divider %>
           <%= drop_down "Target" do %>
         <%#= menu_item "Monthly", targets_mNonthly_target_type_path %>
@@ -56,7 +56,7 @@
           <% end %>
           <%= menu_item "Stock", stock_index_path %>
           <%= drop_down "Sales Reports" do %>
-            <%= menu_item "Analysis", reports_first_filter_path %>
+            <%= menu_item "Analysis", reports_search_main_path %>
         <%#= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
             <%= menu_item "Quick View", reports_quick_view_path %>
           <% end %>
@@ -82,11 +82,11 @@
               <%= yield %>
             </div>
           </div>
-          <div class="push"></div>						
+          <div class="push"></div>
         </div>
         <div class="footer-wrapper">
           <div class="container">
-            <p class="muted credit">Copyright &copy; 2013 <%= link_to "Royal Abadi Sejahtera", "http://royalabadisejahtera.com/ras/", 
+            <p class="muted credit">Copyright &copy; 2013 <%= link_to "Royal Abadi Sejahtera", "http://royalabadisejahtera.com/ras/",
                 :target => "_blank" %></a></p>
           </div>
         </div>
