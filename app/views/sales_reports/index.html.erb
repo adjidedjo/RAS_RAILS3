@@ -10,20 +10,23 @@
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>             
-              <div class="block-content">              
+              </div>
+              <div class="block-content">
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
                   <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
-                </div>               
+                </div>
+                <br />
                 <div class="control-group">
                   <%= label_tag 'brand' %>
                   <%= select_tag 'brand', options_for_select(options_for_tipe, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
                 </div>
+                <br />
                 <div class="control-group">
                   <%= label_tag 'bulan' %>
                   <%= select_month(Date.today, add_month_numbers: true, :html_options => {:class => "select"}) %>
                 </div>
+                <br />
                 <div class="control-group">
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
@@ -31,7 +34,7 @@
                 </div>
               </div>
             </div>
-          <% end %>        
+          <% end %>
         </div>
       </div>
     </div>
