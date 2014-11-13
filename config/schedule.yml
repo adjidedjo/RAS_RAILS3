@@ -23,7 +23,7 @@ update_price_list:
   rails_envs: development, production, staging
 
 check_sales_reports:
-  cron: "30 0 * * 1-6"
+  cron: "0 0 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "check_reports"
@@ -31,17 +31,9 @@ check_sales_reports:
   rails_envs: development, production, staging
 
 sales_reports_prev_month:
-  cron: "0 3 1-15 * *"
+  cron: "0 22 1-15 * 1-6"
   queue: cron
   class: ControlUpload
   args: "check_reports_prev_month"
-  description: check sales_reports
-  rails_envs: development, production, staging
-
-background_work:
-  cron: "15 12 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "background_work"
   description: check sales_reports
   rails_envs: development, production, staging

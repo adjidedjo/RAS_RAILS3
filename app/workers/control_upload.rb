@@ -65,26 +65,4 @@ class ControlUpload
     LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
   end
-
-  def background_work
-    SqlSales.migration_sales_report(Date.today.month, Date.today.year)
-    SqlSales.migration_sales_report(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
-    PriceList.check_availability_master(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
-    PriceList.check_report_price_list(Date.today.prev_month.month, Date.today.month, Date.today.prev_month.year, Date.today.year)
-    LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_article(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_fabric(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_customer(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_salesmen(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_size(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_brand(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_product(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-  end
 end
