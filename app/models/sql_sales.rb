@@ -4,15 +4,15 @@ class SqlSales < ActiveRecord::Base
   set_table_name "tbLaporanCabang"
 
   def self.migration_sales_report(month, year)
-    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ?", month, year).each do |sql_sales|
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and jenisbrgdisc is not null", month, year).each do |sql_sales|
       lapcab = LaporanCabang.find_by_cabang_id_and_tanggalsj_and_nofaktur_and_kodebrg_and_customer_and_jumlah(sql_sales.idcabang.to_i,
         sql_sales.tanggalsj,sql_sales.nofaktur, sql_sales.kodebrg, sql_sales.customer, sql_sales.jumlah)
-      if lapcab.jenisbrgdisc == 'Accessoris Elite'
+      if sql_sales.jenisbrgdisc == 'Accessoris Elite'
         merk = 'Non Serenity'
-      elsif lapcab.jenisbrgdisc == 'Accessoris Lady'
+      elsif sql_sales.jenisbrgdisc == 'Accessoris Lady'
         merk = 'Lady Americana'
       else
-        merk = lapcab.jenisbrgdisc
+        merk = sql_sales.jenisbrgdisc
       end
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
