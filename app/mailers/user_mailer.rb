@@ -11,9 +11,9 @@ class UserMailer < ActionMailer::Base
 		@dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
-    mail(:to => recipients, :subject => "Laporan Upload Data Penjualan Harian")
+    mail(:to => email1, :subject => "Laporan Upload Data Penjualan Harian")
   end
-  
+
   def report_previous_month
     email1 = "aji.y@ras.co.id"
     email2 = "ratna.d@ras.co.id"
@@ -26,12 +26,12 @@ class UserMailer < ActionMailer::Base
     @cabang_get_id_second = Cabang.get_id_to_22
     mail(:to => recipients, :subject => "Laporan Upload Data Penjualan Harian Bulan Lalu")
   end
-  
+
   def account_approved(user)
     @user = User.where("email = ?", user)
     mail(:to => user, :subject => "Your Account Has Been Approved")
   end
-  
+
   def sign_up(user)
     @user = User.find_by_email(user)
     mail(:to => user, :subject => "Welcome to Sales Analytic")

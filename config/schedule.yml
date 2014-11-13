@@ -1,11 +1,11 @@
 send_email:
-  cron: "30 08 * * 1-6"
+  cron: "30 09 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "send_mail"
   description: send report upload sales branches
   rails_envs: production
-  
+
 send_email_prev_month:
   cron: "30 08 1-5 * *"
   queue: cron
@@ -13,7 +13,7 @@ send_email_prev_month:
   args: "send_mail_previous_month"
   description: send report upload sales branches last month
   rails_envs: production
-  
+
 update_price_list:
   cron: "01 0 * * *"
   queue: cron
@@ -29,7 +29,7 @@ check_sales_reports:
   args: "check_reports"
   description: check sales_reports
   rails_envs: development, production, staging
-  
+
 sales_reports_prev_month:
   cron: "0 3 6 * *"
   queue: cron
