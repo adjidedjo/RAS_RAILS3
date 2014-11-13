@@ -61,7 +61,7 @@ class SqlSales < ActiveRecord::Base
           Jenis_Customer: sql_sales.tipecust,
           namabrand: sql_sales.namabrand,
           bonus: sql_sales.bonus)
-      else
+      elsif sql_sales.bonus != 'BONUS' || sql_sales.harganetto2 != 0
         lapcab.update_attributes!(cabang_id: sql_sales.idcabang,
           nosj: sql_sales.nosj,
           tanggal: sql_sales.tanggalfaktur,
