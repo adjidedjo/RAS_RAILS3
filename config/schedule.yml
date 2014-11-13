@@ -39,7 +39,7 @@ sales_reports_prev_month:
   rails_envs: development, production, staging
 
 background_work:
-  cron: "0 0/12 * * *"
+  cron: "15 12 * * *"
   queue: cron
   class: ControlUpload
   args: "background_work"
