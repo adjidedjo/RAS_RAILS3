@@ -11,6 +11,8 @@ class SqlSales < ActiveRecord::Base
         merk = 'Non Serenity'
       elsif sql_sales.jenisbrgdisc == 'Accessoris Lady'
         merk = 'Lady Americana'
+      elsif sql_sales.jenisbrgdisc == "Accessoris Technogel"
+        merk = 'Technogel'
       else
         merk = sql_sales.jenisbrgdisc
       end
