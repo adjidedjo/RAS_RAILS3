@@ -56,7 +56,7 @@ class LaporanCabang < ActiveRecord::Base
   #  background_job
   def self.sales_by_size(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.size_standard("S").group(:cabang_id, :jenisbrgdisc, :jenisbrg, :namaartikel, :lebar).each do |lapcab|
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.size_st("S").group(:cabang_id, :jenisbrgdisc, :jenisbrg, :namaartikel, :lebar).each do |lapcab|
       sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel_and_lebar(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.namaartikel, lapcab.lebar)
       if sales_brand.nil?
         SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
