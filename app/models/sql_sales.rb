@@ -7,15 +7,6 @@ class SqlSales < ActiveRecord::Base
     select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and jenisbrgdisc is not null", month, year).each do |sql_sales|
       lapcab = LaporanCabang.find_by_cabang_id_and_tanggalsj_and_nofaktur_and_kodebrg_and_customer_and_jumlah(sql_sales.idcabang.to_i,
         sql_sales.tanggalsj,sql_sales.nofaktur, sql_sales.kodebrg, sql_sales.customer, sql_sales.jumlah)
-      if sql_sales.jenisbrgdisc == 'Accessoris Elite'
-        merk = 'Non Serenity'
-      elsif sql_sales.jenisbrgdisc == 'Accessoris Lady'
-        merk = 'Lady Americana'
-      elsif sql_sales.jenisbrgdisc == "Accessoris Technogel"
-        merk = 'Technogel'
-      else
-        merk = sql_sales.jenisbrgdisc
-      end
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
           nosj: sql_sales.nosj,
@@ -29,7 +20,7 @@ class SqlSales < ActiveRecord::Base
           salesman: sql_sales.salesman,
           kodebrg: sql_sales.kodebrg,
           namabrg: sql_sales.namabrg,
-          jenisbrgdisc: merk,
+          jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
           jenisbrg: sql_sales.jenisbrg,
           kodeartikel: sql_sales.kodeartikel,
@@ -74,7 +65,7 @@ class SqlSales < ActiveRecord::Base
           salesman: sql_sales.salesman,
           kodebrg: sql_sales.kodebrg,
           namabrg: sql_sales.namabrg,
-          jenisbrgdisc: merk,
+          jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
           jenisbrg: sql_sales.jenisbrg,
           kodeartikel: sql_sales.kodeartikel,
