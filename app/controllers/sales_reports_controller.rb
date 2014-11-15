@@ -1,17 +1,18 @@
 class SalesReportsController < ApplicationController
   include SalesReportsHelper
-  
+
   def pilihan_brand
-    redirect_to sales_reports_path(:brand => params[:brand], :branch => params[:branch], :date => params[:date]['month'].to_i) if params[:brand].present?
+    redirect_to sales_reports_path(:brand_faktur => params[:brand_faktur],
+      :branch_faktur => params[:branch_faktur], :date => params[:date]['month'].to_i) if params[:brand_faktur].present?
   end
-  
+
   # GET /sales_reports
   # GET /sales_reports.json
   def index
-    unless params[:branch].blank? && params[:brand].blank?
+    unless params[:branch_faktur].blank? && params[:brand_faktur].blank?
       faktur = SalesReport.select('nofaktur').search_by_month_and_year(params[:date]['month'].to_i, Date.today.year)
-      .brand(brand(params[:brand])).search_by_branch(params[:branch]).order("nofaktur ASC").group('nofaktur')
-      
+      .brand(brand(params[:brand_faktur])).search_by_branch(params[:branch_faktur]).order("nofaktur ASC").group('nofaktur')
+
       unless faktur.empty?
         slice = faktur.map(&:nofaktur)
         ceui = []
@@ -59,7 +60,7 @@ class SalesReportsController < ApplicationController
 
     respond_to do |format|
       if @sales_report.save
-        format.html { redirect_to sales_reports_path(:brand => params[:sales_report]['jenisbrgdisc'], :branch => params[:sales_report]['cabang_id'], :date => params[:sales_report]['tanggal'].to_i), notice: 'Sales report was successfully created.' }
+        format.html { redirect_to sales_reports_path(:brand_faktur => params[:sales_report]['jenisbrgdisc'], :branch_faktur => params[:sales_report]['cabang_id'], :date => params[:sales_report]['tanggal'].to_i), notice: 'Sales report was successfully created.' }
         format.json { render json: @sales_report, status: :created, location: @sales_report }
       else
         format.html { render action: "new" }

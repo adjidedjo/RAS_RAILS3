@@ -42,24 +42,24 @@ $(document).ready(function(){
       $(element).closest('.control-group').removeClass('success').addClass('error');
     },
     rules: {
-      month: {
+      month_faktur: {
         required: true
       },
-      branch: {
+      branch_faktur: {
         required: true
       },
-      brand: {
+      brand_faktur: {
         required: true
       }
     },
     messages:{
-      month:{
+      month_faktur:{
         required: "Pilih Bulan"
       },
-      branch:{
+      branch_faktur:{
         required: "Pilih Cabang"
       },
-      brand:{
+      brand_faktur:{
         required: "Pilih Brand"
       }
     }
