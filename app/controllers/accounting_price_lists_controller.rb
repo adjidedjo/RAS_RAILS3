@@ -1,24 +1,25 @@
 class AccountingPriceListsController < ApplicationController
   include SalesReportsHelper
-  
+
   def export_excel
-    @export = LaporanCabang.search_by_branch(params[:branch]).brand(params[:brand]).month(params[:date][:month]).year(params[:year]) if params[:year].present?
+    @export = LaporanCabang.search_by_branch(params[:branch_price_list]).brand(params[:brand_price_list]).month(params[:date][:month_price_list]).year(params[:year]) if params[:year].present?
     respond_to do |format|
       format.html
       format.xls
     end
   end
-  
+
   def pilihan_brand
-    redirect_to accounting_price_lists_path(:brand => params[:brand], :branch => params[:branch], :date => params[:date]['month'].to_i) if params[:brand].present?
+    redirect_to accounting_price_lists_path(:brand_price_list => params[:brand_price_list],
+      :branch_price_list => params[:branch], :date => params[:date]['month'].to_i) if params[:brand_price_list].present?
   end
-  
+
   # GET /accounting_price_lists
   # GET /accounting_price_lists.json
   def index
-    unless params[:branch].blank? && params[:brand].blank?
-      @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month].to_i, Date.today.year)
-      .brand(brand(params[:brand])).search_by_branch(params[:branch]).where("checked = ?", false).order("nofaktur ASC")
+    unless params[:branch_price_list].blank? && params[:brand_price_list].blank?
+      @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, Date.today.year)
+      .brand(brand(params[:brand_price_list])).search_by_branch(params[:branch_price_list]).where("checked = ?", false).order("nofaktur ASC")
       @accounting_price_list = AccountingPriceList.new
     end
   end
@@ -73,8 +74,9 @@ class AccountingPriceListsController < ApplicationController
 
     respond_to do |format|
       if @accounting_price_list.update_attributes(params[:accounting_price_list])
-        format.html { redirect_to accounting_price_lists_path(:brand => params[:brand], :branch => params[:branch],
-            :month => params[:month]), notice: 'Price list was successfully checked.' }
+        format.html { redirect_to accounting_price_lists_path(:brand_price_list => params[:brand_price_list],
+            :branch_price_list => params[:branch_price_list],
+            :month_price_list => params[:month_price_list]), notice: 'Price list was successfully checked.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -94,7 +96,7 @@ class AccountingPriceListsController < ApplicationController
       format.json { head :ok }
     end
   end
-  
+
   def update_multiple
     @report = CheckedItemMaster.find(params[:report_ids])
     @report.each do |repsales|
@@ -106,6 +108,6 @@ class AccountingPriceListsController < ApplicationController
       end
     end
     flash[:notice] = "Reports Checked"
-    redirect_to accounting_price_lists_path(branch: params[:branch], brand: params[:brand], month: params[:month])
+    redirect_to accounting_price_lists_path(branch_price_list: params[:branch_price_list], brand_price_list: params[:brand_price_list], month_price_list: params[:month_price_list])
   end
 end

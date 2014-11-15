@@ -1,4 +1,4 @@
-$(document).ready(function(){    
+$(document).ready(function(){
   $('#faktur').dataTable({
     iDisplayLength: 10,
     "bAutoWidth": false,
@@ -12,24 +12,23 @@ $(document).ready(function(){
     {
       sWidth: '50px'
     }
-    ]  
+    ]
   });
-    
-  $('.form-accounting-price-list select').tooltipster({ 
+
+  $('.form-accounting-faktur select').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
-  $('.form-accounting-price-list').validate({
-    
+
+  $('.form-accounting-faktur').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -43,7 +42,7 @@ $(document).ready(function(){
       $(element).closest('.control-group').removeClass('success').addClass('error');
     },
     rules: {
-      tipe: {
+      month: {
         required: true
       },
       branch: {
@@ -51,23 +50,17 @@ $(document).ready(function(){
       },
       brand: {
         required: true
-      },
-      month: {
-        required: true
       }
     },
     messages:{
-      tipe: {
-        required: "Pilih Tipe"
+      month:{
+        required: "Pilih Bulan"
       },
       branch:{
         required: "Pilih Cabang"
       },
       brand:{
         required: "Pilih Brand"
-      },
-      month:{
-        required: "Pilih Bulan"
       }
     }
   });

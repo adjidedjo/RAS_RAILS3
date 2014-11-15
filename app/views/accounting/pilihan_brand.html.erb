@@ -1,0 +1,48 @@
+<div class="row-fluid">
+  <div class="offset4">
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Select Brand</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <%= form_tag accounting_check_faktur_path, :method => 'get' do %>
+            <fieldset>
+              <% if current_user.user_brand == 'Elite' || current_user.user_brand == 'Admin' %>
+                <label class="radio">
+                  <%= check_box_tag 'brand[]', 'Non Serenity' %> Elite
+                </label>
+                <label class="radio">
+                  <%= check_box_tag 'brand[]', 'Serenity' %> Serenity
+                </label>
+              <% end %>
+              <% if current_user.user_brand == 'Lady Americana' || current_user.user_brand == 'Admin' %>
+                <label class="radio">
+                  <%= check_box_tag 'brand[]', 'Lady Americana' %> Lady Americana
+                </label>
+              <% end %>
+              <% if current_user.user_brand == 'Classic' || current_user.user_brand == 'Admin' %>
+                <label class="radio">
+                  <%= check_box_tag 'brand[]', 'Classic' %> Classic
+                </label>
+              <% end %>
+              <% if current_user.user_brand == 'Royal' || current_user.user_brand == 'Admin' %>
+                <label class="radio">
+                  <%= check_box_tag 'brand[]', 'Royal' %> Royal
+                </label>
+              <% end %>
+            </fieldset>
+            <br />
+            <div class="pull-right"><button type="submit" class="btn btn-primary">Process</button></div>
+          <% end %>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+  </div>
+</div>
+

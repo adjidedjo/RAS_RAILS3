@@ -14,17 +14,17 @@
               <div class="block-content">
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
-                  <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"select", :prompt => 'Select Cabang'} %>
+                  <%= select_tag 'branch_price_list', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch_price_list]), {:class=>"select", :prompt => 'Select Cabang'} %>
                 </div>
                 <br />
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]), {:class=>"select", :prompt => 'Select Brand'} %>
+                  <%= select_tag 'brand_price_list', options_for_select(options_for_tipe_price, params[:brand_price_list]), {:class=>"select", :prompt => 'Select Brand'} %>
                 </div>
                 <br />
                 <div class="control-group">
                   <%= label_tag 'bulan' %>
-                  <%= select_tag 'month', options_for_select(options_for_bulan, params[:month]), {:class => "select", :prompt => 'Select Bulan'} %>
+                  <%= select_tag 'month_price_list', options_for_select(options_for_bulan, params[:month_price_list]), {:class => "select", :prompt => 'Select Bulan'} %>
                 </div>
                 <br />
                 <div class="control-group">
@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <% if params[:branch].blank? && params[:brand].blank? || @accounting_price_lists.nil? %>
+    <% if params[:branch_price_list].blank? && params[:brand_price_list].blank? || @accounting_price_lists.nil? %>
       <div class="span6">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
           <div class="span8" style="padding-top: 25px">
@@ -91,9 +91,9 @@
               <tbody>
                 <% @accounting_price_lists.each do |laporan| %>
                   <tr>
-                    <%= hidden_field_tag 'branch', params[:branch] %>
-                    <%= hidden_field_tag 'brand', params[:brand] %>
-                    <%= hidden_field_tag 'month', params[:month] %>
+                    <%= hidden_field_tag 'branch_price_list', params[:branch_price_list] %>
+                    <%= hidden_field_tag 'brand_price_list', params[:brand_price_list] %>
+                    <%= hidden_field_tag 'month_price_list', params[:month_price_list] %>
                     <td><%= check_box_tag "report_ids[]", laporan.id %> || <%= link_to 'Detail', edit_accounting_price_list_path(laporan.id), data: {remote: true, "data-toggle" => "modal", "data-target" => "myModal",
                         params: { cabang_id: laporan.cabang_id, nofaktur: laporan.nofaktur, branch: params[:branch], brand: params[:brand], month: params[:month] }.to_param} %></td>
                     <td><%= laporan.nofaktur %></td>
@@ -110,8 +110,10 @@
               </tbody>
             </table>
             <br />
-            <%= submit_tag "Set all as checked" %>
-            <%= submit_tag "Checked as customer services" %>
+            <% unless @accounting_price_lists.empty? %>
+              <%= submit_tag "Set all as checked" %>
+              <%= submit_tag "Checked as customer services" %>
+            <% end %>
           <% end %>
         </div>
       </div>

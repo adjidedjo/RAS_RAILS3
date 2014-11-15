@@ -12,27 +12,28 @@ $(document).ready(function(){
       });
     }
   });
-  
+
   $('#price_list').dataTable({
     iDisplayLength: 50,
     bRetrieve: true,
     bAutoWidth: false
   });
-    
-  $('.form-accounting-faktur select').tooltipster({ 
+
+  $('.form-accounting-price-list select').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
-  $('.form-accounting-faktur').validate({
+
+  $('.form-accounting-price-list').validate({
+
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -46,25 +47,31 @@ $(document).ready(function(){
       $(element).closest('.control-group').removeClass('success').addClass('error');
     },
     rules: {
-      month: {
+      tipe: {
         required: true
       },
-      branch: {
+      branch_price_list: {
         required: true
       },
-      brand: {
+      brand_price_list: {
+        required: true
+      },
+      month_price_list: {
         required: true
       }
     },
     messages:{
-      month:{
-        required: "Pilih Bulan"
+      tipe: {
+        required: "Pilih Tipe"
       },
-      branch:{
+      branch_price_list:{
         required: "Pilih Cabang"
       },
-      brand:{
+      brand_price_list:{
         required: "Pilih Brand"
+      },
+      month_price_list:{
+        required: "Pilih Bulan"
       }
     }
   });
