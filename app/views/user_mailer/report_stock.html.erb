@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Laporan Upload Data Stock Harian</title>
+    <style type="text/css">
+      table.tableizer-table {
+        border: 1px solid #CCC;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        width: "100%";
+      }
+      .tableizer-table td {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
+      }
+      .tableizer-table th {
+        background-color: #104E8B;
+        color: #FFF;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+
+    <p>Dear All,</p>
+
+    <p>Dengan email ini kami beritahukan cabang-cabang yang telah dan belum upload data stock harian.</p>
+    <p>Demi kelancaran laporan, kami harap pihak-pihak terkait dapat membantu memberitahukan kepada PIC cabang yang belum mengupload data,</p>
+    <p>agar mengupload data stock sesuai tanggal yang belum diupload.</p>
+    <p>Thanks.</p>
+    <br />
+    <br />
+    <table class="tableizer-table">
+      <tr>
+        <th rowspan="2">Dates</th>
+        <th colspan="16">Control</th>
+      </tr>
+      <tr>
+        <% Cabang.get_id.each do |cabang| %>
+          <th><%= cabang.Cabang.gsub(/Cabang/, '') %></th>
+        <% end %>
+      </tr>
+      <% @dates.each do |date| %>
+        <tr>
+          <th scope="row"><%= date.strftime("%e%b%y") %></th>
+          <% @cabang_get_id.each do |cab| %>
+            <td><%= SqlStock.stock_mail_sql(cab, date).any? ? "up" : "0" %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+
+    <p>Note:</p>
+    <p>up = Data pada tanggal tersebut sudah di upload</p>
+    <p>0 = Data pada tanggal tersebut belum di upload</p>
+
+  </body>
+</html>

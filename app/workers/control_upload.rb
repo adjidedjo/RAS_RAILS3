@@ -27,6 +27,7 @@ class ControlUpload
 
   def send_mail
     UserMailer.report.deliver
+    UserMailer.report_stock.deliver
   end
 
   def send_mail_previous_month
