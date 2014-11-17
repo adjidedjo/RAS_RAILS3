@@ -161,13 +161,15 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.create_new_artikel_from_report(bulan, tahun)
     LaporanCabang.where("month(tanggalsj) = ? and year(tanggalsj) = ?", bulan, tahun).each do |lap|
-      if Artikel.where("KodeCollection = ?", lap.kodeartikel).empty?
-        Artikel.create(:KodeBrand => lap.kodeartikel[0,2],:KodeCollection => lap.kodeartikel,
-          :Produk => lap.namaartikel, :KodeProduk => lap.kodebrg[0,2], :Aktif => 1)
-      end
-      if Kain.where("KodeKain = ?", lap.kodekain).empty?
-        Kain.create(:KodeKain => lap.kodekain,:NamaKain => lap.namakain,
-          :KodeCollection => lap.kodeartikel, :Aktif => 1)
+      unless lap.kodeartikel.nil?
+        if Artikel.where("KodeCollection = ?", lap.kodeartikel).empty?
+          Artikel.create(:KodeBrand => lap.kodeartikel[0,2],:KodeCollection => lap.kodeartikel,
+            :Produk => lap.namaartikel, :KodeProduk => lap.kodebrg[0,2], :Aktif => 1)
+        end
+        if Kain.where("KodeKain = ?", lap.kodekain).empty?
+          Kain.create(:KodeKain => lap.kodekain,:NamaKain => lap.namakain,
+            :KodeCollection => lap.kodeartikel, :Aktif => 1)
+        end
       end
     end
   end
