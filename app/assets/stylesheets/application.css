@@ -148,7 +148,7 @@ table#stock td {
   background-color:#F3F3F3;
   padding: 15px;
   margin: 0 auto;
-  border-width:3px;	
+  border-width:3px;
   border-style:outset;
 }
 
@@ -161,13 +161,13 @@ table#stock td {
   background-color:#F3F3F3;
   padding: 15px;
   margin: 0 auto;
-  border-width:3px;	
+  border-width:3px;
   border-style:outset;
   margin-top: 20px;
   padding: 40px 0px 20px 0px;
 }
 @media screen and (min-width: 600px) and (max-width: 800px) {
-  table tr, th, td { 
+  table tr, th, td {
     overflow: hidden;
     width: 100% !important;
   }
@@ -177,11 +177,11 @@ table#stock td {
   }
 }
 
-@media 
+@media
 only screen and (min-width: 768px),
 (min-device-width: 768px) and (max-device-width: 1024px)  {
 
-  table th, td { 
+  table th, td {
     overflow: hidden;
   }
 
@@ -191,41 +191,41 @@ only screen and (min-width: 768px),
 
   table#stock tr { border: 1px solid #ccc; }
 
-  table#stock td { 
+  table#stock td {
     /* Behave  like a "row" */
     border: none;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
     position: relative;
-    padding-left: 50%; 
+    padding-left: 50%;
   }
 
-  table#stock td:before { 
+  table#stock td:before {
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
     top: 7px;
     left: 6px;
-    width: 45%; 
-    padding-right: 10px; 
+    width: 45%;
+    padding-right: 10px;
     white-space: nowrap;
   }
 
-  table#table_parameter td { 
+  table#table_parameter td {
     /* Behave  like a "row" */
     border: none;
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid #eee;
     position: relative;
-    padding-left: 50%; 
+    padding-left: 50%;
   }
 
-  table#table_parameter td:before { 
+  table#table_parameter td:before {
     /* Now like a table header */
     position: absolute;
     /* Top/left values mimic padding */
     top: 7px;
     left: 6px;
-    width: 45%; 
-    padding-right: 10px; 
+    width: 45%;
+    padding-right: 10px;
     white-space: nowrap;
   }
 
@@ -281,11 +281,11 @@ div#grand_total {
   @extend .error;
 }
 
-.navbar .brand { 
-  max-height: 40px; 
+.navbar .brand {
+  max-height: 40px;
   overflow: visible;
   padding-top: 0;
-  padding-bottom: 0; 
+  padding-bottom: 0;
 }
 
 html, body, .container, .content {
@@ -295,10 +295,6 @@ html, body, .container, .content {
 
 .container,.content {
   position: relative;
-}
-
-.proper-content {
-  padding-top: 40px; /* >= navbar height */
 }
 
 .wrapper {

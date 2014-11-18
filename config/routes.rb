@@ -2,16 +2,18 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  get "insentif_kontrak/main"
+
   resources :advisories do
-    collection do 
+    collection do
       get 'laporan_bulanan'
     end
   end
-  
+
   resources :future_price_lists
 
   resources :regional_branches
-  
+
   resources :regionals do
     collection do
       get 'remove_cabang'
@@ -23,7 +25,7 @@ Rain::Application.routes.draw do
   end
 
   mount ResqueWeb::Engine => "/resque_web"
-  
+
   resources :accounting_price_lists do
     collection do
       get 'pilihan_brand'
@@ -91,6 +93,10 @@ Rain::Application.routes.draw do
 	get "reports/search_by_ukuran"
 	get "reports/search_by_customer"
 	get "reports/search_by_salesman"
+	get "reports/sales_cabang_per_brand"
+	get "reports/sales_cabang_per_produk_per_brand"
+	get "reports/sales_cabang_per_toko"
+	get "reports/sales_cabang_per_toko_per_produk"
 
   resources :users_mails
 

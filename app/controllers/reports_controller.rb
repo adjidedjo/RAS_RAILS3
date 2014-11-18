@@ -1,6 +1,22 @@
 class ReportsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => :summary_of_sales
 
+  def sales_cabang_per_toko_per_produk
+
+  end
+
+  def sales_cabang_per_toko
+
+  end
+
+  def sales_cabang_per_produk_per_brand
+
+  end
+
+  def sales_cabang_per_brand
+
+  end
+
   def search_by_salesman
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
@@ -191,8 +207,10 @@ class ReportsController < ApplicationController
 
   def quick_view_monthly_process
     branch = current_user.branch == nil ? nil : current_user.branch
-    redirect_to reports_quick_view_monthly_result_path(:brand => params[:quick_view_brand], :group_by => 'cabang_id',
-      :from => 3.month.ago.to_date, :to => Date.today.to_date, :branch => branch )
+    redirect_to reports_quick_view_monthly_result_path(:brand_scb => params[:quick_view_brand], :group_by => 'cabang_id',
+      :month => Date.today, :branch => branch ) if params[:type] == 'scb'
+    redirect_to reports_quick_view_monthly_result_path(:brand_scm => params[:quick_view_brand], :group_by => 'cabang_id',
+      :month => Date.today, :branch => branch ) if params[:type] == 'scm'
   end
 
   def quick_view_monthly

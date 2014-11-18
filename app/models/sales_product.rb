@@ -13,7 +13,7 @@ class SalesProduct < ActiveRecord::Base
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :between_date_sales, lambda { |from_m, to_m, from_y, to_y| where("bulan between ? and ? and tahun between ? and ?", from_m, to_m, from_y, to_y) if from_m.present? && to_m.present? }
 	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
-	
+
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
 		select("sum(qty) as sum_jumlah, sum(val) as sum_harganetto2")
@@ -22,4 +22,8 @@ class SalesProduct < ActiveRecord::Base
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
     .customer_modern_all(customer_modern).brand_size(size_type).customer_retail_all(customer_all_retail)
 	end
+
+  def self.sales_cabang_per_merk_per_produk(merk, product, cabang, date)
+    select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).search_by_type(product).brand(merk)
+  end
 end

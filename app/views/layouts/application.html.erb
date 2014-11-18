@@ -36,7 +36,7 @@
     <%= favicon_link_tag 'logo_ras1.jpg', :rel => 'shortcut icon' %>
   </head>
   <body>
-    <%= nav_bar :fixed => :top, :brand => "Sales Analytics" do %>
+    <%= nav_bar :responsive => true, :brand => "Sales Analytics" do %>
       <% if current_user %>
         <%= menu_group do %>
           <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.roles == 'Admin' || current_user.roles == 'Accounting' || current_user.roles == 'SuperHero' %>
@@ -57,8 +57,16 @@
           <%= menu_item "Stock", stock_index_path %>
           <%= drop_down "Sales Reports" do %>
             <%= menu_item "Analysis", reports_search_main_path %>
-        <%#= menu_item "Weekly", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
-            <%= menu_item "Quick View", reports_quick_view_path %>
+            <%= drop_down_submenu "Quick View" do %>
+              <%= menu_item "Mingguan", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
+              <%= drop_down_submenu "Bulanan" do %>
+                <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
+                <%= menu_item "Sales Cabang per Brand", reports_sales_cabang_per_brand_path(month: Date.today) %>
+                <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_path(month: Date.today, cabang_scp: "") %>
+                <%= menu_item "Sales Cabang per Toko", reports_quick_view_monthly_path(type: "sct") %>
+                <%= menu_item "Sales Cabang per Toko dan Produk", reports_quick_view_monthly_path(type: "sctp") %>
+              <% end %>
+            <% end %>
           <% end %>
           <%= menu_item "How To", docs_index_path %>
         <% end %>
