@@ -2,7 +2,7 @@ class AccountingPriceListsController < ApplicationController
   include SalesReportsHelper
 
   def export_excel
-    @export = LaporanCabang.search_by_branch(params[:branch_price_list]).brand(params[:brand_price_list]).month(params[:date][:month]).year(params[:year]) if params[:year].present?
+    @export = LaporanCabang.search_by_branch(params[:branch_price_list]).brand(params[:brand]).month(params[:date][:month]).year(params[:year]) if params[:year].present?
     respond_to do |format|
       format.html
       format.xls
