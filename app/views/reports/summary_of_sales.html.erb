@@ -45,7 +45,7 @@
       <% end %>
       <% @grand_total_ser.each do |ser| %>
         <li><h3 style="font-size: 25px; color: #2E6E9E">Serenity: <%= currency(ser.sum_jumlah) %> || <%= currency(ser.sum_harganetto2) %></h3></li>
-      <% end %>    
+      <% end %>
       <% @grand_total_lady.each do |lady| %>
         <li><h3 style="font-size: 25px; color: #2E6E9E">Lady Americana: <%= currency(lady.sum_jumlah) %> || <%= currency(lady.sum_harganetto2) %></h3></li>
       <% end %>
@@ -128,7 +128,7 @@
       speed: 10000,
       pause: 30000
     });
-    
+
     $('.bxslider').bxSlider({
       minSlides: 2,
       maxSlides: 2,
@@ -137,7 +137,7 @@
       ticker: true,
       speed: 50000
     });
-    
+
     $('.total_brand').bxSlider({
       displaySlideQty: 1,
       moveSlideQty: 1,

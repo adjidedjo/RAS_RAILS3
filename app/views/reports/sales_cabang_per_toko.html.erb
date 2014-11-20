@@ -1,0 +1,73 @@
+<div class="row-fluid">
+  <div class="offset5">
+    <div class="block-content collapse in">
+      <h2 style="font-size: 17px;"><i>Laporan Sales Cabang per Toko</i></h2>
+    </div>
+  </div>
+</div>
+<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan Project dan Aksesoris</p></h5>
+<div class="span3">
+  <p style="text-align: left;">
+    <%= form_tag reports_sales_cabang_per_toko_path, :method => 'get', :class => "form form-inline" do %>
+      <label style="font-size: 13px;">Cabang: </label>
+      <%= hidden_field_tag "month", params[:month] %>
+      <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
+      <button type="submit" class="btn btn-primary">
+        Refine Search
+      </button>
+    <% end %>
+  </p>
+</div>
+<div class="span2 offset2">
+  <p style="text-align: center; font-size: 14px;">
+    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp])%>
+    <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %>
+    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp])%>
+  </p>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+      <table id="sales_cabang_per_toko" class="table table-striped">
+        <thead>
+          <tr>
+            <th rowspan="2" style="font-size: 13px; text-align: center;">Toko</th>
+            <% Merk.all.each do |brand| %>
+              <th style="font-size: 13px; text-align: center" colspan="2"><%= brand.Merk %></th>
+            <% end %>
+          </tr>
+          <tr>
+            <% (1..7).each do  %>
+              <th>Qty</th>
+              <th>Val</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th scope="row" style="font-size: 13px; font-weight: bold;"><i>Total</i></th>
+            <% (1..14).each do  %>
+              <td style="font-size: 12px; background-color: #DFEFFC;"></td>
+            <% end %>
+          </tr>
+        </tfoot>
+        <tbody>
+          <% SalesCustomer.sales_cabang_per_toko(params[:cabang_scp], params[:month].to_date).each do |toko| %>
+            <tr>
+              <th scope="row" style="font-size: 13px; height: 10px;"><%= toko.customer %></th>
+              <% Merk.all.each do |merk| %>
+                <% if toko.merk != merk.Merk %>
+                  <td style="font-size: 12px; height: 40px;">0</td>
+                  <td style="font-size: 12px; height: 40px;">0</td>
+                <% else %>
+                  <td style="font-size: 12px; height: 40px;"><%= currency(toko.qty.to_i) %></td>
+                  <td style="font-size: 12px; height: 40px;"><%= currency(toko.val.to_i) %> </td>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

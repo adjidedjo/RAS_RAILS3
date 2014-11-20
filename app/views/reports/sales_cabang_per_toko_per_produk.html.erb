@@ -1,0 +1,78 @@
+<div class="row-fluid">
+  <div class="offset4">
+    <div class="block-content collapse in">
+      <h2 style="font-size: 17px;"><i>Laporan Sales Cabang per Produk dan per Brand</i></h2>
+    </div>
+  </div>
+</div>
+<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan Project</p></h5>
+<div class="span6">
+  <p style="text-align: left;">
+    <%= form_tag reports_sales_cabang_per_toko_per_produk_path, :method => 'get', :class => "form form-inline" do %>
+      <label style="font-size: 13px;">Cabang: </label>
+      <%= hidden_field_tag "month", params[:month] %>
+      <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
+      <label style="font-size: 13px;">Customer: </label>
+      <%= select_tag 'customer_scp', options_for_select(SalesCustomer.get_name_customer(params[:month].to_date).collect {|a| [a.customer, a.customer]}, params[:customer_scp]), :class => 'multiselect', :multiple => true %>
+      <button type="submit" class="btn btn-primary">
+        Refine Search
+      </button>
+    <% end %>
+  </p>
+</div>
+<div class="span4 offset8">
+  <p style="text-align: center; font-size: 14px;">
+    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp])%>
+    <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %>
+    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp])%>
+  </p>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+      <table id="sales_cabang_per_brand" class="table table-striped">
+        <thead>
+          <tr>
+            <th rowspan="2" style="font-size: 13px; text-align: center;">Type</th>
+            <% Merk.all.each do |brand| %>
+              <th style="font-size: 13px; text-align: center" colspan="2"><%= brand.Merk %></th>
+            <% end %>
+          </tr>
+          <tr>
+            <% (1..7).each do  %>
+              <th>Qty</th>
+              <th>Val</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th scope="row" style="font-size: 13px; font-weight: bold;"><i>Total</i></th>
+            <% (1..14).each do  %>
+              <td style="font-size: 13px; background-color: #DFEFFC;"></td>
+            <% end %>
+          </tr>
+        </tfoot>
+        <tbody>
+          <% ["KB","KM","DV","SA","SB","HB", "AC"].each do |jenis| %>
+            <tr>
+              <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
+              <% Merk.all.each do |merk| %>
+                <% sales_product = SalesCustomer.sales_cabang_per_toko_per_produk(merk.Merk, jenis(jenis), params[:cabang_scp], params[:month].to_date, params[:customer_scp]) %>
+                <% if sales_product.empty? %>
+                  <td style="font-size: 15px; height: 40px;">0</td>
+                  <td style="font-size: 15px; height: 40px;">0</td>
+                <% else %>
+                  <% sales_product.each do |sum| %>
+                    <td style="font-size: 15px; height: 40px;"><%= currency(sum.qty.to_i) %></td>
+                    <td style="font-size: 15px; height: 40px;"><%= currency(sum.val.to_i) %> </td>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
