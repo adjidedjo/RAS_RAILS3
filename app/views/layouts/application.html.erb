@@ -58,13 +58,13 @@
           <%= drop_down "Sales Reports" do %>
             <%= menu_item "Analysis", reports_search_main_path %>
             <%= drop_down_submenu "Quick View" do %>
-              <%= menu_item "Mingguan", laporan_cabang_weekly_report_path(:periode_week => 1.week.ago) %>
+              <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
               <%= drop_down_submenu "Bulanan" do %>
                 <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
                 <%= menu_item "Sales Cabang per Brand", reports_sales_cabang_per_brand_path(month: Date.today) %>
                 <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_path(month: Date.today, cabang_scp: "") %>
-                <%= menu_item "Sales Cabang per Toko", reports_quick_view_monthly_path(type: "sct") %>
-                <%= menu_item "Sales Cabang per Toko dan Produk", reports_quick_view_monthly_path(type: "sctp") %>
+                <%= menu_item "Sales Cabang per Toko", reports_sales_cabang_per_toko_path(month: Date.today, cabang_scp: "") %>
+                <%= menu_item "Sales Cabang per Toko dan Produk", reports_sales_cabang_per_toko_per_produk_path(month: Date.today, cabang_scp: "", customer: "") %>
               <% end %>
             <% end %>
           <% end %>
