@@ -1,11 +1,9 @@
 $(document).ready(function(){
-  $('#sales_cabang_per_brand').dataTable({
-    bFilter: false,
-    bInfo: false,
-    bPaginate: false,
+  $('#sales_cabang_per_toko').dataTable({
+    bFilter: true,
     bJQueryUI: true,
-    iDisplayLength: -1,
-    bSort: false,
+    iDisplayLength: 10,
+    bSort: true,
     "fnFooterCallback": function ( nRow, aaData ) {
       /*
                * Calculate the total market share for all browsers in this table (ie inc. outside
@@ -67,10 +65,84 @@ $(document).ready(function(){
     }
   });
 
+  $('#sales_cabang_per_brand').dataTable({
+    bFilter: false,
+    bJQueryUI: true,
+    iDisplayLength: -1,
+    bSort: true,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+               * Calculate the total market share for all browsers in this table (ie inc. outside
+               * the pagination)
+               */
+
+      for ( var i = 0; i < 50; i++ ) {
+        var iTotalQty1 = 0;
+        var iTotalVal2 = 0;
+        var iTotalQty3 = 0;
+        var iTotalVal4 = 0;
+        var iTotalQty5 = 0;
+        var iTotalVal6 = 0;
+        var iTotalQty7 = 0;
+        var iTotalVal8 = 0;
+        var iTotalQty9 = 0;
+        var iTotalVal10 = 0;
+        var iTotalQty11 = 0;
+        var iTotalVal12 = 0;
+        var iTotalQty13 = 0;
+        var iTotalVal14 = 0;
+      }
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalQty1 += parseCurrency(aaData[i][1])*1;
+        iTotalVal2 += parseCurrency(aaData[i][2])*1;
+        iTotalQty3 += parseCurrency(aaData[i][3])*1;
+        iTotalVal4 += parseCurrency(aaData[i][4])*1;
+        iTotalQty5 += parseCurrency(aaData[i][5])*1;
+        iTotalVal6 += parseCurrency(aaData[i][6])*1;
+        iTotalQty7 += parseCurrency(aaData[i][7])*1;
+        iTotalVal8 += parseCurrency(aaData[i][8])*1;
+        iTotalQty9 += parseCurrency(aaData[i][9])*1;
+        iTotalVal10 += parseCurrency(aaData[i][10])*1;
+        iTotalQty11 += parseCurrency(aaData[i][11])*1;
+        iTotalVal12 += parseCurrency(aaData[i][12])*1;
+        iTotalQty13 += parseCurrency(aaData[i][13])*1;
+        iTotalVal14 += parseCurrency(aaData[i][14])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[0].innerHTML = addCommas(parseInt(iTotalQty1))
+      nCells[1].innerHTML = addCommas(parseInt(iTotalVal2))
+      nCells[2].innerHTML = addCommas(parseInt(iTotalQty3))
+      nCells[3].innerHTML = addCommas(parseInt(iTotalVal4))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalQty5))
+      nCells[5].innerHTML = addCommas(parseInt(iTotalVal6))
+      nCells[6].innerHTML = addCommas(parseInt(iTotalQty7))
+      nCells[7].innerHTML = addCommas(parseInt(iTotalVal8))
+      nCells[8].innerHTML = addCommas(parseInt(iTotalQty9))
+      nCells[9].innerHTML = addCommas(parseInt(iTotalVal10))
+      nCells[10].innerHTML = addCommas(parseInt(iTotalQty11))
+      nCells[11].innerHTML = addCommas(parseInt(iTotalVal12))
+      nCells[12].innerHTML = addCommas(parseInt(iTotalQty13))
+      nCells[13].innerHTML = addCommas(parseInt(iTotalVal14))
+
+    }
+  });
+
+  $('#customer_scp').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+
   $('#cabang_scp').multiselect({
     numberDisplayed: 1,
     maxHeight: 200
   });
+
   $('#brand_scb').multiselect({
     numberDisplayed: 1,
     maxHeight: 200

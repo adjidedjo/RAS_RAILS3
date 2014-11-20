@@ -5,13 +5,13 @@ class SalesCustomer < ActiveRecord::Base
 	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	scope :artikel, lambda {|artikel| where("artikel like ?", artikel) if artikel.present?}
-	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
+	scope :customer, lambda {|customer| where("customer in (?)", customer) if customer.present? }
 	scope :fabric, lambda {|fabric| where("kain like ?", fabric) unless fabric.nil?}
 	scope :size_length, lambda {|brand_size| where("ukuran like ?", %(_______________#{brand_size}%)) if brand_size.present?}
 	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
-	
+
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
 		select("sum(qty) as sum_jumlah, sum(val) as sum_harganetto2")
@@ -20,4 +20,20 @@ class SalesCustomer < ActiveRecord::Base
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
 	end
+
+  def self.sales_cabang_per_toko(cabang, date)
+    select("*, sum(qty) as qty, sum(val) as val")
+    .where("bulan = ? and tahun = ?", date.month, date.year)
+    .search_by_branch(cabang).group("customer")
+  end
+
+  def self.sales_cabang_per_toko_per_produk(merk, produk, cabang, date, customer)
+    select("sum(qty) as qty, sum(val) as val")
+    .where("bulan = ? and tahun = ?", date.month, date.year)
+    .search_by_branch(cabang).search_by_type(produk).brand(merk).customer(customer)
+  end
+
+  def self.get_name_customer(date)
+    select("customer").where("bulan = ? and tahun = ?", date.month, date.year).group("customer")
+  end
 end

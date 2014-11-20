@@ -16,21 +16,26 @@ function fnCreateSelect( aData, aSelected )
 }
 
 $(document).ready(function(){
-  
-  $('.control_branches input[type="text"], .control_branches select').tooltipster({ 
+
+  $('#brand_week').multiselect({
+    numberDisplayed: 1,
+    maxHeight: 200
+  });
+
+  $('.control_branches input[type="text"], .control_branches select').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
+
   $('.control_branches').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -55,7 +60,7 @@ $(document).ready(function(){
       $(element).closest('.control-group').removeClass('success').addClass('error');
     }
   });
-  
+
   // Datepicker
   $('#from').datepicker({
     dateFormat: 'yy-mm-dd'
@@ -80,7 +85,7 @@ $(document).ready(function(){
   }).attr('readonly','readonly');
 
   $('#customer_monthly').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -153,7 +158,7 @@ $(document).ready(function(){
   });
 
   $('#customer_monthly2').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -226,14 +231,14 @@ $(document).ready(function(){
   });
 
   $('#customer_by_store').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true
   });
 
   $('#group_by_size_comparison').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -333,7 +338,7 @@ $(document).ready(function(){
   });
 
   $('#group_by_customer').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -379,9 +384,56 @@ $(document).ready(function(){
   });
   $('#weekly_report_sales').dataTable({
     iDisplayLength: 30,
-    "sScrollX": "100%",
-    "sScrollXInner": "150%",
-    "bScrollCollapse": true
+    bFilter: false,
+    bInfo: false,
+    bPaginate: false,
+    sScrollX: "100%",
+    sScrollXInner: "150%",
+    bScrollCollapse: true,
+    "fnFooterCallback": function ( nRow, aaData ) {
+      /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+
+      var iTotalRow1 = 0;
+      var iTotalRow2 = 0;
+      var iTotalRow3 = 0;
+      var iTotalRow4 = 0;
+      var iTotalRow5 = 0;
+      var iTotalRow6 = 0;
+      var iTotalRow7 = 0;
+      var iTotalRow8 = 0;
+      var iTotalRow9 = 0;
+      var iTotalRow10 = 0;
+
+      for ( var i=0 ; i<aaData.length ; i++ )
+      {
+        iTotalRow1 += parseCurrency(aaData[i][1])*1;
+        iTotalRow2 += parseCurrency(aaData[i][2])*1;
+        iTotalRow3 += parseCurrency(aaData[i][3])*1;
+        iTotalRow4 += parseCurrency(aaData[i][4])*1;
+        iTotalRow5 += parseCurrency(aaData[i][5])*1;
+        iTotalRow6 += parseCurrency(aaData[i][6])*1;
+        iTotalRow7 += parseCurrency(aaData[i][7])*1;
+        iTotalRow8 += parseCurrency(aaData[i][8])*1;
+        iTotalRow9 += parseCurrency(aaData[i][9])*1;
+        iTotalRow10 += parseCurrency(aaData[i][10])*1;
+      }
+
+      /* Modify the footer row to match what we want */
+      var nCells = nRow.getElementsByTagName('td');
+      nCells[0].innerHTML = addCommas(parseInt(iTotalRow1))
+      nCells[1].innerHTML = addCommas(parseInt(iTotalRow2))
+      nCells[2].innerHTML = addCommas(parseInt(iTotalRow3))
+      nCells[3].innerHTML = addCommas(parseInt(iTotalRow4))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalRow5))
+      nCells[5].innerHTML = addCommas(parseInt(iTotalRow6))
+      nCells[6].innerHTML = addCommas(parseInt(iTotalRow7))
+      nCells[7].innerHTML = addCommas(parseInt(iTotalRow8))
+      nCells[8].innerHTML = addCommas(parseInt(iTotalRow9))
+      nCells[9].innerHTML = addCommas(parseInt(iTotalRow10))
+    }
   });
 
   $('#weekly_report_sales_total').dataTable({
@@ -407,7 +459,7 @@ $(document).ready(function(){
 
   $('#table_year').dataTable( {
     sPaginationType: "full_numbers",
-        
+
     iDisplayLength: 20,
     "fnFooterCallback": function ( nRow, aaData ) {
       /*
@@ -467,7 +519,7 @@ $(document).ready(function(){
 
   $('#group_by_cabang_2').dataTable({
     sPaginationType: "full_numbers",
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -535,7 +587,7 @@ $(document).ready(function(){
   });
 
   $('#group_by_cabang').dataTable({
-        
+
     iDisplayLength: 30,
     aLengthMenu: [[10, 30, 50, 100, -1], [10, 30, 50, 100, "All"]],
     bRetrieve: true,
@@ -608,7 +660,7 @@ $(document).ready(function(){
 
   $('#table_year_elite').dataTable({
     sPaginationType: "full_numbers",
-        
+
     iDisplayLength: 20,
     "fnFooterCallback": function ( nRow, aaData ) {
       /*
@@ -661,7 +713,7 @@ $(document).ready(function(){
   });
   $('#table_year_elite_month_and_year').dataTable({
     sPaginationType: "full_numbers",
-        
+
     iDisplayLength: 20,
     "fnFooterCallback": function ( nRow, aaData ) {
       /*
@@ -699,7 +751,7 @@ $(document).ready(function(){
   });
 
   $('#group_by_cabang_total').dataTable({
-        
+
     bPaginate: false,
     bFilter: false
   });
@@ -759,22 +811,22 @@ $(document).ready(function(){
   });
 
   $('#table_control_branch').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     autoWidth: false,
     "scrollX": true
   });
-  
+
   $('#table_control_branch2').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     autoWidth: false,
     "scrollX": true
   });
   $('#table_total').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     autoWidth: false,
@@ -782,26 +834,26 @@ $(document).ready(function(){
     iDisplayLength: -1
   });
   $('#table_total2').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     bJQueryUI: true,
     iDisplayLength: -1
   });
   $('#table_grand_total').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     autoWidth: false,
     iDisplayLength: -1
   });
   $('#table_grand_total2').dataTable({
-    bFilter: false, 
+    bFilter: false,
     bInfo: false,
     bPaginate: false,
     iDisplayLength: -1
   });
-  
+
 
   function parseCurrency( num ) {
     return parseFloat( num.replace(/\./g, '') );
