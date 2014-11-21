@@ -14,7 +14,7 @@ $(document).ready(function(){
   });
 
   $('#price_list').dataTable({
-    iDisplayLength: 50,
+    iDisplayLength: 10,
     bRetrieve: true,
     bAutoWidth: false
   });
