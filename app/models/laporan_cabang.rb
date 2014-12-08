@@ -183,9 +183,9 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     end
   end
 
-  def self.compare_price_list(bulan_lalu, bulan, tahun_lalu, tahun)
-    select("*").where("month(tanggalsj) between ? and ? and year(tanggalsj) between ? and ? and kodebrg not like ? and kodebrg not like ? and bonus not like ?",
-      bulan_lalu, bulan, tahun_lalu, tahun, %(___________#{'T'}%), %(___________#{'P'}%), "bonus").no_pengajuan
+  def self.compare_price_list(bulan , tahun)
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ? and bonus not like ?",
+      bulan, tahun, %(___________#{'T'}%), "bonus").no_pengajuan.not_equal_with_nosj
   end
 
   def self.get_target_by_salesman(branch, date, merk, salesman)

@@ -31,7 +31,7 @@ check_sales_reports:
   rails_envs: development, production, staging
 
 sales_reports_prev_month:
-  cron: "0 22 1-15 * 1-6"
+  cron: "0 22 1-6 * 1-6"
   queue: cron
   class: ControlUpload
   args: "check_reports_prev_month"

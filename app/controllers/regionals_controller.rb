@@ -88,7 +88,7 @@ class RegionalsController < ApplicationController
       format.json { head :ok }
     end
   end
-  
+
   def remove_cabang
     regional = Regional.find(params[:regional_id])
     @regional_branches = regional.regional_branches.where(cabang_id: params[:cabang_id])
@@ -99,7 +99,7 @@ class RegionalsController < ApplicationController
       format.json { head :ok }
     end
   end
-  
+
   def list_cabang
     if params[:regional].present?
       @regional = Regional.find(params[:regional])
@@ -110,18 +110,20 @@ class RegionalsController < ApplicationController
       @cabang = cab.empty? ? Cabang.all : Cabang.where("id not in (?)", cab)
     end
   end
-  
+
   def edit_multiple
     if params[:produk_ids].nil?
-      redirect_to price_list_regionals_path(brand_id: params[:brand_id], 
+      redirect_to price_list_regionals_path(brand_id: params[:brand_id],
         regional_id: params[:regional_id]), notice: 'Please select at lease one product.'
+    elsif params[:add] == 'other'
+      redirect_to additional_lady_regionals_path(brand_id: params[:brand_id], regional_id: params[:regional_id], produk_ids: params[:produk_ids]) if params[:add] == 'other'
     else
       @artikel = FuturePriceList.find(params[:produk_ids])
       @brand_id = params[:brand_id]
       @regional_id = params[:regional_id]
     end
   end
-  
+
   def update_multiple
     @artikels = FuturePriceList.find(params[:artikel_ids])
     @artikels.each do |artikel|
@@ -130,8 +132,56 @@ class RegionalsController < ApplicationController
     flash[:notice] = "Updated products!"
     redirect_to price_list_regionals_path(brand_id: params[:brand_id], regional_id: params[:regional_id])
   end
-  
+
   def price_list
-    @produk = FuturePriceList.where("brand_id = ? and regional_id = ?", params[:brand_id], params[:regional_id]).group("produk, kain, jenis, panjang, lebar")
+    @produk = PriceList.where("brand_id = ? and regional_id = ?", params[:brand_id], params[:regional_id]).group("produk, kain, jenis, panjang, lebar")
+  end
+
+  def additional_lady
+    @artikel = PriceList.find(params[:produk_ids])
+    @brand_id = params[:brand_id]
+    @regional_id = params[:regional_id]
+    child_chosen = []
+    @artikel.each do |fpl|
+      fpl.parent_items.each do |parent|
+        child_chosen << PriceList.find(parent.child_item_id)
+      end
+    end
+    @child_chosen = child_chosen
+    @produk = if child_chosen.empty?
+      PriceList.where("brand_id = ? and regional_id = ? and jenis not like ?",
+        params[:brand_id], params[:regional_id], 'KM')
+    else
+      PriceList.where("brand_id = ? and regional_id = ? and id not in (?) and jenis not like ?",
+        params[:brand_id], params[:regional_id], child_chosen.map(&:id), 'KM')
+    end
+  end
+
+  def update_multiple_lady
+    products = params[:products].gsub(/\W/, ',').split(',')
+    @child = PriceList.find(params[:child_ids])
+    @artikel = PriceList.find(products)
+    @artikel.each do |artikel|
+      artikel.update_attributes(additional_program: true)
+      @child.each do |pl|
+        artikel.parent_items.create(parent_item_id: artikel.id,
+          child_item_id: pl.id,
+          next_diskon4: params["price_list"]["discount_4"],
+          next_cashback: params["price_list"]["cashback"],
+          next_upgrade: params["price_list"]["upgrade"],
+          program_starting_at: params["price_list"]["program_starting_at"].to_date)
+      end
+    end
+    flash[:notice] = "Updated products!"
+    redirect_to additional_lady_regionals_path(brand_id: params[:brand_id], regional_id: params[:regional_id], produk_ids: products)
+  end
+
+  def remove_multiple_lady
+    goods = params[:artikel]
+    child_goods = params[:produk].to_i
+    goods.each do |gds|
+      PriceList.find(gds).parent_items.find_by_child_item_id(child_goods).destroy
+    end
+    redirect_to additional_lady_regionals_path(brand_id: params[:brand_id], regional_id: params[:regional_id], produk_ids: params[:produk_ids])
   end
 end

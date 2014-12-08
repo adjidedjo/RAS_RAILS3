@@ -11,6 +11,8 @@
             <th>Kain</th>
             <th>Panjang</th>
             <th>Lebar</th>
+            <th>Kode Barang</th>
+            <th>Harga</th>
           </tr>
         </thead>
         <tfoot>
@@ -28,6 +30,8 @@
               <td><%= kain.nil? ? "" : kain.NamaKain %></td>
               <td><%= produk.panjang %></td>
               <td><%= produk.lebar %></td>
+              <td><%= produk.kode_barang %></td>
+              <td><%= currency(produk.harga) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -41,7 +45,8 @@
         <%= radio_button_tag(:add, "discount") %> Discount <br />
         <%= radio_button_tag(:add, "upgrade") %> Upgrade <br />
         <%= radio_button_tag(:add, "cashback") %> Cashback <br />
-        <%= radio_button_tag(:add, "special_price") %> Special Price
+        <%= radio_button_tag(:add, "special_price") %> Special Price <br />
+        <%= radio_button_tag(:add, "other") %> Other
       </ul>
       <%= submit_tag "Update Checked Product", regional_id: params[:regional_id] %>
     <% end %>

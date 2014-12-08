@@ -1,11 +1,11 @@
 class Regional < ActiveRecord::Base
   has_many :cabang, :through => :regional_branches
   has_many :regional_branches
-  
+
   validates :nama, :presence => true
   validates :brand_id, :presence => true
   validates :nama, :uniqueness => {:scope => [:nama, :brand_id]}
-  
+
   before_destroy :set_regional_id
   
   def self.update_harga
@@ -19,21 +19,21 @@ class Regional < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.update_discount
     @discount = FuturePriceList.where("discount_starting_at = ?", Date.today)
     unless @discount.empty?
       @discount.each do |discount|
         PriceList.where(kode_barang: discount.kode_barang, regional_id: discount.regional_id).each do |list|
-          list.update_attributes!(:prev_discount_1 => list.discount_1, :prev_discount_2 => list.discount_2, 
+          list.update_attributes!(:prev_discount_1 => list.discount_1, :prev_discount_2 => list.discount_2,
             :prev_discount_3 => list.discount_3, :prev_discount_4 => list.discount_4)
-          list.update_attributes!(:discount_1 => discount.discount_1, :discount_2 => discount.discount_2, 
+          list.update_attributes!(:discount_1 => discount.discount_1, :discount_2 => discount.discount_2,
             :discount_3 => discount.discount_3, :discount_4 => discount.discount_4)
         end
       end
     end
   end
-  
+
   def self.update_upgrade
     @upgrade = FuturePriceList.where("upgrade_starting_at = ?", Date.today)
     unless @upgrade.empty?
@@ -45,7 +45,7 @@ class Regional < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.update_cashback
     @cashback = FuturePriceList.where("cashback_starting_at = ?", Date.today)
     unless @cashback.empty?
@@ -57,7 +57,7 @@ class Regional < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.update_special_price
     @special_price = FuturePriceList.where("special_price_starting_at = ?", Date.today)
     unless @special_price.empty?
@@ -69,7 +69,7 @@ class Regional < ActiveRecord::Base
       end
     end
   end
-  
+
   private
   def set_regional_id
     Cabang.where("regional_id = ?", self.id).each do |cabang|
