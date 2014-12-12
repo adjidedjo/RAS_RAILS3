@@ -52,16 +52,17 @@
           </tr>
         </tfoot>
         <tbody>
-          <% SalesCustomer.sales_cabang_per_toko(params[:cabang_scp], params[:month].to_date).each do |toko| %>
+          <% SalesCustomerByBrand.sales_cabang_per_toko(params[:cabang_scp], params[:month].to_date).each do |toko| %>
             <tr>
               <th scope="row" style="font-size: 13px; height: 10px;"><%= toko.customer %></th>
               <% Merk.all.each do |merk| %>
-                <% if toko.merk != merk.Merk %>
+                <% all = SalesCustomerByBrand.find_by_kode_customer_and_merk(toko.kode_customer, merk.id) %>
+                <% if all.nil? %>
                   <td style="font-size: 12px; height: 40px;">0</td>
                   <td style="font-size: 12px; height: 40px;">0</td>
                 <% else %>
-                  <td style="font-size: 12px; height: 40px;"><%= currency(toko.qty.to_i) %></td>
-                  <td style="font-size: 12px; height: 40px;"><%= currency(toko.val.to_i) %> </td>
+                  <td style="font-size: 12px; height: 40px;"><%= currency(all.qty.to_i) %></td>
+                  <td style="font-size: 12px; height: 40px;"><%= currency(all.val.to_i) %> </td>
                 <% end %>
               <% end %>
             </tr>
