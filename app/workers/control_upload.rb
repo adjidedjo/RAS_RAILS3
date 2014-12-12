@@ -52,6 +52,7 @@ class ControlUpload
     LaporanCabang.sales_by_article(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_fabric(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_customer(Date.today.month, Date.today.year)
+    LaporanCabang.sales_by_customer_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_salesmen(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_size(Date.today.month, Date.today.year)
   end
@@ -64,6 +65,7 @@ class ControlUpload
     LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    LaporanCabang.sales_by_customer_by_brand(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
   end
