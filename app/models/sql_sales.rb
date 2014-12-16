@@ -51,7 +51,10 @@ class SqlSales < ActiveRecord::Base
           kota: sql_sales.kota,
           Jenis_Customer: sql_sales.tipecust,
           namabrand: sql_sales.namabrand,
-          bonus: sql_sales.bonus)
+          bonus: sql_sales.bonus,
+          groupcust: sql_sales.groupcust,
+          plankinggroup: sql_sales.plankinggroup
+        )
       elsif sql_sales.bonus != 'BONUS' || sql_sales.harganetto2 != 0
         lapcab.update_attributes!(cabang_id: sql_sales.idcabang,
           nosj: sql_sales.nosj,
@@ -96,7 +99,23 @@ class SqlSales < ActiveRecord::Base
           kota: sql_sales.kota,
           Jenis_Customer: sql_sales.tipecust,
           namabrand: sql_sales.namabrand,
-          bonus: sql_sales.bonus)
+          bonus: sql_sales.bonus,
+          groupcust: sql_sales.groupcust,
+          plankinggroup: sql_sales.plankinggroup)
+      end
+    end
+  end
+
+  def self.customer_migration(month, year)
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and jenisbrgdisc is not null", month, year).each do |sql_cust|
+      customer = Customer.find_by_nama_customer_and_kode_customer_and_cabang_id(sql_cust.customer, sql_cust.kodecust, sql_cust.idcabang)
+      if customer.nil?
+        Customer.create(kode_customer: sql_cust.kodecust,
+        cabang_id: sql_cust.idcabang,
+        nama_customer: sql_cust.customer,
+        tipe_customer: sql_cust.tipecust,
+        group_customer: sql_cust.groupcust,
+        flankin_customer: sql_cust.plankinggroup)
       end
     end
   end
