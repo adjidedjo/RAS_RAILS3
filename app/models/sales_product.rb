@@ -1,6 +1,6 @@
 class SalesProduct < ActiveRecord::Base
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
-	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
+	scope :search_by_type, lambda {|type| where("kode_produk in (?)", type) if type.present? }
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}

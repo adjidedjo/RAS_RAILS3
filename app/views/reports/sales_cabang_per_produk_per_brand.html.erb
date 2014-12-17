@@ -56,7 +56,7 @@
             <tr>
               <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
               <% Merk.all.each do |merk| %>
-                <% sales_product = SalesProduct.sales_cabang_per_merk_per_produk(merk.Merk, jenis(jenis), params[:cabang_scp], params[:month].to_date) %>
+                <% sales_product = SalesProduct.sales_cabang_per_merk_per_produk(merk.Merk, jenis, params[:cabang_scp], params[:month].to_date) %>
                 <% if sales_product.empty? %>
                   <td style="font-size: 15px; height: 40px;">0</td>
                   <td style="font-size: 15px; height: 40px;">0</td>
