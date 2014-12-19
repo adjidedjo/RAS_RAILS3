@@ -46,7 +46,7 @@
               <tr>
                 <th rowspan="2">Branch</th>
                 <th colspan="2"><%= link_to image_tag("left.png", :size => "25x25"), reports_quick_view_monthly_result_path(brand_scb: params[:brand_scb], month: (params[:month].to_date - 1.month), group_by: params[:group_by]),
-                    :class => '' %> <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %> <%= link_to image_tag("right.png", :size => "25x25"), reports_quick_view_monthly_result_path(brand_scb: params[:brand_Scb], month: (params[:month].to_date + 1.month), group_by: params[:group_by]), :class => '' %></th>
+                    :class => '' %> <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %> <%= link_to image_tag("right.png", :size => "25x25"), reports_quick_view_monthly_result_path(brand_scb: params[:brand_scb], month: (params[:month].to_date + 1.month), group_by: params[:group_by]), :class => '' %></th>
               </tr>
               <tr>
                 <th>Qty</th>
