@@ -29,17 +29,16 @@
           <th colspan="10"><%= params[:brand_week].present? ? params[:brand_week].join(",") : "All Brand" %></th>
         </tr>
         <tr>
-          <% get_week_number = @periode.cweek - 5 %>
-          <th colspan="2">Week <%= @periode.beginning_of_month.cweek %> </br><%= @first_day_week_1.strftime('%d/%m/%Y') %> -
-            <%= @last_day_week_1.strftime('%d/%m/%Y') %></th>
-          <th colspan="2">Week <%= @periode.beginning_of_month.cweek + 1 %> </br><%= @first_day_week_2.strftime('%d/%m/%Y') %> -
-            <%= @last_day_week_2.strftime('%d/%m/%Y') %></th>
-          <th colspan="2">Week <%= @periode.beginning_of_month.cweek + 2 %> </br><%= @first_day_week_3.strftime('%d/%m/%Y') %> -
-            <%= @last_day_week_3.strftime('%d/%m/%Y') %></th>
-          <th colspan="2">Week <%= @periode.beginning_of_month.cweek + 3 %> </br><%= @first_day_week_4.strftime('%d/%m/%Y') %> -
-            <%= @last_day_week_4.strftime('%d/%m/%Y') %></th>
-          <th colspan="2">Week <%= @periode.beginning_of_month.cweek + 4 %> </br><%= @first_day_week_5.strftime('%d/%m/%Y') %> -
-            <%= @last_day_week_5.strftime('%d/%m/%Y') %></th>
+          <th colspan="2">Week <%= (@date.beginning_of_week + 7).cweek %> </br><%= (@date.beginning_of_week + 7).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + 7).strftime('%d/%m/%Y') %></th>
+          <th colspan="2">Week <%= (@date.beginning_of_week + 14).cweek %> </br><%= (@date.beginning_of_week + 14).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + 14).strftime('%d/%m/%Y') %></th>
+          <th colspan="2">Week <%= (@date.beginning_of_week + 21).cweek %> </br><%= (@date.beginning_of_week + 21).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + 21).strftime('%d/%m/%Y') %></th>
+          <th colspan="2">Week <%= (@date.beginning_of_week + 28).cweek %> </br><%= (@date.beginning_of_week + 28).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + 28).strftime('%d/%m/%Y') %></th>
+          <th colspan="2">Week <%= (@date.beginning_of_week + 35).cweek %> </br><%= (@date.beginning_of_week + 35).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + 35).strftime('%d/%m/%Y') %></th>
         </tr>
         <tr>
           <% (1..5).each do  %>
@@ -62,10 +61,9 @@
             <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
             <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
             <% merk =  params[:brand_week].present? ? params[:brand_week] : "" %>
-            <% (0..4).each do |c| %>
-              <% date = params[:periode_week].to_date %>
-              <% first_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek + c, 1) %>
-              <% last_day_week_1 = Date.commercial(date.year, date.beginning_of_month.cweek + c, 7) %>
+            <% [7,14,21,28,35].each do |c| %>
+              <% first_day_week_1 = @date.beginning_of_week + c %>
+              <% last_day_week_1 = first_day_week_1.end_of_week %>
               <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
                 <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
                 <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>

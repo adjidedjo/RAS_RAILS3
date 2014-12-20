@@ -28,7 +28,7 @@ class LaporanCabangController < ApplicationController
 		@week5 = 0
 		unless params[:periode_week].nil?
       @periode = params[:periode_week].to_date
-		  calculation_date_weekly_report(@periode)
+      @date = params[:periode_week].to_date.beginning_of_week - 35
     end
 
 		respond_to do |format|
