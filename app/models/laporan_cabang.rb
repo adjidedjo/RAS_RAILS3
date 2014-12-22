@@ -85,14 +85,15 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_customer(bulan, tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
+    select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg, :customer).each do |lapcab|
       sales_brand = SalesCustomer.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_artikel_and_produk_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.namaartikel, lapcab.jenisbrg, lapcab.customer)
       if sales_brand.nil?
         SalesCustomer.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
+          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -157,8 +158,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
-        sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
-          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
+        sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
     end
   end

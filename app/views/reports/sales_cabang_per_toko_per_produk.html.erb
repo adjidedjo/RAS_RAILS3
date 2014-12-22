@@ -1,7 +1,7 @@
 <div class="row-fluid">
   <div class="offset4">
     <div class="block-content collapse in">
-      <h2 style="font-size: 17px;"><i>Laporan Sales Cabang per Produk dan per Brand</i></h2>
+      <h2 style="font-size: 17px;"><i>Laporan Sales per Toko dan per Produk</i></h2>
     </div>
   </div>
 </div>
@@ -58,7 +58,7 @@
             <tr>
               <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
               <% Merk.all.each do |merk| %>
-                <% sales_product = SalesCustomer.sales_cabang_per_toko_per_produk(merk.Merk, jenis(jenis), params[:cabang_scp], params[:month].to_date, params[:customer_scp]) %>
+                <% sales_product = SalesCustomer.sales_cabang_per_toko_per_produk(merk.Merk, jenis, params[:cabang_scp], params[:month].to_date, params[:customer_scp]) %>
                 <% if sales_product.empty? %>
                   <td style="font-size: 15px; height: 40px;">0</td>
                   <td style="font-size: 15px; height: 40px;">0</td>

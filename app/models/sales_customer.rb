@@ -1,7 +1,7 @@
 class SalesCustomer < ActiveRecord::Base
 	scope :between_date_sales, lambda { |from_m, to_m, from_y, to_y| where("bulan between ? and ? and tahun between ? and ?", from_m, to_m, from_y, to_y) if from_m.present? && to_m.present? }
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
-	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
+	scope :search_by_type, lambda {|type| where("kode_produk in (?)", type) if type.present? }
 	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	scope :artikel, lambda {|artikel| where("artikel like ?", artikel) if artikel.present?}
@@ -21,8 +21,14 @@ class SalesCustomer < ActiveRecord::Base
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
 	end
 
-  def self.sales_cabang_per_toko(cabang, date)
-    select("*, sum(qty) as qty, sum(val) as val")
+  def self.sales_cabang_per_toko(merk, customer, cabang, date)
+    select("*, sum(qty) as sum_qty, sum(val) as sum_val")
+    .where("bulan = ? and tahun = ?", date.month, date.year)
+    .search_by_branch(cabang).customer(customer).brand(merk)
+  end
+
+  def self.find_toko(cabang, date)
+    select("*")
     .where("bulan = ? and tahun = ?", date.month, date.year)
     .search_by_branch(cabang).group("customer")
   end

@@ -14,7 +14,7 @@ class SalesBrand < ActiveRecord::Base
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 
   def self.sales_cabang_per_merk(merk, cabang, date)
-    select("qty, val").where("bulan = ?", date.month).search_by_branch(cabang).brand(merk)
+    select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).brand(merk)
   end
 
   def self.customer_quick_monthly(month, year, branch, brand)
