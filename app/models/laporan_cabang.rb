@@ -55,14 +55,16 @@ class LaporanCabang < ActiveRecord::Base
 
   #  background_job
   def self.sales_by_size(bulan, tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.size_st("S").group(:cabang_id, :jenisbrgdisc, :jenisbrg, :namaartikel, :lebar).each do |lapcab|
-      sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel_and_lebar(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.namaartikel, lapcab.lebar)
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun)
+    .not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :lebar).each do |lapcab|
+      sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.lebar)
       if sales_brand.nil?
         SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand)
+          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand,
+          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -70,14 +72,15 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_salesmen(bulan, tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg, :customer, :salesman).each do |lapcab|
-      sales_brand = SalesSalesman.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_sales_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.salesman, lapcab.customer)
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :customer, :salesman).each do |lapcab|
+      sales_brand = SalesSalesman.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_sales_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.salesman, lapcab.customer)
       if sales_brand.nil?
         SalesSalesman.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
+          :kode_produk => lapcab.kodejenis)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -86,7 +89,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.sales_by_customer(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg, :customer).each do |lapcab|
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :customer).each do |lapcab|
       sales_brand = SalesCustomer.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_artikel_and_produk_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.namaartikel, lapcab.jenisbrg, lapcab.customer)
       if sales_brand.nil?
         SalesCustomer.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
@@ -101,15 +104,13 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_customer_by_brand(bulan, tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kode_customer,
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kode_customer, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :customer).each do |lapcab|
-      sales_brand = SalesCustomerByBrand.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_artikel_and_produk_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.namaartikel, lapcab.customer)
+      sales_brand = SalesCustomerByBrand.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.customer)
       if sales_brand.nil?
-        merk = Merk.find_by_Merk(lapcab.jenisbrgdisc)
-        get_brand = merk.nil? ? '0' : merk.id
         SalesCustomerByBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, :kode_customer => lapcab.kode_customer,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => get_brand, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
@@ -119,13 +120,14 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.sales_by_fabric(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg, :namaartikel, :namakain).each do |lapcab|
-      sales_brand = SalesFabric.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel_and_kain(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.namaartikel, lapcab.namakain)
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :namakain).each do |lapcab|
+      sales_brand = SalesFabric.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_kain(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.namakain)
       if sales_brand.nil?
         SalesFabric.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
+          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -134,13 +136,14 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.sales_by_article(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg, :namaartikel).each do |lapcab|
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel).each do |lapcab|
       sales_brand = SalesArticle.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.namaartikel)
       if sales_brand.nil?
         SalesArticle.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
+          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -149,8 +152,8 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.sales_by_product(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :jenisbrg).each do |lapcab|
-      sales_brand = SalesProduct.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_produk_and_artikel(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.jenisbrg, lapcab.namaartikel)
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodeartikel, :kodejenis).each do |lapcab|
+      sales_brand = SalesProduct.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel)
       if sales_brand.nil?
         SalesProduct.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
