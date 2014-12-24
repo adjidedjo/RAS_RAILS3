@@ -66,4 +66,8 @@ Rain::Application.configure do
     :password             => 'Roy@l4b@d!',
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
+  config.middleware.use ExceptionNotifier,
+    :email_prefix => "[Error] ",
+    :sender_address => %{"notifier" <notifier@salesanalytic.com>},
+    :exception_recipients => %w{aji.y@ras.co.id}
 end

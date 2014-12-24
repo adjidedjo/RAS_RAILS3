@@ -34,6 +34,7 @@ gem 'jquery-datatables-rails', "~> 1.12.2"
 gem 'jquery-ui-rails'
 gem 'activerecord-sqlserver-adapter'
 gem 'tiny_tds'
+gem 'exception_notification', "~> 3.0.1"
 
 gem 'whenever'
 gem 'resque'
