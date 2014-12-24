@@ -119,7 +119,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_fabric(bulan, tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :namakain).each do |lapcab|
       sales_brand = SalesFabric.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_kain(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.namakain)
       if sales_brand.nil?
