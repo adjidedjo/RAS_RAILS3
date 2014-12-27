@@ -32,6 +32,7 @@
         <Cell><Data ss:Type="String">Cashback</Data></Cell>
         <Cell><Data ss:Type="String">Upgrade</Data></Cell>
         <Cell><Data ss:Type="String">KetPPB</Data></Cell>
+        <Cell><Data ss:Type="String">Bonus</Data></Cell>
       </Row>
       <% @export.each do |export| %>
         <Row>
@@ -47,7 +48,7 @@
           <Cell><Data ss:Type="String"><%= export.namakain %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.panjang %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.lebar %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= export.jumlah %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= export.jumlah %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.satuan %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.hargasatuan %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.hargabruto %></Data></Cell>
@@ -60,6 +61,7 @@
           <Cell><Data ss:Type="String"><%= export.cashback %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.nupgrade %></Data></Cell>
           <Cell><Data ss:Type="String"><%= export.ketppb %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.bonus %></Data></Cell>
         </Row>
       <% end %>
     </Table>
