@@ -13,11 +13,11 @@
             <div class="block-content">
               <div class="form-group">
                 <%= label_tag 'cabang' %>
-                <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}), {:class=>"form-control"} %>
-              </div>               
+                <%= select_tag 'branch', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch]), {:class=>"form-control"} %>
+              </div>
               <div class="form-group">
                 <%= label_tag 'brand' %>
-                <%= select_tag 'brand', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}), {:class=>"form-control"} %>
+                <%= select_tag 'brand', options_for_select(Merk.all.collect {|a| [a.Merk, a.IdMerk]}, params[:brand]), {:class=>"form-control"} %>
               </div>
               <div class="form-group">
                 <%= label_tag 'bulan' %>
@@ -34,7 +34,7 @@
               </div>
             </div>
           </div>
-        <% end %>        
+        <% end %>
       </div>
     </div>
   </div>

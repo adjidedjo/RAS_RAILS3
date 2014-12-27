@@ -48,12 +48,23 @@ class LaporanCabang < ActiveRecord::Base
   scope :cabang, lambda {|branch| where("cabang_id = ?", branch) if branch.present? }
   scope :size_st, lambda {|size| where("kodebrg like ?", %(___________#{size}%)) if size.present?}
   scope :lebar, lambda {|lebar| where("lebar in (?)", lebar) if lebar.present?}
+  scope :brand_on_kodebrg, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
 
   def self.grand_total_cabang(cabang)
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(cabang).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
   end
 
   #  background_job
+  def self.update_customer(bulan, tahun)
+    where('month(tanggalsj) = ? and year(tanggalsj) = ?',bulan, tahun).each do |custlap|
+      Customer.find_by_nama_customer(custlap.customer).each do |cust|
+        unless cust.nil?
+          custlap.update_attributes(:tipecust => cust.tipe_customer,:groupcust => cust.group_customer,:kota => cust.kota)
+        end
+      end
+    end
+  end
+
   def self.sales_by_size(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun)
