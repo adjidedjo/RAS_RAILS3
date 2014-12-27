@@ -28,6 +28,8 @@
                 <% if params[:year].present? and params[:brand].present? %>
                   <%= link_to 'Export to Excel', url_for(request.parameters.merge({format: "xls"})),
                     :class=>"btn btn-info" %>
+                  <%= link_to 'New Filter', export_excel_accounting_price_lists_path,
+                    :class=>"btn btn-info" %>
                 <% else %>
                   <button type="submit" class="btn btn-primary">Process</button>
                 <% end %>
