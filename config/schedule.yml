@@ -37,3 +37,11 @@ sales_reports_prev_month:
   args: "check_reports_prev_month"
   description: check sales_reports
   rails_envs: development, production, staging
+
+update_customer:
+  cron: "0 3 28 12 *"
+  queue: cron
+  class: ControlUpload
+  args: "update_customer"
+  description: update customer
+  rails_envs: production, staging

@@ -69,4 +69,8 @@ class ControlUpload
     LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
     LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
   end
+
+  def update_customer
+    LaporanCabang.update_customer
+  end
 end

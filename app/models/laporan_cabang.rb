@@ -55,10 +55,10 @@ class LaporanCabang < ActiveRecord::Base
   end
 
   #  background_job
-  def self.update_customer(bulan, tahun)
-    where('month(tanggalsj) = ? and year(tanggalsj) = ?',bulan, tahun).each do |custlap|
-      Customer.find_by_nama_customer(custlap.customer).each do |cust|
-        unless cust.nil?
+  def self.update_customer
+    (1..12).each do |a|
+      Customer.all.each do |cust|
+        self.where('customer like ? and month(tanggalsj) = ? and year(tanggalsj) = ?', cust.nama_customer, a.to_i, 2014).each do |custlap|
           custlap.update_attributes(:tipecust => cust.tipe_customer,:groupcust => cust.group_customer,:kota => cust.kota)
         end
       end
