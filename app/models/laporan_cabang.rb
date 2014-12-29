@@ -56,10 +56,10 @@ class LaporanCabang < ActiveRecord::Base
 
   #  background_job
   def self.update_customer
-    (1..12).each do |a|
-      Customer.all.each do |cust|
+    Customer.all.each do |cust|
+      (1..12).each do |a|
         self.where('customer like ? and month(tanggalsj) = ? and year(tanggalsj) = ?', cust.nama_customer, a.to_i, 2014).each do |custlap|
-          custlap.update_attributes(:tipecust => cust.tipe_customer,:groupcust => cust.group_customer,:kota => cust.kota)
+          custlap.update_attributes(:tipecust => cust.tipe_customer, :groupcust => cust.group_customer,:kota => cust.kota)
         end
       end
     end
