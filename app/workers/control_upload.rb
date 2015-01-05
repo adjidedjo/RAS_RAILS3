@@ -74,4 +74,12 @@ class ControlUpload
   def update_customer
     LaporanCabang.update_customer
   end
+
+  def daily_migration_prev_month
+    SqlSales.migration_sales_report(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+  end
+
+  def daily_migration
+    SqlSales.migration_sales_report(Date.today.month, Date.today.year)
+  end
 end

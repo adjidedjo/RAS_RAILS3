@@ -30,14 +30,6 @@ check_sales_reports:
   description: check sales_reports
   rails_envs: development, production, staging
 
-sales_reports_prev_month:
-  cron: "0 22 1-6 * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "check_reports_prev_month"
-  description: check sales_reports
-  rails_envs: development, production, staging
-
 update_customer:
   cron: "0 3 28 12 *"
   queue: cron
@@ -45,3 +37,19 @@ update_customer:
   args: "update_customer"
   description: update customer
   rails_envs: production, staging
+
+daily_migration:
+  cron: "12 01 * * 1-6"
+  queue: cron
+  class: ControlUpload
+  args: "daily_migration"
+  description: migrate sales_report
+  rails_envs: development, production, staging
+
+daily_migration_prev_month:
+  cron: "12 30 1-11 * 1-6"
+  queue: cron
+  class: ControlUpload
+  args: "daily_migration_prev_month"
+  description: migrate sales_report
+  rails_envs: development, production, staging
