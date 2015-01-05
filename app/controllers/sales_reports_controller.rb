@@ -10,7 +10,7 @@ class SalesReportsController < ApplicationController
   # GET /sales_reports.json
   def index
     unless params[:branch_faktur].blank? && params[:brand_faktur].blank?
-      faktur = SalesReport.select('nofaktur').search_by_month_and_year(params[:date]['month'].to_i, Date.today.year)
+      faktur = SalesReport.select('nofaktur').search_by_month_and_year(params[:date][:month].to_i, params[:date][:year].to_i)
       .brand(brand(params[:brand_faktur])).search_by_branch(params[:branch_faktur]).order("nofaktur ASC").group('nofaktur')
 
       unless faktur.empty?

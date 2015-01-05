@@ -24,7 +24,12 @@
                 <br />
                 <div class="control-group">
                   <%= label_tag 'bulan' %>
-                  <%= select_month(Date.today, add_month_numbers: true, :html_options => {:class => "select"}) %>
+                  <%= select_month(params[:date].nil? ? Date.today : params[:date][:month].to_i, :html_options => {:class => "select"}) %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <%= label_tag 'tahun' %>
+                  <%= select_year(params[:date].nil? ? Date.today : params[:date][:year].to_i, :html_options => {:class => "select"}) %>
                 </div>
                 <br />
                 <div class="control-group">

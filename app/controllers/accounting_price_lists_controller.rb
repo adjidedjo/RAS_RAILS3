@@ -18,7 +18,7 @@ class AccountingPriceListsController < ApplicationController
   # GET /accounting_price_lists.json
   def index
     unless params[:branch_price_list].blank? && params[:brand_price_list].blank?
-      @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, Date.today.year)
+      @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, params[:date][:year].to_i)
       .brand(brand(params[:brand_price_list])).search_by_branch(params[:branch_price_list]).where("checked = ?", false).order("nofaktur ASC")
       @accounting_price_list = AccountingPriceList.new
     end
