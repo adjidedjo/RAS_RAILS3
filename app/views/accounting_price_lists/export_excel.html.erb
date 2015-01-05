@@ -21,11 +21,14 @@
               </div>
               <div class="form-group">
                 <%= label_tag 'bulan' %>
-                <%= select_month(Date.today, add_month_numbers: true, :class=>"form-control") %>
+                <%= select_month(params[:date].nil? ? Date.today : params[:date][:month].to_i, :class=>"form-control") %>
               </div>
-              <%= hidden_field_tag 'year', Date.today.year  %>
               <div class="form-group">
-                <% if params[:year].present? and params[:brand].present? %>
+                <%= label_tag 'tahun' %>
+                <%= select_year(params[:date].nil? ? Date.today : params[:date][:year].to_i, field_name: 'year', :class=>"form-control") %>
+              </div>
+              <div class="form-group">
+                <% if params[:brand].present? %>
                   <%= link_to 'Export to Excel', url_for(request.parameters.merge({format: "xls"})),
                     :class=>"btn btn-info" %>
                   <%= link_to 'New Filter', export_excel_accounting_price_lists_path,
