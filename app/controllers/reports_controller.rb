@@ -177,7 +177,7 @@ class ReportsController < ApplicationController
       redirect_to reports_search_by_salesman_path(from: params[:from], to: params[:to], branch: params[:branch], brand: params[:brand]) if params[:sales] == 'salesman'
     end
   end
-  
+
   def summary_of_sales
 		@cabang_get_id = Cabang.get_id
     @cabang_7 = Cabang.get_id_to_7

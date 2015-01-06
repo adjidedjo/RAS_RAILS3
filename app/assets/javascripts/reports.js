@@ -138,6 +138,20 @@ $(document).ready(function(){
     enableCaseInsensitiveFiltering: true
   });
 
+  $('#customer_channel').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+
+  $('#customer_group').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+
   $('#cabang_scp').multiselect({
     numberDisplayed: 1,
     maxHeight: 200

@@ -6,7 +6,7 @@
   </div>
 </div>
 <h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan Project</p></h5>
-<div class="span6">
+<div class="span11">
   <p style="text-align: left;">
     <%= form_tag reports_sales_cabang_per_toko_per_produk_path, :method => 'get', :class => "form form-inline" do %>
       <label style="font-size: 13px;">Cabang: </label>
@@ -14,6 +14,10 @@
       <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
       <label style="font-size: 13px;">Customer: </label>
       <%= select_tag 'customer_scp', options_for_select(SalesCustomer.get_name_customer(params[:month].to_date).collect {|a| [a.customer, a.customer]}, params[:customer_scp]), :class => 'multiselect', :multiple => true %>
+      <label style="font-size: 13px;">Channel Customer: </label>
+      <%= select_tag 'customer_channel', options_for_select(ChannelCustomer.all.collect {|a| [a.channel, a.channel]}, params[:customer_channel]), :class => 'multiselect', :multiple => true %>
+      <label style="font-size: 13px;">Group Customer: </label>
+      <%= select_tag 'customer_group', options_for_select(SalesCustomer.get_name_group_customer(params[:month].to_date).collect {|a| [a.group_customer, a.group_customer]}, params[:customer_group]), :class => 'multiselect', :multiple => true %>
       <button type="submit" class="btn btn-primary">
         Refine Search
       </button>
@@ -22,9 +26,9 @@
 </div>
 <div class="span4 offset8">
   <p style="text-align: center; font-size: 14px;">
-    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp])%>
+    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp], customer_channel: params[:customer_channel], customer_group: params[:customer_group])%>
     <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %>
-    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp])%>
+    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_per_produk_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp], customer_channel: params[:customer_channel], customer_group: params[:customer_group])%>
   </p>
 </div>
 <div class="container-fluid">
@@ -58,7 +62,7 @@
             <tr>
               <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
               <% Merk.all.each do |merk| %>
-                <% sales_product = SalesCustomer.sales_cabang_per_toko_per_produk(merk.Merk, jenis, params[:cabang_scp], params[:month].to_date, params[:customer_scp]) %>
+                <% sales_product = SalesCustomer.sales_cabang_per_toko_per_produk(merk.Merk, jenis, params[:cabang_scp], params[:month].to_date, params[:customer_scp], params[:customer_channel], params[:customer_group]) %>
                 <% if sales_product.empty? %>
                   <td style="font-size: 15px; height: 40px;">0</td>
                   <td style="font-size: 15px; height: 40px;">0</td>
