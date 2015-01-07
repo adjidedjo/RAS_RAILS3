@@ -58,7 +58,7 @@
           </tr>
         </tfoot>
         <tbody>
-          <% SalesCustomerByBrand.sales_cabang_per_toko(params[:cabang_scp], params[:month].to_date, params[:customer_channel], params[:customer_group]).each do |toko| %>
+          <% SalesCustomerByBrand.sales_cabang_per_toko(params[:cabang_scp], params[:month].to_date, params[:customer_channel], params[:customer_group], params[:customer_scp]).each do |toko| %>
             <tr>
               <th scope="row" style="font-size: 13px; height: 10px;"><%= toko.customer %></th>
               <% Merk.all.each do |merk| %>

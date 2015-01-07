@@ -23,10 +23,11 @@ class SalesCustomerByBrand < ActiveRecord::Base
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
   end
 
-  def self.sales_cabang_per_toko(cabang, date, channel, group)
+  def self.sales_cabang_per_toko(cabang, date, channel, group, customer)
     select("kode_customer, customer")
     .where("bulan = ? and tahun = ?", date.month, date.year)
-    .search_by_branch(cabang).customer_channel(channel).customer_group(group).group("customer")
+    .search_by_branch(cabang).customer_channel(channel).customer(customer)
+    .customer_group(group).group("customer")
   end
 
   def self.get_sales(customer, merk)
