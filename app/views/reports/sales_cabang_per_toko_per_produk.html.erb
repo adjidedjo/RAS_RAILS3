@@ -19,7 +19,7 @@
       <label style="font-size: 13px;">Group Customer: </label>
       <%= select_tag 'customer_group', options_for_select(SalesCustomer.get_name_group_customer(params[:month].to_date).collect {|a| [a.group_customer, a.group_customer]}, params[:customer_group]), :class => 'multiselect', :multiple => true %>
       <button type="submit" class="btn btn-primary">
-        Refine Search
+        Refind Search
       </button>
     <% end %>
   </p>

@@ -12,7 +12,7 @@ class SalesCustomer < ActiveRecord::Base
 	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
 	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
 	scope :customer_channel, lambda {|channel| where("tipe in (?)", channel) if channel.present?}
-	scope :customer_group, lambda {|group| where("tipe in (?)", group) if group.present?}
+	scope :customer_group, lambda {|group| where("group_customer in (?)", group) if group.present?}
 
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)

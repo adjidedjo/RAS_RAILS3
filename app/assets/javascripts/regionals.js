@@ -12,18 +12,31 @@ $(document).ready(function() {
       });
     }
   });
-  
+
   $('#list_cabang').dataTable({
     "bPaginate": false,
     "bAutoWidth": false,
-    "bInfo": false,  
+    "bInfo": false,
     "bFilter": false
+  });
+
+  $('#list_selected_goods').dataTable({
+    "bPaginate": true,
+    "bAutoWidth": false,
+    "bInfo": false,
+    iDisplayLength: 10
+  });
+
+  $('#list_goods').dataTable({
+    "bPaginate": true,
+    "bAutoWidth": false,
+    iDisplayLength: 10
   });
 
   $('#list_produk').DataTable({
     iDisplayLength: 25
   });
-  
+
   $('#future_price_list_upgrade_starting_at').datepicker({
     dateFormat: 'yy-mm-dd'
   }).attr('readonly','readonly');
@@ -39,13 +52,16 @@ $(document).ready(function() {
   $('#future_price_list_harga_starting_at').datepicker({
     dateFormat: 'yy-mm-dd'
   }).attr('readonly','readonly');
-  
-  $('.test add').tooltipster({ 
+  $('#price_list_program_starting_at').datepicker({
+    dateFormat: 'yy-mm-dd'
+  }).attr('readonly','readonly');
+
+  $('.test add').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
+
   $('.test').validate({
     onclick: false,
     rules: {

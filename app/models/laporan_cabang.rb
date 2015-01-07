@@ -75,8 +75,8 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.update_customer
     Customer.all.each do |cust|
-      SalesCustomer.where('customer like ?', cust.nama_customer).each do |custlap|
-        custlap.update_attributes(:tipe => cust.tipe_customer, :group => cust.group_customer,
+      SalesSizes.where('customer like ?', cust.nama_customer).each do |custlap|
+        custlap.update_attributes(:tipe_customer => cust.tipe_customer, :group_customer => cust.group_customer,
           :city => cust.kota, :area => cust.area, :plankinggroup => cust.flankin_customer)
       end
     end

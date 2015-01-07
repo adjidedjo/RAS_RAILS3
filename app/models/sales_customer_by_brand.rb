@@ -11,6 +11,8 @@ class SalesCustomerByBrand < ActiveRecord::Base
   scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
   scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
   scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
+  scope :customer_channel, lambda {|channel| where("tipe_customer in (?)", channel) if channel.present?}
+	scope :customer_group, lambda {|group| where("group_customer in (?)", group) if group.present?}
 
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
@@ -21,13 +23,21 @@ class SalesCustomerByBrand < ActiveRecord::Base
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
   end
 
-  def self.sales_cabang_per_toko(cabang, date)
+  def self.sales_cabang_per_toko(cabang, date, channel, group)
     select("kode_customer, customer")
     .where("bulan = ? and tahun = ?", date.month, date.year)
-    .search_by_branch(cabang).group("customer")
+    .search_by_branch(cabang).customer_channel(channel).customer_group(group).group("customer")
   end
 
   def self.get_sales(customer, merk)
     where('kode_customer like ? and merk like ?', customer, merk)
+  end
+
+  def self.get_name_customer(date)
+    select("customer").where("bulan = ? and tahun = ?", date.month, date.year).group("customer")
+  end
+
+  def self.get_name_group_customer(date)
+    select("group_customer").where("bulan = ? and tahun = ?", date.month, date.year).group("group_customer")
   end
 end

@@ -21,6 +21,9 @@ Rain::Application.routes.draw do
       get 'price_list'
       put 'update_multiple'
       post 'edit_multiple'
+      get 'additional_lady'
+      put 'update_multiple_lady'
+      get 'remove_multiple_lady'
     end
   end
 
@@ -97,6 +100,7 @@ Rain::Application.routes.draw do
 	get "reports/sales_cabang_per_produk_per_brand"
 	get "reports/sales_cabang_per_toko"
 	get "reports/sales_cabang_per_toko_per_produk"
+	get "reports/pilih_cabang"
 
   resources :users_mails
 
