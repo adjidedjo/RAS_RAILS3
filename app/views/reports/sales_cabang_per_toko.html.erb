@@ -26,9 +26,9 @@
 </div>
 <div class="span4 offset8">
   <p style="text-align: center; font-size: 14px;">
-    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp])%>
+    <%= link_to image_tag("left.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date - 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp], customer_channel: params[:customer_channel], customer_group: params[:customer_group])%>
     <%= Date::MONTHNAMES[params[:month].to_date.month] + " " + params[:month].to_date.strftime("%Y") %>
-    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp])%>
+    <%= link_to image_tag("right.png", :size => "25x25"), reports_sales_cabang_per_toko_path(month: (params[:month].to_date + 1.month), cabang_scp: params[:cabang_scp], customer_scp: params[:customer_scp], customer_channel: params[:customer_channel], customer_group: params[:customer_group])%>
   </p>
 </div>
 <div class="container-fluid">
