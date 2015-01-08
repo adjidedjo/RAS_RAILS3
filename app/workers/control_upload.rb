@@ -59,16 +59,17 @@ class ControlUpload
   end
 
   def check_reports_prev_month
-    SqlSales.migration_sales_report(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    SqlSales.migration_sales_report(Date.today.prev_month.month, Date.today.prev_month.year)
     PriceList.check_report_price_list(Date.today.prev_month.month, Date.today.prev_month.year)
-    LaporanCabang.sales_by_brand(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_product(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_article(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_fabric(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_customer(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_customer_by_brand(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_salesmen(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
-    LaporanCabang.sales_by_size(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    SqlFreeStock.migration_stok(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_brand(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_product(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_article(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_fabric(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_customer(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_customer_by_brand(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_salesmen(Date.today.prev_month.month, Date.today.prev_month.year)
+    LaporanCabang.sales_by_size(Date.today.prev_month.month, Date.today.prev_month.year)
   end
 
   def update_customer
@@ -76,7 +77,7 @@ class ControlUpload
   end
 
   def daily_migration_prev_month
-    SqlSales.migration_sales_report(1.month.ago.beginning_of_month.to_date.month, 1.month.ago.beginning_of_month.to_date.year)
+    SqlSales.migration_sales_report(Date.today.prev_month.month, Date.today.prev_month.year)
   end
 
   def daily_migration
