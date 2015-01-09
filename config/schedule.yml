@@ -47,7 +47,7 @@ daily_migration:
   rails_envs: development, production, staging
 
 daily_migration_prev_month:
-  cron: "12 30 1-11 * 1-6"
+  cron: "30 12 1-11 * 1-6"
   queue: cron
   class: ControlUpload
   args: "daily_migration_prev_month"
