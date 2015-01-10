@@ -141,7 +141,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel, :series => lapcab.namabrand,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
-          :city => lapcab.kota, :group => lapcab.groupcust, :type => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
+          :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe_customer => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
