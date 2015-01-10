@@ -75,7 +75,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.update_customer
     Customer.all.each do |cust|
-      SalesSizes.where('customer like ?', cust.nama_customer).each do |custlap|
+      SalesSize.where('customer like ?', cust.nama_customer).each do |custlap|
         custlap.update_attributes(:tipe_customer => cust.tipe_customer, :group_customer => cust.group_customer,
           :city => cust.kota, :area => cust.area, :plankinggroup => cust.flankin_customer)
       end
@@ -125,7 +125,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel,
-          :city => lapcab.kota, :group => lapcab.groupcust, :type => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
+          :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
