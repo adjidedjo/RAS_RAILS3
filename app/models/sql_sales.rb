@@ -59,7 +59,7 @@ class SqlSales < ActiveRecord::Base
           nupgrade: sql_sales.nupgrade,
           ketppb: sql_sales.ketppb,
           kota: sql_sales.kota,
-          Jenis_Customer: sql_sales.tipecust,
+          tipecust: sql_sales.tipecust,
           namabrand: sql_sales.namabrand,
           bonus: sql_sales.bonus,
           groupcust: sql_sales.groupcust,
