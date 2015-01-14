@@ -73,7 +73,7 @@ class ControlUpload
   end
 
   def update_customer
-    LaporanCabang.update_customer
+    LaporanCabang.update_customer(Date.today.month, Date.today.year)
   end
 
   def daily_migration_prev_month

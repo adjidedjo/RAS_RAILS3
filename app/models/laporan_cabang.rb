@@ -73,11 +73,11 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     end
   end
 
-  def self.update_customer
+  def self.update_customer(month, year)
     Customer.all.each do |cust|
-      SalesSize.where('customer like ?', cust.nama_customer).each do |custlap|
-        custlap.update_attributes(:tipe_customer => cust.tipe_customer, :group_customer => cust.group_customer,
-          :city => cust.kota, :area => cust.area, :plankinggroup => cust.flankin_customer)
+      LaporanCabang.where('cabang_id = ? and customer like ? and month(tanggalsj) = ? and year(tanggalsj) = ?', cust.cabang_id, cust.nama_customer, month, year).each do |custlap|
+        custlap.update_attributes(:tipecust => cust.tipe_customer, :groupcust => cust.group_customer,
+          :kota => cust.kota, :plankinggroup => cust.flankin_customer)
       end
     end
   end
