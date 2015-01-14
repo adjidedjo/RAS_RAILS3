@@ -55,7 +55,7 @@ daily_migration_prev_month:
   rails_envs: development, production, staging
 
 daily_update_customer:
-  cron: "00 21 *s * 1-6"
+  cron: "00 21 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "update_customer"
