@@ -1,5 +1,5 @@
 send_email:
-  cron: "30 08 * * 1-6"
+  cron: "30 09 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "send_mail"
@@ -7,7 +7,7 @@ send_email:
   rails_envs: production
 
 send_email_prev_month:
-  cron: "30 08 1-11 * *"
+  cron: "30 09 1-11 * *"
   queue: cron
   class: ControlUpload
   args: "send_mail_previous_month"
