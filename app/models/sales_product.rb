@@ -24,6 +24,10 @@ class SalesProduct < ActiveRecord::Base
 	end
 
   def self.sales_cabang_per_merk_per_produk(merk, product, cabang, date)
-    select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).search_by_type(product).brand(merk)
+    select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ?", date.month, date.year).search_by_branch(cabang).search_by_type(product).brand(merk)
+  end
+
+  def self.sales_cabang_per_merk_per_produk_by_year(merk, product, cabang, date)
+    select("sum(qty) as qty, sum(val) as val").where("tahun = ?", date.year).search_by_branch(cabang).search_by_type(product).brand(merk)
   end
 end

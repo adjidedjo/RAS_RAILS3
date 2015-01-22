@@ -10,6 +10,9 @@ class ReportsController < ApplicationController
   def sales_cabang_per_produk_per_brand
   end
 
+  def sales_cabang_per_produk_per_brand_by_year
+  end
+
   def sales_cabang_per_brand
   end
 
