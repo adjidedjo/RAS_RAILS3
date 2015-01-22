@@ -131,6 +131,13 @@ $(document).ready(function(){
     }
   });
 
+  $('#merk').multiselect({
+    maxHeight: 200,
+    numberDisplayed: 1,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true
+  });
+
   $('#customer_scp').multiselect({
     maxHeight: 200,
     numberDisplayed: 1,

@@ -99,6 +99,7 @@ Rain::Application.routes.draw do
 	get "reports/sales_cabang_per_brand"
 	get "reports/sales_cabang_per_produk_per_brand"
 	get "reports/sales_cabang_per_produk_per_brand_by_year"
+	get "reports/sales_cabang_per_cabang_per_produk_by_year"
 	get "reports/sales_cabang_per_toko"
 	get "reports/sales_cabang_per_toko_per_produk"
 	get "reports/pilih_cabang"
