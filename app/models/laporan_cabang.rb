@@ -227,12 +227,8 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
   # end background_job
 
-  def self.summary_of_sales(cab, jenis, cabang)
-    if jenis == "AC"
-      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(#{cab}%_#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
-    else
-      select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").where("kodebrg like ?", %(__#{cab}%)).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
-    end
+  def self.summary_of_sales(brand, jenis, cabang)
+    select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").brand(brand).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
   end
 
   def self.compare_price_list(bulan , tahun)

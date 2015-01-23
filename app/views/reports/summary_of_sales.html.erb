@@ -19,11 +19,11 @@
       <tfoot>
       </tfoot>
       <tbody>
-        <% ["KB","KM","DV","SA","SB","HB"].each do |jenis| %>
+        <% ["KB","KM","DV","SA","SB","HB", "AC"].each do |jenis| %>
           <tr>
             <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
-            <% ["E", "L", "R", "S"].each do |cab| %>
-              <% LaporanCabang.summary_of_sales(cab, jenis, "").each do |sum| %>
+            <% ["Non Serenity", "Lady Americana", "Royal", "Serenity"].each do |cab| %>
+              <% SalesProduct.summary_of_sales(cab, jenis, "").each do |sum| %>
                 <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_jumlah) %></td>
                 <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_harganetto2) %> </td>
               <% end %>
@@ -87,7 +87,7 @@
               <td></td>
             <% end %>
             <td style="font-weight: bold; font-size: 13px; text-align: center"><i>Grand Total <%= Cabang.find(cabang).Cabang.gsub(/cabang/, '')  %></i></td>
-            <% LaporanCabang.grand_total_cabang(cabang).each do |sum| %>
+            <% SalesProduct.grand_total_cabang(cabang).each do |sum| %>
               <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_jumlah.to_i) %></td>
               <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_harganetto2.to_i) %> </td>
             <% end %>
@@ -97,8 +97,8 @@
           <% ["KB","KM","DV","SA","SB","HB", "AC"].each do |jenis| %>
             <tr>
               <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
-              <% ["E", "L", "R", "S"].each do |cab| %>
-                <% LaporanCabang.summary_of_sales(cab, jenis, cabang).each do |sum| %>
+              <% ["Non Serenity", "Lady Americana", "Royal", "Serenity"].each do |cab| %>
+                <% SalesProduct.summary_of_sales(cab, jenis, cabang).each do |sum| %>
                   <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_jumlah.to_i) %></td>
                   <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_harganetto2.to_i) %> </td>
                 <% end %>

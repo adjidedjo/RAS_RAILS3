@@ -1,7 +1,7 @@
 class SalesProduct < ActiveRecord::Base
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("kode_produk in (?)", type) if type.present? }
-	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
+	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
 	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
@@ -33,5 +33,13 @@ class SalesProduct < ActiveRecord::Base
 
   def self.sales_cabang_per_cabang_per_produk_by_year(merk, product, cabang, date)
     select("sum(qty) as qty, sum(val) as val").where("tahun = ?", date.year).search_by_branch(cabang).search_by_type(product).brand(merk)
+  end
+
+  def self.summary_of_sales(brand, jenis, cabang)
+    select("sum(val) as sum_harganetto2, sum(qty) as sum_jumlah").brand(brand).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year)
+  end
+
+  def self.grand_total_cabang(cabang)
+    select("sum(val) as sum_harganetto2, sum(qty) as sum_jumlah").search_by_branch(cabang).search_by_month_and_year(Date.today.month, Date.today.year)
   end
 end

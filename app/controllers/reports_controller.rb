@@ -188,10 +188,10 @@ class ReportsController < ApplicationController
 		@cabang_get_id = Cabang.get_id
     @cabang_7 = Cabang.get_id_to_7
     @cabang_24 = Cabang.get_id_to_22
-    @grand_total_lady = LaporanCabang.summary_of_sales("L", "", "")
-    @grand_total_elite = LaporanCabang.summary_of_sales("E", "", "")
-    @grand_total_royal = LaporanCabang.summary_of_sales("R", "", "")
-    @grand_total_ser = LaporanCabang.summary_of_sales("S", "", "")
+    @grand_total_lady = SalesProduct.summary_of_sales("Lady Americana", "", "")
+    @grand_total_elite = SalesProduct.summary_of_sales("Non Serenity", "", "")
+    @grand_total_royal = SalesProduct.summary_of_sales("Royal", "", "")
+    @grand_total_ser = SalesProduct.summary_of_sales("Serenity", "", "")
   end
 
   def quick_view_monthly_result
