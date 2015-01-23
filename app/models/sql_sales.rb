@@ -1,7 +1,7 @@
 class SqlSales < ActiveRecord::Base
   self.abstract_class = true
   establish_connection "sqlserver"
-  set_table_name "tbLaporanCabang"
+  set_table_name "VLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
 
@@ -65,8 +65,10 @@ class SqlSales < ActiveRecord::Base
           groupcust: sql_sales.groupcust,
           plankinggroup: sql_sales.plankinggroup
         )
-      elsif sql_sales.bonus != 'BONUS' || sql_sales.harganetto2 != 0
+      else
         lapcab.update_attributes!(
+          jenisbrgdisc: sql_sales.jenisbrgdisc,
+          kodejenis: sql_sales.kodejenis,
           jumlah: sql_sales.jumlah,
           satuan: sql_sales.satuan,
           hargasatuan: sql_sales.hargasatuan,
