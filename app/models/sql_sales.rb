@@ -7,8 +7,8 @@ class SqlSales < ActiveRecord::Base
 
   def self.migration_sales_report(month, year)
     select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ?", month, year).without_batal.each do |sql_sales|
-      lapcab = LaporanCabang.find_by_cabang_id_and_tanggalsj_and_nofaktur_and_kodebrg_and_customer_and_jumlah(sql_sales.idcabang.to_i,
-        sql_sales.tanggalsj,sql_sales.nofaktur, sql_sales.kodebrg, sql_sales.customer, sql_sales.jumlah)
+      lapcab = LaporanCabang.find_by_cabang_id_and_tanggalsj_and_nofaktur_and_kodebrg_and_customer(sql_sales.idcabang.to_i,
+        sql_sales.tanggalsj,sql_sales.nofaktur, sql_sales.kodebrg, sql_sales.customer)
       if sql_sales.jenisbrgdisc.empty?
         if sql_sales.kodeartikel == 'E'
           sql_sales.jenisbrgdisc = Merk.find_by_IdMerk('E').Merk
@@ -63,7 +63,9 @@ class SqlSales < ActiveRecord::Base
           namabrand: sql_sales.namabrand,
           bonus: sql_sales.bonus,
           groupcust: sql_sales.groupcust,
-          plankinggroup: sql_sales.plankinggroup
+          plankinggroup: sql_sales.plankinggroup,
+          tanggal_fetched: Date.today,
+          tanggal_upload: sql_sales.tanggalinput
         )
       else
         lapcab.update_attributes!(
@@ -87,7 +89,8 @@ class SqlSales < ActiveRecord::Base
           totalnettofaktur: sql_sales.totalnettofaktur,
           cashback: sql_sales.cashback,
           nupgrade: sql_sales.nupgrade,
-          bonus: sql_sales.bonus)
+          bonus: sql_sales.bonus,
+          tanggal_upload: sql_sales.tanggalinput)
       end
     end
   end
