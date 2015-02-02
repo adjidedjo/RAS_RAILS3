@@ -19,7 +19,7 @@
 
         <p>
           <b>Brand:</b>
-          <%= Merk.find_by_id(@monthly_target.brand_id).Merk %>
+          <%= Merk.find_by_Merk(@monthly_target.merk_id).Merk %>
         </p>
         <% unless @monthly_target.customer.nil? %>
           <p>

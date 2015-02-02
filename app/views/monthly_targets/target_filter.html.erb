@@ -23,10 +23,10 @@
                   </label>
                 </fieldset>
                 <%= label_tag 'Select a Branch' %>
-                <%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}),
+                <%= select_tag 'cabang_id', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_id]),
                   :prompt=>"Select Branch"  %><br /><br />
                 <%= label_tag 'Select a Merk' %>
-                <%= select_tag 'merk_id', options_for_select(@merk.collect {|a| [a.Merk, a.Merk]}),
+                <%= select_tag 'merk_id', options_for_select(@merk.collect {|a| [a.Merk, a.Merk]}, params[:merk_id]),
                   :prompt=>"Select Merk" %><br /><br />
                 <%= label_tag 'Select Month and Year' %>
                 <%= select_tag "month_year", options_for_select(@months), :prompt=>"Select Month Year" %><br /><br />
@@ -68,10 +68,10 @@
                     <tr>
                       <td scope="row"><%= Cabang.find_by_id(target[0]).Cabang.gsub(/Cabang/,'') %></td>
                       <td><%= @var_target = target[1].nil? ? 0 : target[1] %></td>
-                      <% LaporanCabang.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
-                        <td><%= @var_sales = reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
+                      <% SalesSalesman.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
+                        <td><%= @var_sales = reached_sales.sum_val.nil? ? 0 : currency(reached_sales.sum_val) %></td>
                       <% end %>
-                      <td><%= number_to_percentage(LaporanCabang.growth_sales_target(@var_target, @var_sales), :precision => 2)  %></td>
+                      <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@var_target, @var_sales), :precision => 2)  %></td>
                     </tr>
                   <% end %>
                 </tbody>
@@ -83,7 +83,7 @@
         <div class="span6">
           <div class="col-sm-6 col-md-4 col-md-offset-4">
             <div class="span9" style="padding-top: 25px">
-              <table id="monthly_target_sales" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+              <table id="monthly_target_salesmen" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
                 <thead>
                   <tr>
                     <th rowspan="2">Salesman</th>
@@ -111,10 +111,10 @@
                       <td scope="row"><%= target.sales %></td>
                       <td><%= Cabang.find_by_id(target.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
                       <td><%= @target = target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %></td>
-                      <% LaporanCabang.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
-                        <td><%= @sales = reached_sales.sum_jumlah.nil? ? 0 : reached_sales.sum_jumlah %></td>
+                      <% SalesSalesman.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
+                        <td><%= @sales = reached_sales.sum_val.nil? ? 0 : currency(reached_sales.sum_val) %></td>
                       <% end %>
-                      <td><%= number_to_percentage(LaporanCabang.growth_sales_target(@target, @sales), :precision => 2) %></td>
+                      <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@target, @sales), :precision => 2) %></td>
                     </tr>
                   <% end %>
                 </tbody>
