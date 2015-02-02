@@ -1,19 +1,25 @@
 $(document).ready(function(){
-  
-  $('.monthly_target input[type="radio"], .monthly_target select').tooltipster({ 
+
+  $('#monthly_target1').dataTable({
+    iDisplayLength: 10,
+    bRetrieve: true,
+    bAutoWidth: false
+  });
+
+  $('.monthly_target input[type="radio"], .monthly_target select').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
+
   $('.monthly_target').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -49,8 +55,8 @@ $(document).ready(function(){
       }
     }
   });
-  
-  $('#monthly_target_sales').dataTable({
+
+  $('#monthly_target_salesmen').dataTable({
     iDisplayLength: 10,
     bRetrieve: true,
     "fnFooterCallback": function ( nRow, aaData ) {
@@ -74,7 +80,7 @@ $(document).ready(function(){
       nCells[2].innerHTML = addCommas(parseInt(iTotalSales))
     }
   });
-  
+
   $('#monthly_target_branch').dataTable({
     iDisplayLength: 10,
     bRetrieve: true,
@@ -99,11 +105,11 @@ $(document).ready(function(){
       nCells[1].innerHTML = addCommas(parseInt(iTotalSales))
     }
   });
-  
+
   function parseCurrency( num ) {
     return parseFloat( num.replace(/\./g, '') );
   }
-  
+
   function addCommas(nStr)
   {
     nStr += '';

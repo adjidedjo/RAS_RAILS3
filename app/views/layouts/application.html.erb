@@ -51,7 +51,7 @@
           <% end %>
           <%= menu_divider %>
           <%= drop_down "Target" do %>
-        <%#= menu_item "Monthly", targets_mNonthly_target_type_path %>
+            <%= menu_item "Input Target", monthly_targets_path %>
             <%= menu_item "Target vs Sales", monthly_targets_target_filter_path %>
           <% end %>
           <%= menu_item "Stock", stock_index_path %>

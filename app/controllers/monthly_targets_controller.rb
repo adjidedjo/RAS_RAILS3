@@ -12,7 +12,7 @@ class MonthlyTargetsController < ApplicationController
       @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
     end
   end
-  
+
   def view_target_sales
     @targets_sales = MonthlyTarget.get_target_by_sales(params[:cabang_id], params[:merk_id], params[:month_year])
   end
@@ -24,7 +24,7 @@ class MonthlyTargetsController < ApplicationController
   # GET /monthly_targets
   # GET /monthly_targets.json
   def index
-    @monthly_targets = MonthlyTarget.all
+    @monthly_targets = MonthlyTarget.where(target_year: Date.today.year)
 
     respond_to do |format|
       format.html # index.html.erb
