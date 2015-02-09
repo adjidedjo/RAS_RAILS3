@@ -8,14 +8,14 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :login, 
+  attr_accessible :username, :email, :password, :password_confirmation, :remember_me, :login,
 		:approved, :user_brand, :branch, :sales_stock
   attr_accessor :login
   after_create :send_welcome_mail
-  
+
   def send_welcome_mail
-    user = User.find_by_roles('SuperHero')
-    UserMailer.sign_up(user.email).deliver
+    admin = User.find_by_roles('SuperHero')
+    UserMailer.sign_up(admin, email).deliver
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)
@@ -27,16 +27,16 @@ class User < ActiveRecord::Base
     end
   end
 
-	def active_for_authentication? 
-  	super && approved? 
-	end 
+	def active_for_authentication?
+  	super && approved?
+	end
 
-	def inactive_message 
-		if !approved? 
-		  :not_approved 
-		else 
-		  super # Use whatever other message 
-		end 
+	def inactive_message
+		if !approved?
+		  :not_approved
+		else
+		  super # Use whatever other message
+		end
 	end
 
 	def self.send_mail

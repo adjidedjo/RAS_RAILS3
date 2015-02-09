@@ -40,10 +40,16 @@
       <% end %>
     </div>
     <div class="control-group">
-      <label class="checkbox">Roles</label>
+      <label class="checkbox">Brand</label>
       <div class="controls">
         <%= f.select :user_brand, ["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand", "Accounting"],
-          :include_blank => "All", :class => "input_login" %></div>
+          :include_blank => "-", :class => "input_login" %></div>
+    </div>
+    <div class="control-group">
+      <label class="checkbox">Roles</label>
+      <div class="controls">
+        <%= f.select :roles, ["Admin", "Lady Americana", "Classic", "Elite", "Royal", "Serenity", "Grand", "Accounting"],
+          :include_blank => "-", :class => "input_login" %></div>
     </div>
     <div class="control-group">
       <label class="checkbox">Branch</label>
@@ -55,7 +61,7 @@
       <label class="checkbox">Type</label>
       <div class="controls">
         <%= f.select :sales_stock, ["Sales", "Stock"],
-          :include_blank => "All", :class => "input_login" %></div><br />	
+          :include_blank => "All", :class => "input_login" %></div><br />
       <%= submit_tag "Create", :class => "btn btn-primary" %>
     </div>
   <% end %>

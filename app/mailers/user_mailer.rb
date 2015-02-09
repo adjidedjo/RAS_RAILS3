@@ -8,7 +8,7 @@ class UserMailer < ActionMailer::Base
       recipient_to << rec.email if rec.cc == false
       recipient_cc << rec.email if rec.cc == true
     end
-		@dates = Date.today.beginning_of_month..Date.today
+	@dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
     @cabang_get_id = Cabang.get_id
@@ -46,8 +46,8 @@ class UserMailer < ActionMailer::Base
     mail(:to => user, :subject => "Your Account Has Been Approved")
   end
 
-  def sign_up(user)
-    @user = User.find_by_email(user)
-    mail(:to => user, :subject => "Welcome to Sales Analytic")
+  def sign_up(admin, user)
+    @user = user
+    mail(:to => admin.email, :subject => "New User has been sign up")
   end
 end
