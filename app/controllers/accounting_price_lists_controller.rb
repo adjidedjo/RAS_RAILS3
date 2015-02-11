@@ -18,7 +18,8 @@ class AccountingPriceListsController < ApplicationController
   # GET /accounting_price_lists.json
   def index
     unless params[:branch_price_list].blank? && params[:brand_price_list].blank?
-      @accounting_price_lists = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, params[:date][:year].to_i)
+      date_get = params[:date_update].nil? ? params[:date][:year] : params[:date_update]
+      @test = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, date_get.to_i)
       .brand(brand(params[:brand_price_list])).search_by_branch(params[:branch_price_list]).where("checked = ?", false).order("nofaktur ASC")
       @accounting_price_list = AccountingPriceList.new
     end
@@ -103,11 +104,13 @@ class AccountingPriceListsController < ApplicationController
       if params[:commit] == 'Checked as customer services'
         repsales.update_attributes!(:checked => true)
         repsales.update_attributes!(:customer_services => true)
+        params[:report_ids] = []
       elsif params[:commit] == 'Set all as checked'
         repsales.update_attributes!(:checked => true)
+        params[:report_ids] = []
       end
     end
     flash[:notice] = "Reports Checked"
-    redirect_to accounting_price_lists_path(branch_price_list: params[:branch_price_list], brand_price_list: params[:brand_price_list], month_price_list: params[:month_price_list])
+    redirect_to accounting_price_lists_path(branch_price_list: params[:branch_price_list], brand_price_list: params[:brand_price_list], month_price_list: params[:month_price_list], date_update: params[:date])
   end
 end

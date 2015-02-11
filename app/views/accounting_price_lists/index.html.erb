@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <% if params[:branch_price_list].blank? && params[:brand_price_list].blank? || @accounting_price_lists.nil? %>
+    <% if params[:branch_price_list].blank? && params[:brand_price_list].blank? %>
       <div class="span6">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
           <div class="span8" style="padding-top: 25px">
@@ -94,11 +94,13 @@
                 </tr>
               </thead>
               <tbody>
-                <% @accounting_price_lists.each do |laporan| %>
+                <% @test.each do |laporan| %>
                   <tr>
                     <%= hidden_field_tag 'branch_price_list', params[:branch_price_list] %>
                     <%= hidden_field_tag 'brand_price_list', params[:brand_price_list] %>
                     <%= hidden_field_tag 'month_price_list', params[:month_price_list] %>
+                    <%= date_get = params[:date_update].nil? ? params[:date][:year] : params[:date_update] %>
+                    <%= hidden_field_tag 'date', date_get %>
                     <td><%= check_box_tag "report_ids[]", laporan.id %> || <%= link_to 'Detail', edit_accounting_price_list_path(laporan.id), data: {remote: true, "data-toggle" => "modal", "data-target" => "myModal",
                         params: { cabang_id: laporan.cabang_id, nofaktur: laporan.nofaktur, branch: params[:branch], brand: params[:brand], month: params[:month] }.to_param} %></td>
                     <td><%= laporan.nofaktur %></td>
@@ -115,7 +117,7 @@
               </tbody>
             </table>
             <br />
-            <% unless @accounting_price_lists.empty? %>
+            <% unless @test.empty? %>
               <%= submit_tag "Set all as checked" %>
               <%= submit_tag "Checked as customer services" %>
             <% end %>
