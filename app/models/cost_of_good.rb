@@ -4,6 +4,7 @@ class CostOfGood < ActiveRecord::Base
     :customer, :margin1, :margin2, :margin3, :margin4, :margin5, :margin_percent, :central, :lrv, :incentive_sales,
     :incentive_sales_m, :ongkir, :hpp, :b_mkt, :b_mkt_m, :bhbo, :total_bonus, :net_a_incentive, :margin_m, :margin, :produk
   before_save :find_net
+  before_update :find_net
 
   def find_net
     kodebarang = produk+artikel
