@@ -1,0 +1,128 @@
+<p id="notice"><%= notice %></p>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <div class="offset5">
+      <h2>Margin Diskon</h2>
+    </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="diskon1" border="1" class="display" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Merk</th>
+          <th>Artikel</th>
+          <th>Ukuran</th>
+          <th>Cabang</th>
+          <th>Customer</th>
+          <th>Margin 1</th>
+          <th>Margin 2</th>
+          <th>Margin 3</th>
+          <th>Margin 4</th>
+          <th>Margin 5</th>
+          <th>Margin %</th>
+          <th>Price List</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= Merk.find_by_IdMerk(@cost_of_good.merk).Merk %></td>
+          <td><%= Artikel.find_by_KodeCollection(@cost_of_good.artikel).Produk %></td>
+          <td><%= @cost_of_good.ukuran %></td>
+          <td><%= Cabang.find(@cost_of_good.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+          <td><%= @cost_of_good.customer %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin1) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin2) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin3) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin4) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin5) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin_percent) %></td>
+          <td><%= currency(@cost_of_good.price_list) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="diskon2" border="1" class="display" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Diskon 1</th>
+          <th>Diskon 2</th>
+          <th>Net Diskon</th>
+          <th>Paket 8 + 1</th>
+          <th>TOP</th>
+          <th>Net TOP</th>
+          <th>Central</th>
+          <th>Poin</th>
+          <th>Net Poin</th>
+          <th>Kontrak</th>
+          <th>Net Kontrak</th>
+          <th>LRV</th>
+          <th>Net LRV</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= number_to_percentage(@cost_of_good.diskon1) %></td>
+          <td><%= number_to_percentage(@cost_of_good.diskon2) %></td>
+          <td><%= currency(@cost_of_good.net_a_diskon) %></td>
+          <td><%= @cost_of_good.paket %></td>
+          <td><%= @cost_of_good.top %></td>
+          <td><%= currency(@cost_of_good.net_a_top) %></td>
+          <td><%= currency(@cost_of_good.central) %></td>
+          <td><%= number_to_percentage(@cost_of_good.point) %></td>
+          <td><%= currency(@cost_of_good.net_a_poin) %></td>
+          <td><%= number_to_percentage(@cost_of_good.kontrak) %></td>
+          <td><%= currency(@cost_of_good.net_a_kontrak) %></td>
+          <td><%= number_to_percentage(@cost_of_good.lrv) %></td>
+          <td><%= currency(@cost_of_good.net_a_lrv) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="diskon3" border="1" class="display" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Insentif Sales%</th>
+          <th>Insentif Sales</th>
+          <th>Net Insentif</th>
+          <th>Total bonus</th>
+          <th>Ongkir</th>
+          <th>Hpp</th>
+          <th>B Mkt %</th>
+          <th>B Mkt</th>
+          <th>BHBO</th>
+          <th>Margin</th>
+          <th>Margin%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= number_to_percentage(@cost_of_good.incentive_sales) %></td>
+          <td><%= currency(@cost_of_good.incentive_sales_m) %></td>
+          <td><%= currency(@cost_of_good.net_a_incentive) %></td>
+          <td><%= currency(@cost_of_good.total_bonus) %></td>
+          <td><%= currency(@cost_of_good.ongkir) %></td>
+          <td><%= currency(@cost_of_good.hpp) %></td>
+          <td><%= number_to_percentage(@cost_of_good.b_mkt) %></td>
+          <td><%= currency(@cost_of_good.b_mkt_m) %></td>
+          <td><%= currency(@cost_of_good.bhbo) %></td>
+          <td><%= currency(@cost_of_good.margin_m) %></td>
+          <td><%= number_to_percentage(@cost_of_good.margin) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<%= link_to 'Edit', edit_cost_of_good_path(@cost_of_good) %> |
+<%= link_to 'Back', cost_of_goods_path %>

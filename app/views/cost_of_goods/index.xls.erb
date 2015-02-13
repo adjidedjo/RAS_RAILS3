@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:x="urn:schemas-microsoft-com:office:excel"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Merk</Data></Cell>
+        <Cell><Data ss:Type="String">Artikel</Data></Cell>
+        <Cell><Data ss:Type="String">Ukuran</Data></Cell>
+        <Cell><Data ss:Type="String">Cabang</Data></Cell>
+        <Cell><Data ss:Type="String">Customer</Data></Cell>
+        <Cell><Data ss:Type="String">Margin 1</Data></Cell>
+        <Cell><Data ss:Type="String">Margin 2</Data></Cell>
+        <Cell><Data ss:Type="String">Margin 3</Data></Cell>
+        <Cell><Data ss:Type="String">Margin 4</Data></Cell>
+        <Cell><Data ss:Type="String">Margin 5</Data></Cell>
+        <Cell><Data ss:Type="String">Margin %</Data></Cell>
+        <Cell><Data ss:Type="String">Price List</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 1</Data></Cell>
+        <Cell><Data ss:Type="String">Diskon 2</Data></Cell>
+        <Cell><Data ss:Type="String">Net Diskon</Data></Cell>
+        <Cell><Data ss:Type="String">Paket 8 + 1</Data></Cell>
+        <Cell><Data ss:Type="String">TOP</Data></Cell>
+        <Cell><Data ss:Type="String">Net TOP</Data></Cell>
+        <Cell><Data ss:Type="String">Central</Data></Cell>
+        <Cell><Data ss:Type="String">Poin</Data></Cell>
+        <Cell><Data ss:Type="String">Net Poin</Data></Cell>
+        <Cell><Data ss:Type="String">Kontrak</Data></Cell>
+        <Cell><Data ss:Type="String">Net Kontrak</Data></Cell>
+        <Cell><Data ss:Type="String">LRV</Data></Cell>
+        <Cell><Data ss:Type="String">Net LRV</Data></Cell>
+        <Cell><Data ss:Type="String">Insentif Sales%</Data></Cell>
+        <Cell><Data ss:Type="String">Insentif Sales</Data></Cell>
+        <Cell><Data ss:Type="String">Net Insentif</Data></Cell>
+        <Cell><Data ss:Type="String">Total bonus</Data></Cell>
+        <Cell><Data ss:Type="String">Ongkir</Data></Cell>
+        <Cell><Data ss:Type="String">Hpp</Data></Cell>
+        <Cell><Data ss:Type="String">B Mkt %</Data></Cell>
+        <Cell><Data ss:Type="String">B Mkt</Data></Cell>
+        <Cell><Data ss:Type="String">Bonus+Hpp+BMKT+Ongkir</Data></Cell>
+        <Cell><Data ss:Type="String">Margin</Data></Cell>
+        <Cell><Data ss:Type="String">Margin%</Data></Cell>
+      </Row>
+      <% @cost_of_goods.each do |export| %>
+        <Row>
+          <Cell><Data ss:Type="String"><%= Merk.find_by_IdMerk(export.merk).Merk %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= Artikel.find_by_KodeCollection(export.artikel).Produk %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.ukuran %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= Cabang.find(export.cabang_id).Cabang.gsub(/Cabang/, "") %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.customer %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin1) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin2) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin3) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin4) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin5) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin_percent) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.price_list) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.diskon1)%></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.diskon2) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_diskon) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.paket %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= export.top %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_top) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.central) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.point) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_poin) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.kontrak) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_kontrak) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.lrv)  %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_lrv) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.incentive_sales) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.incentive_sales_m) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.net_a_incentive)  %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.total_bonus) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.ongkir) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.hpp) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.b_mkt) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.b_mkt_m) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.bhbo) %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= currency(export.margin_m)  %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= number_to_percentage(export.margin)%></Data></Cell>
+        </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

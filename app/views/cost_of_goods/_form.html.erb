@@ -1,0 +1,179 @@
+<div class="row">
+  <div class="span3">
+    <!-- block -->
+    <div class="block">
+      <div class="navbar navbar-inner block-header">
+        <div class="muted pull-left">Margin Diskon<br /> Form 1</div>
+        <div class="pull-right"><span class="badge badge-info"></span>
+
+        </div>
+      </div>
+      <div class="block-content">
+        <%= form_for(@cost_of_good) do |f| %>
+          <% if @cost_of_good.errors.any? %>
+            <div id="error_explanation">
+              <h2><%= pluralize(@cost_of_good.errors.count, "error") %> prohibited this cost_of_good from being saved:</h2>
+
+              <ul>
+                <% @cost_of_good.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          <fieldset>
+            <div class="field">
+              <%= f.label :produk %>
+              <%= f.select(:produk, Product.all.collect {|a| [a.Namaroduk, a.KodeProduk]})%>
+            </div>
+            <br />
+            <div class="field">
+              <%= f.label :merk %>
+              <%= f.select(:merk, Merk.all.collect {|a| [a.Merk, a.IdMerk]})%>
+            </div>
+            <br />
+            <div class="field">
+              <%= f.label :artikel %>
+              <%=  f.select(:artikel, Artikel.all.collect {|a| [a.Produk, a.KodeCollection]}) %>
+            </div>
+            <br />
+            <div class="field">
+              <%= f.label :ukuran %>
+              <%= f.text_field :ukuran %>
+            </div>
+            <br />
+            <div class="field">
+              <%= f.label :cabang_id %>
+              <%= f.select(:cabang_id, Cabang.get_id.collect {|a| [a.Cabang, a.id]}) %>
+            </div>
+            <br />
+            <div class="field">
+              <%= f.label :customer %>
+              <%= f.select(:customer, Customer.all.collect {|a| [a.nama_customer, a.nama_customer]}) %>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+    <div class="span3">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Margin Diskon<br /> Form 2</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <fieldset>
+            <div class="field">
+              <%= f.label :margin1 %><br />
+              <%= f.number_field :margin1 %>
+            </div>
+            <div class="field">
+              <%= f.label :margin2 %><br />
+              <%= f.number_field :margin2 %>
+            </div>
+            <div class="field">
+              <%= f.label :margin3 %><br />
+              <%= f.number_field :margin3 %>
+            </div>
+            <div class="field">
+              <%= f.label :margin4 %><br />
+              <%= f.number_field :margin4 %>
+            </div>
+            <div class="field">
+              <%= f.label :margin5 %><br />
+              <%= f.number_field :margin5 %>
+            </div>
+            <div class="field">
+              <%= f.label :margin_percent %><br />
+              <%= f.text_field :margin_percent %>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+    <div class="span3">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Margin Diskon<br /> Form 3</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <fieldset>
+            <div class="field">
+              <%= f.label :diskon1 %><br />
+              <%= f.number_field :diskon1 %>
+            </div>
+            <div class="field">
+              <%= f.label :diskon2 %><br />
+              <%= f.number_field :diskon2 %>
+            </div>
+            <div class="field">
+              <%= f.label :paket %><br />
+              <%= f.text_field :paket, :precision => 20, :scale => 2 %>
+            </div>
+            <div class="field">
+              <%= f.label :top %><br />
+              <%= f.number_field :top %>
+            </div>
+            <div class="field">
+              <%= f.label :central %><br />
+              <%= f.text_field :central %>
+            </div>
+            <div class="field">
+              <%= f.label :point %><br />
+              <%= f.text_field :point, :precision => 20, :scale => 2, :step => "0.6" %>
+            </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- /block -->
+  </div>
+    <div class="span3">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Margin Diskon<br /> Form 4</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <fieldset>
+            <div class="field">
+              <%= f.label :kontrak %><br />
+              <%= f.number_field :kontrak %>
+            </div>
+            <div class="field">
+              <%= f.label :lrv %><br />
+              <%= f.number_field :lrv %>
+            </div>
+            <div class="field">
+              <%= f.label :incentive_sales %><br />
+              <%= f.text_field :incentive_sales, :precision => 20, :scale => 2, :step => "0.6" %>
+            </div>
+            <div class="field">
+              <%= f.label :ongkir %><br />
+              <%= f.text_field :ongkir %>
+            </div>
+            <div class="field">
+              <%= f.label :b_mkt %><br />
+              <%= f.text_field :b_mkt, :precision => 20, :scale => 2, :step => "0.6" %>
+            </div>
+            <div class="actions">
+              <%= f.submit %>
+            </div>
+          <% end %>
+        </fieldset>
+      </div>
+    </div>
+    <!-- /block -->
+  </div>
+</div>

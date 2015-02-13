@@ -1,0 +1,53 @@
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <div class="offset5">
+      <h2>Listing Cost of Goods</h2>
+    </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="monthly_target1" border="1" class="display" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Merk</th>
+          <th>Artikel</th>
+          <th>Ukuran</th>
+          <th>Cabang</th>
+          <th>Customer</th>
+          <th>Hpp</th>
+          <th>Price list</th>
+          <th>Margin</th>
+          <th>Margin%</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @cost_of_goods.each do |cost_of_good| %>
+          <tr>
+            <td><%= Merk.find_by_IdMerk(cost_of_good.merk).Merk %></td>
+            <td><%= Artikel.find_by_KodeCollection(cost_of_good.artikel).Produk %></td>
+            <td><%= cost_of_good.ukuran %></td>
+            <td><%= Cabang.find(cost_of_good.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+            <td><%= cost_of_good.customer %></td>
+            <td><%= currency(cost_of_good.hpp) %></td>
+            <td><%= currency(cost_of_good.price_list) %></td>
+            <td><%= currency(cost_of_good.margin_m) %></td>
+            <td><%= number_to_percentage(cost_of_good.margin) %></td>
+            <td><%= link_to 'Show', cost_of_good %></td>
+            <td><%= link_to 'Edit', edit_cost_of_good_path(cost_of_good) %></td>
+            <td><%= link_to 'Destroy', cost_of_good, confirm: 'Are you sure?', method: :delete %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<br />
+<div class="offset10">
+  <%= link_to 'Export to Excel', url_for(request.parameters.merge({format: "xls"})),  :class=>"btn btn-info" %>
+</div>
+<%= link_to 'New Cost of good', new_cost_of_good_path %>

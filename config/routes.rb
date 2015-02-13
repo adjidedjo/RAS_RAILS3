@@ -2,6 +2,8 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  resources :cost_of_goods
+
   get "insentif_kontrak/main"
 
   resources :advisories do
@@ -66,6 +68,7 @@ Rain::Application.routes.draw do
   get "targets/monthly_target_customer"
   get "reports/summary_of_sales"
 
+  get "reports/mps"
   get "reports/size_special"
   get "reports/size_standard"
   get "reports/customer_modern"
