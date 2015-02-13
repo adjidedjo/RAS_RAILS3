@@ -11,6 +11,7 @@ class CostOfGood < ActiveRecord::Base
 and kodebarang like '%#{ukuran}%' " ).first
     pl_kode = PriceList.where("produk like ? and cabang_id = ?", artikel, cabang_id).first
     self.price_list = pl_kode.harga
+    self.hpp = coi_kode.hpp
     net_after_diskon = (pl_kode.harga - (pl_kode.harga*diskon1/100) - (pl_kode.harga - (pl_kode.harga*diskon1/100))*diskon2/100)
     self.net_a_diskon = net_after_diskon
     self.net_a_top = (paket - (paket*top/100))
