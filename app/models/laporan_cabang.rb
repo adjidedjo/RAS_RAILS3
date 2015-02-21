@@ -51,6 +51,8 @@ class LaporanCabang < ActiveRecord::Base
   scope :lebar, lambda {|lebar| where("lebar in (?)", lebar) if lebar.present?}
   scope :brand_on_kodebrg, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :without_empty_brand, where("jenisbrgdisc not like ?", '')
+  scope :accessoris_bonus, where("kodejenis not like ? and bonus like ?", 'AC', 'BONUS')
+  scope :nosj_to_check, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?",%(#{'SJY'}%), %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 
   def self.grand_total_cabang(cabang)
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(cabang).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
@@ -265,8 +267,8 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.compare_price_list(bulan , tahun)
-    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ? and bonus not like ?",
-      bulan, tahun, %(___________#{'T'}%), "bonus").no_pengajuan.not_equal_with_nosj
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ?",
+      bulan, tahun, %(___________#{'T'}%)).no_pengajuan.nosj_to_check.accessoris_bonus
   end
 
   def self.get_target_by_salesman(branch, date, merk, salesman)

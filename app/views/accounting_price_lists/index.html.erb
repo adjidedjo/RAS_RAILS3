@@ -91,6 +91,7 @@
                   <th class="th-pjg">P</th>
                   <th class="th-lbr">L</th>
                   <th class="th-qty">Qty</th>
+                  <th class="th-qty">Bonus</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,6 +110,7 @@
                     <td><%= laporan.panjang %></td>
                     <td><%= laporan.lebar %></td>
                     <td><%= laporan.quantity %></td>
+                    <td><%= laporan.bonus %></td>
                   </tr>
                 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <%= render 'form', :locals => {:tipe => params[:tipe]} %>
