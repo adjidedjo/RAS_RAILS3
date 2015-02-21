@@ -7,6 +7,11 @@ class ReportsController < ApplicationController
   def sales_cabang_per_toko
   end
 
+  def sales_cabang_per_customer_per_brand_by_year
+    params[:cabang].nil? ? 2 : params[:cabang]
+    @customer = Customer.customer(params[:customer_scp]).search_by_branch(params[:cabang_scp]).customer_channel(params[:customer_channel]).customer_group(params[:customer_group])
+  end
+
   def sales_cabang_per_produk_per_brand
   end
 

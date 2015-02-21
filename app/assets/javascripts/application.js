@@ -14,4 +14,6 @@
 //= require jquery.validate
 //= require jquery.tooltipster
 //= require jquery.bxslider
+//= require pivot.min
+//= require pivot.coffee
 //= require_tree .

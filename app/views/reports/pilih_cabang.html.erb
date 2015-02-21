@@ -10,16 +10,31 @@
           </div>
         </div>
         <div class="block-content">
-          <%= form_tag reports_sales_cabang_per_toko_path(month: Date.today), :method => 'get', :class => 'quick_view_month' do %>
-            <fieldset>
-              <div class="control-group">
-                <label style="font-size: 13px;">Cabang: </label>
-                <%= hidden_field_tag 'month', Date.today  %>
-                <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
-              </div>
-              <br />
-              <div class="pull-right"><button type="submit" class="btn btn-primary">Process</button></div>
-            </fieldset>
+          <% if params[:tipena] == 'yearly' %>
+            <%= form_tag reports_sales_cabang_per_customer_per_brand_by_year_path(year: Date.today), :method => 'get', :class => 'quick_view_month' do %>
+              <fieldset>
+                <div class="control-group">
+                  <label style="font-size: 13px;">Cabang: </label>
+                  <%= hidden_field_tag 'year', Date.today  %>
+                  <%= hidden_field_tag 'tipena', params[:tipena] %>
+                  <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <br />
+                <div class="pull-right"><button type="submit" class="btn btn-primary">Process</button></div>
+              </fieldset>
+            <% end %>
+          <% else %>
+            <%= form_tag reports_sales_cabang_per_toko_path(month: Date.today), :method => 'get', :class => 'quick_view_month' do %>
+              <fieldset>
+                <div class="control-group">
+                  <label style="font-size: 13px;">Cabang: </label>
+                  <%= hidden_field_tag 'month', Date.today  %>
+                  <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <br />
+                <div class="pull-right"><button type="submit" class="btn btn-primary">Process</button></div>
+              </fieldset>
+            <% end %>
           <% end %>
         </div>
       </div>

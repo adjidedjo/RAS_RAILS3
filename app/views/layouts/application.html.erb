@@ -69,6 +69,7 @@
               <%= drop_down_submenu "Tahunan" do %>
                 <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_by_year_path(year: Date.today, cabang_scp: "") %>
                 <%= menu_item "Sales Cabang per Cabang dan Produk", reports_sales_cabang_per_cabang_per_produk_by_year_path(year: Date.today, merk: "") %>
+                <%= menu_item "Sales Cabang per Customer dan Brand", reports_pilih_cabang_path(year: Date.today, merk: "", tipena: "yearly") %>
               <% end %>
             <% end %>
           <% end %>

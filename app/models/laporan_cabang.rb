@@ -15,6 +15,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
+	scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
 	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
@@ -141,6 +142,23 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel, :series => lapcab.namabrand,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
+          :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe_customer => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
+      else
+        sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+      end
+    end
+  end
+
+  def self.sales_by_customer_by_brand_yearly(tahun)
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_year(tahun).not_equal_with_nosj.without_empty_brand.group(:cabang_id, :jenisbrgdisc, :customer).each do |lapcab|
+      sales_brand = SalesCustomerByBrandYear.find_by_tahun_and_cabang_id_and_merk_and_customer(tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.customer)
+      if sales_brand.nil?
+        SalesCustomerByBrandYear.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
+          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, :kode_customer => lapcab.kode_customer,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel, :series => lapcab.namabrand,
+          :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe_customer => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
