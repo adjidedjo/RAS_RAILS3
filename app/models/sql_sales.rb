@@ -25,7 +25,7 @@ class SqlSales < ActiveRecord::Base
   end
 
   def self.migration_sales_report(month, year)
-    select("*").where("idcabang = ? and month(tanggalsj) = ? and year(tanggalsj) = ?", branch, month, year).each do |sql_sales|
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ?", month, year).each do |sql_sales|
       lapcab = LaporanCabang.find_by_tanggalsj_and_nosj_and_kodebrg_and_customer_and_bonus(sql_sales.tanggalsj,
         sql_sales.nosj, sql_sales.kodebrg, sql_sales.customer, sql_sales.bonus)
       if lapcab.nil?
