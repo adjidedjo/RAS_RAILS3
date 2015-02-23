@@ -9,6 +9,8 @@
 <div class="span11">
   <p style="text-align: left;">
     <%= form_tag reports_sales_cabang_per_toko_per_produk_path, :method => 'get', :class => "form form-inline" do %>
+      <label style="font-size: 13px;">Bulan : </label>
+      <%= select_tag "month", options_for_select(@months, params[:month]), :class => "input-small" %>
       <label style="font-size: 13px;">Cabang: </label>
       <%= hidden_field_tag "month", params[:month] %>
       <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>

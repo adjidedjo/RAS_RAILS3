@@ -10,7 +10,7 @@
   <p style="text-align: left;">
     <%= form_tag reports_sales_cabang_per_brand_path, :method => 'get', :class => "form form-inline" do %>
       <label style="font-size: 13px;">Bulan : </label>
-      <%= select_tag "month", options_for_select(@months, params[:month]), :class => "col-md-1" %>
+      <%= select_tag "month", options_for_select(@months, params[:month]), :class => "input-small" %>
       <button type="submit" class="btn btn-primary">
         Refine Search
       </button>

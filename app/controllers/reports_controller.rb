@@ -2,23 +2,35 @@ class ReportsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => :summary_of_sales
 
   def sales_cabang_per_toko_per_produk
+    sales_cabang_per_brand
   end
 
   def sales_cabang_per_toko
+    sales_cabang_per_brand
   end
 
   def sales_cabang_per_customer_per_brand_by_year
+    sales_cabang_per_produk_per_brand_by_year
     params[:cabang].nil? ? 2 : params[:cabang]
     @customer = Customer.customer(params[:customer_scp]).search_by_branch(params[:cabang_scp]).customer_channel(params[:customer_channel]).customer_group(params[:customer_group])
   end
 
   def sales_cabang_per_produk_per_brand
+    sales_cabang_per_brand
   end
 
   def sales_cabang_per_produk_per_brand_by_year
+    if params[:year].present?
+      @date = params[:year].to_date
+      @years = []
+      (-2..2).each do |m|
+        @years << [@date.prev_year(m).strftime("%Y"), @date.prev_year(m)]
+      end
+    end
   end
 
   def sales_cabang_per_cabang_per_produk_by_year
+    sales_cabang_per_produk_per_brand_by_year
   end
 
   def sales_cabang_per_brand

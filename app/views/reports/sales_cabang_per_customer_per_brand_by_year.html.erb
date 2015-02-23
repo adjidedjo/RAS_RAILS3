@@ -9,20 +9,22 @@
 <div class="span11">
   <p style="text-align: left;">
     <%= form_tag reports_sales_cabang_per_customer_per_brand_by_year_path, :method => 'get', :class => "form form-inline" do %>
-    <label style="font-size: 13px;">Cabang: </label>
-    <%= hidden_field_tag "year", params[:year] %>
-    <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
-    <label style="font-size: 13px;">Customer: </label>
+      <label style="font-size: 13px;">Tahun : </label>
+      <%= select_tag "year", options_for_select(@years, params[:year]), :class => "input-small" %>
+      <label style="font-size: 13px;">Cabang: </label>
+      <%= hidden_field_tag "year", params[:year] %>
+      <%= select_tag 'cabang_scp', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:cabang_scp]), :class => 'multiselect', :multiple => true %>
+      <label style="font-size: 13px;">Customer: </label>
       <%= select_tag 'customer_scp', options_for_select(SalesCustomerByBrandYear.get_name_customer(params[:year].to_date, params[:cabang_scp]).collect {|a| [a.customer, a.customer]}, params[:customer_scp]), :class => 'multiselect', :multiple => true %>
       <label style="font-size: 13px;">Channel Customer: </label>
       <%= select_tag 'customer_channel', options_for_select(ChannelCustomer.all.collect {|a| [a.channel, a.channel]}, params[:customer_channel]), :class => 'multiselect', :multiple => true %>
       <label style="font-size: 13px;">Group Customer: </label>
       <%= select_tag 'customer_group', options_for_select(SalesCustomerByBrand.get_name_group_customer(params[:year].to_date).collect {|a| [a.group_customer, a.group_customer]}, params[:customer_group]), :class => 'multiselect', :multiple => true %>
       <button type="submit" class="btn btn-primary">
-      Refine Search
-    </button>
-  <% end %>
-</p>
+        Refine Search
+      </button>
+    <% end %>
+  </p>
 </div>
 <div class="span4 offset8">
   <p style="text-align: center; font-size: 14px;">
