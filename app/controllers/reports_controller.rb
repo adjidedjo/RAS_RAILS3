@@ -22,6 +22,13 @@ class ReportsController < ApplicationController
   end
 
   def sales_cabang_per_brand
+    if params[:month].present?
+      @date = params[:month].to_date
+      @months = []
+      (-5..5).each do |m|
+        @months << [@date.prev_month(m).strftime("%b %Y"), @date.prev_month(m)]
+      end
+    end
   end
 
   def search_by_salesman
