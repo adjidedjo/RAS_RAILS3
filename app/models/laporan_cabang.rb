@@ -152,7 +152,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_customer_by_brand_yearly(tahun)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
+    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel, kode_customer,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_year(tahun).not_equal_with_nosj.without_empty_brand.group(:cabang_id, :jenisbrgdisc, :customer).each do |lapcab|
       sales_brand = SalesCustomerByBrandYear.find_by_tahun_and_cabang_id_and_merk_and_customer(tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.customer)
       if sales_brand.nil?
