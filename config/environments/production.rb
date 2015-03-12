@@ -59,12 +59,9 @@ Rain::Application.configure do
   config.active_support.deprecation = :notify
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address              => "smtp.gmail.com",
-    :port                 => 587,
-    :domain               => 'gmail.com',
-    :user_name            => 'ras.salesanalytic@gmail.com',
-    :password             => 'Roy@l4b@d!',
-    :authentication       => 'plain',
+    :address              => "smtp.ras.co.id",
+    :port                 => 25,
+    :domain               => 'ras.co.id',
     :enable_starttls_auto => true  }
   config.middleware.use ExceptionNotifier,
     :email_prefix => "[Error] ",
