@@ -9,20 +9,47 @@ class PriceList < ActiveRecord::Base
     :dependent => :destroy
   has_many :predators, :through => :escapes
 
+  def self.future_to_price_list
+    FuturePriceList.where("DATE(updated_at) = ?", Date.today).each do |fpl|
+      PriceList.where("kode_barang like ? and regional_id = ?", fpl.kode_barang, fpl.regional_id).each do |pl|
+        if pl.empty?
+          PriceList.create(:cabang_id => fpl.cabang_id, :brand_id => fpl.brand_id, :regional_id => fpl.regional_id,
+            :jenis => fpl.jenis, :produk => fpl.produk, :kain => fpl.kain,
+            :panjang => fpl.panjang, :lebar => fpl.lebar, :harga => fpl.harga, :prev_harga => fpl.harga,
+            :discount_1 => fpl.discount_1, :prev_discount_1 => fpl.discount_1,
+            :discount_2 => fpl.discount_2, :prev_discount_2 => fpl.discount_2,
+            :discount_3 => fpl.discount_3, :prev_discount_3 => fpl.discount_3,
+            :discount_4 => fpl.discount_4, :prev_discount_4 => fpl.discount_4,
+            :upgrade => fpl.upgrade, :prev_upgrade => fpl.upgrade,
+            :cashback => fpl.upgrade, :prev_cashback => fpl.cashback,
+            :special_price => fpl.special_price, :prev_special_price => fpl.special_price,
+            :kode_barang => fpl.kode_barang, :nama => fpl.nama)
+        elsif fpl.harga_starting_at == Date.today
+          pl.update_attributes!(:harga => fpl.harga, :prev_harga => pl.harga)
+        elsif fpl.discount_starting_at == Date.today
+          pl.update_attributes!(
+            :discount_1 => fpl.discount_1, :prev_discount_1 => pl.discount_1,
+            :discount_2 => fpl.discount_2, :prev_discount_2 => pl.discount_2,
+            :discount_3 => fpl.discount_3, :prev_discount_3 => pl.discount_3,
+            :discount_4 => fpl.discount_4, :prev_discount_4 => pl.discount_4)
+        elsif fpl.upgrade_starting_at == Date.today
+          pl.update_attributes!(:upgrade => fpl.upgrade, :prev_upgrade => pl.upgrade)
+        elsif fpl.cashback_starting_at == Date.today
+          pl.update_attributes!(:cashback => fpl.cashback, :prev_cashback => pl.cashback)
+        else fpl.special_price_starting_at == Date.today
+          pl.update_attributes!(:special_price => fpl.special_price, :prev_special_price => pl.special_price)
+        end
+      end
+    end
+  end
+
   def self.check_availability_master(bulan, tahun)
     LaporanCabang.compare_price_list(bulan, tahun).each do |lap|
       merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
       unless merk.empty?
         regional = Cabang.find(lap.cabang_id).regional.find_by_brand_id(merk.first.id)
         unless regional.nil?
-          price_list = PriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
           future_price_list = FuturePriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
-          if price_list.empty?
-            PriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
-              :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
-              :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111, :prev_harga => 11111,
-              :kode_barang => lap.kodebrg, :nama => lap.namabrg)
-          end
           if future_price_list.empty?
             FuturePriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
               :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
@@ -83,13 +110,6 @@ class PriceList < ActiveRecord::Base
                       :discount_4_master => pricelist.prev_discount_4, :discount_4_laporan => lap.diskon4,
                       :customer => lap.customer, :tanggal => lap.tanggalsj)
                   end
-                end
-              else
-                if (lap.hargasatuan == pricelist.harga) || ((lap.nupgrade*lap.jumlah) == pricelist.upgrade) ||
-                    (lap.cashback == pricelist.cashback) || (lap.diskon1 == pricelist.discount_1) ||
-                    (lap.diskon2 == pricelist.discount_2) || (lap.diskon3 == pricelist.discount_3) ||
-                    (lap.diskon4 = pricelist.prev_discount_4) && (customer_services == false)
-                  customer_services.destroy_all
                 end
               end
             end
