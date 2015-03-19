@@ -78,7 +78,7 @@ class PriceList < ActiveRecord::Base
                   if (lap.hargasatuan != pricelist.harga) || ((lap.nupgrade*lap.jumlah) != pricelist.upgrade) ||
                       (lap.cashback != pricelist.cashback) || (lap.diskon1 != pricelist.discount_1) ||
                       (lap.diskon2 != pricelist.discount_2) || (lap.diskon3 != pricelist.discount_3) ||
-                      (lap.diskon4 != pricelist.prev_discount_4)
+                      (lap.diskon4 != pricelist.discount_4)
                     CheckedItemMaster.create(:nofaktur => lap.nofaktur, :tgl_faktur => lap.tanggal,
                       :kodebarang => lap.kodebrg, :namabarang => lap.namabrg, :cabang_id => lap.cabang_id,
                       :harga_master => pricelist.harga, :harga_laporan => lap.hargasatuan,
@@ -109,6 +109,17 @@ class PriceList < ActiveRecord::Base
                       :discount_3_master => pricelist.prev_discount_3, :discount_3_laporan => lap.diskon3,
                       :discount_4_master => pricelist.prev_discount_4, :discount_4_laporan => lap.diskon4,
                       :customer => lap.customer, :tanggal => lap.tanggalsj)
+                  end
+                end
+              else
+                if lap.tanggalsj.month == bulan
+                  if (lap.hargasatuan == pricelist.harga) && ((lap.nupgrade*lap.jumlah) == pricelist.upgrade) &&
+                      (lap.cashback == pricelist.cashback) && (lap.diskon1 == pricelist.discount_1) &&
+                      (lap.diskon2 == pricelist.discount_2) && (lap.diskon3 == pricelist.discount_3) &&
+                      (lap.diskon4 == pricelist.discount_4)
+                    match_customer_services = CheckedItemMaster.where("tanggal = ? and nofaktur like ? and kodebarang like ? and customer like ? and quantity like ?",
+                      lap.tanggalsj, lap.nofaktur, lap.kodebrg, lap.customer, lap.jumlah)
+                    match_customer_services.first.destroy
                   end
                 end
               end
