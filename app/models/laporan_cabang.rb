@@ -267,7 +267,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.compare_price_list(bulan , tahun)
-    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ? and cabang_id = ?",
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ?",
       bulan, tahun, %(___________#{'T'}%)).no_pengajuan.nosj_to_check
   end
 

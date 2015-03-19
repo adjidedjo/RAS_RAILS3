@@ -15,17 +15,17 @@ class UserMailer < ActionMailer::Base
     mail(:to => recipient_to, :cc => recipient_cc, :subject => "Laporan Upload Data Stock Harian")
   end
 
-	def report(user, cc)
+  def report
     recipient_to = []
     recipient_cc = []
     Recipient.where("mailing_for in (?)", ["penjualan", "all"]).each do |rec|
       recipient_to << rec.email if rec.cc == false
       recipient_cc << rec.email if rec.cc == true
     end
-		@dates = Date.today.beginning_of_month..Date.today
+    @dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
-    mail(:to => user, :cc => cc,:subject => "Laporan Upload Data Penjualan Harian")
+    mail(:to => recipient_to, :cc => recipient_cc,:subject => "Laporan Upload Data Penjualan Harian")
   end
 
   def report_previous_month
