@@ -43,89 +43,87 @@
         </div>
       </div>
     </div>
-    <% if params[:branch_price_list].blank? && params[:brand_price_list].blank? %>
+    <% if @test.present? %>
       <div class="span6">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
           <div class="span8" style="padding-top: 25px">
-            <table id="price_list" border="1" class="display responsive no-wrap" cellspacing="0">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>No Faktur</th>
-                  <th>Customer</th>
-                  <th>Kode Barang</th>
-                  <th>Size</th>
-                  <th>Qty</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              </tbody>
-            </table>
-            <div class="span6 offset2">
-              <h4><%= params[:branch].blank? ? 'Silahkan pilih Cabang, Brand, dan Bulan' : 'Data tidak ditemukan' %></h4>
+            <%= form_tag update_multiple_accounting_price_lists_path, :method => :post do %>
+              <span>No faktur: </span><span><%= @test.nofaktur %></span><br />
+              <span>No SO: </span><span><%= @test.no_so %></span><br />
+              <span>No PO: </span><span><%= @test.no_po %></span><br />
+              <span>Nama Customer: </span><span><%= @test.customer %></span><br />
+              <table id="check_price_list" class="display row-border" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th style="background-color: #E2E4FF">Nama Barang</th>
+                    <th>Kode Barang</th>
+                    <th>Panjang</th>
+                    <th>Lebar</th>
+                    <th>Qty</th>
+                    <th>Bonus</th>
+                    <th>Harga Laporan</th>
+                    <th>Harga Master</th>
+                    <th>Diskon 1 Laporan</th>
+                    <th>Diskon 1 Master</th>
+                    <th>Diskon 2 Laporan</th>
+                    <th>Diskon 2 Master</th>
+                    <th>Diskon 3 Laporan</th>
+                    <th>Diskon 3 Master</th>
+                    <th>Diskon 4 Laporan</th>
+                    <th>Diskon 4 Master</th>
+                    <th>Netto2</th>
+                    <th>Upgrade Laporan</th>
+                    <th>Upgrade Master</th>
+                    <th>Cashback Laporan</th>
+                    <th>Cashback Master</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% AccountingPriceList.where(nofaktur: @test.nofaktur).each do |test| %>
+                    <tr>
+                      <td style="min-width: 350px"><%= test.namabarang %></td>
+                      <td style="min-width: 100px"><%= test.kodebarang %></td>
+                      <td style="min-width: 50px"><%= test.panjang %></td>
+                      <td style="min-width: 50px"><%= test.lebar %></td>
+                      <td style="min-width: 20px"><%= test.quantity %></td>
+                      <td style="min-width: 50px"><%= test.bonus %></td>
+                      <td style="min-width: 100px"><%= currency(test.harga_master) %></td>
+                      <td style="min-width: 100px"><%= currency(test.harga_laporan) %></td>
+                      <td style="min-width: 100px"><%= test.discount_1_master %></td>
+                      <td style="min-width: 100px"><%= test.discount_1_laporan %></td>
+                      <td style="min-width: 100px"><%= test.discount_2_master %></td>
+                      <td style="min-width: 100px"><%= test.discount_2_laporan %></td>
+                      <td style="min-width: 100px"><%= test.discount_3_master %></td>
+                      <td style="min-width: 100px"><%= test.discount_3_laporan %></td>
+                      <td style="min-width: 100px"><%= test.discount_4_master %></td>
+                      <td style="min-width: 100px"><%= test.discount_4_master %></td>
+                      <td style="min-width: 100px"><%= currency(test.netto2) %></td>
+                      <td style="min-width: 100px"><%= currency(test.upgrade_master) %></td>
+                      <td style="min-width: 100px"><%= currency(test.upgrade_laporan) %></td>
+                      <td style="min-width: 100px"><%= currency(test.cashback_master) %></td>
+                      <td style="min-width: 100px"><%= currency(test.cashback_master) %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <br />
+              <span><%= radio_button_tag "saac",  "checked"  %>Set as checked</span><br />
+              <span><%= radio_button_tag "saac",  "cs"  %>Set as customer services</span>
+              <%= hidden_field_tag 'nofaktur', @test.nofaktur %>
+              <%= hidden_field_tag 'branch_price_list', params[:branch_price_list] %>
+              <%= hidden_field_tag 'brand_price_list', params[:brand_price_list] %>
+              <%= hidden_field_tag 'month_price_list', params[:month_price_list] %>
+              <% if params[:date].nil? %>
+                <%= hidden_field_tag 'date', params[:date_update].to_i %>
+              <% else %>
+                <%= hidden_field_tag 'date', params[:date][:year].to_i %>
+              <% end %>
+              <span style="float: right"><%= submit_tag "Next", class: "btn btn-primary" %></span>
+              <% end %>
             </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
-  <% else %>
-    <div class="span6">
-      <div class="col-sm-6 col-md-4 col-md-offset-4">
-        <div class="span8" style="padding-top: 25px">
-          <%= form_tag update_multiple_accounting_price_lists_path, :method => :post do %>
-            <table id="price_list" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
-              <thead>
-                <tr>
-                  <th class="th-ops"><%= check_box_tag "check_all" %> Check All</th>
-                  <th class="th-nofak">No Faktur</th>
-                  <th class="th-cust">Customer</th>
-                  <th class="th-item">Kode Barang</th>
-                  <th class="th-pjg">P</th>
-                  <th class="th-lbr">L</th>
-                  <th class="th-qty">Qty</th>
-                  <th class="th-qty">Bonus</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @test.each do |laporan| %>
-                  <tr>
-                    <%= hidden_field_tag 'branch_price_list', params[:branch_price_list] %>
-                    <%= hidden_field_tag 'brand_price_list', params[:brand_price_list] %>
-                    <%= hidden_field_tag 'month_price_list', params[:month_price_list] %>
-                    <% date_get = params[:date_update].nil? ? params[:date][:year] : params[:date_update] %>
-                    <%= hidden_field_tag 'date', date_get %>
-                    <td><%= check_box_tag "report_ids[]", laporan.id %> || <%= link_to 'Detail', edit_accounting_price_list_path(laporan.id), data: {remote: true, "data-toggle" => "modal", "data-target" => "myModal",
-                        params: { cabang_id: laporan.cabang_id, nofaktur: laporan.nofaktur, branch: params[:branch], brand: params[:brand], month: params[:month] }.to_param} %></td>
-                    <td><%= laporan.nofaktur %></td>
-                    <td><%= laporan.customer %></td>
-                    <td><%= laporan.kodebarang %></td>
-                    <td><%= laporan.panjang %></td>
-                    <td><%= laporan.lebar %></td>
-                    <td><%= laporan.quantity %></td>
-                    <td><%= laporan.bonus %></td>
-                  </tr>
-                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <%= render 'form', :locals => {:tipe => params[:tipe]} %>
-                </div>
-              <% end %>
-              </tbody>
-            </table>
-            <br />
-            <% unless @test.empty? %>
-              <%= submit_tag "Set all as checked" %>
-              <%= submit_tag "Checked as customer services" %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-</div>
+  </div>

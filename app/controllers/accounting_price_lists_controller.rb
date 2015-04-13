@@ -14,19 +14,17 @@ class AccountingPriceListsController < ApplicationController
       :branch_price_list => params[:branch], :date => params[:date]['month'].to_i) if params[:brand_price_list].present?
   end
 
-  # GET /accounting_price_lists
-  # GET /accounting_price_lists.json
+  # GET /accounting_price_lists GET /accounting_price_lists.json
   def index
     unless params[:branch_price_list].blank? && params[:brand_price_list].blank?
       date_get = params[:date_update].nil? ? params[:date][:year] : params[:date_update]
       @test = AccountingPriceList.search_by_month_and_year(params[:month_price_list].to_i, date_get.to_i)
-      .brand(brand(params[:brand_price_list])).search_by_branch(params[:branch_price_list]).where("checked = ?", false).order("nofaktur ASC")
+      .brand(brand(params[:brand_price_list])).search_by_branch(params[:branch_price_list]).where("checked = ?", false).group(:nofaktur).order("nofaktur ASC").first
       @accounting_price_list = AccountingPriceList.new
     end
   end
 
-  # GET /accounting_price_lists/1
-  # GET /accounting_price_lists/1.json
+  # GET /accounting_price_lists/1 GET /accounting_price_lists/1.json
   def show
     @accounting_price_list = AccountingPriceList.find(params[:id])
 
@@ -36,8 +34,7 @@ class AccountingPriceListsController < ApplicationController
     end
   end
 
-  # GET /accounting_price_lists/new
-  # GET /accounting_price_lists/new.json
+  # GET /accounting_price_lists/new GET /accounting_price_lists/new.json
   def new
     @accounting_price_list = AccountingPriceList.new
 
@@ -52,8 +49,7 @@ class AccountingPriceListsController < ApplicationController
     @accounting_price_list = AccountingPriceList.find(params[:id])
   end
 
-  # POST /accounting_price_lists
-  # POST /accounting_price_lists.json
+  # POST /accounting_price_lists POST /accounting_price_lists.json
   def create
     @accounting_price_list = AccountingPriceList.new(params[:accounting_price_list])
 
@@ -68,8 +64,7 @@ class AccountingPriceListsController < ApplicationController
     end
   end
 
-  # PUT /accounting_price_lists/1
-  # PUT /accounting_price_lists/1.json
+  # PUT /accounting_price_lists/1 PUT /accounting_price_lists/1.json
   def update
     @accounting_price_list = AccountingPriceList.find(params[:id])
 
@@ -86,8 +81,7 @@ class AccountingPriceListsController < ApplicationController
     end
   end
 
-  # DELETE /accounting_price_lists/1
-  # DELETE /accounting_price_lists/1.json
+  # DELETE /accounting_price_lists/1 DELETE /accounting_price_lists/1.json
   def destroy
     @accounting_price_list = AccountingPriceList.find(params[:id])
     @accounting_price_list.destroy
@@ -99,15 +93,13 @@ class AccountingPriceListsController < ApplicationController
   end
 
   def update_multiple
-    @report = CheckedItemMaster.find(params[:report_ids])
+    @report = CheckedItemMaster.where("nofaktur like ?", params[:nofaktur])
     @report.each do |repsales|
-      if params[:commit] == 'Checked as customer services'
+      if params[:saac] == 'cs'
         repsales.update_attributes!(:checked => true)
         repsales.update_attributes!(:customer_services => true)
-        params[:report_ids] = []
-      elsif params[:commit] == 'Set all as checked'
+      elsif params[:saac] == 'checked'
         repsales.update_attributes!(:checked => true)
-        params[:report_ids] = []
       end
     end
     flash[:notice] = "Reports Checked"

@@ -1,4 +1,15 @@
 $(document).ready(function(){
+  $('#check_price_list').dataTable({
+    bAutoWidth: true,
+    bProcessing: false,
+    bFilter: false,
+    sScrollX: "300px",
+    bScrollCollapse: true,
+    bPaginate: false,
+    bInfo: false,
+    bSort: false
+  });
+
   $('#check_all').click(function(){
     if(this.checked) {
       // Iterate each checkbox

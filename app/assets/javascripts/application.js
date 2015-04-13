@@ -12,6 +12,7 @@
 //= require dataTables/jquery.dataTables
 //= require jquery.dataTables.columnFilter
 //= require jquery.validate
+//= require dataTables.fixedColumns
 //= require jquery.tooltipster
 //= require jquery.bxslider
 //= require_tree .
