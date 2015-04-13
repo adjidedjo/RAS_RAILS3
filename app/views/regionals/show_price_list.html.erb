@@ -1,0 +1,155 @@
+<h3><%= @item.nama %></h3>
+<% artikel = Artikel.where("KodeCollection like ?", @item.produk).first  %>
+<% kain = Kain.where("KodeKain like ?", @item.kain).first  %>
+<% if params[:status] == 'e' %>
+  <div class="row-fluid">
+    <%= form_for @item, url: {action: "update_kode_barang"} do |f| %>
+      <div style="float: left; padding-right: 50px">
+        <%= f.hidden_field 'regional_id' %>
+        <%= f.label "Kode Barang"%>
+        <%= f.text_field :kode_barang %>
+        <%= f.label "Jenis"%>
+        <%= f.text_field "jenis" %>
+        <%= f.label "Artikel"%>
+        <%= f.text_field "produk"%>
+        <%= f.label "Kain"%>
+        <%= f.text_field "kain" %>
+        <%= f.label "Panjang"%>
+        <%= f.text_field "panjang" %>
+        <%= f.label "Lebar"%>
+        <%= f.text_field "lebar" %>
+      </div>
+      <div style="float: left; padding-right: 50px;">
+        <%= f.label "Harga"%>
+        <%= f.text_field "harga" %>
+        <%= f.label "discount 1"%>
+        <%= f.text_field "discount_1" %>
+        <%= f.label "discount 2"%>
+        <%= f.text_field "discount_2" %>
+        <%= f.label "discount 3"%>
+        <%= f.text_field "discount_3" %>
+        <%= f.label "discount 4"%>
+        <%= f.text_field "discount_4" %>
+        <%= f.label "Upgrade"%>
+        <%= f.text_field "upgrade" %>
+      </div>
+      <div style="float: left; padding-right: 50px;">
+        <%= f.label "cashback"%>
+        <%= f.text_field "cashback" %>
+        <%= f.label "Special Price"%>
+        <%= f.text_field "special_price" %>
+        <%= f.label "From Period"%>
+        <%= f.text_field "from_period", class: "from_period" %>
+          <%= f.label "To Period"%>
+          <%= f.text_field "to_period", class: "to_period" %>
+            <%= f.label "Gambar"%>
+            <%= f.file_field "image", value: @item.image_url %>
+          </div>
+          <%= image_tag @item.image_url(:thumb).to_s %>
+          <div style="clear: both;padding-left: 700px;">
+            <%= f.submit "Update", class: "btn btn-primary" %>
+              <%= link_to "Back", price_list_regionals_path(brand_id: @item.brand_id, regional_id: @item.regional_id),class: "btn btn-info" %>
+              </div>
+
+            <% end %>
+          </div>
+        <% elsif params[:status] == 'r' %>
+
+          <div class="row-fluid">
+            <%= form_for @item, url: {action: "update_kode_barang"} do |f| %>
+              <div style="float: left; padding-right: 50px">
+                <%= f.hidden_field 'regional_id' %>
+                <%= f.label "Kode Barang"%>
+                <%= f.text_field :kode_barang, disabled: true %>
+                <%= f.label "Jenis"%>
+                <%= f.text_field "jenis", disabled: true %>
+                <%= f.label "Artikel"%>
+                <%= f.text_field "produk", disabled: true %>
+                <%= f.label "Kain"%>
+                <%= f.text_field "kain", disabled: true %>
+                <%= f.label "Panjang"%>
+                <%= f.text_field "panjang", disabled: true %>
+                <%= f.label "Lebar"%>
+                <%= f.text_field "lebar", disabled: true %>
+              </div>
+              <div style="float: left; padding-right: 50px;">
+                <%= f.label "Harga"%>
+                <%= f.text_field "harga", disabled: true %>
+                <%= f.label "discount 1"%>
+                <%= f.text_field "discount_1", disabled: true %>
+                <%= f.label "discount 2"%>
+                <%= f.text_field "discount_2", disabled: true %>
+                <%= f.label "discount 3"%>
+                <%= f.text_field "discount_3", disabled: true %>
+                <%= f.label "discount 4"%>
+                <%= f.text_field "discount_4", disabled: true %>
+                <%= f.label "Upgrade"%>
+                <%= f.text_field "upgrade", disabled: true %>
+              </div>
+              <div style="float: left; padding-right: 50px;">
+                <%= f.label "cashback"%>
+                <%= f.text_field "cashback", disabled: true %>
+                <%= f.label "Special Price"%>
+                <%= f.text_field "special_price", disabled: true %>
+                <%= f.label "From Period"%>
+                <%= f.text_field "from_period", class: "from_period", disabled: true %>
+                  <%= f.label "To Period"%>
+                  <%= f.text_field "to_period", class: "to_period", disabled: true %>
+                    <%= f.label "Gambar"%>
+                    <%= f.file_field "image", value: @item.image_url, disabled: true %>
+                  </div>
+                  <%= image_tag @item.image_url(:thumb).to_s %>
+                  <div style="clear: both;padding-left: 700px;">
+                    <%= link_to "Back", search_price_list_regionals_path(branch_price_list: params[:branch_price_list],
+                      brand_price_list: params[:brand_price_list], kategori_price_list: params[:kategori_price_list],
+                      tipe_price_list: params[:tipe_price_list], kain_price_list: params[:kain_price_list]),class: "btn btn-info" %>
+                    <% end %>
+                  </div>
+                </div>
+
+              <% end %>
+
+              <div class="row-fluid" style="float: left;">
+                <div class="block-content collapse in">
+                  <table id="list_produk" class="display table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                      <tr>
+                        <th>Kode Barang</th>
+                        <th>Kode Produk</th>
+                        <th>Produk</th>
+                        <th>Kain</th>
+                        <th>Panjang</th>
+                        <th>Lebar</th>
+                        <th>Harga</th>
+                        <th>From Period</th>
+                        <th>To Period</th>
+                        <th>Tanggal</th>
+                        <th>Keterangan</th>
+                        <th>Image</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                    </tfoot>
+                    <tbody>
+                      <% @item_version.reverse.map do |iv| %>
+                        <tr>
+                          <td><%= iv.reify.kode_barang %></td>
+                          <td><%= iv.reify.jenis %></td>
+                          <% artikel = Artikel.where("KodeCollection like ?", iv.reify.produk).first  %>
+                          <% kain = Kain.where("KodeKain like ?", iv.reify.kain).first  %>
+                          <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+                          <td><%= kain.nil? ? "" : kain.NamaKain %></td>
+                          <td><%= iv.reify.panjang %></td>
+                          <td><%= iv.reify.lebar %></td>
+                          <td><%= currency(iv.reify.harga) %></td>
+                          <td><%= iv.reify.from_period %></td>
+                          <td><%= iv.reify.to_period %></td>
+                          <td><%= iv.created_at.to_date %></td>
+                          <td></td>
+                          <td><%= image_tag iv.reify.image_url(:pp).to_s %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>

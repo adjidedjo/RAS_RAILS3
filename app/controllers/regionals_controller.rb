@@ -1,4 +1,30 @@
 class RegionalsController < ApplicationController
+
+  def search_price_list
+    @kategori = Product.all.map {|a| [a.Namaroduk, a.KodeProduk]}
+    @artikel = Artikel.all.map {|a| [a.Produk, a.KodeCollection ]}
+    @kain = Kain.all.map {|a| [a.NamaKain, a.KodeKain ]}
+    if params[:branch_price_list].present? && params[:brand_price_list].present?
+      merk_id = Merk.where(Merk: params[:brand_price_list]).first.id
+      get_reg_id = RegionalBranch.find_by_cabang_id_and_brand_id(params[:branch_price_list], merk_id).regional.id
+      @items = PriceList.find_kategori(params[:kategori_price_list]).find_tipe(params[:tipe_price_list]).find_kain(params[:kain_price_list]).where(regional_id: get_reg_id)
+    end
+  end
+
+  def update_kode_barang
+    item = PriceList.find_by_kode_barang_and_regional_id(params[:price_list]["kode_barang"], params[:price_list]["regional_id"])
+    item.update_attributes!(params[:price_list].reject { |k,v| v.blank? })
+
+    respond_to do |format|
+      format.html { redirect_to show_price_list_regionals_path(kode_barang: params[:price_list]["kode_barang"]), notice: "Berhasil di Update" }
+
+    end
+  end
+
+  def show_price_list
+    @item = PriceList.find_by_kode_barang(params[:kode_barang])
+    @item_version = @item.versions.order("created_at DESC")
+  end
   # GET /regionals
   # GET /regionals.json
   def index

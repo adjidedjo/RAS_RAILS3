@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="span3">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="block-content">
+          <%= form_tag search_price_list_regionals_path, :method => 'get', :class => "form-accounting-price-list" do %>
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Search Price List</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
+
+                </div>
+              </div>
+              <div class="block-content">
+                <div class="control-group">
+                  <%= label_tag 'cabang' %>
+                  <%= select_tag 'branch_price_list', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch_price_list]), {:class=>"select", :prompt => 'Pilih Cabang'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <%= label_tag 'brand' %>
+                  <%= select_tag 'brand_price_list', options_for_select(options_for_tipe_price, params[:brand_price_list]), {:class=>"select", :prompt => 'Pilih Brand'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <%= label_tag 'kategori' %>
+                  <%= select_tag 'kategori_price_list', options_for_select(@kategori, params[:kategori_price_list]), {:class=>"select", :prompt => 'Pilih Kategori'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <%= label_tag 'tipe' %>
+                  <%= select_tag 'tipe_price_list', options_for_select(@artikel, params[:tipe_price_list]), {:class=>"select", :prompt => 'Pilih Tipe'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <%= label_tag 'kain' %>
+                  <%= select_tag 'kain_price_list', options_for_select(@kain, params[:kain_price_list]), {:class=>"select", :prompt => 'Pilih Kain'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <button type="submit" class="btn btn-primary">
+                    <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% if params[:branch_price_list].present? && params[:brand_price_list].present? %>
+      <div class="row-fluid">
+        <div class="block-content collapse in">
+          <table id="list_produk" border="1" cellspacing="0" cellpadding="3">
+            <thead>
+              <tr>
+                <th>Kode Produk</th>
+                <th>Produk</th>
+                <th>Kain</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
+                <th>Kode Barang</th>
+                <th>Harga</th>
+              </tr>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody>
+              <% @items.each do |produk| %>
+                <tr>
+                  <%= hidden_field_tag 'regional_id', params[:regional_id] %>
+                  <%= hidden_field_tag 'brand_id', params[:brand_id] %>
+                  <td><%= produk.jenis %></td>
+                  <% artikel = Artikel.where("KodeCollection like ?", produk.produk).first  %>
+                  <% kain = Kain.where("KodeKain like ?", produk.kain).first  %>
+                  <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+                  <td><%= kain.nil? ? "" : kain.NamaKain %></td>
+                  <td><%= produk.panjang %></td>
+                  <td><%= produk.lebar %></td>
+                  <td><%= link_to produk.kode_barang, show_price_list_regionals_path(kode_barang: produk.kode_barang, status: "r") %></td>
+                  <td><%= currency(produk.harga) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+<div class="row-fluid">
+  <div class="offset5">
+    <div class="block-content collapse in">
+      <h2 style="font-size: 17px;"><i>Quick View Sales Report</i></h2>
+    </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="offset0">
+    <div class="span5">
+      <!-- block -->
+      <div class="block">
+        <div class="navbar navbar-inner block-header">
+          <div class="muted pull-left">Search Parameters</div>
+          <div class="pull-right"><span class="badge badge-info"></span>
+
+          </div>
+        </div>
+        <div class="block-content collapse in">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Brand</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= params[:brand].nil? ? "" : params[:brand].join(',') %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- /block -->
+    </div>
+  </div>
+</div>
+<br />
+<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan SJY, SJP, SJV dan SJB</p></h5>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <label>
+    </label>
+  </div>
+</div>
+<br />
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="quick_report" border="1" class="display" cellspacing="0" cellpadding="3" width="100%">
+      <thead>
+        <tr>
+          <th rowspan="2">Branch</th>
+          <th colspan="2"><%= 3.month.ago.strftime("%B") + " " + 3.month.ago.strftime("%Y") %></th>
+          <th colspan="2"><%= 2.month.ago.strftime("%B") + " " + 2.month.ago.strftime("%Y") %></th>
+          <th colspan="2"><%= 1.month.ago.strftime("%B") + " " + 1.month.ago.strftime("%Y") %></th>
+          <th colspan="2"><%= Date.today.strftime("%B") + " " + Date.today.strftime("%Y") %></th>
+        </tr>
+        <tr>
+          <% (1..4).each do %>
+            <th>Qty</th>
+            <th>Val</th>
+          <% end %>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <% (1..8).each do  %>
+            <td></td>
+          <% end %>
+        </tr>
+      </tfoot>
+      <tbody>
+        <% Cabang.get_id.each do |laporan| %>
+          <tr>
+            <td scope="row"><%= laporan.Cabang.gsub(/Cabang/,'') %></td>
+
+
+            <% if SalesBrand.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).empty? %>
+              <td>0</td>
+              <td>0</td>
+            <% else %>
+              <% SalesBrand.customer_quick_monthly(3.month.ago.month, 3.month.ago.year, laporan.id, params[:brand]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+              <% end %>
+            <% end %>
+
+
+            <% if SalesBrand.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
+                params[:brand]).empty? %>
+              <td>0</td>
+              <td>0</td>
+            <% else %>
+              <% SalesBrand.customer_quick_monthly(2.month.ago.month, 2.month.ago.year, laporan.id,
+                params[:brand]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+              <% end %>
+            <% end %>
+
+            <% if Date.today.strftime('%d') <= '15' %>
+              <% if TmpBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+                  params[:brand]).empty? %>
+                <td>0</td>
+                <td>0</td>
+              <% else %>
+                <% TmpBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+                  params[:brand]).each do |a| %>
+                  <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                  <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+              <% end %>
+            <% else %>
+              <% if SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+                  params[:brand]).empty? %>
+                <td>0</td>
+                <td>0</td>
+              <% else %>
+                <% SalesBrand.customer_quick_monthly(1.month.ago.month, 1.month.ago.year, laporan.id,
+                  params[:brand]).each do |a| %>
+                  <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                  <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+              <% end %>
+            <% end %>
+
+            <% if TmpBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
+                params[:brand]).empty? %>
+              <td>0</td>
+              <td>0</td>
+            <% else %>
+              <% TmpBrand.customer_quick_monthly(Date.today.month, Date.today.year, laporan.id,
+                params[:brand]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : a.qty.to_i %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

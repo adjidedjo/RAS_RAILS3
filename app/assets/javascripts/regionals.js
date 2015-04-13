@@ -1,4 +1,11 @@
 $(document).ready(function() {
+  $('.from_period').datepicker({
+    dateFormat: 'yy-mm-dd'
+  }).attr('readonly','readonly');
+  $('.to_period').datepicker({
+    dateFormat: 'yy-mm-dd'
+  }).attr('readonly','readonly');
+
   $('#check_all').click(function(){
     if(this.checked) {
       // Iterate each checkbox
@@ -14,10 +21,10 @@ $(document).ready(function() {
   });
 
   $('#list_cabang').dataTable({
-    "bPaginate": false,
-    "bAutoWidth": false,
-    "bInfo": false,
-    "bFilter": false
+    bPaginate: false,
+    bAutoWidth: false,
+    bInfo: false,
+    bFilter: false
   });
 
   $('#list_selected_goods').dataTable({
