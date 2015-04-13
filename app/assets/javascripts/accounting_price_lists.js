@@ -3,7 +3,7 @@ $(document).ready(function(){
     bAutoWidth: true,
     bProcessing: false,
     bFilter: false,
-    sScrollX: "300px",
+    sScrollX: "110%",
     bScrollCollapse: true,
     bPaginate: false,
     bInfo: false,

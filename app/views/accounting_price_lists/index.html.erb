@@ -52,25 +52,22 @@
               <span>No SO: </span><span><%= @test.no_so %></span><br />
               <span>No PO: </span><span><%= @test.no_po %></span><br />
               <span>Nama Customer: </span><span><%= @test.customer %></span><br />
-              <table id="check_price_list" class="display row-border" cellspacing="0" width="100%">
+              <table id="check_price_list" class="display table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                   <tr>
-                    <th style="background-color: #E2E4FF">Nama Barang</th>
-                    <th>Kode Barang</th>
-                    <th>Panjang</th>
-                    <th>Lebar</th>
+                    <th>Nama Barang</th>
                     <th>Qty</th>
                     <th>Bonus</th>
-                    <th>Harga Laporan</th>
                     <th>Harga Master</th>
-                    <th>Diskon 1 Laporan</th>
+                    <th>Harga Laporan</th>
                     <th>Diskon 1 Master</th>
-                    <th>Diskon 2 Laporan</th>
+                    <th>Diskon 1 Laporan</th>
                     <th>Diskon 2 Master</th>
-                    <th>Diskon 3 Laporan</th>
+                    <th>Diskon 2 Laporan</th>
                     <th>Diskon 3 Master</th>
-                    <th>Diskon 4 Laporan</th>
+                    <th>Diskon 3 Laporan</th>
                     <th>Diskon 4 Master</th>
+                    <th>Diskon 4 Laporan</th>
                     <th>Netto2</th>
                     <th>Upgrade Laporan</th>
                     <th>Upgrade Master</th>
@@ -83,9 +80,6 @@
                   <% AccountingPriceList.where(nofaktur: @test.nofaktur).each do |test| %>
                     <tr>
                       <td style="min-width: 350px"><%= test.namabarang %></td>
-                      <td style="min-width: 100px"><%= test.kodebarang %></td>
-                      <td style="min-width: 50px"><%= test.panjang %></td>
-                      <td style="min-width: 50px"><%= test.lebar %></td>
                       <td style="min-width: 20px"><%= test.quantity %></td>
                       <td style="min-width: 50px"><%= test.bonus %></td>
                       <td style="min-width: 100px"><%= currency(test.harga_master) %></td>
