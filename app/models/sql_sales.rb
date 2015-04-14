@@ -1,7 +1,7 @@
 class SqlSales < ActiveRecord::Base
   self.abstract_class = true
   establish_connection "sqlserver"
-#  set_table_name "VLaporanCabang"
+  set_table_name "VLaporanCabang"
 #  set_table_name "tbLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
