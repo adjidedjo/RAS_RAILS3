@@ -1,14 +1,16 @@
 $(document).ready(function(){
-  $('#check_price_list').dataTable({
+  var table = $('#check_price_list').dataTable({
     bAutoWidth: true,
     bProcessing: false,
     bFilter: false,
-    sScrollX: "110%",
+    sScrollX: "100%",
     bScrollCollapse: true,
     bPaginate: false,
     bInfo: false,
-    bSort: false
+    bSort: false,
+    paging: false
   });
+  new $.fn.dataTable.FixedColumns( table );
 
   $('#check_all').click(function(){
     if(this.checked) {

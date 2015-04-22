@@ -16,7 +16,7 @@ class RegionalsController < ApplicationController
     item.update_attributes!(params[:price_list].reject { |k,v| v.blank? })
 
     respond_to do |format|
-      format.html { redirect_to show_price_list_regionals_path(kode_barang: params[:price_list]["kode_barang"]), notice: "Berhasil di Update" }
+      format.html { redirect_to show_price_list_regionals_path(kode_barang: params[:price_list]["kode_barang"], status: "e"), notice: "Berhasil di Update" }
 
     end
   end

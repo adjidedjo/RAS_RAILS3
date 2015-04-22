@@ -55,7 +55,7 @@
               <table id="check_price_list" class="display table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                   <tr>
-                    <th>Nama Barang</th>
+                    <th style="background-color: buttonhighlight">Nama Barang</th>
                     <th>Qty</th>
                     <th>Bonus</th>
                     <th>Harga Master</th>
@@ -79,24 +79,24 @@
                 <tbody>
                   <% AccountingPriceList.where(nofaktur: @test.nofaktur).each do |test| %>
                     <tr>
-                      <td style="min-width: 350px"><%= test.namabarang %></td>
-                      <td style="min-width: 20px"><%= test.quantity %></td>
-                      <td style="min-width: 50px"><%= test.bonus %></td>
-                      <td style="min-width: 100px"><%= currency(test.harga_master) %></td>
-                      <td style="min-width: 100px"><%= currency(test.harga_laporan) %></td>
-                      <td style="min-width: 100px"><%= test.discount_1_master %></td>
-                      <td style="min-width: 100px"><%= test.discount_1_laporan %></td>
-                      <td style="min-width: 100px"><%= test.discount_2_master %></td>
-                      <td style="min-width: 100px"><%= test.discount_2_laporan %></td>
-                      <td style="min-width: 100px"><%= test.discount_3_master %></td>
-                      <td style="min-width: 100px"><%= test.discount_3_laporan %></td>
-                      <td style="min-width: 100px"><%= test.discount_4_master %></td>
-                      <td style="min-width: 100px"><%= test.discount_4_master %></td>
-                      <td style="min-width: 100px"><%= currency(test.netto2) %></td>
-                      <td style="min-width: 100px"><%= currency(test.upgrade_master) %></td>
-                      <td style="min-width: 100px"><%= currency(test.upgrade_laporan) %></td>
-                      <td style="min-width: 100px"><%= currency(test.cashback_master) %></td>
-                      <td style="min-width: 100px"><%= currency(test.cashback_master) %></td>
+                      <td><%= test.namabarang %></td>
+                      <td><%= test.quantity %></td>
+                      <td><%= test.bonus %></td>
+                      <td><%= currency(test.harga_master) %></td>
+                      <td><%= currency(test.harga_laporan) %></td>
+                      <td><%= test.discount_1_master %></td>
+                      <td><%= test.discount_1_laporan %></td>
+                      <td><%= test.discount_2_master %></td>
+                      <td><%= test.discount_2_laporan %></td>
+                      <td><%= test.discount_3_master %></td>
+                      <td><%= test.discount_3_laporan %></td>
+                      <td><%= test.discount_4_master %></td>
+                      <td><%= test.discount_4_master %></td>
+                      <td><%= currency(test.netto2) %></td>
+                      <td><%= currency(test.upgrade_master) %></td>
+                      <td><%= currency(test.upgrade_laporan) %></td>
+                      <td><%= currency(test.cashback_master) %></td>
+                      <td><%= currency(test.cashback_master) %></td>
                     </tr>
                   <% end %>
                 </tbody>

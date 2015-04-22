@@ -1,13 +1,8 @@
-div.dataTables_wrapper {
-  width: 800px;
-  margin: 0 auto;
-}
+table#check_price_list tbody td {min-width: 300px; text-align: center;}
+table#check_price_list th, td {white-space: nowrap;}
 
 #myModal{
   overflow:hidden;
-}
-body {
-  overflow-y: scroll !important;
 }
 
 .form-accounting-price-list
@@ -22,44 +17,6 @@ only screen and (max-width: 1024px),
 (min-device-width: 768px) and (max-device-width: 1024px){
 
   /* Force table to not be like tables anymore */
-  table#check_price_list th, td {
-    overflow: hidden;
-    width: 45%;
-    white-space: pre-wrap;
-  }
-
-  table#price_list {
-    table-layout: fixed;
-  }
-
-  .th-ops{
-    width: 7%;
-  }
-
-  .th-nofak{
-    width: 11%;
-  }
-
-  .th-cust{
-    width: 10%;
-  }
-
-  .th-item{
-    width: 11%;
-  }
-
-  .th-pjg{
-    width: 2%;
-  }
-
-  .th-lbr{
-    width: 2%;
-  }
-
-  .th-qty{
-    width: 1%;
-  }
-}
 
 .form-accounting
 {
