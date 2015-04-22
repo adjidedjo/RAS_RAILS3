@@ -19,7 +19,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
 	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
-	scope :no_pengajuan, where("ketppb not like ? and ketppb not like ? ", %(%#{'pengajuan'}%),%(%#{'bonus'}%))
+	scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))
 	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
 	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
 	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }

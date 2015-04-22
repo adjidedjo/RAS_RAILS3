@@ -132,24 +132,26 @@
                     </tfoot>
                     <tbody>
                       <% @item_version.reverse.map do |iv| %>
-                        <tr>
-                          <td><%= iv.reify.kode_barang %></td>
-                          <td><%= iv.reify.jenis %></td>
-                          <% artikel = Artikel.where("KodeCollection like ?", iv.reify.produk).first  %>
-                          <% kain = Kain.where("KodeKain like ?", iv.reify.kain).first  %>
-                          <td><%= artikel.nil? ? "" : artikel.Produk %></td>
-                          <td><%= kain.nil? ? "" : kain.NamaKain %></td>
-                          <td><%= iv.reify.panjang %></td>
-                          <td><%= iv.reify.lebar %></td>
-                          <td><%= currency(iv.reify.harga) %></td>
-                          <td><%= iv.reify.from_period %></td>
-                          <td><%= iv.reify.to_period %></td>
-                          <td><%= iv.created_at.to_date %></td>
-                          <td></td>
-                          <td><%= image_tag iv.reify.image_url(:pp).to_s %></td>
-                        </tr>
+                         <% unless iv.reify.nil? %>
+                            <tr>
+                              <td><%= iv.reify.kode_barang %></td>
+                              <td><%= iv.reify.jenis %></td>
+                              <% artikel = Artikel.where("KodeCollection like ?", iv.reify.produk).first  %>
+                              <% kain = Kain.where("KodeKain like ?", iv.reify.kain).first  %>
+                              <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+                              <td><%= kain.nil? ? "" : kain.NamaKain %></td>
+                            <td><%= iv.reify.panjang %></td>
+                            <td><%= iv.reify.lebar %></td>
+                              <td><%= currency(iv.reify.harga) %></td>
+                              <td><%= iv.reify.from_period %></td>
+                              <td><%= iv.reify.to_period %></td>
+                              <td><%= iv.created_at.to_date %></td>
+                              <td></td>
+                             <td><%= image_tag iv.reify.image_url(:pp).to_s %></td>
+                           </tr>
+                        <% end %>
                       <% end %>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                  </tbody>
+                </table>
+           </div>
+         </div>

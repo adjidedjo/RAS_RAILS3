@@ -68,9 +68,9 @@ class PriceList < ActiveRecord::Base
   end
 
 
-  def self.check_report_price_list(bulan, tahun)
+  def self.check_report_price_list(bulan, tahun, no_faktur)
     #    CheckedItemMaster.destroy_all(customer_services: false)
-    LaporanCabang.compare_price_list(bulan, tahun).each do |lap|
+    LaporanCabang.compare_price_list(bulan, tahun).where(nofaktur: no_faktur).each do |lap|
       unless lap.kodebrg[2].nil?
         merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
         unless merk.empty?
@@ -158,21 +158,14 @@ class PriceList < ActiveRecord::Base
           :kain => fpl.kain,
           :panjang => fpl.panjang,
           :lebar => fpl.lebar,
-          :prev_harga => fpl.harga,
           :harga => fpl.harga,
-          :prev_discount_1 => fpl.discount_1,
           :discount_1 => fpl.discount_1,
-          :prev_discount_2 => fpl.discount_2,
           :discount_2 => fpl.discount_2,
-          :prev_discount_3 => fpl.discount_3,
           :discount_3 => fpl.discount_3,
-          :prev_discount_4 => fpl.discount_4,
           :discount_4 => fpl.discount_4,
-          :prev_upgrade => fpl.upgrade,
           :upgrade => fpl.upgrade,
           :prev_cashback => fpl.cashback,
           :cashback => fpl.cashback,
-          :prev_special_price => fpl.special_price,
           :special_price => fpl.special_price,
           :regional_id => fpl.regional_id,
           :additional_program => 0,
