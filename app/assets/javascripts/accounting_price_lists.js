@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var table = $('#check_price_list').dataTable({
+  var check = $('#check_price_list').dataTable({
     bAutoWidth: true,
     bProcessing: false,
     bFilter: false,
@@ -10,7 +10,6 @@ $(document).ready(function(){
     bSort: false,
     paging: false
   });
-  new $.fn.dataTable.FixedColumns( table );
 
   $('#check_all').click(function(){
     if(this.checked) {
