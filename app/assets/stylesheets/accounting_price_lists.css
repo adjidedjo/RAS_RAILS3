@@ -1,4 +1,4 @@
-table#check_price_list tbody td {min-width: 300px; text-align: center;}
+table#check_price_list tbody td {min-width: 200px; text-align: center;}
 table#check_price_list th, td {white-space: nowrap;}
 
 #myModal{
