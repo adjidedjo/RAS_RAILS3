@@ -68,9 +68,9 @@ class PriceList < ActiveRecord::Base
   end
 
 
-  def self.check_report_price_list(bulan, tahun, no_faktur)
+  def self.check_report_price_list(bulan, tahun)
     #    CheckedItemMaster.destroy_all(customer_services: false)
-    LaporanCabang.compare_price_list(bulan, tahun).where(nofaktur: no_faktur).each do |lap|
+    LaporanCabang.compare_price_list(bulan, tahun).each do |lap|
       unless lap.kodebrg[2].nil?
         merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
         unless merk.empty?
