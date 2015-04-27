@@ -53,7 +53,7 @@ class ControlUpload
     SqlSales.migration_sales_report(Date.today.month, Date.today.year)
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_availability_master(Date.today.month, Date.today.year)
-    PriceList.future_to_price_list
+    PriceList.future_to_price
     PriceList.check_report_price_list(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
