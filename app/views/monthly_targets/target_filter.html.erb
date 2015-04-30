@@ -67,7 +67,7 @@
                   <% @targets.each do |target| %>
                     <tr>
                       <td scope="row"><%= Cabang.find_by_id(target[0]).Cabang.gsub(/Cabang/,'') %></td>
-                      <td><%= @var_target = target[1].nil? ? 0 : target[1] %></td>
+                      <td><%= @var_target = target[1].nil? ? 0 : currency(target[1]) %></td>
                       <% SalesSalesman.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
                         <td><%= @var_sales = reached_sales.sum_val.nil? ? 0 : currency(reached_sales.sum_val) %></td>
                       <% end %>
