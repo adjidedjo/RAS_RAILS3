@@ -38,6 +38,8 @@
         <%= f.text_field "cashback" %>
         <%= f.label "Special Price"%>
         <%= f.text_field "special_price" %>
+        <%= f.label "Status Aktif"%>
+        <%= f.select :active, [['Aktif', true], ['Tidak Aktif', false]] %>
         <%= f.label "From Period"%>
         <%= f.text_field "from_period", class: "from_period" %>
           <%= f.label "To Period"%>

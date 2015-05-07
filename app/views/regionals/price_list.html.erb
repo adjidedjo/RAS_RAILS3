@@ -11,6 +11,7 @@
           <th>Lebar</th>
           <th>Kode Barang</th>
           <th>Harga</th>
+          <th>Status Aktif</th>
         </tr>
       </thead>
       <tfoot>
@@ -29,6 +30,7 @@
             <td><%= produk.lebar %></td>
             <td><%= link_to produk.kode_barang, show_price_list_regionals_path(kode_barang: produk.kode_barang, status: "e") %></td>
             <td><%= currency(produk.harga) %></td>
+            <td><%= produk.active? ? 'Aktif' : 'Tidak Aktif' %></td>
           </tr>
         <% end %>
       </tbody>
