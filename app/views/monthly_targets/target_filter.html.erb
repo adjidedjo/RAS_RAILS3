@@ -67,9 +67,11 @@
                   <% @targets.each do |target| %>
                     <tr>
                       <td scope="row"><%= Cabang.find_by_id(target[0]).Cabang.gsub(/Cabang/,'') %></td>
-                      <td><%= @var_target = target[1].nil? ? 0 : currency(target[1]) %></td>
+                      <% @var_target = target[1].nil? ? 0 : target[1] %>
+                      <td><%= currency(@var_target) %></td>
                       <% SalesSalesman.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
-                        <td><%= @var_sales = reached_sales.sum_val.nil? ? 0 : currency(reached_sales.sum_val) %></td>
+                        <% @var_sales = reached_sales.sum_val.nil? ? 0 : reached_sales.sum_val %>
+                        <td><%= currency(@var_sales) %></td>
                       <% end %>
                       <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@var_target, @var_sales), :precision => 2)  %></td>
                     </tr>
@@ -110,9 +112,11 @@
                       <% search_target = params[:month_year].to_date.strftime("%B").downcase %>
                       <td scope="row"><%= target.sales %></td>
                       <td><%= Cabang.find_by_id(target.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
-                      <td><%= @target = target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %></td>
+                      <% @target = target.send("#{search_target.to_sym}").nil? ? 0 : target.send("#{search_target.to_sym}") %>
+                      <td><%=  currency(@target) %></td>
                       <% SalesSalesman.get_target_by_salesman(target.cabang_id, params[:month_year], target.merk_id, target.sales).each do |reached_sales|  %>
-                        <td><%= @sales = reached_sales.sum_val.nil? ? 0 : currency(reached_sales.sum_val) %></td>
+                        <% @sales = reached_sales.sum_val.nil? ? 0 : reached_sales.sum_val %>
+                        <td><%= currency(@sales) %></td>
                       <% end %>
                       <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@target, @sales), :precision => 2) %></td>
                     </tr>

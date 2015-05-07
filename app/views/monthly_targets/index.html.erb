@@ -22,7 +22,9 @@
         <% @monthly_targets.each do |monthly_target| %>
           <tr>
             <td>
-              <%= link_to Cabang.find_by_id(monthly_target.cabang_id).Cabang.gsub(/Cabang/,''), monthly_target_path(monthly_target) %>
+              <% if Cabang.find_by_id(monthly_target.cabang_id).present? %>
+                <%= link_to Cabang.find_by_id(monthly_target.cabang_id).Cabang.gsub(/Cabang/,''), monthly_target_path(monthly_target) %>
+              <% end %>
             </td>
             <td><%= monthly_target.merk_id %></td>
             <td><%= monthly_target.sales %></td>
