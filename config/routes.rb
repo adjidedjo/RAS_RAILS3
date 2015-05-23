@@ -2,6 +2,10 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  get "forecasts/index"
+
+  resources :forecasts
+
   resources :cost_of_goods
 
   get "insentif_kontrak/main"

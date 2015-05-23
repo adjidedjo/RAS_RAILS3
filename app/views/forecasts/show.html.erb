@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Cabang:</b>
+  <%= @forecast.cabang_id %>
+</p>
+
+<p>
+  <b>Bulan:</b>
+  <%= @forecast.bulan %>
+</p>
+
+<p>
+  <b>Tahun:</b>
+  <%= @forecast.tahun %>
+</p>
+
+<p>
+  <b>Kode forecast:</b>
+  <%= @forecast.kode_forecast %>
+</p>
+
+<p>
+  <b>Artikel:</b>
+  <%= @forecast.artikel %>
+</p>
+
+<p>
+  <b>Kain:</b>
+  <%= @forecast.kain %>
+</p>
+
+<p>
+  <b>Jumlah:</b>
+  <%= @forecast.jumlah %>
+</p>
+
+
+<%= link_to 'Edit', edit_forecast_path(@forecast) %> |
+<%= link_to 'Back', forecasts_path %>

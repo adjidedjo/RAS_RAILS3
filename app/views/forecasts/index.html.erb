@@ -1,0 +1,40 @@
+<h3>Cari Forecast</h3>
+<%= render 'search' %>
+
+<% if @forecasts.present? %>
+
+  <h1>Listing forecasts</h1>
+
+  <table id="index_forecast" class="display table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>Cabang</th>
+        <th>Bulan</th>
+        <th>Tahun</th>
+        <th>Kode forecast</th>
+        <th>Artikel</th>
+        <th>Kain</th>
+        <th>Jumlah</th>
+        <th>Jumlah Penjualan</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @forecasts.each do |forecast| %>
+        <tr>
+          <td><%= Cabang.find(forecast.cabang_id).Cabang.gsub(/Cabang/, '') %></td>
+          <td><%= t("date.month_names")[forecast.bulan] %></td>
+          <td><%= forecast.tahun %></td>
+          <td><%= forecast.kode_forecast %></td>
+          <td><%= forecast.artikel %></td>
+          <td><%= forecast.kain %></td>
+          <td><%= forecast.jumlah %></td>
+          <td><%= Forecast.search_sales(forecast.kode_forecast, forecast.bulan, forecast.tahun, forecast.cabang_id) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% end %>
+
+<br />

@@ -1,0 +1,25 @@
+<%= form_tag forecasts_path, method: :get do |f| %>
+  <div class="block">
+    <div class="navbar navbar-inner block-header">
+    </div>
+    <div class="block-content">
+      <div class="control-group">
+        <%= label_tag 'cabang' %>
+        <%= select_tag 'branch_forecast', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.id]}, params[:branch_forecast]), {:class=>"select", :prompt => 'Select Cabang'} %>
+      </div>
+      <div class="control-group">
+        <%= label_tag 'bulan' %>
+        <%= select_tag 'month_forecast', options_for_select(options_for_bulan, params[:month_forecast]), {:class => "select", :prompt => 'Select Bulan'} %>
+      </div>
+      <div class="control-group">
+        <%= label_tag 'tahun' %>
+        <%= select_year(params[:date].nil? ? Date.today : params[:date][:year].to_i, :class => "select") %>
+      </div>
+      <div class="control-group">
+        <button type="submit" class="btn btn-primary">
+          <%= params[:branch_forecast].blank? ? 'Search' : 'Refine Search' %>
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>

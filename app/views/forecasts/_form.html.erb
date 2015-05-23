@@ -1,0 +1,45 @@
+<%= form_for(@forecast) do |f| %>
+  <% if @forecast.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@forecast.errors.count, "error") %> prohibited this forecast from being saved:</h2>
+
+      <ul>
+      <% @forecast.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :cabang_id %><br />
+    <%= f.number_field :cabang_id %>
+  </div>
+  <div class="field">
+    <%= f.label :bulan %><br />
+    <%= f.number_field :bulan %>
+  </div>
+  <div class="field">
+    <%= f.label :tahun %><br />
+    <%= f.number_field :tahun %>
+  </div>
+  <div class="field">
+    <%= f.label :kode_forecast %><br />
+    <%= f.text_field :kode_forecast %>
+  </div>
+  <div class="field">
+    <%= f.label :artikel %><br />
+    <%= f.text_field :artikel %>
+  </div>
+  <div class="field">
+    <%= f.label :kain %><br />
+    <%= f.text_field :kain %>
+  </div>
+  <div class="field">
+    <%= f.label :jumlah %><br />
+    <%= f.number_field :jumlah %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
