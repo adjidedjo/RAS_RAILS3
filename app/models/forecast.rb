@@ -11,7 +11,7 @@ class Forecast < ActiveRecord::Base
     else
       get_kode_barang.each do |item_forecast|
         return LaporanCabang.where("month(tanggalsj) = ? and year(tanggalsj) = ? and cabang_id = ? and kodebrg like ?",
-          bulan, tahun, cabang, item_forecast.kode_barang).sum(:jumlah)
+          bulan, tahun, cabang, item_forecast.kode_forecast).sum(:jumlah)
       end
     end
   end
