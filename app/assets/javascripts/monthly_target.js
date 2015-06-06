@@ -36,9 +36,6 @@ $(document).ready(function(){
       targets: {
         required: true
       },
-      cabang_id: {
-        required: true
-      },
       month_year: {
         required: true
       }
@@ -47,11 +44,8 @@ $(document).ready(function(){
       targets:{
         required: "Pilih Target "
       },
-      cabang_id:{
-        required: "Pilih Cabang"
-      },
       month_year:{
-        required: "Pilih Bulan dan Tahun"
+        required: "Pilih Bulan "
       }
     }
   });
@@ -92,17 +86,23 @@ $(document).ready(function(){
 
       var iTotalTarget = 0;
       var iTotalSales = 0;
+      var iTotalTargetTahun = 0;
+      var iTotalSalesTahun = 0;
 
       for ( var i=0 ; i<aaData.length ; i++ )
       {
         iTotalTarget += parseCurrency(aaData[i][1])*1;
         iTotalSales += parseCurrency(aaData[i][2])*1;
+        iTotalTargetTahun += parseCurrency(aaData[i][4])*1;
+        iTotalSalesTahun += parseCurrency(aaData[i][5])*1;
       }
 
       /* Modify the footer row to match what we want */
       var nCells = nRow.getElementsByTagName('td');
       nCells[0].innerHTML = addCommas(parseInt(iTotalTarget))
       nCells[1].innerHTML = addCommas(parseInt(iTotalSales))
+      nCells[3].innerHTML = addCommas(parseInt(iTotalTargetTahun))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalSalesTahun))
     }
   });
 

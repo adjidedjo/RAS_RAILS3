@@ -14,14 +14,23 @@ class MonthlyTarget < ActiveRecord::Base
   scope :sales_counter, lambda {|sales_counter| where(:sales_counter => sales_counter) if sales_counter.present?}
   scope :date, lambda {|date| where(:target_year => date.year) if date.present?}
 
+  def self.sum_of_month_year
+    
+  end
+
   def self.get_monthly_target(merk, cabang, month, year)
     find(:all, :select => "total", :conditions => ["merk_id = ? and cabang_id = ? and target_year = ?",
         merk, cabang, %(#{year +'-01-'+'01'})])
   end
 
   def self.get_target_by_branch(cabang, merk, date)
-    month_selected = date.to_date.strftime("%B").downcase
+    month_selected = date.to_date.strftime("%B").downcase if date.present?
     select("cabang_id, #{month_selected}").branch(cabang).merk(merk).date(date.to_date).group("cabang_id").sum("#{month_selected}")
+  end
+
+  def self.get_target_by_year(cabang, merk, date)
+    month_selected = date.to_date.strftime("%B").downcase if date.present?
+    self.branch(cabang).merk(merk).date(date.to_date).group(:cabang_id, :january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december)
   end
 
   def self.get_target_by_sales(cabang, merk, date)

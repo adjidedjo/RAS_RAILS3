@@ -47,34 +47,49 @@
                 <thead>
                   <tr>
                     <th rowspan="2">By</th>
-                    <th colspan="2"><%= params[:month_year].to_date.strftime("%B") + " " + params[:month_year].to_date.strftime("%Y") %></th>
+                    <th colspan="3"><%= params[:month_year].to_date.strftime("%B") + " " + params[:month_year].to_date.strftime("%Y") %></th>
+                    <th colspan="3">Akumulasi 2015</th>
                   </tr>
                   <tr>
                     <th>Target</th>
-                    <th>Sales</th>
+                    <th>ACV</th>
+                    <th>%</th>
+                    <th>Target</th>
+                    <th>ACV</th>
                     <th>%</th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
                     <th scope="row">Total</th>
-                    <% (1..3).each do  %>
+                    <% (1..6).each do  %>
                       <td></td>
                     <% end %>
                   </tr>
                 </tfoot>
                 <tbody>
-                  <% @targets.each do |target| %>
-                    <tr>
-                      <td scope="row"><%= Cabang.find_by_id(target[0]).Cabang.gsub(/Cabang/,'') %></td>
-                      <% @var_target = target[1].nil? ? 0 : target[1] %>
-                      <td><%= currency(@var_target) %></td>
-                      <% SalesSalesman.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
-                        <% @var_sales = reached_sales.sum_val.nil? ? 0 : reached_sales.sum_val %>
-                        <td><%= currency(@var_sales) %></td>
-                      <% end %>
-                      <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@var_target, @var_sales), :precision => 2)  %></td>
-                    </tr>
+                  <% Cabang.all.each do |cabang| %>
+                    <% @targets.get_target_by_branch(cabang.id, params[:merk_id], params[:month_year]).each do |target| %>
+                      <tr>
+                        <td scope="row"><%= cabang.Cabang.gsub(/Cabang/,'') %></td>
+                        <% @var_target = target[1].nil? ? 0 : target[1] %>
+                        <td><%= currency(@var_target) %></td>
+                        <% SalesSalesman.get_target(target[0], params[:month_year], params[:merk_id]).each do |reached_sales|  %>
+                          <% @var_sales = reached_sales.sum_val.nil? ? 0 : reached_sales.sum_val %>
+                          <td><%= currency(@var_sales) %></td>
+                        <% end %>
+                        <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@var_target, @var_sales), :precision => 2)  %></td>
+                        <%YearlyTarget.get_yearly_target(params[:merk_id], cabang.id, params[:month_year].to_date).each do |yt| %>
+                          <% @target_tahun = yt.total %>
+                          <td><%= currency(yt.total) %> </td>
+                        <% end %>
+                        <% SalesSalesman.target_tahunan(target[0],params[:merk_id], params[:month_year]).each do |reached_sales|  %>
+                          <% @var_sales = reached_sales.sum_val.nil? ? 0 : reached_sales.sum_val %>
+                          <td><%= currency(@var_sales) %></td>
+                        <% end %>
+                        <td><%= number_to_percentage(SalesSalesman.growth_sales_target(@target_tahun, @var_sales), :precision => 2) %></td>
+                      </tr>
+                    <% end %>
                   <% end %>
                 </tbody>
               </table>

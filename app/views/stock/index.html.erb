@@ -6,56 +6,32 @@
           <%= form_tag stock_index_path, :method => 'get', :class => "stock_index" do %>
             <div class="block">
               <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Search Different Price List</div>
+                <div class="muted pull-left">Search Stock</div>
                 <div class="pull-right"><span class="badge badge-info"></span>
 
                 </div>
-              </div>             
-              <div class="block-content">      
+              </div>
+              <div class="block-content">
                 <div class="control-group">
                   <%= label_tag 'tanggal' %>
                   <%= text_field_tag 'date', params[:date].nil? ? nil : params[:date], :placeholder => "Date", :html => {:class => "input-large"}  %>
-                </div>               
+                </div>
                 <div class="control-group">
                   <%= label_tag 'cabang' %>
-                  <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, 
+                  <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]},
                     params[:cabang_id]), :class => 'multiselect', :multiple => true %>
                 </div>
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]}, 
+                  <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]},
                     params[:merk_id]), {:class => "select",:prompt => 'Select Brand'} %>
                 </div>
                 <div class="control-group">
                   <%= label_tag 'type' %>
-                  <%= select_tag 'type_id', options_for_select(@type.collect {|a| [a.Namaroduk, a.KodeProduk]}, 
+                  <%= select_tag 'type_id', options_for_select(@type.collect {|a| [a.Namaroduk, a.KodeProduk]},
                     params[:type_id]), {:class => "select",:prompt => 'Select Type'} %>
                 </div>
-                <div class="control-group">
-                  <%= label_tag 'product' %>
-                  <%= select_tag 'article_id', options_for_select(@article.collect {|a| [a.Produk, a.KodeCollection]}, 
-                    params[:merk_id]), {:class => "select", :prompt => 'Select Article'} %>
-                </div>
-                <div class="control-group">
-                  <%= label_tag 'kain' %>
-                  <%= select_tag 'kain_id', options_for_select(@fabric.collect {|a| [a.NamaKain, a.KodeKain]}, 
-                    params[:merk_id]), {:class => "select", :prompt => 'Select Kain'} %>
-                </div>
-                <div class="control-group">
-                  <%= label_tag 'size' %>
-                  <label class="radio">
-                    <%= radio_button_tag 'size', 'all', true %> All
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'size', 'S' %> Standard <br />
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'size', 'T' %> Special
-                  </label>
-                  <label class="radio">
-                    <%= radio_button_tag 'size', 'P' %> Display
-                  </label>
-                </div>
+                <br />
                 <div class="control-group">
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
@@ -63,7 +39,7 @@
                 </div>
               </div>
             </div>
-          <% end %>        
+          <% end %>
         </div>
       </div>
     </div>
@@ -86,10 +62,6 @@
                 <th>Panjang</th>
                 <th>Lebar</th>
                 <th>Free</th>
-                <th>Buffer</th>
-                <th>Real</th>
-                <th>S</th>
-                <th>D</th>
               </tr>
             </thead>
             <tbody>
@@ -103,10 +75,6 @@
                   <td><%= stock.kodebrg.slice(12..14) %></td>
                   <td><%= stock.kodebrg.slice(15..17) %></td>
                   <td><%= stock.freestock %></td>
-                  <td><%= stock.bufferstock %></td>
-                  <td><%= stock.realstock %></td>
-                  <td><%= stock.realstockservice %></td>
-                  <td><%= stock.realstockdowngrade %></td>
                 </tr>
               <% end %>
             </tbody>

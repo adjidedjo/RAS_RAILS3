@@ -2,7 +2,8 @@ class SalesSalesman < ActiveRecord::Base
   scope :between_date_sales, lambda { |from_m, to_m, from_y, to_y| where("bulan between ? and ? and tahun between ? and ?", from_m, to_m, from_y, to_y) if from_m.present? && to_m.present? }
 	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
-	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year)}
+	scope :search_by_month_and_year, lambda { |month, year| where("bulan = ? and tahun = ?", month, year) if month.present? && year.present? }
+	scope :search_by_year, lambda { |year| where("tahun = ?", year) if year.present? }
 	scope :brand, lambda {|brand| where("merk in (?)", brand) if brand.present?}
 	scope :artikel, lambda {|artikel| where("artikel like ?", artikel) if artikel.present?}
 	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
@@ -16,6 +17,10 @@ class SalesSalesman < ActiveRecord::Base
   def self.get_target_by_salesman(branch, date, merk, salesman)
     select("sum(qty) as sum_jumlah, sum(val) as sum_val").search_by_month_and_year(date.to_date.month, date.to_date.year)
     .brand(merk).search_by_branch(branch).salesman(salesman)
+  end
+
+  def self.target_tahunan(branch, merk, date)
+    select("sum(qty) as sum_jumlah, sum(val) as sum_val").brand(merk).search_by_branch(branch).search_by_year(date.to_date.year)
   end
 
   def self.get_target(branch, date, merk)

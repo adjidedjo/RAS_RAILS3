@@ -9,7 +9,8 @@ class MonthlyTargetsController < ApplicationController
     end
     unless params[:month_year].nil?
       @targets_sales = MonthlyTarget.get_target_by_sales(params[:cabang_id], params[:merk_id], params[:month_year])
-      @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
+      #      @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
+      @targets = MonthlyTarget
     end
   end
 
@@ -21,8 +22,7 @@ class MonthlyTargetsController < ApplicationController
     @targets = MonthlyTarget.get_target_by_branch(params[:cabang_id], params[:merk_id], params[:month_year])
   end
 
-  # GET /monthly_targets
-  # GET /monthly_targets.json
+  # GET /monthly_targets GET /monthly_targets.json
   def index
     @monthly_targets = MonthlyTarget.where(target_year: Date.today.year)
 
@@ -32,8 +32,7 @@ class MonthlyTargetsController < ApplicationController
     end
   end
 
-  # GET /monthly_targets/1
-  # GET /monthly_targets/1.json
+  # GET /monthly_targets/1 GET /monthly_targets/1.json
   def show
     @monthly_target = MonthlyTarget.find(params[:id])
 
@@ -43,8 +42,7 @@ class MonthlyTargetsController < ApplicationController
     end
   end
 
-  # GET /monthly_targets/new
-  # GET /monthly_targets/new.json
+  # GET /monthly_targets/new GET /monthly_targets/new.json
   def new
     @monthly_target = MonthlyTarget.new
     @date = Date.today
@@ -63,8 +61,7 @@ class MonthlyTargetsController < ApplicationController
     @monthly_target = MonthlyTarget.find(params[:id])
   end
 
-  # POST /monthly_targets
-  # POST /monthly_targets.json
+  # POST /monthly_targets POST /monthly_targets.json
   def create
     @monthly_target = MonthlyTarget.new(params[:monthly_target])
     @monthly_target.target_year = params[:date][:target_year]
@@ -80,8 +77,7 @@ class MonthlyTargetsController < ApplicationController
     end
   end
 
-  # PUT /monthly_targets/1
-  # PUT /monthly_targets/1.json
+  # PUT /monthly_targets/1 PUT /monthly_targets/1.json
   def update
     @monthly_target = MonthlyTarget.find(params[:id])
 
@@ -96,8 +92,7 @@ class MonthlyTargetsController < ApplicationController
     end
   end
 
-  # DELETE /monthly_targets/1
-  # DELETE /monthly_targets/1.json
+  # DELETE /monthly_targets/1 DELETE /monthly_targets/1.json
   def destroy
     @monthly_target = MonthlyTarget.find(params[:id])
     @monthly_target.destroy
