@@ -1,0 +1,47 @@
+<%- model_class = Sale -%>
+<div class="page-header">
+  <h1>Penjualan <%= @channel_customer.nama.titleize  %></h1>
+</div>
+<table id="v_penjualan" class="display table table-striped table-bordered responsive nowrap mini_size" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Channel</th>
+      <th>Channel Customer</th>
+      <th>PC</th>
+      <th>No SO</th>
+      <th>Customer</th>
+      <th>Ket Pembayaran</th>
+      <th>Cara Pembayaran</th>
+      <th>Total Pembayaran</th>
+      <th>Total Keseluruhan</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sales.each do |sale| %>
+      <tr>
+        <td><%= sale.channel_customer.channel.channel %></td>
+        <td><%= sale.channel_customer.nama.upcase %></td>
+        <td><%= sale.sales_promotion.nama.upcase %></td>
+        <td><%= link_to sale.no_so.upcase, pos_channel_customers_show_path(id: sale.id) %></td>
+        <td><%= sale.pos_ultimate_customer.nama.capitalize %></td>
+        <td><%= sale.cara_bayar == 'um' ? 'Uang Muka' : 'Lunas' %></td>
+        <td><%= sale.tipe_pembayaran %></td>
+        <% total = (sale.pembayaran+sale.payment_with_debit_card.jumlah+sale.payment_with_credit_cards.sum(:jumlah)+sale.jumlah_transfer) %>
+        <td class="money"><%= currency(total) %></td>
+        <td class="money"><%= currency(sale.netto) %></td>
+        <td>
+          <%#= link_to "Print (PDF)", sale_path(sale, :format => 'pdf'), :class => 'btn btn-default btn-xs' %>
+  <%#= link_to t('.destroy', :default => t("helpers.links.destroy")),
+  sale_path(sale),
+  :method => :delete,
+  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+  :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
+<%#= link_to "Export to Excel", accounting_stocks_view_penjualan_path(cc_id: params[:cc_id], format: "xls"), :class => "btn btn-info" %>

@@ -1,0 +1,31 @@
+<h2>List Channel Customer </h2>
+<hr>
+
+<table id="channel_customer" class="display table table-striped table-bordered responsive nowrap" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="all">Nama Channel Customer</th>
+      <th class="all">Alamat</th>
+      <th class="all">Dari Tanggal</th>
+      <th class="all">Sampai Tanggal</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%  @channel_customer.each do |cc|  %>
+      <tr>
+        <td><%= cc.nama.upcase %></td>
+        <td><%= cc.alamat %></td>
+        <td><%= cc.dari_tanggal.nil? ? '-' : cc.dari_tanggal.strftime("%d %B %Y") %></td>
+        <td><%= cc.sampai_tanggal.nil? ? '-' : cc.sampai_tanggal.strftime("%d %B %Y") %></td>
+        <td><%= link_to "Penjualan", pos_channel_customers_view_penjualan_path(cc_id: cc.id) %></td>
+        <td><%= link_to "Mutasi Stock", '#' %></td>
+        <td><%= link_to "Selisih Intransit vs Penerimaan", '#' %></td>
+        <td><%= link_to "Selisih Stock vs Retur", '#' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

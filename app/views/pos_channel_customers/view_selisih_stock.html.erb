@@ -1,0 +1,31 @@
+<h1>Laporan Selisih Stock vs Return Display</h1>
+
+<table id="sales_rekap_stock" class="display table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>No SJ</th>
+      <th>Kode Barang</th>
+      <th>Nama Barang</th>
+      <th>Stock</th>
+      <th>Retur</th>
+      <th>Selisih</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @retur.each do |ins| %>
+      <tr>
+        <td><%= ins.no_sj %></td>
+        <td><%= ins.kode_barang %></td>
+        <td><%= ExhibitionStockItem.find_by_kode_barang(ins.kode_barang).nama %></td>
+        <% stock = ExhibitionStockItem.where(kode_barang: ins.kode_barang, no_sj: ins.no_sj, checked_in: true).sum(:jumlah)  %>
+        <td><%= stock %></td>
+        <% retur = ExhibitionStockItem.where(kode_barang: ins.kode_barang, no_sj: ins.no_sj, checked_in: true, checked_out: true).sum(:jumlah)  %>
+        <td><%= retur %></td>
+        <td><%= stock - retur %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
+<%= link_to "Export to Excel", accounting_stocks_view_selisih_stock_path(cc_id: params[:cc_id], format: "xls"), :class => "btn btn-info" %>

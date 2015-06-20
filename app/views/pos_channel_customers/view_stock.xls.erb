@@ -1,0 +1,64 @@
+<h1>Laporan Mutasi Stok</h1>
+
+<table id="sales_rekap_stock" class="display table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Kode Barang</th>
+      <th>Nama Barang</th>
+      <th>Tanggal</th>
+      <th>Penerimaan</th>
+      <th>Pengeluaran</th>
+      <th>Saldo</th>
+      <th>Keterangan</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @report_stock_in.each do |rs| %>
+      <tr>
+        <td><%= rs.kode_barang %></td>
+        <td><%= rs.nama %></td>
+        <td><%= rs.tanggal   %></td>
+        <td><%= rs.qty_in %></td>
+        <td>0</td>
+        <td>-</td>
+        <td>Stok Awal</td>
+      </tr>
+    <% end %>
+    <% @report_stock_out.each do |rs| %>
+      <tr>
+        <td><%= rs.kode_barang %></td>
+        <td><%= rs.nama %></td>
+        <td><%= rs.tanggal   %></td>
+        <td>0</td>
+        <td><%= rs.qty_out %></td>
+        <td>-</td>
+        <td><%= rs.keterangan == 'B' ? 'Retur Display' : 'Penjualan' %></td>
+      </tr>
+    <% end %>
+    <% @report_stock_return.each do |rs| %>
+      <tr>
+        <td><%= rs.kode_barang %></td>
+        <td><%= rs.nama %></td>
+        <td><%= rs.tanggal   %></td>
+        <td>0</td>
+        <td><%= rs.qty_out %></td>
+        <% a = StoreSalesAndStockHistory.where(no_sj: rs.no_sj, kode_barang: rs.kode_barang, keterangan: "R", channel_customer_id: params[:cc_id]).sum(:qty_in) - StoreSalesAndStockHistory.where(no_sj: rs.no_sj, kode_barang: rs.kode_barang, keterangan: "S", channel_customer_id: params[:cc_id]).sum(:qty_out) %>
+        <td>-</td>
+        <td><%= rs.keterangan == 'B' ? 'Retur Display' : 'Penjualan' %></td>
+      </tr>
+    <% end %>
+    <% @report_stock_in.each do |rs| %>
+      <tr>
+        <td><%= rs.kode_barang %></td>
+        <td><%= rs.nama %></td>
+        <td><%= rs.tanggal   %></td>
+        <td>-</td>
+        <td>-</td>
+        <% a = StoreSalesAndStockHistory.where(no_sj: rs.no_sj, kode_barang: rs.kode_barang, keterangan: "R", channel_customer_id: params[:cc_id]).sum(:qty_in) - StoreSalesAndStockHistory.where(no_sj: rs.no_sj, kode_barang: rs.kode_barang, keterangan: ["S","B"], channel_customer_id: params[:cc_id]).sum(:qty_out) %>
+        <td><%= a %></td>
+        <td>Saldo Akhir</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

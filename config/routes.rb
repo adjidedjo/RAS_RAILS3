@@ -2,6 +2,13 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  get "pos_channel_customers/index"
+  get 'pos_channel_customers/view_stock'
+  get 'pos_channel_customers/view_selisih_intransit'
+  get 'pos_channel_customers/view_selisih_stock'
+  get 'pos_channel_customers/view_penjualan'
+  get 'pos_channel_customers/show'
+
   get "forecasts/index"
 
   resources :forecasts
@@ -125,6 +132,7 @@ Rain::Application.routes.draw do
 
   get "pages/home"
   get "monthly_targets/target_filter"
+  get "monthly_targets/pivot_table_ex"
   get "monthly_targets/view_target"
   get "monthly_targets/view_target_sales"
 
