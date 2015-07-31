@@ -15,5 +15,4 @@
 //= require dataTables.fixedColumns
 //= require jquery.tooltipster
 //= require jquery.bxslider
-//= require pivot
 //= require_tree .
