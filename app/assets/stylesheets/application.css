@@ -9,7 +9,6 @@
  *= require bootstrap-responsive
  *= require bootstrap-multiselect
  *= require tooltipster
- *= require pivot
  *= require_tree .
 */
 .search_main
