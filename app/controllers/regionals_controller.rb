@@ -12,7 +12,7 @@ class RegionalsController < ApplicationController
   def show_product
     @reg = params[:regional_id]
     @bra = params[:brand_id]
-    @produk = PriceList.where("brand_id = ? and regional_id = ?", @bra, @reg).group("produk, kain, jenis, panjang, lebar")
+    @produk = PriceList.where("brand_id = ? and regional_id = ?", @bra, @reg).group("produk, kain, jenis")
   end
 
   def show_regional
