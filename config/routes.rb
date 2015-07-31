@@ -40,6 +40,10 @@ Rain::Application.routes.draw do
       get 'additional_lady'
       put 'update_multiple_lady'
       get 'remove_multiple_lady'
+      get 'show_regional'
+      get 'show_product'
+      get 'show_history_product'
+      get 'modal_history'
     end
   end
 

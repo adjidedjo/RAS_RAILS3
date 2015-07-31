@@ -1,5 +1,29 @@
 class RegionalsController < ApplicationController
 
+  def show_history_product
+    @history_product = PriceList.where("brand_id = ? and regional_id = ? and produk = ? and kain = ?",
+      params[:bra], params[:reg], params[:pk], params[:kn]).group("produk, kain").order("created_at DESC")
+    @item_version = []
+    @history_product.each do |hp|
+      @item_version << hp.versions.order("created_at ASC")
+    end
+  end
+
+  def show_product
+    @reg = params[:regional_id]
+    @bra = params[:brand_id]
+    @produk = PriceList.where("brand_id = ? and regional_id = ?", @bra, @reg).group("produk, kain, jenis, panjang, lebar")
+  end
+
+  def show_regional
+    @regionals = Regional.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @regionals }
+    end
+  end
+
   def search_price_list
     @kategori = Product.all.map {|a| [a.Namaroduk, a.KodeProduk]}
     @artikel = Artikel.all.map {|a| [a.Produk, a.KodeCollection ]}

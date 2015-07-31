@@ -40,6 +40,12 @@
         <%= f.text_field "special_price" %>
         <%= f.label "Status Aktif"%>
         <%= f.select :active, [['Aktif', true], ['Tidak Aktif', false]] %>
+        <%= f.label "Status Barang"%>
+        <%= f.select :status, [['Normal', 'N'], ['Bad Stock', 'B'], ['Dead Stock', 'D'], ['Return', 'R'], ['Service', 'S'], ['Rcycle', 'E']] %>
+        <%= f.label "Keterangan(ex: tambahan diskon dll)"%>
+        <%= f.text_field :keterangan %>
+      </div>
+      <div style="float: left; padding-right: 50px;">
         <%= f.label "From Period"%>
         <%= f.text_field "from_period", class: "from_period" %>
           <%= f.label "To Period"%>
@@ -48,7 +54,7 @@
             <%= f.file_field "image", value: @item.image_url %>
       </div>
         <%= image_tag @item.image_url(:thumb).to_s %>
-      <div style="clear: both;padding-left: 700px;">
+      <div style="clear: both;padding-left: 600px;">
         <%= f.submit "Update", class: "btn btn-primary" %>
         <%= link_to "Back", price_list_regionals_path(brand_id: @item.brand_id, regional_id: @item.regional_id),class: "btn btn-info" %>
       </div>
@@ -101,7 +107,7 @@
        <%= f.file_field "image", value: @item.image_url, disabled: true %>
      </div>
      <%= image_tag @item.image_url(:thumb).to_s %>
-       <div style="clear: both;padding-left: 700px;">
+       <div style="clear: both; padding-left: 600px;">
          <%= link_to "Back", search_price_list_regionals_path(branch_price_list: params[:branch_price_list],
          brand_price_list: params[:brand_price_list], kategori_price_list: params[:kategori_price_list],
            tipe_price_list: params[:tipe_price_list], kain_price_list: params[:kain_price_list]),class: "btn btn-info" %>
@@ -148,7 +154,7 @@
                               <td><%= iv.reify.from_period %></td>
                               <td><%= iv.reify.to_period %></td>
                               <td><%= iv.created_at.to_date %></td>
-                              <td></td>
+                              <td><%= iv.reify.keterangan %></td>
                              <td><%= image_tag iv.reify.image_url(:pp).to_s %></td>
                            </tr>
                         <% end %>

@@ -1,0 +1,33 @@
+<h3>List Produk</h3>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="list_produk" border="1" cellspacing="0" cellpadding="3">
+      <thead>
+        <tr>
+          <th>Kode Produk</th>
+          <th>Produk</th>
+          <th>Kain</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tfoot>
+      </tfoot>
+      <tbody>
+        <% @produk.each do |produk| %>
+          <tr>
+            <%= hidden_field_tag 'regional_id', params[:regional_id] %>
+            <%= hidden_field_tag 'brand_id', params[:brand_id] %>
+            <td><%= produk.jenis %></td>
+            <% artikel = Artikel.where("KodeCollection like ?", produk.produk).first  %>
+            <% kain = Kain.where("KodeKain like ?", produk.kain).first  %>
+            <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+            <td><%= kain.nil? ? "" : kain.NamaKain %></td>
+            <td><%= link_to 'Show History', show_history_product_regionals_path(pk: produk.produk, kn: produk.kain, reg: @reg, bra: @bra) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= link_to 'Back', show_regional_regionals_path %>

@@ -1,0 +1,23 @@
+<h3>Listing regionals</h3>
+<div class="row-fluid">
+  <div class="block-content collapse in">
+    <table id="list_cabang" class="display row-border" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Brand</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @regionals.each do |regional| %>
+          <tr>
+            <td><%= regional.nama %></td>
+            <td><%= Merk.find(regional.brand_id).Merk %></td>
+            <td><%= link_to 'Show', show_product_regionals_path(regional_id: regional.id, brand_id: regional.brand_id), :class => "btn btn-link" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

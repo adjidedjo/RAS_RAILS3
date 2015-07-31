@@ -1,3 +1,18 @@
+$(document).on("click", ".modal-history", function () {
+     var barang = $(this).data('id');
+     var ukuran = $(this).data('size');
+     $(".modal-body #barang").val( barang );
+     $(".modal-body #ukuran").val( ukuran );
+     // $.ajax({
+     //  datatype: 'script',
+     //  url: "/regionals/modal_history",
+     //  data: { brg: barang, size: ukuran }
+     //})
+     // As pointed out in comments,
+     // it is superfluous to have to manually call the modal.
+     // $('#addBookDialog').modal('show');
+});
+
 $(document).ready(function() {
   $('.from_period').datepicker({
     dateFormat: 'yy-mm-dd'
@@ -25,6 +40,25 @@ $(document).ready(function() {
     bAutoWidth: false,
     bInfo: false,
     bFilter: false
+  });
+
+  $('#show_history_product').dataTable({
+    bPaginate: false,
+    bAutoWidth: false,
+    bInfo: false,
+    bFilter: false,
+    bSortable: false
+  });
+
+  $('#show_history_products1, #show_history_products2, #show_history_products3, \n\
+#show_history_products5, #show_history_products4, \n\
+#show_history_products6, #show_history_products7').dataTable({
+    bPaginate: false,
+    bAutoWidth: false,
+    bInfo: false,
+    bFilter: false,
+    bSortable: false,
+    bDestroy: true
   });
 
   $('#list_selected_goods').dataTable({
