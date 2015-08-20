@@ -1,108 +1,56 @@
-<% artikel = @history_product.first.produk.nil? ? '' : Artikel.where("KodeCollection like ?", @history_product.first.produk).first.Produk %>
-<% kain = Kain.where("KodeKain like ?", @history_product.first.kain).first.nil? ? '' : Kain.where("KodeKain like ?", @history_product.first.kain).first.NamaKain %>
-
-<h2>Harga Terbaru <%= @history_product.first.jenis %> <%= artikel %> <%= kain %></h2>
-
-<h5>NB:
-  <ul>
-    <li>Table pertama adalah Data harga terupdate</li>
-    <li>Klik ukuran untuk mengetahui history dari ukuran barang tersebut</li>
-    <li>Scroll ke bawah untuk melihat history dari masing-masing ukuran</li>
-  </ul>
-</h5>
-
+<% artikel = @produk.produk.nil? ? '' : Artikel.where("KodeCollection like ?", @produk.produk).first.Produk %>
+<% kain = Kain.where("KodeKain like ?", @produk.kain).first.nil? ? '' : Kain.where("KodeKain like ?", @produk.kain).first.NamaKain %>
 <div class="row-fluid" style="float: left;">
   <div class="block-content collapse in">
-    <table id="show_history_product" class="display table-striped table-bordered" cellspacing="0" width="100%">
+    <h4><%= @produk.nama %></h4>
+    <table id="show_history_products" class="display table-striped table-bordered" cellspacing="0" width="100%">
       <thead>
         <tr>
-          <th>Jenis</th>
+          <th>Kode Produk</th>
           <th>Produk</th>
           <th>Kain</th>
-          <th>090</th>
-          <th>100</th>
-          <th>120</th>
-          <th>140</th>
-          <th>160</th>
-          <th>180</th>
-          <th>200</th>
+          <th>Panjang</th>
+          <th>Lebar</th>
+          <th>Status</th>
+          <th>Tanggal Dirubah</th>
+          <th>Harga</th>
         </tr>
       </thead>
       <tfoot>
       </tfoot>
       <tbody>
-        <% pl = PriceList.where(jenis: @history_product.first.jenis, produk: @history_product.first.produk, kain: @history_product.first.kain) %>
+        <% @history_product.each do |hp| %>
           <tr>
-            <td><%= pl.first.jenis %></td>
-            <% artikel = Artikel.where("KodeCollection like ?", pl.first.produk).first  %>
-            <% kain = Kain.where("KodeKain like ?", pl.first.kain).first  %>
+            <td><%= @produk.jenis %></td>
+            <% artikel = Artikel.where("KodeCollection like ?", @produk.produk).first  %>
+            <% kain = Kain.where("KodeKain like ?", @produk.kain).first  %>
             <td><%= artikel.nil? ? "" : artikel.Produk %></td>
             <td><%= kain.nil? ? "" : kain.NamaKain %></td>
-            <td><%= pl.where(lebar: '090').first.nil? ? '-' : currency(pl.where(lebar: '090').first.harga) %></td>
-            <td><%= pl.where(lebar: '100').first.nil? ? '-' : currency(pl.where(lebar: '100').first.harga) %></td>
-            <td><%= pl.where(lebar: '120').first.nil? ? '-' : currency(pl.where(lebar: '120').first.harga) %></td>
-            <td><%= pl.where(lebar: '140').first.nil? ? '-' : currency(pl.where(lebar: '140').first.harga) %></td>
-            <td><%= pl.where(lebar: '160').first.nil? ? '-' : currency(pl.where(lebar: '160').first.harga) %></td>
-            <td><%= pl.where(lebar: '180').first.nil? ? '-' : currency(pl.where(lebar: '180').first.harga) %></td>
-            <td><%= pl.where(lebar: '200').first.nil? ? '-' : currency(pl.where(lebar: '200').first.harga) %></td>
+            <td><%= @produk.panjang %></td>
+            <td><%= @produk.lebar %></td>
+            <td><%= hp.item_status %> (Current)</td>
+            <td></td>
+            <td><%= currency(hp.harga) %></td>
           </tr>
+          <% hp.versions.order("created_at ASC").map do |iv| %>
+            <% unless iv.reify.nil? %>
+              <tr>
+                <td><%= @produk.jenis %></td>
+                <% artikel = Artikel.where("KodeCollection like ?", @produk.produk).first  %>
+                <% kain = Kain.where("KodeKain like ?", @produk.kain).first  %>
+                <td><%= artikel.nil? ? "" : artikel.Produk %></td>
+                <td><%= kain.nil? ? "" : kain.NamaKain %></td>
+                <td><%= @produk.panjang %></td>
+                <td><%= @produk.lebar %></td>
+                <td><%= iv.reify.item_status %></td>
+                <td><%= iv.reify.created_at.to_date.strftime("%d %B %Y") %></td>
+                <td><%= currency(iv.reify.harga) %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
       </tbody>
     </table>
   </div>
 </div>
-<br /><br />
-
-<% length = pl.count %>
-<% pl.each do |hp| %>
-  <% artikel = @history_product.first.produk.nil? ? '' : Artikel.where("KodeCollection like ?", @history_product.first.produk).first.Produk %>
-  <% kain = Kain.where("KodeKain like ?", @history_product.first.kain).first.nil? ? '' : Kain.where("KodeKain like ?", @history_product.first.kain).first.NamaKain %>
-  <div class="row-fluid" style="float: left;">
-    <h5>History <%= hp.jenis %> <%= artikel %> <%= kain %> Ukuran <%= hp.lebar %></h5>
-    <div class="block-content collapse in">
-      <table id="show_history_products<%= length %>" class="display table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>Kode Barang</th>
-            <th>Kode Produk</th>
-            <th>Produk</th>
-            <th>Kain</th>
-            <th>Panjang</th>
-            <th>Lebar</th>
-            <th>Harga</th>
-            <th>From Period</th>
-            <th>To Period</th>
-            <th>Tanggal</th>
-            <th>Keterangan</th>
-            <th>Image</th>
-          </tr>
-        </thead>
-        <tfoot>
-        </tfoot>
-        <tbody>
-          <% hp.versions.order("created_at ASC").map do |iv| %>
-            <% unless iv.reify.nil? %>
-              <tr>
-                <td><%= iv.reify.kode_barang %></td>
-                <td><%= iv.reify.jenis %></td>
-                <% artikel = Artikel.where("KodeCollection like ?", iv.reify.produk).first  %>
-                <% kain = Kain.where("KodeKain like ?", iv.reify.kain).first  %>
-                <td><%= artikel.nil? ? "" : artikel.Produk %></td>
-                <td><%= kain.nil? ? "" : kain.NamaKain %></td>
-                <td><%= iv.reify.panjang %></td>
-                <td><%= iv.reify.lebar %></td>
-                <td><%= currency(iv.reify.harga) %></td>
-                <td><%= iv.reify.from_period %></td>
-                <td><%= iv.reify.to_period %></td>
-                <td><%= iv.created_at.to_date %></td>
-                <td><%= iv.reify.keterangan %></td>
-                <td><%= image_tag iv.reify.image_url(:pp).to_s %></td>
-                </tr>
-              <% end %>
-            <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <br /><br />
-  <% length = length - 1 %>
-<% end %>
+<%= link_to "Back", :back, class: "btn btn-info" %>

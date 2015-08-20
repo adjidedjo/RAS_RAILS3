@@ -1,13 +1,14 @@
 class PriceList < ActiveRecord::Base
-
   has_many :parent_items,  :foreign_key => 'parent_item_id',
     :class_name => 'GoodsHeritage',
     :dependent => :destroy
-  has_many :child_items,     :through => :parent_items
+  has_many :child_items, :through => :parent_items
   has_many :escapes,   :foreign_key => 'child_item_id',
     :class_name => 'GoodsHeritage',
     :dependent => :destroy
   has_many :predators, :through => :escapes
+  has_many :price_list_status_histories, inverse_of: :price_list, dependent: :destroy
+  accepts_nested_attributes_for :price_list_status_histories, allow_destroy: true
   has_paper_trail
   mount_uploader :image, PriceListUploader, :mount_on => :image_filename
 
@@ -55,9 +56,9 @@ class PriceList < ActiveRecord::Base
       unless merk.empty?
         regional = Cabang.find(lap.cabang_id).regional.find_by_brand_id(merk.first.id)
         unless regional.nil?
-          future_price_list = FuturePriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
+          future_price_list = PriceList.where("brand_id = ? and regional_id = ? and kode_barang like ?", merk.first.id, regional.id, lap.kodebrg)
           if future_price_list.empty?
-            FuturePriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
+            PriceList.create(:cabang_id => lap.cabang_id, :brand_id => merk.first.id, :regional_id => regional.id,
               :jenis => lap.kodejenis, :produk => lap.kodeartikel, :kain => lap.kodekain,
               :panjang => lap.panjang, :lebar => lap.lebar, :harga => 11111,
               :kode_barang => lap.kodebrg, :nama => lap.namabrg)

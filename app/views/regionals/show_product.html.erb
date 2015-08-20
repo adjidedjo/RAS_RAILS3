@@ -7,6 +7,7 @@
           <th>Kode Produk</th>
           <th>Produk</th>
           <th>Kain</th>
+          <th>Ukuran</th>
           <th></th>
         </tr>
       </thead>
@@ -22,12 +23,12 @@
             <% kain = Kain.where("KodeKain like ?", produk.kain).first  %>
             <td><%= artikel.nil? ? "" : artikel.Produk %></td>
             <td><%= kain.nil? ? "" : kain.NamaKain %></td>
-            <td><%= link_to 'Show History', show_history_product_regionals_path(pk: produk.produk, kn: produk.kain, reg: @reg, bra: @bra) %></td>
+            <td><%= produk.panjang %> x <%=  produk.lebar %></td>
+            <td><%= link_to 'Show History', show_history_product_regionals_path(produk_id: produk.id) %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 </div>
-
-<%= link_to 'Back', show_regional_regionals_path %>
+<%= link_to 'Back', show_regional_regionals_path, class: "btn btn-info" %>

@@ -1,0 +1,19 @@
+<fieldset class="form-inline">
+  <%= f.label :status, class: "a" %>
+  <%= f.label :harga, class: "b" %>
+  <%= f.label :diskon1, class: "c" %>
+  <%= f.label :diskon2, class: "c" %>
+  <%= f.label :diskon3, class: "c" %>
+  <%= f.label :diskon4, class: "c" %>
+  <%= f.label :diskon5, class: "c" %>
+</fieldset>
+<fieldset class="form-inline">
+  <%= f.select :item_status,  [ 'N', 'B', 'D', 'E', 'K' ], {:prompt => 'Pilih'}, :class => "input-mini" %>
+  <%= f.text_field :harga, :class => "input-small" %>
+  <%= f.text_field :diskon1, :class => "input-mini" %>
+  <%= f.text_field :diskon2, :class => "input-mini" %>
+  <%= f.text_field :diskon3, :class => "input-mini" %>
+  <%= f.text_field :diskon4, :class => "input-mini" %>
+  <%= f.text_field :diskon5, :class => "input-mini" %>
+</fieldset>
+<br />

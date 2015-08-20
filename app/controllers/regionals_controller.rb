@@ -1,18 +1,14 @@
 class RegionalsController < ApplicationController
 
   def show_history_product
-    @history_product = PriceList.where("brand_id = ? and regional_id = ? and produk = ? and kain = ?",
-      params[:bra], params[:reg], params[:pk], params[:kn]).group("produk, kain").order("created_at DESC")
-    @item_version = []
-    @history_product.each do |hp|
-      @item_version << hp.versions.order("created_at ASC")
-    end
+    @history_product = PriceList.find(params[:produk_id]).price_list_status_histories
+    @produk = PriceList.find(params[:produk_id])
   end
 
   def show_product
     @reg = params[:regional_id]
     @bra = params[:brand_id]
-    @produk = PriceList.where("brand_id = ? and regional_id = ?", @bra, @reg).group("produk, kain, jenis")
+    @produk = PriceList.where("brand_id = ? and regional_id = ?", @bra, @reg).group("produk, kain, jenis, lebar")
   end
 
   def show_regional
@@ -48,6 +44,7 @@ class RegionalsController < ApplicationController
   def show_price_list
     @item = PriceList.find_by_kode_barang(params[:kode_barang])
     @item_version = @item.versions.order("created_at DESC")
+    5.times { @item.price_list_status_histories.build } unless @item.price_list_status_histories.present?
   end
   # GET /regionals
   # GET /regionals.json

@@ -2,3 +2,21 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+.a{
+  width: 3em;
+  float: left;
+  text-align: right;
+  margin-right: 2.5em;
+}
+.b{
+  width: 3em;
+  float: left;
+  text-align: right;
+  margin-right: 5.7em;
+}
+.c{
+  width: 3em;
+  float: left;
+  text-align: right;
+  margin-right: 3.5em;
+}
