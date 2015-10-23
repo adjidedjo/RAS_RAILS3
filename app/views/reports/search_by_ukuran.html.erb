@@ -96,7 +96,7 @@
             <tbody>
               <% @search_by_ukuran.each do |sbb| %>
                 <tr>
-                  <td><%= Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+                  <td><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'')  : '-' %></td>
                   <td><%= sbb.merk %></td>
                   <td><%= sbb.produk %></td>
                   <td><%= sbb.artikel %></td>

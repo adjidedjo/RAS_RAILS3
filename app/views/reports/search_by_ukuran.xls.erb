@@ -50,7 +50,7 @@
             <tbody>
               <% @search_by_ukuran.each do |sbb| %>
                 <tr>
-                  <td><%= Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'') %></td>
+                  <td><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'')  : '-' %></td>
                   <td><%= sbb.nosj %></td>
                   <td><%= sbb.tanggalsj %></td>
                   <td><%= sbb.nofaktur %></td>
