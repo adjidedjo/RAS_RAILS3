@@ -60,6 +60,8 @@
           <%= menu_item "Update Regional & Price List", regionals_path %>
           <%= drop_down "Sales Reports" do %>
             <%= menu_item "Analysis", reports_search_main_path %>
+            <%= menu_item "Check History PL", show_regional_regionals_path %>
+            <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
             <%= drop_down_submenu "Quick View" do %>
               <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
               <%= drop_down_submenu "Bulanan" do %>
@@ -75,7 +77,6 @@
                 <%= menu_item "Sales Cabang per Customer dan Brand", reports_pilih_cabang_path(year: Date.today, merk: "", tipena: "yearly") %>
               <% end %>
             <% end %>
-            <%= menu_item "Check History PL", show_regional_regionals_path %>
           <% end %>
           <%= menu_item "How To", docs_index_path %>
         <% end %>

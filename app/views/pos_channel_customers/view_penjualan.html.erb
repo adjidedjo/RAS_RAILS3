@@ -30,7 +30,7 @@
             <td><%= sale.pos_ultimate_customer.nama.capitalize %></td>
             <td><%= sale.cara_bayar == 'um' ? 'Uang Muka' : 'Lunas' %></td>
             <td><%= sale.tipe_pembayaran %></td>
-            <% total = (sale.pembayaran+sale.payment_with_debit_card.jumlah+sale.payment_with_credit_cards.sum(:jumlah)+sale.jumlah_transfer) %>
+            <% total = (sale.pembayaran+sale.payment_with_debit_card.jumlah.to_i+sale.payment_with_credit_cards.sum(:jumlah)+sale.jumlah_transfer) %>
             <td class="money"><%= currency(total) %></td>
             <td class="money"><%= currency(sale.netto) %></td>
             <td>
