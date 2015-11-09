@@ -50,10 +50,8 @@ class ControlUpload
   end
 
   def check_reports
-    SqlSales.migration_sales_report(Date.today.month, Date.today.year)
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_availability_master(Date.today.month, Date.today.year)
-    PriceList.future_to_price
     PriceList.check_report_price_list(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
@@ -67,7 +65,6 @@ class ControlUpload
   end
 
   def check_reports_prev_month
-    SqlSales.migration_sales_report(Date.today.prev_month.month, Date.today.prev_month.year)
     PriceList.check_report_price_list(Date.today.prev_month.month, Date.today.prev_month.year)
     LaporanCabang.sales_by_brand(Date.today.prev_month.month, Date.today.prev_month.year)
     LaporanCabang.sales_by_product(Date.today.prev_month.month, Date.today.prev_month.year)
@@ -84,10 +81,10 @@ class ControlUpload
   end
 
   def daily_migration_prev_month
-    SqlSales.migration_sales_report(Date.today.prev_month.month, Date.today.prev_month.year)
+    SqlSales.migration_sales_report_prev_month
   end
 
   def daily_migration
-    SqlSales.migration_sales_report(Date.today.month, Date.today.year)
+    SqlSales.migration_sales_report
   end
 end

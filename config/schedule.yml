@@ -1,3 +1,19 @@
+daily_migration:
+  cron: "0 */1 * * 1-6"
+  queue: cron
+  class: ControlUpload
+  args: "daily_migration"
+  description: migrate sales_report
+  rails_envs: development, production, staging
+
+daily_migration_prev_month:
+  cron: "0 */4 1-6 * 1-6"
+  queue: cron
+  class: ControlUpload
+  args: "daily_migration_prev_month"
+  description: migrate sales_report
+  rails_envs: development, production, staging
+
 send_email:
   cron: "30 09 * * 1-6"
   queue: cron
@@ -12,14 +28,6 @@ send_email_prev_month:
   class: ControlUpload
   args: "send_mail_previous_month"
   description: send report upload sales branches last month
-  rails_envs: production
-
-send_email_stock:
-  cron: "30 09 1-11 * *"
-  queue: cron
-  class: ControlUpload
-  args: "send_mail_report_stock"
-  description: send stock report
   rails_envs: production
 
 update_price_list:
@@ -53,28 +61,4 @@ check_stock:
   args: "check_stock"
   description: check stock
   rails_envs: development, production, stagings
-
-daily_migration:
-  cron: "12 01 * * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "daily_migration"
-  description: migrate sales_report
-  rails_envs: development, production, staging
-
-daily_migration_prev_month:
-  cron: "30 12 1-11 * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "daily_migration_prev_month"
-  description: migrate sales_report
-  rails_envs: development, production, staging
-
-daily_update_customer:
-  cron: "00 21 * * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "update_customer"
-  description: update customer
-  rails_envs: development, production, staging
 
