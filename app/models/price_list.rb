@@ -69,9 +69,9 @@ class PriceList < ActiveRecord::Base
   end
 
 
-  def self.check_report_price_list(bulan, tahun)
+  def self.check_report_price_list
     #    CheckedItemMaster.destroy_all(customer_services: false)
-    LaporanCabang.compare_price_list(bulan, tahun).each do |lap|
+    LaporanCabang.compare_price_list.each do |lap|
       unless lap.kodebrg[2].nil?
         merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
         unless merk.empty?
@@ -81,7 +81,7 @@ class PriceList < ActiveRecord::Base
               customer_services = CheckedItemMaster.where("tanggal = ? and nofaktur like ? and kodebarang like ? and customer like ? and quantity like ? and no_so like ?",
                 lap.tanggalsj, lap.nofaktur, lap.kodebrg, lap.customer, lap.jumlah, lap.noso)
               if customer_services.empty?
-                if lap.tanggalsj.month == bulan
+                if lap.tanggalsj.month == Date.today.month
                   if (lap.hargasatuan != pricelist.harga) || ((lap.nupgrade*lap.jumlah) != pricelist.upgrade) ||
                       (lap.cashback != pricelist.cashback) || (lap.diskon1 != pricelist.discount_1) ||
                       (lap.diskon2 != pricelist.discount_2) || (lap.diskon3 != pricelist.discount_3) ||
@@ -129,7 +129,7 @@ class PriceList < ActiveRecord::Base
                   end
                 end
               else
-                if lap.tanggalsj.month == bulan
+                if lap.tanggalsj.month == Date.today.month
                   if (lap.hargasatuan == pricelist.harga) && ((lap.nupgrade*lap.jumlah) == pricelist.upgrade) &&
                       (lap.cashback == pricelist.cashback) && (lap.diskon1 == pricelist.discount_1) &&
                       (lap.diskon2 == pricelist.discount_2) && (lap.diskon3 == pricelist.discount_3) &&

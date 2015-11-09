@@ -266,9 +266,9 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").brand(brand).search_by_branch(cabang).search_by_type(jenis).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
   end
 
-  def self.compare_price_list(bulan , tahun)
-    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ? and kodebrg not like ?",
-      bulan, tahun, %(___________#{'T'}%)).no_pengajuan.nosj_to_check
+  def self.compare_price_list
+    select("*").where("date(tanggal_upload) = ? and kodebrg not like ?",
+      Date.today, %(___________#{'T'}%)).no_pengajuan.nosj_to_check
   end
 
   def self.get_target_by_salesman(branch, date, merk, salesman)
