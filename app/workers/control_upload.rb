@@ -51,7 +51,7 @@ class ControlUpload
 
   def check_reports
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
-    PriceList.check_availability_master(Date.today.month, Date.today.year)
+    PriceList.check_availability_master
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_article(Date.today.month, Date.today.year)

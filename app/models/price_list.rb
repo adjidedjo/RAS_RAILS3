@@ -50,8 +50,8 @@ class PriceList < ActiveRecord::Base
     end
   end
 
-  def self.check_availability_master(bulan, tahun)
-    LaporanCabang.compare_price_list(bulan, tahun).each do |lap|
+  def self.check_availability_master
+    LaporanCabang.compare_price_list.each do |lap|
       merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
       unless merk.empty?
         regional = Cabang.find(lap.cabang_id).regional.find_by_brand_id(merk.first.id)
