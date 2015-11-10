@@ -78,7 +78,7 @@ class SqlSales < ActiveRecord::Base
           tanggal_fetched: Date.today,
           tanggal_upload: sql_sales.tanggalinput
         )
-      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload == sql_sales.tanggalinput
+      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload != sql_sales.tanggalinput
         lapcab.update_attributes!(
           jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
@@ -109,7 +109,7 @@ class SqlSales < ActiveRecord::Base
 
 
   def self.migration_sales_report_prev_month
-    select("*").where("tanggalinput >= ? and month(tanggalsj) = ?", Date.today, Date.today.prev_month.month).each do |sql_sales|
+    select("*").where("tanggalinput >= ? and month(tanggalsj) = ?", Date.today.to_date, Date.today.prev_month.month).each do |sql_sales|
       lapcab = LaporanCabang.find_by_nosj(sql_sales.nosj)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
@@ -162,7 +162,7 @@ class SqlSales < ActiveRecord::Base
           tanggal_fetched: Date.today,
           tanggal_upload: sql_sales.tanggalinput
         )
-      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload == sql_sales.tanggalinput
+      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload != sql_sales.tanggalinput
         lapcab.update_attributes!(
           jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
