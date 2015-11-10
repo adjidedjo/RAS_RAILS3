@@ -78,7 +78,7 @@ class SqlSales < ActiveRecord::Base
           tanggal_fetched: Date.today,
           tanggal_upload: sql_sales.tanggalinput
         )
-      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload != sql_sales.tanggalinput
+      elsif lapcab.nosj == sql_sales.nosj && sql_sales.tanggalinput >=  lapcab.tanggal_upload
         lapcab.update_attributes!(
           jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
@@ -162,7 +162,7 @@ class SqlSales < ActiveRecord::Base
           tanggal_fetched: Date.today,
           tanggal_upload: sql_sales.tanggalinput
         )
-      elsif lapcab.nosj == sql_sales.nosj && lapcab.tanggal_upload != sql_sales.tanggalinput
+      elsif lapcab.nosj == sql_sales.nosj && sql_sales.tanggalinput >=  lapcab.tanggal_upload
         lapcab.update_attributes!(
           jenisbrgdisc: sql_sales.jenisbrgdisc,
           kodejenis: sql_sales.kodejenis,
