@@ -25,7 +25,7 @@ class SqlSales < ActiveRecord::Base
   end
 
     def self.migration_sales_report
-      select("*").where("tanggalinput >= ?", Date.yesterday.to_date).each do |sql_sales|
+      select("*").where("tanggalinput >= ?", "2015-11-09".to_date).each do |sql_sales|
       lapcab = LaporanCabang.find_by_nosj_and_kodebrg(sql_sales.nosj, sql_sales.kodebrg)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,

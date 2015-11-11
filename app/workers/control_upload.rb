@@ -52,6 +52,7 @@ class ControlUpload
   def check_reports
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_availability_master
+    PriceList.check_report_price_list
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_article(Date.today.month, Date.today.year)
@@ -84,6 +85,5 @@ class ControlUpload
 
   def daily_migration
     SqlSales.migration_sales_report
-    PriceList.check_report_price_list
   end
 end
