@@ -100,7 +100,7 @@ class PriceList < ActiveRecord::Base
                           :discount_2_master => pricelist_noso.nil? ? 0 : pricelist_noso.discount_2, :discount_2_laporan => noso.diskon2,
                           :discount_3_master => pricelist_noso.nil? ? 0 : pricelist_noso.discount_3, :discount_3_laporan => noso.diskon3,
                           :discount_4_master => pricelist_noso.nil? ? 0 : pricelist_noso.discount_4, :discount_4_laporan => noso.diskon4,
-                          :customer => noso.customer, :tanggal => noso.tanggalsj, :no_so => noso.noso, :no_po => noso.nopo)
+                          :customer => noso.customer, :tanggal => noso.tanggalsj, :no_so => noso.noso, :no_po => noso.nopo, :total_netto2 => noso.totalnetto2)
                       end
                     end
                   end
@@ -123,7 +123,7 @@ class PriceList < ActiveRecord::Base
                           :discount_2_master => pricelist_noso.nil? ? 0 : pricelist.discount_2, :discount_2_laporan => noso.diskon2,
                           :discount_3_master => pricelist_noso.nil? ? 0 : pricelist.discount_3, :discount_3_laporan => noso.diskon3,
                           :discount_4_master => pricelist_noso.nil? ? 0 : pricelist.discount_4, :discount_4_laporan => noso.diskon4,
-                          :customer => noso.customer, :tanggal => noso.tanggalsj, :no_so => noso.noso, :no_po => noso.nopo)
+                          :customer => noso.customer, :tanggal => noso.tanggalsj, :no_so => noso.noso, :no_po => noso.nopo, :total_netto2 => noso.totalnetto2)
                       end
                     end
                   end
