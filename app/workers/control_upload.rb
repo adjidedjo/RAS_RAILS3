@@ -38,7 +38,7 @@ class ControlUpload
   end
 
   def check_stock
-    SqlFreeStock.migration_stok(Date.today.month, Date.today.year)
+    SqlFreeStock.migration_stok
   end
 
   def update_price_list
