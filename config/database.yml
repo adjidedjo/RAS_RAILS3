@@ -11,29 +11,35 @@ development:
   reconnect: false
   database: dbmarketing
   pool: 5
+  reconnect: true
   username: root
-  password: yulianto
-  host: localhost
+  password: royalabadi
+  host: 192.168.101.220
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
+jdeoracle:
+  adapter: oracle_enhanced
+  username: JDEDBA
+  password: Royal2012
+  database: "(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=db.ras.co.id)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl.ras.co.id)))"
+
+sqlserver:
+  adapter: sqlserver
+  encoding: utf8
+  reconnect: true
+  database: DBMarketing
+  pool: 5
+  username: sa
+  password: batosay*99
+  host: 192.168.100.6
+  port: 1433
+
+pos:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: test-mysql2_test
+  database: point_of_sales_development
   pool: 5
+  reconnect: true
   username: root
-  password:
+  password: root
   host: localhost
-
-production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database:
-  pool: 5
-  username:
-  password:
-  host: 

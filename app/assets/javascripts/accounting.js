@@ -1,4 +1,17 @@
 $(document).ready(function(){
+
+  $('#brand_depositbg').multiselect({
+    numberDisplayed: 1,
+    maxHeight: 200
+  });
+
+  $('#depositbg_table').dataTable({
+    iDisplayLength: 50,
+    "bAutoWidth": false,
+    "bFilter": false,
+    "bSort": true
+  });
+
   $('#faktur').dataTable({
     iDisplayLength: 10,
     "bAutoWidth": false,

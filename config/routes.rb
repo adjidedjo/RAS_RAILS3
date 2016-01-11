@@ -62,6 +62,8 @@ Rain::Application.routes.draw do
   get "laporan_cabang/new"
 
   get "accounting/check_faktur"
+  get "accounting/depositbg"
+  post "accounting/depositbg_process"
   get "accounting/pilihan_brand"
   get "accounting/faktur"
 
