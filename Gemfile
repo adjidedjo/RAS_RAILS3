@@ -43,6 +43,9 @@ gem 'resque-web', require: 'resque_web'
 gem 'paper_trail', '~> 4.0.0.beta'
 gem 'carrierwave'
 gem "rmagick"
+gem "activerecord-oracle_enhanced-adapter", "~> 1.4.0"
+# Use oracle as the database for Active Record
+gem 'ruby-oci8'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
