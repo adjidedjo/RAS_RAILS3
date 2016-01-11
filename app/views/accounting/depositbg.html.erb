@@ -1,0 +1,78 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="span3">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="block-content">
+          <%= form_tag accounting_depositbg_path, :method => 'get', :class => "form-accounting-price-list" do %>
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Search Different Price List</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
+
+                </div>
+              </div>
+              <div class="block-content">
+                <div class="control-group">
+                  <%= text_field_tag 'from', params[:from].nil? ? nil : params[:date], :placeholder => "From Date", :html => {:class => "input-large"}  %>
+                </div>
+                <div class="control-group">
+                  <%= text_field_tag 'to', params[:to].nil? ? nil : params[:date], :placeholder => "To Date", :html => {:class => "input-large"}  %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'cabang' %>
+                  <%= select_tag 'branch_depositbg', options_for_select(Cabang.get_id.collect {|a| [a.Cabang, a.IdCabang]}, params[:branch_depositbg]),
+                    {:class => 'select', :prompt => 'Select Cabang'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'brand' %>
+                  <%= select_tag 'brand_depositbg', options_for_select(Merk.all.collect {|a| [a.Merk, a.IdMerk]}, params[:brand_depositbg]), {:class => 'multiselect',
+                    :multiple => true} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <button type="submit" class="btn btn-primary">
+                    <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% if @result.present? %>
+
+      <div class="span6">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+          <div class="span8" style="padding-top: 25px">
+            <span>Cabang: </span><span><%= @branch %></span><br />
+            <span>Toko: </span><span><%= @dealer %></span><br />
+            <span>Periode: </span><span></span><br />
+            <span>Target: </span><span></span><br />
+            <table id="depositbg_table" class="display table-striped table-bordered" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>PAYMENT ID</th>
+                  <th>BANK</th>
+                  <th>NO GIRO</th>
+                  <th>TANGGAL</th>
+                  <th>PENJUALAN</th>
+                  <th>PEMBAYARAN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @result.each do |rs| %>
+                  <tr>
+                    <% rs.each do |key, value|  %>
+                      <td style="text-align: center;"><%= value  %></td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
