@@ -1,8 +1,8 @@
 class SqlSales < ActiveRecord::Base
   self.abstract_class = true
   establish_connection "sqlserver"
-  set_table_name "VLaporanCabang"
-#  set_table_name "tbLaporanCabang"
+  #set_table_name "VLaporanCabang"
+  set_table_name "tbLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
   scope :search_by_branch, lambda {|branch| where("idcabang in (?)", branch) if branch.present? }

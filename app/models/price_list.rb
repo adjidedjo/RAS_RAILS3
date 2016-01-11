@@ -71,7 +71,7 @@ class PriceList < ActiveRecord::Base
 
   def self.check_report_price_list
     #    CheckedItemMaster.destroy_all(customer_services: false)
-    LaporanCabang.compare_price_list.each do |lap|
+    LaporanCabang.where(nofaktur: "fkl-11-1511-00006").each do |lap|
       unless lap.kodebrg[2].nil?
         merk = Merk.where("IdMerk like ?", "#{lap.kodebrg[2]}")
         unless merk.empty?
