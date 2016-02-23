@@ -5,7 +5,7 @@ class LaporanCabang < ActiveRecord::Base
   belongs_to :cabang
 	belongs_to :brand
 
-  scope :check_invoices, lambda {|date, jenis| where(:tanggalsj => date, :jenisbrgdisc => jenis).order("tanggalsj desc")}
+  scope :check_invoices, lambda {|date, jenis| where(:tanggalsj => date).where("jenisbrgdisc in (?)", jenis).order("tanggalsj desc")}
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   # scope for monthly/monthly
@@ -16,7 +16,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
 	scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
-	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
+	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
 	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
 	scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))

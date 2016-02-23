@@ -1,7 +1,7 @@
 class SqlSales < ActiveRecord::Base
   self.abstract_class = true
   establish_connection "sqlserver"
-  #set_table_name "VLaporanCabang"
+  # #set_table_name "VLaporanCabang"
   set_table_name "tbLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
@@ -24,8 +24,20 @@ class SqlSales < ActiveRecord::Base
     end
   end
 
-    def self.migration_sales_report
-      select("*").where("tanggalinput >= ?", Date.today.to_date).each do |sql_sales|
+  def self.change_brand(brand)
+    if brand == "Non Serenity"
+      "ELITE"
+    elsif brand == "Lady Americana"
+      "LADY"
+    elsif brand == "Royal"
+      "ROYAL"
+    elsif brand == "Serenity"
+      "SERENITY"
+    end
+  end
+
+  def self.migration_sales_report(date)
+    select("*").where("tanggalinput >= ?", date).each do |sql_sales|
       lapcab = LaporanCabang.find_by_nosj_and_kodebrg(sql_sales.nosj, sql_sales.kodebrg)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
@@ -41,7 +53,7 @@ class SqlSales < ActiveRecord::Base
           salesman: sql_sales.salesman,
           kodebrg: sql_sales.kodebrg,
           namabrg: sql_sales.namabrg,
-          jenisbrgdisc: sql_sales.jenisbrgdisc,
+          jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
           kodejenis: sql_sales.kodejenis,
           jenisbrg: sql_sales.jenisbrg,
           kodeartikel: sql_sales.kodeartikel,
@@ -81,7 +93,7 @@ class SqlSales < ActiveRecord::Base
       elsif (lapcab.nosj == sql_sales.nosj) && (lapcab.tanggal_upload.to_formatted_s(:short) != sql_sales.tanggalinput.to_formatted_s(:short))
         lapcab.update_attributes!(
           nofaktur: sql_sales.nofaktur,
-          jenisbrgdisc: sql_sales.jenisbrgdisc,
+          jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
           kodejenis: sql_sales.kodejenis,
           jumlah: sql_sales.jumlah,
           satuan: sql_sales.satuan,

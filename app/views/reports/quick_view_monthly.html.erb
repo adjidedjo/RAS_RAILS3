@@ -15,7 +15,10 @@
               <% if current_user.user_brand == 'Elite' || current_user.user_brand == 'Admin' %>
                 <div class="control-group">
                   <label class="radio">
-                    <%= check_box_tag 'quick_view_brand[]', 'Non Serenity' %> Elite
+                    <%= check_box_tag 'quick_view_brand[]', 'Non Serenity' %> Non Serenity
+                  </label>
+                  <label class="radio">
+                    <%= check_box_tag 'quick_view_brand[]', 'ELITE' %> Elite(JDE)
                   </label>
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Serenity' %> Serenity
@@ -24,6 +27,9 @@
                 <% if current_user.user_brand == 'Lady Americana' || current_user.user_brand == 'Admin' %>
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Lady Americana' %> Lady Americana
+                  </label>
+                  <label class="radio">
+                    <%= check_box_tag 'quick_view_brand[]', 'LADY' %> LADY(JDE)
                   </label>
                 <% end %>
                 <% if current_user.user_brand == 'Classic' || current_user.user_brand == 'Admin' %>

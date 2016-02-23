@@ -1,5 +1,5 @@
 module ApplicationHelper
-  
+
   def brand(brand)
     if brand == 'Non Serenity'
       "E"
@@ -19,22 +19,22 @@ module ApplicationHelper
       "R"
     end
   end
-  
+
   def options_for_bulan
     [[Date::MONTHNAMES[1], 1],[Date::MONTHNAMES[2], 2],[Date::MONTHNAMES[3], 3],
       [Date::MONTHNAMES[4], 4],[Date::MONTHNAMES[5], 5],[Date::MONTHNAMES[6], 6],
       [Date::MONTHNAMES[7], 7],[Date::MONTHNAMES[8], 8],[Date::MONTHNAMES[9], 9],
       [Date::MONTHNAMES[10], 10],[Date::MONTHNAMES[11], 11],[Date::MONTHNAMES[12], 12]]
   end
-  
+
   def currency(price)
     number_to_currency(price, :precision => 0, :unit => "", :delimiter => ".")
   end
-  
+
   def percentage(price)
     number_to_percentage(price, :precision => 0)
   end
-  
+
   def jenis(jenis)
     if jenis == "KM"
       "Kasur Matras"
@@ -52,7 +52,7 @@ module ApplicationHelper
       "Sorong Bawah"
     end
   end
-  
+
   def chart_nonser
     Cabang.get_id.map do |merk|
       {
@@ -62,7 +62,7 @@ module ApplicationHelper
       }
     end
   end
-  
+
   def chart_lady
     Cabang.get_id.map do |merk|
       {
@@ -72,7 +72,7 @@ module ApplicationHelper
       }
     end
   end
-  
+
   def chart_serenity
     Cabang.get_id.map do |merk|
       {
@@ -82,7 +82,7 @@ module ApplicationHelper
       }
     end
   end
-  
+
   def chart_royal
     Cabang.get_id.map do |merk|
       {

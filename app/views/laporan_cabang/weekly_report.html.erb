@@ -12,7 +12,7 @@
       <%= form_tag laporan_cabang_weekly_report_path, :method => 'get', :class => "form form-inline" do %>
         <label style="font-size: 13px;">Cabang: </label>
         <%= hidden_field_tag "periode_week", params[:periode_week] %>
-        <%= select_tag 'brand_week', options_for_select(Merk.all.collect {|a| [a.Merk, a.Merk]}, params[:brand_week]), :class => 'multiselect', :multiple => true %>
+        <%= select_tag 'brand_week', options_for_select(options_for_tipe_price, params[:brand_week]), :class => 'multiselect', :multiple => true %>
         <button type="submit" class="btn btn-primary">
           Refine Search
         </button>
