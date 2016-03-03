@@ -55,7 +55,7 @@ check_stock:
   rails_envs: development, production, stagings
 
   jde_migration_order:
-  cron: "0 9 * * 1-6"
+  cron: "30 9 * * 1-6"
   queue: cron
   class: ControlUpload
   args: "daily_migration_jde"
