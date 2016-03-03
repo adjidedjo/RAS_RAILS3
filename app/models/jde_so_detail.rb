@@ -4,7 +4,7 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where(sdnxtr: "999", sdlttr: "580", sddcto: "SO").where("sdaddj = ?", date_to_julian(Date.today)).each do |a|
+    where(sdnxtr: "999", sdlttr: "580", sddcto: "SO").where("sdaddj = ?", date_to_julian(Date.yesterday.to_date)).each do |a|
       fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
       customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
       if customer.abat1.strip == "C"

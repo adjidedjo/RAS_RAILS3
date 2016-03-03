@@ -54,3 +54,11 @@ check_stock:
   description: check stock
   rails_envs: development, production, stagings
 
+  jde_migration_order:
+  cron: "0 9 * * 1-6"
+  queue: cron
+  class: ControlUpload
+  args: "check_reports"
+  description: check sales_reports
+  rails_envs: development, production, staging
+

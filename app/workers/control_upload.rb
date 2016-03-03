@@ -53,7 +53,6 @@ class ControlUpload
     LaporanCabang.create_new_artikel_from_report(Date.today.month, Date.today.year)
     PriceList.check_availability_master
     PriceList.check_report_price_list
-    JdeSoDetail.import_so_detail
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_product(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_article(Date.today.month, Date.today.year)
@@ -86,5 +85,9 @@ class ControlUpload
 
   def daily_migration
     SqlSales.migration_sales_report
+  end
+
+  def daily_migration_jde
+    JdeSoDetail.import_so_detail
   end
 end
