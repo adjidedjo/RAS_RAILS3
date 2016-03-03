@@ -58,7 +58,7 @@ check_stock:
   cron: "0 9 * * 1-6"
   queue: cron
   class: ControlUpload
-  args: "check_reports"
+  args: "daily_migration_jde"
   description: check sales_reports
   rails_envs: development, production, staging
 
