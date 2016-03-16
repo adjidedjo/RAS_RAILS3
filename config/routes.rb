@@ -194,6 +194,7 @@ Rain::Application.routes.draw do
 	get "laporan_cabang/chart"
 	get "reports/chart"
 	get "stock/special_size"
+	match 'stock/jde_availability'=> 'stock#jde_availability'
   get 'stock/update_kategori', :as => 'update_kategori'
   get 'stock/update_jenis_produk', :as => 'update_jenis_produk'
   get 'stock/update_artikel', :as => 'update_artikel'

@@ -1,8 +1,15 @@
 class StockController < ApplicationController
 
-	def special_size
-		@get_stock = Stock.check_stock(params[:date], params[:cabang_id]) unless params[:date].nil?
-	end
+  def jde_availability
+    respond_to do |format|
+      format.html
+      format.json { render json: ItemAvailability.new(view_context) }
+    end
+  end
+
+  def special_size
+    @get_stock = Stock.check_stock(params[:date], params[:cabang_id]) unless params[:date].nil?
+  end
 
   def index
 		@branch = Cabang.branch_get_name(current_user)

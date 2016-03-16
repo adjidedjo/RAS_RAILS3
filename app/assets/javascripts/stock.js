@@ -3,21 +3,21 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-  
-  $('.stock_index input[type="text"]').tooltipster({ 
+
+  $('.stock_index input[type="text"]').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
     onlyOne: false,    // allow multiple tips to be open at a time
     position: 'right'  // display the tips to the right of the element
   });
-    
+
   $('.stock_index').validate({
     errorPlacement: function (error, element) {
-                        
+
       var lastError = $(element).data('lastError'),
       newError = $(error).text();
-            
+
       $(element).data('lastError', newError);
-                            
+
       if(newError !== '' && newError !== lastError){
         $(element).tooltipster('content', newError);
         $(element).tooltipster('show');
@@ -102,5 +102,12 @@ $(document).ready(function(){
     iDisplayLength: 50,
     bRetrieve: true,
     bAutoWidth: false
+  });
+
+  $('#stock_jde').dataTable({
+    sPaginationType: "full_numbers",
+    bProcessing: true,
+    bServerSide: true,
+    sAjaxSource: $('#stock_jde').data('source')
   });
 });
