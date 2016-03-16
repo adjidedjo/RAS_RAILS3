@@ -14,7 +14,7 @@ class ItemAvailability
     item_available = item_available.page(page).per_page(per_page)
     if params[:sSearch].present?
       item_master = JdeItemMaster.where("imlitm like :search", search: "%#{params[:sSearch]}%" )
-      item_available = item_available.where("liitm like :search", search: item_master.first.imitm)
+      item_available = item_available.where("liitm like :search", search: "%#{item_master.first.imitm.to_i}%")
     end
     item_available
   end
