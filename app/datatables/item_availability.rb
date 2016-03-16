@@ -13,7 +13,7 @@ class ItemAvailability
     item_available = JdeItemAvailability.where("limcu like ? and lipqoh >= ?", "%11011", 1).order("#{sort_column} #{sort_direction}")
     item_available = item_available.page(page).per_page(per_page)
     if params[:sSearch].present?
-      item_master = JdeItemMaster.where("imlitm like ? and imtmpl like ? and imseg4 like ?", "%#{params[:sSearch]}%", "%BJ MATRASS%", "%S%")
+      item_master = JdeItemMaster.where("imlitm like ? or imdsc1 like ? and imtmpl like ? and imseg4 like ?", "%#{params[:sSearch]}%", "%#{params[:sSearch]}%", "%BJ MATRASS%", "%S%")
       item_available = item_available.where("liitm IN (?)", item_master)
     end
     item_available
