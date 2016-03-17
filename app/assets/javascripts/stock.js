@@ -106,6 +106,7 @@ $(document).ready(function(){
 
   $('#stock_jde').dataTable({
     sPaginationType: "full_numbers",
+    bResponsive: true,
     bProcessing: true,
     bServerSide: true,
     sAjaxSource: $('#stock_jde').data('source')
