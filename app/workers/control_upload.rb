@@ -25,6 +25,10 @@ class ControlUpload
 
   end
 
+  def intransit_pos
+    PosAutoIntransit.insert_delivered_stock_from_jde
+  end
+
   def send_mail
     UserMailer.report.deliver
   end

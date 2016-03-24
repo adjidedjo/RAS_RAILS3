@@ -62,3 +62,11 @@ jde_migration_order:
   description: sales reports jde
   rails_envs: development, production, staging
 
+jde_intransit_to_pos:
+  cron: "0 8-21 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "intransit_pos"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+
