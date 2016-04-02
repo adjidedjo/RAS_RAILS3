@@ -4,7 +4,7 @@ class PosAutoIntransit < ActiveRecord::Base
 
   def self.insert_delivered_stock_from_jde
     PosChannelCustomer.where("address_number > ?", 0).each do |pcc|
-      SalesOrderHistoryJde.find_sales_transfer_to_showroom("16/03/2016".to_date, pcc.address_number).each do |soh|
+      SalesOrderHistoryJde.find_sales_transfer_to_showroom(Date.today, pcc.address_number).each do |soh|
         jde_date_today = jde_date_to_date(soh.sdaddj.to_i)
         nama_brg = soh.sddsc1.strip + " " + soh.sddsc2.strip
         duplicate_stock = self.where(channel_customer_id: pcc.id, serial: soh.sdlotn, kode_barang: soh.sdaitm.strip, no_sj: soh.sddeln)
