@@ -101,9 +101,9 @@
             <th scope="row"><%= date.strftime("%d/%b/%y") %></th>
             <% @cabang_get_id_second.each do |cab| %>
               <% if params[:category] == "Penjualan" %>
-                <td><%= cab.laporan_cabang.check_invoices(date, "Non Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, ["Non Serenity", "ELITE"]).limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
                 <td><%= cab.laporan_cabang.check_invoices(date, "Serenity").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
-                <td><%= cab.laporan_cabang.check_invoices(date, "Lady Americana").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
+                <td><%= cab.laporan_cabang.check_invoices(date, ["Lady Americana", "LADY"]).limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
                 <td bgcolor="#E2E4FF"><%= cab.laporan_cabang.check_invoices(date, "Royal").limit(1).any? ? image_tag("checkmark.gif") : "0" %></td>
               <% else %>
                 <td><%= cab.stock.control_stock(date, "E").order("id desc").limit(1).any? ? image_tag("checkmark.gif") : "" %></td>
