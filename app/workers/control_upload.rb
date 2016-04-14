@@ -93,5 +93,6 @@ class ControlUpload
 
   def daily_migration_jde
     JdeSoDetail.import_so_detail
+    JdeItemMaster.get_new_items_from_jde
   end
 end
