@@ -12,15 +12,20 @@ class StockController < ApplicationController
   end
 
   def index
-		@branch = Cabang.branch_get_name(current_user)
-		@brand = Merk.merk_all(current_user)
-		@type = Product.all
-		@article = Artikel.group(:Produk)
-		@fabric = Kain.all
+    @branch = Cabang.branch_get_name(current_user)
+	@brand = Merk.merk_all(current_user)
+    @type = Product.all
+	@article = Artikel.group(:Produk)
+	@fabric = Kain.all
     @id_cabang = Cabang.get_id
     @get_stock = Stock.check_stock(params[:date], params[:cabang_id], params[:merk_id], params[:type_id], params[:article_id],
       params[:fabric_id], params[:size]) if params[:date].present?
 		@task_months = @get_stock.group_by { |t| [t.kodebrg.slice(0..14), t.cabang] } unless params[:date].nil?
+
+    respond_to do |format|
+      format.html
+      format.xls
+    end
   end
 
   def update_kategori

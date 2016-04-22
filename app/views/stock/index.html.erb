@@ -36,6 +36,8 @@
                   <button type="submit" class="btn btn-primary">
                     <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
                   </button>
+                  <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], :cabang_id => params[:cabang_id],
+                    :merk_id => params[:merk_id], :type_id => params[:type_id], :article_id => params[:article_id]), :class=>"btn btn-info" %>
                 </div>
               </div>
             </div>
@@ -62,6 +64,7 @@
                 <th>Panjang</th>
                 <th>Lebar</th>
                 <th>Free</th>
+                <th>Out SO</th>
               </tr>
             </thead>
             <tbody>
@@ -75,6 +78,7 @@
                   <td><%= stock.kodebrg.slice(12..14) %></td>
                   <td><%= stock.kodebrg.slice(15..17) %></td>
                   <td><%= stock.freestock %></td>
+                  <td><%= stock.outstandingSO%></td>
                 </tr>
               <% end %>
             </tbody>

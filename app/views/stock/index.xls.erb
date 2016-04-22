@@ -1,60 +1,41 @@
-<h2 style="font-size: 20px; position: absolute; left: 350px;"><i>Normal Stock Report Period <%= params[:date].to_date.strftime("%e %B %Y") %></i></h2>
-<br /><br />
-<table id="stock" class="display">
-  <thead>
-    <tr>
-      <th rowspan="3">Cabang</th>
-      <th rowspan="3">Jenis</th>
-      <th rowspan="3">Brand</th>
-      <th rowspan="3">Artikel</th>
-      <th rowspan="3">Kain</th>
-    </tr>
-    <tr>
-      <th colspan="5">90</th>
-      <th colspan="5">100</th>
-      <th colspan="5">120</th>
-      <th colspan="5">160</th>
-      <th colspan="5">180</th>
-      <th colspan="5">200</th>
-    </tr>
-    <tr>
-      <% (1..6).each do %>
-        <th>Freestock</th>
-        <th>Bufferstock</th>
-        <th>Realstock</th>
-        <th>Service</th>
-        <th>Downgrade</th>
-      <% end %>
-    </tr>
-  </thead>
-  <tfoot>
-  </tfoot>
-  <tbody>
-    <% @task_months.each do |test, stocks| %>
-      <tr>
-        <th scope="row"><%= Cabang.find_by_id(test[1]).Cabang.gsub(/Cabang/, "") %></th>
-        <td scope="row"><%= Product.product_name(test[0].slice(0..1)).first.Namaroduk unless Product.product_name(test[0].slice(0..1)).first.nil? %></th>
-        <td scope="row"><%= Merk.merk_name(test[0].slice(2)).first.Merk unless Merk.merk_name(test[0].slice(2)).first.nil? %></th>
-        <td scope="row"><%= Artikel.artikel_name(test[0].slice(2..5)).first.Produk unless Artikel.artikel_name(test[0].slice(2..5)).first.nil? %></th>
-        <td scope="row"><%= Kain.kain_name(test[0].slice(6..10)).first.NamaKain unless Kain.kain_name(test[0].slice(6..10)).first.nil? %></th>
-          <% ["090","100","120","160","180","200"].each do |size| %>
-            <% if Stock.get_size_qty(test[0], test[1], params[:date], size).empty? %>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          <% else %>
-            <% Stock.get_size_qty(test[0], test[1], params[:date], size).each do |qty| %>
-              <td><%= qty.freestock  %></td>
-              <td><%= qty.bufferstock  %></td>
-              <td><%= qty.realstock  %></td>
-              <td><%= qty.realstockservice  %></td>
-              <td><%= qty.realstockdowngrade  %></td>
-            <% end %>
-          <% end %>
+<div class="span6">
+  <div class="col-sm-6 col-md-4 col-md-offset-4">
+    <div class="span8" style="padding-top: 25px">
+      <div class="block-content collapse in">
+        <% unless params[:date].nil? %>
+          <table id="stock_a" border="1" class="display responsive no-wrap" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Cabang</th>
+                <th>Brand</th>
+                <th>Jenis</th>
+                <th>Produk</th>
+                <th>Kain</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
+                <th>Free</th>
+                <th>Out SO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @get_stock.map do |stock| %>
+                <tr>
+                  <td><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+                  <td><%= brand(Merk.merk_name(stock.kodebrg.slice(2)).first.Merk) unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></td>
+                  <td><%= Product.product_name(stock.kodebrg.slice(0..1)).first.KodeProduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></td>
+                  <td><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></td>
+                  <td><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></td>
+                  <td><%= stock.kodebrg.slice(12..14) %></td>
+                  <td><%= stock.kodebrg.slice(15..17) %></td>
+                  <td><%= stock.freestock %></td>
+                  <td><%= stock.outstandingSO%></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="freestock">Freestock</div>
         <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      </div>
+    </div>
+  </div>
+</div>
