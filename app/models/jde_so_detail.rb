@@ -2,9 +2,19 @@ class JdeSoDetail < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "proddta.f4211" #sd
 
+  def self.outstanding_so(item_number, first_week, last_week, branch_plan)
+    select("sum(sduorg) as sduorg").where("sditm = ? and sdnxtr < ? and sdlttr < ? and sddcto like ? and sdtrdj between ? and ? and sdmcu like ?",
+      item_number, "999", "580", "SO", date_to_julian(first_week), date_to_julian(last_week), "%#{branch_plan}%")
+  end
+
+  def self.delivered_so(item_number, first_week, last_week)
+    select("sum(sdsoqs) as sdsoqs").where("sditm = ? and sdnxtr = ? and sdlttr = ? and sddcto like ? and sdaddj between ? and ?",
+      item_number, "999", "580", "SO", date_to_julian(first_week), date_to_julian(last_week))
+  end
+
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where(sdnxtr: "999", sdlttr: "580", sddcto: "SO").where("sdaddj = ?", date_to_julian(Date.yesterday.to_date)).each do |a|
+    where(sdnxtr: "999", sdlttr: "580", sddcto: "SO").where("sdaddj = ?", date_to_julian(1.day.ago.to_date)).each do |a|
       fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
       customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
       if customer.abat1.strip == "C"

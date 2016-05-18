@@ -3,6 +3,7 @@ class SqlFreeStock < ActiveRecord::Base
   set_table_name "TbStockCabang"
 
   def self.migration_stok
+    Stock.auto_stock_jde
     where("tanggal >= ?", Date.today).each do |sql_stock|
       fstock = Stock.where(cabang_id: sql_stock.cabang, kodebrg: sql_stock.kodebrg)
       if fstock.empty?
