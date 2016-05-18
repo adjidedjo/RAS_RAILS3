@@ -3,7 +3,7 @@
     <div class="span8" style="padding-top: 25px">
       <div class="block-content collapse in">
         <% unless params[:date].nil? %>
-        <h4>Stock per Tanggal <%= params[:date].to_date.strftime("%Y-%m-%d") %></h4>
+        <h4>Stock per Tanggal <%= params[:date].to_date.strftime("%d %B %Y") %></h4>
           <table id="stock_a" border="1" class="display responsive no-wrap" cellspacing="0">
             <thead>
               <tr>
