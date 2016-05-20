@@ -36,16 +36,17 @@
     <table class="tableizer-table">
       <tr>
         <th rowspan="3">Dates</th>
-        <th colspan="24">Control</th>
+        <th colspan="36">Control</th>
       </tr>
       <tr>
         <% Cabang.get_id_to_7.each do |cabang| %>
-          <th colspan="3"><%= cabang.Alias %></th>
+          <th colspan="4"><%= cabang.Alias %></th>
         <% end %>
       </tr>
       <tr>
-        <% (1..8).each do |a| %>
+        <% (1..9).each do |a| %>
           <th>E</th>
+          <th>S</th>
           <th>L</th>
           <th>R</th>
         <% end %>
@@ -54,8 +55,9 @@
         <tr>
           <th scope="row"><%= date.strftime("%e%b%y") %></th>
           <% @cabang_get_id_first.each do |cab| %>
-            <td><%= cab.laporan_cabang.check_invoices(date, "Non Serenity").limit(1).any? ? "up" : "0" %></td>
-            <td><%= cab.laporan_cabang.check_invoices(date, "Lady Americana").limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, ["Non Serenity", "ELITE"]).limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, "Serenity").limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, ["Lady Americana", "LADY"]).limit(1).any? ? "up" : "0" %></td>
             <td><%= cab.laporan_cabang.check_invoices(date, "Royal").limit(1).any? ? "up" : "0" %></td>
           <% end %>
         </tr>
@@ -65,11 +67,11 @@
     <table class="tableizer-table">
       <tr>
         <th rowspan="3">Dates</th>
-        <th colspan="24">Control</th>
+        <th colspan="32">Control</th>
       </tr>
       <tr>
         <% Cabang.get_id_to_22.each do |cabang| %>
-          <th colspan="3"><%= cabang.Alias %></th>
+          <th colspan="4"><%= cabang.Alias %></th>
         <% end %>
       </tr>
       <tr>
