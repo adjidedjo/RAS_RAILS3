@@ -43,7 +43,7 @@
       <% @search_by_ukuran.each do |sbb| %>
         <Row>
 
-          <Cell><Data ss:Type="String"><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang/,'')  : '-' %></Data></Cell>
+          <Cell><Data ss:Type="String"><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang /,'')  : '-' %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.nosj %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.tanggalsj %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.nofaktur %></Data></Cell>
@@ -59,18 +59,18 @@
           <Cell><Data ss:Type="String"><%= sbb.namabrand %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.namaartikel %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.namakain %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.panjang %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.lebar %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.jumlah %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.hargasatuan %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.diskon1 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.diskon2 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.diskon3 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.diskon4 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.diskon5 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.harganetto2 %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.cashback %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.nupgrade %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.panjang %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.lebar %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.jumlah %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.hargasatuan %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.diskon1 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.diskon2 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.diskon3 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.diskon4 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.diskon5 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.harganetto2 %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.cashback %></Data></Cell>
+          <Cell><Data ss:Type="Number"><%= sbb.nupgrade %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.ketppb %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.kota %></Data></Cell>
           <Cell><Data ss:Type="String"><%= sbb.tipecust%></Data></Cell>
