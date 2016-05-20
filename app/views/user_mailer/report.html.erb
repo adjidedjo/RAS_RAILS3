@@ -5,18 +5,18 @@
     <title>Laporan Upload Data Penjualan Harian</title>
     <style type="text/css">
       table.tableizer-table {
-        border: 1px solid #CCC; 
+        border: 1px solid #CCC;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 12px;
         width: "100%";
-      } 
+      }
       .tableizer-table td {
         padding: 4px;
         margin: 3px;
         border: 1px solid #ccc;
       }
       .tableizer-table th {
-        background-color: #104E8B; 
+        background-color: #104E8B;
         color: #FFF;
         font-weight: bold;
       }
@@ -75,6 +75,7 @@
       <tr>
         <% (1..8).each do |a| %>
           <th>E</th>
+          <th>S</th>
           <th>L</th>
           <th>R</th>
         <% end %>
@@ -83,14 +84,15 @@
         <tr>
           <th scope="row"><%= date.strftime("%e%b%y") %></th>
           <% @cabang_get_id_second.each do |cab| %>
-            <td><%= cab.laporan_cabang.check_invoices(date, "Non Serenity").limit(1).any? ? "up" : "0" %></td>
-            <td><%= cab.laporan_cabang.check_invoices(date, "Lady Americana").limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, ["Non Serenity", "ELITE"]).limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, "Serenity").limit(1).any? ? "up" : "0" %></td>
+            <td><%= cab.laporan_cabang.check_invoices(date, ["Lady Americana", "LADY"]).limit(1).any? ? "up" : "0" %></td>
             <td><%= cab.laporan_cabang.check_invoices(date, "Royal").limit(1).any? ? "up" : "0" %></td>
           <% end %>
         </tr>
       <% end %>
     </table>
-    
+
     <p>Note:</p>
     <p>up = Data pada tanggal tersebut sudah di upload</p>
     <p>0 = Data pada tanggal tersebut belum di upload</p>
