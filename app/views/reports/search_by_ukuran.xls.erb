@@ -1,82 +1,78 @@
-<?xml version="1.0"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
-          xmlns:o="urn:schemas-microsoft-com:office:office"
-          xmlns:x="urn:schemas-microsoft-com:office:excel"
-          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
-          xmlns:html="http://www.w3.org/TR/REC-html40">
-  <Worksheet ss:Name="Sheet1">
-    <Table>
-      <Row>
+<table>
+  <thead>
+    <tr>
 
-        <Cell><Data ss:Type="String">Cabang</Data></Cell>
-        <Cell><Data ss:Type="String">No SJ</Data></Cell>
-        <Cell><Data ss:Type="String">Tanggal SJ</Data></Cell>
-        <Cell><Data ss:Type="String">No Faktur</Data></Cell>
-        <Cell><Data ss:Type="String">No So</Data></Cell>
-        <Cell><Data ss:Type="String">Kode Customer</Data></Cell>
-        <Cell><Data ss:Type="String">Customer</Data></Cell>
-        <Cell><Data ss:Type="String">Alamat Kirim</Data></Cell>
-        <Cell><Data ss:Type="String">Salesman</Data></Cell>
-        <Cell><Data ss:Type="String">Kode Barang</Data></Cell>
-        <Cell><Data ss:Type="String">Nama Barang</Data></Cell>
-        <Cell><Data ss:Type="String">Merk</Data></Cell>
-        <Cell><Data ss:Type="String">Jenis</Data></Cell>
-        <Cell><Data ss:Type="String">Series</Data></Cell>
-        <Cell><Data ss:Type="String">Artikel</Data></Cell>
-        <Cell><Data ss:Type="String">Kain</Data></Cell>
-        <Cell><Data ss:Type="Number">Panjang</Data></Cell>
-        <Cell><Data ss:Type="Number">Lebar</Data></Cell>
-        <Cell><Data ss:Type="Number">Quantity</Data></Cell>
-        <Cell><Data ss:Type="Number">Harga Satuan</Data></Cell>
-        <Cell><Data ss:Type="Number">Diskon 1</Data></Cell>
-        <Cell><Data ss:Type="Number">Diskon 2</Data></Cell>
-        <Cell><Data ss:Type="Number">Diskon 3</Data></Cell>
-        <Cell><Data ss:Type="Number">Diskon 4</Data></Cell>
-        <Cell><Data ss:Type="Number">Diskon 5</Data></Cell>
-        <Cell><Data ss:Type="Number">Value</Data></Cell>
-        <Cell><Data ss:Type="Number">Cashback</Data></Cell>
-        <Cell><Data ss:Type="Number">Upgrade</Data></Cell>
-        <Cell><Data ss:Type="String">Ket PPB</Data></Cell>
-        <Cell><Data ss:Type="String">Kota</Data></Cell>
-        <Cell><Data ss:Type="String">Jenis Customer</Data></Cell>
-      </Row>
-      <% @search_by_ukuran.each do |sbb| %>
-        <Row>
+      <th>Cabang</th>
+      <th>No SJ</th>
+      <th>Tanggal SJ</th>
+      <th>No Faktur</th>
+      <th>No So</th>
+      <th>Kode Customer</th>
+      <th>Customer</th>
+      <th>Alamat Kirim</th>
+      <th>Salesman</th>
+      <th>Kode Barang</th>
+      <th>Nama Barang</th>
+      <th>Merk</th>
+      <th>Jenis</th>
+      <th>Series</th>
+      <th>Artikel</th>
+      <th>Kain</th>
+      <th>Panjang</th>
+      <th>Lebar</th>
+      <th>Quantity</th>
+      <th>Harga Satuan</th>
+      <th>Diskon 1</th>
+      <th>Diskon 2</th>
+      <th>Diskon 3</th>
+      <th>Diskon 4</th>
+      <th>Diskon 5</th>
+      <th>Value</th>
+      <th>Cashback</th>
+      <th>Upgrade</th>
+      <th>Ket PPB</th>
+      <th>Kota</th>
+      <th>Jenis Customer</th>
+    </tr>
+  </thead>
+  <tbody>    
+    <% @search_by_ukuran.each do |sbb| %>
+      <tr>
+  
 
-          <Cell><Data ss:Type="String"><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang /,'')  : '-' %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.nosj %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.tanggalsj %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.nofaktur %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.noso %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.kode_customer %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.customer %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.alamatkirim %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.salesman %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.kodebrg %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.namabrg %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.jenisbrgdisc %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.jenisbrg %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.namabrand %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.namaartikel %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.namakain %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.panjang %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.lebar %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.jumlah %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.hargasatuan %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.diskon1 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.diskon2 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.diskon3 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.diskon4 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.diskon5 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.harganetto2 %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.cashback %></Data></Cell>
-          <Cell><Data ss:Type="Number"><%= sbb.nupgrade %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.ketppb %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.kota %></Data></Cell>
-          <Cell><Data ss:Type="String"><%= sbb.tipecust%></Data></Cell>
-        </Row>
-      <% end %>
-    </Table>
-  </Worksheet>
-</Workbook>
+        <td><%= sbb.cabang_id.present? ? Cabang.find_by_id(sbb.cabang_id).Cabang.gsub(/Cabang /,'')  : '-' %></td>
+        <td><%= sbb.nosj %></td>
+        <td><%= sbb.tanggalsj %></td>
+        <td><%= sbb.nofaktur %></td>
+        <td><%= sbb.noso %></td>
+        <td><%= sbb.kode_customer %></td>
+        <td><%= sbb.customer %></td>
+        <td><%= sbb.alamatkirim %></td>
+        <td><%= sbb.salesman %></td>
+        <td><%= sbb.kodebrg %></td>
+        <td><%= sbb.namabrg %></td>
+        <td><%= sbb.jenisbrgdisc %></td>
+        <td><%= sbb.jenisbrg %></td>
+        <td><%= sbb.namabrand %></td>
+        <td><%= sbb.namaartikel %></td>
+        <td><%= sbb.namakain %></td>
+        <td><%= sbb.panjang %></td>
+        <td><%= sbb.lebar %></td>
+        <td><%= sbb.jumlah.to_i %></td>
+        <td><%= sbb.hargasatuan %></td>
+        <td><%= sbb.diskon1 %></td>
+        <td><%= sbb.diskon2 %></td>
+        <td><%= sbb.diskon3 %></td>
+        <td><%= sbb.diskon4 %></td>
+        <td><%= sbb.diskon5 %></td>
+        <td><%= sbb.harganetto2 %></td>
+        <td><%= sbb.cashback %></td>
+        <td><%= sbb.nupgrade %></td>
+        <td><%= sbb.ketppb %></td>
+        <td><%= sbb.kota %></td>
+        <td><%= sbb.tipecust%></th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
