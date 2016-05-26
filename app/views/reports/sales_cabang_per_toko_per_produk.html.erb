@@ -17,7 +17,7 @@
       <label style="font-size: 13px;">Customer: </label>
       <%= select_tag 'customer_scp', options_for_select(SalesCustomer.get_name_customer(params[:month].to_date).collect {|a| [a.customer, a.customer]}, params[:customer_scp]), :class => 'multiselect', :multiple => true %>
       <label style="font-size: 13px;">Channel Customer: </label>
-      <%= select_tag 'customer_channel', options_for_select(ChannelCustomer.all.collect {|a| [a.channel, a.channel]}, params[:customer_channel]), :class => 'multiselect', :multiple => true %>
+      <%= select_tag 'customer_channel', options_for_select(CcSalesAnalytic.all.collect {|a| [a.channel, a.channel]}, params[:customer_channel]), :class => 'multiselect', :multiple => true %>
       <label style="font-size: 13px;">Group Customer: </label>
       <%= select_tag 'customer_group', options_for_select(SalesCustomer.get_name_group_customer(params[:month].to_date).collect {|a| [a.group_customer, a.group_customer]}, params[:customer_group]), :class => 'multiselect', :multiple => true %>
       <button type="submit" class="btn btn-primary">

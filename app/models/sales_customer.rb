@@ -36,6 +36,13 @@ class SalesCustomer < ActiveRecord::Base
   end
 
   def self.sales_cabang_per_toko_per_produk(merk, produk, cabang, date, customer, channel, group)
+    if merk == 'Non Serenity'
+      merk = ['Non Serenity', 'ELITE']
+    elsif merk == 'Lady Americana'
+      merk = ['LADY', 'Lady Americana']
+    elsif merk == 'Classic'
+      merk = ['CLASSIC', 'Classic']
+    end
     select("sum(qty) as qty, sum(val) as val")
     .where("bulan = ? and tahun = ?", date.month, date.year)
     .search_by_branch(cabang).search_by_type(produk).brand(merk).customer(customer)
