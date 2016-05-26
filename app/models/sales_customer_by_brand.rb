@@ -14,6 +14,18 @@ class SalesCustomerByBrand < ActiveRecord::Base
   scope :customer_channel, lambda {|channel| where("tipe_customer in (?)", channel) if channel.present?}
 	scope :customer_group, lambda {|group| where("group_customer in (?)", group) if group.present?}
 
+  def self.find_merk(merk)
+    if merk == 'Non Serenity'
+      merk = ['Non Serenity', 'ELITE']
+    elsif merk == 'Lady Americana'
+      merk = ['LADY', 'Lady Americana']
+    elsif merk == 'Classic'
+      merk = ['CLASSIC', 'Classic']
+    else
+      merk
+    end
+  end
+
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,
       customer_all_retail)
     select("sum(qty) as sum_jumlah, sum(val) as sum_harganetto2")
