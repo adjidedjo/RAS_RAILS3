@@ -5,7 +5,7 @@
     </div>
   </div>
 </div>
-<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan Project dan Aksesoris</p></h5>
+<h5><p>NB: Hasil Laporan Penjualan ini tidak termasuk penjualan Project</p></h5>
 <div class="span11">
   <p style="text-align: left;">
     <%= form_tag reports_sales_cabang_per_brand_path, :method => 'get', :class => "form form-inline" do %>
@@ -32,7 +32,7 @@
           <tr>
             <th rowspan="2" style="font-size: 13px; text-align: center;">Type</th>
             <% Merk.all.each do |brand| %>
-              <th style="font-size: 13px; text-align: center" colspan="2"><%= brand.Merk %></th>
+              <th style="font-size: 13px; text-align: center" colspan="2"><%= brand.Merk == 'Non Serenity' ? 'Elite' : brand.Merk %></th>
             <% end %>
           </tr>
           <tr>

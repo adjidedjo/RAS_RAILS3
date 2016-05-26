@@ -54,6 +54,18 @@ class LaporanCabang < ActiveRecord::Base
   scope :accessoris_bonus, where("kodejenis not like ? and bonus like ?", 'AC', 'BONUS')
   scope :nosj_to_check, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?",%(#{'SJY'}%), %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 
+  def self.combine_group(merk)
+    if merk == 'Non Serenity' || merk == 'Accessoris Elite'
+      merk = 'ELITE'
+    elsif merk == 'Lady Americana' || merk == 'Accessoris Lady'
+      merk = 'Lady Americana'
+    elsif merk == 'Classic'
+      merk = 'CLASSIC'
+    elsif merk == 'Technogel' || merk == 'Accessoris Technogel'
+      merk = 'TECHGEL'
+    end
+  end
+
   def self.grand_total_cabang(cabang)
     select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah").search_by_branch(cabang).search_by_month_and_year(Date.today.month, Date.today.year).not_equal_with_nosj
   end
@@ -93,7 +105,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
@@ -109,7 +121,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesSalesman.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis)
       else
@@ -125,7 +137,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesCustomer.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel,
           :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
@@ -141,7 +153,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesCustomerByBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, :kode_customer => lapcab.kode_customer,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel, :series => lapcab.namabrand,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe_customer => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
@@ -158,7 +170,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesCustomerByBrandYear.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, :kode_customer => lapcab.kode_customer,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel, :series => lapcab.namabrand,
           :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe_customer => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
@@ -175,7 +187,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesFabric.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
@@ -191,7 +203,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesArticle.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
       else
@@ -204,12 +216,17 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodeartikel, :kodejenis).each do |lapcab|
       sales_brand = SalesProduct.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel)
+      if (lapcab.jenisbrg.include? ('Elite')) || (lapcab.jenisbrg.include? ('LA'))
+        jenis = 'AC'
+      else
+        jenis = lapcab.jenisbrg
+      end
       if sales_brand.nil?
         SalesProduct.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
-          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
+          :kode_produk => jenis, :kode_artikel => lapcab.kodeartikel)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       end
@@ -238,7 +255,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if sales_brand.nil?
         SalesBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)

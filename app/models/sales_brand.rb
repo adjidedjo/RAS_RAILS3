@@ -20,6 +20,8 @@ class SalesBrand < ActiveRecord::Base
       merk = ['LADY', 'Lady Americana']
     elsif merk == 'Classic'
       merk = ['CLASSIC', 'Classic']
+    elsif merk == 'Technogel'
+      merk = ['TECHGEL', 'Technogel']
     end
     select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).brand(merk)
   end
