@@ -64,7 +64,7 @@ class ControlUpload
     LaporanCabang.sales_by_customer(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_customer_by_brand(Date.today.month, Date.today.year)
     LaporanCabang.sales_by_salesmen(Date.today.month, Date.today.year)
-    LaporanCabang.sales_by_size(Date.today.month, Date.today.year)
+    LaporanCabang.sales_by_size(Date.today.day, Date.today.month, Date.today.year)
     LaporanCabang.sales_by_customer_by_brand_yearly(Date.today.year)
   end
 

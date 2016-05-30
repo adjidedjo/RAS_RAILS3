@@ -86,27 +86,34 @@ class ReportsController < ApplicationController
   end
 
   def search_by_ukuran
+    from_d = params[:from].to_date.day
+    to_d = params[:to].to_date.day
     from_m = params[:from].to_date.month
     to_m = params[:to].to_date.month
     from_y = params[:from].to_date.year
     to_y = params[:to].to_date.year
     @artikel = Artikel.group("Produk")
     @kain = Kain.group("NamaKain")
-    @search_by_ukuran = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y)
+    @search_by_ukuran = SalesSize.select("*, sum(qty) as sum_jumlah, sum(val) as sum_val").between_date_sales(from_m, to_m, from_y, to_y).between_day(from_d, to_d)
     .brand(params[:brand]).search_by_branch(params[:branch]).search_by_type(params[:produk]).lebar(params[:lebar])
     .artikel(params[:artikel]).fabric(params[:kain]).group("cabang_id, merk, produk, artikel, kain, ukuran")
 
-    if params[:format] == "xls"
+    if params[:format] == "xls" || params[:format] == "csv"
       @search_by_ukuran = LaporanCabang.between_date_sales(params[:from], params[:to])
       .brand(params[:brand]).type(params[:produk]).search_by_branch(params[:branch])
       .search_by_namaarticle(params[:artikel]).namafabric(params[:kain])
-      .size_st(params[:ukuran]).lebar(params[:lebar])
+      .size_st(params[:ukuran]).lebar(params[:lebar]).order(:tanggalsj)
     end
 
     respond_to do |format|
       format.html
       format.xls
       format.xml
+      format.csv do
+        @search_by_ukuran.each do |aa|
+          send_data aa.class.to_csv
+        end
+      end
     end
   end
 

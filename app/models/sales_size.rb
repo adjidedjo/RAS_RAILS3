@@ -1,5 +1,6 @@
 class SalesSize < ActiveRecord::Base
   scope :between_date_sales, lambda { |from_m, to_m, from_y, to_y| where("bulan between ? and ? and tahun between ? and ?", from_m, to_m, from_y, to_y) if from_m.present? && to_m.present? }
+  scope :between_day, lambda { |from_d, to_d| where("tanggal between ? and ?", from_d, to_d) if from_d.present? && from_d.present?}
   scope :year, lambda { |year| where("tahun = ?", year) if year.present?}
   scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
 	scope :search_by_type, lambda {|type| where("produk in (?)", type) if type.present? }
