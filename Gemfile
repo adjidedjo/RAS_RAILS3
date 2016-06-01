@@ -54,9 +54,10 @@ gem 'ruby-oci8'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-gem 'capistrano'
-gem 'capistrano-ext'
-gem 'rvm-capistrano'
+gem 'capistrano-rvm'
+gem 'capistrano', '~> 3.0'
+gem 'capistrano-rails', '~> 1.1', require: false
+gem 'capistrano-bundler', '~> 1.1', require: false
 gem 'net-ssh'
 
 # To use debugger

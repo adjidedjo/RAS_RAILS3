@@ -24,6 +24,7 @@ GEM
       activesupport (= 3.1.3)
       arel (~> 2.2.1)
       tzinfo (~> 0.3.29)
+    activerecord-oracle_enhanced-adapter (1.4.3)
     activerecord-sqlserver-adapter (3.1.7)
       activerecord (~> 3.1.0)
     activeresource (3.1.3)
@@ -176,6 +177,7 @@ GEM
       nokogiri
       rubyzip
       spreadsheet (> 0.6.4)
+    ruby-oci8 (2.2.1)
     ruby-ole (1.2.11.7)
     rubyzip (1.1.6)
     rufus-scheduler (2.0.24)
@@ -235,6 +237,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-oracle_enhanced-adapter (~> 1.4.0)
   activerecord-sqlserver-adapter
   capistrano
   capistrano-ext
@@ -261,6 +264,7 @@ DEPENDENCIES
   resque-web
   rmagick
   roo
+  ruby-oci8
   rvm-capistrano
   therubyracer
   thin
