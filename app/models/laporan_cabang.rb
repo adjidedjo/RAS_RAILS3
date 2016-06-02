@@ -15,6 +15,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
 	scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
 	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
+	scope :search_by_date, lambda { |date| where("DAY(tanggalsj) = ?", date)}
 	scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
@@ -64,6 +65,8 @@ class LaporanCabang < ActiveRecord::Base
     elsif merk == 'Technogel' || merk == 'Accessoris Technogel'
       merk = 'TECHGEL'
     end
+
+    return merk
   end
 
   def self.grand_total_cabang(cabang)
@@ -97,14 +100,16 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     end
   end
 
-  def self.sales_by_size(bulan, tahun)
+  def self.sales_by_size(tanggal, bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand").search_by_month_and_year(bulan, tahun)
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand")
+    .search_by_month_and_year(bulan, tahun).search_by_date(tanggal)
     .not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :lebar).each do |lapcab|
-      sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.lebar)
+      sales_brand = SalesSize.find_by_tanggal_and_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(tanggal,
+        bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.lebar)
       if sales_brand.nil?
         SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
-          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
+          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, tanggal: tanggal,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
