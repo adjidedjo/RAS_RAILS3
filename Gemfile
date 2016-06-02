@@ -2,14 +2,12 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.1.3'
 
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
+# Bundle edge Rails instead: gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'
 
 
-# Gems used only for assets and not required
-# in production environments by default.
+# Gems used only for assets and not required in production environments by default.
 group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'commonjs'
@@ -47,21 +45,18 @@ gem "activerecord-oracle_enhanced-adapter", "~> 1.4.0"
 # Use oracle as the database for Active Record
 gem 'ruby-oci8'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+# To use ActiveModel has_secure_password gem 'bcrypt-ruby', '~> 3.0.0'
 
-# Use unicorn as the web server
-# gem 'unicorn'
+# Use unicorn as the web server gem 'unicorn'
 
 # Deploy with Capistrano
-gem 'capistrano-rvm'
-gem 'capistrano', '~> 3.0'
-gem 'capistrano-rails', '~> 1.1', require: false
-gem 'capistrano-bundler', '~> 1.1', require: false
+group :development do
+  gem 'capistrano', '~> 2.15'
+  gem 'capistrano-rails'
+end
 gem 'net-ssh'
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+# To use debugger gem 'ruby-debug19', :require => 'ruby-debug'
 
 group :test do
   # Pretty printed test output
