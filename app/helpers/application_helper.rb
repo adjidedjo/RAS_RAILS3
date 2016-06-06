@@ -1,5 +1,18 @@
 module ApplicationHelper
 
+
+  def access_by_brand(user)
+    if user == 'Admin'
+      Merk.all
+    elsif user == 'Elite'
+      ['ELITE', 'NON SERENITY', 'SERENITY']
+    elsif user == 'Lady Americana'
+      ['LADY', 'LADY AMERICANA']
+    elsif user == 'Royal'
+      ['Royal']
+    end
+  end
+
   def brand(brand)
     if brand == 'Non Serenity'
       "E"

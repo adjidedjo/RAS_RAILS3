@@ -24,7 +24,7 @@
                 <%= hidden_field_tag "month", params[:month] %>
                 <div class="control-group">
                   <%= label_tag 'brand' %>
-                  <%= select_tag 'brand_scb', options_for_select(options_for_tipe_price, params[:brand_scb]), :class => 'multiselect', :multiple => true %>
+                  <%= select_tag 'brand_scb', options_for_select(access_by_brand(current_user.user_brand), params[:brand_scb]), :class => 'multiselect', :multiple => true %>
                 </div>
                 <br />
                 <div class="control-group">
