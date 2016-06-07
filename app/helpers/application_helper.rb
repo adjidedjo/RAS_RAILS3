@@ -3,7 +3,7 @@ module ApplicationHelper
 
   def access_by_brand(user)
     if user == 'Admin'
-      Merk.all
+      ['ELITE', 'NON SERENITY', 'SERENITY', 'LADY', 'LADY AMERICANA', 'Royal']
     elsif user == 'Elite'
       ['ELITE', 'NON SERENITY', 'SERENITY']
     elsif user == 'Lady Americana'
