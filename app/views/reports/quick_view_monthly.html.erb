@@ -12,7 +12,7 @@
         <div class="block-content collapse in">
           <%= form_tag reports_quick_view_monthly_process_path, :method => 'get', :class => 'quick_view_month' do %>
             <fieldset>
-              <% if current_user.user_brand == 'Elite' || current_user.user_brand == 'Admin' %>
+              <% if current_user.user_brand == 'Elite' || current_user.user_brand == 'Admin' || current_user.user_brand == 'Accounting' %>
                 <div class="control-group">
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Non Serenity' %> Non Serenity
@@ -24,7 +24,7 @@
                     <%= check_box_tag 'quick_view_brand[]', 'Serenity' %> Serenity
                   </label>
                 <% end %>
-                <% if current_user.user_brand == 'Lady Americana' || current_user.user_brand == 'Admin' %>
+                <% if current_user.user_brand == 'Lady Americana' || current_user.user_brand == 'Admin'  || current_user.user_brand == 'Accounting' %>
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Lady Americana' %> Lady Americana
                   </label>
@@ -32,12 +32,12 @@
                     <%= check_box_tag 'quick_view_brand[]', 'LADY' %> LADY(JDE)
                   </label>
                 <% end %>
-                <% if current_user.user_brand == 'Classic' || current_user.user_brand == 'Admin' %>
+                <% if current_user.user_brand == 'Classic' || current_user.user_brand == 'Admin'  || current_user.user_brand == 'Accounting' %>
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Classic' %> Classic
                   </label>
                 <% end %>
-                <% if current_user.user_brand == 'Royal' || current_user.user_brand == 'Admin' %>
+                <% if current_user.user_brand == 'Royal' || current_user.user_brand == 'Admin'  || current_user.user_brand == 'Accounting' %>
                   <label class="radio">
                     <%= check_box_tag 'quick_view_brand[]', 'Royal' %> Royal
                   </label>

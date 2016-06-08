@@ -63,9 +63,11 @@
           <% end %>
           <%= menu_item "Update Regional & Price List", regionals_path %>
           <%= drop_down "Sales Reports" do %>
-            <%= menu_item "Analysis", reports_search_main_path %>
-            <%= menu_item "Check History PL", show_regional_regionals_path %>
-            <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
+            <% unless current_user.roles == 'Accounting' %>
+              <%= menu_item "Analysis", reports_search_main_path %>
+              <%= menu_item "Check History PL", show_regional_regionals_path %>
+              <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
+            <% end %>
             <% if current_user.user_brand == 'Admin' %>
               <%= drop_down_submenu "Quick View" do %>
                 <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
@@ -83,10 +85,8 @@
                 <% end %>
               <% end %>
             <% else %>
-              <%= menu_item "Analysis", reports_search_main_path %>
               <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
               <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
-              <%= menu_item "Sales Cabang per Brand", reports_sales_cabang_per_brand_path(month: Date.today) %>
             <% end %>
           <% end %>
           <%= menu_item "How To", docs_index_path %>
