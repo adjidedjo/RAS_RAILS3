@@ -88,6 +88,7 @@ class ControlUpload
 
   def daily_migration
     SqlSales.migration_sales_report
+    LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
   end
 
   def daily_migration_jde
