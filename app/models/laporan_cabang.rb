@@ -18,7 +18,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :search_by_date, lambda { |date| where("DAY(tanggalsj) = ?", date)}
 	scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
 	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?",
-       %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
+    %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
 	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
 	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
 	scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))
@@ -32,7 +32,7 @@ class LaporanCabang < ActiveRecord::Base
 	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
 	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
 	scope :namafabric, lambda {|fabric| where("namakain in (?)", fabric) unless fabric.nil?}
-	#scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
+  # #scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
 	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
 	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
 	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
@@ -140,12 +140,17 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel, kota, tipecust, groupcust, plankinggroup,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :customer).each do |lapcab|
       sales_brand = SalesCustomer.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_artikel_and_produk_and_customer(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.namaartikel, lapcab.jenisbrg, lapcab.customer)
+      if (lapcab.jenisbrg.include? ('Elite')) || (lapcab.jenisbrg.include? ('LA'))
+        jenis = 'AC'
+      else
+        jenis = lapcab.kodejenis
+      end
       if sales_brand.nil?
         SalesCustomer.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
           :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2,
-          :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel,
+          :kode_produk => jenis, :kode_artikel => lapcab.kodeartikel,
           :city => lapcab.kota, :group_customer => lapcab.groupcust, :tipe => lapcab.tipecust, :plankinggroup => lapcab.plankinggroup)
       else
         sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
