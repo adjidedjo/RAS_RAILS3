@@ -225,7 +225,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
       if (lapcab.jenisbrg.include? ('Elite')) || (lapcab.jenisbrg.include? ('LA'))
         jenis = 'AC'
       else
-        jenis = lapcab.jenisbrg
+        jenis = lapcab.kodejenis
       end
       if sales_brand.nil?
         SalesProduct.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
