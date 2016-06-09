@@ -1,7 +1,7 @@
 class SqlSales < ActiveRecord::Base
   self.abstract_class = true
   establish_connection "sqlserver"
-  # #set_table_name "VLaporanCabang"
+  #  set_table_name "VLaporanCabang"
   set_table_name "tbLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
@@ -25,9 +25,9 @@ class SqlSales < ActiveRecord::Base
   end
 
   def self.change_brand(brand)
-    if brand == "Non Serenity"
+    if brand == "Non Serenity" || brand == "Accessoris Elite"
       "ELITE"
-    elsif brand == "Lady Americana"
+    elsif brand == "Lady Americana" || brand == "Accessoris Lady"
       "LADY"
     elsif brand == "Royal"
       "ROYAL"
