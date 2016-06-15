@@ -232,7 +232,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
 
   def self.sales_by_product(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg, panjang, lebar, kodejenis, kodeartikel,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").without_acessoris.without_bonus
+customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").without_bonus
     .search_by_month_and_year(bulan, tahun).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodeartikel, :kodejenis).each do |lapcab|
       sales_brand = SalesProduct.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel)
       if (lapcab.jenisbrg.include? ('Elite')) || (lapcab.jenisbrg.include? ('LA'))
