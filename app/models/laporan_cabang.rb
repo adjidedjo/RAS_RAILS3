@@ -104,7 +104,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   def self.sales_by_size(tanggal, bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand")
-    .search_by_month_and_year(bulan, tahun).search_by_date(tanggal)
+    .search_by_month_and_year(bulan, tahun).search_by_date(tanggal).without_acessoris.without_bonus
     .not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :lebar).each do |lapcab|
       sales_brand = SalesSize.find_by_tanggal_and_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(tanggal,
         bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.lebar)
