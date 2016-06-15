@@ -31,7 +31,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
   scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
   scope :namafabric, lambda {|fabric| where("namakain in (?)", fabric) unless fabric.nil?}
-  scope :without_acessoris, where("kodejenis in ('KM', 'DV', 'HB', 'SA', 'SB', 'ST')")
+  scope :without_acessoris, where("kodejenis in ('KM', 'DV', 'HB', 'SA', 'SB', 'ST', 'KB')")
   scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
   scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
   scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
