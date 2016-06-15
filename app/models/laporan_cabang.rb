@@ -9,37 +9,36 @@ class LaporanCabang < ActiveRecord::Base
   scope :query_by_date, lambda {|from, to| where(:tanggalsj => from..to)}
   scope :query_by_single_date, lambda {|date| where(:tanggalsj => date).order("tanggalsj desc")}
   # scope for monthly/monthly
-	scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
-	scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? and type != "AC" }
-	scope :type, lambda {|type| where("jenisbrg in (?)", type) if type.present? and type != "AC" }
-	scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
-	scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
-	scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
-	scope :search_by_date, lambda { |date| where("DAY(tanggalsj) = ?", date)}
-	scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
-	scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?",
-    %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
-	scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
-	scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
-	scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))
-	scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
-	scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
-	scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
-	scope :year, lambda { |year| where("year(tanggalsj) = ?", year) if year.present?}
-	scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
-	scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
-	scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
-	scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
-	scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
-	scope :namafabric, lambda {|fabric| where("namakain in (?)", fabric) unless fabric.nil?}
-  # #scope :without_acessoris, lambda {|kodejenis| where("kodejenis not like ?", %(#{kodejenis}%)) if kodejenis.present?}
-	scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
-	scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
-	scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
-	scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
-	scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
-	scope :sum_jumlah, lambda {sum("jumlah")}
-	scope :sum_amount, select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah")
+  scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
+  scope :search_by_type, lambda {|type| where("kodejenis in (?)", type) if type.present? and type != "AC" }
+  scope :type, lambda {|type| where("jenisbrg in (?)", type) if type.present? and type != "AC" }
+  scope :search_by_article, lambda { |article| where("kodeartikel like ?", %(#{article})) if article.present?}
+  scope :search_by_namaarticle, lambda { |article| where("namaartikel in (?)", article) if article.present?}
+  scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
+  scope :search_by_date, lambda { |date| where("DAY(tanggalsj) = ?", date)}
+  scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
+  scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?",  %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
+  scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
+  scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
+  scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))
+  scope :brand, lambda {|brand| where("jenisbrgdisc in (?)", brand) if brand.present?}
+  scope :brand_size, lambda {|brand_size| where("lebar = ?", brand_size) if brand_size.present?}
+  scope :between_date_sales, lambda { |from, to| where("tanggalsj between ? and ?", from, to) if from.present? && to.present? }
+  scope :year, lambda { |year| where("year(tanggalsj) = ?", year) if year.present?}
+  scope :artikel, lambda {|artikel| where("kodebrg like ?", %(__#{artikel}%)) if artikel.present?}
+  scope :customer, lambda {|customer| where("customer like ?", %(#{customer})) if customer.present? }
+  scope :kode_barang, lambda {|kode_barang| where("kodebrg like ?", kode_barang) if kode_barang.present?}
+  scope :kode_barang_like, lambda {|kode_barang| where("kodebrg like ?", %(%#{kode_barang}%)) if kode_barang.present?}
+  scope :fabric, lambda {|fabric| where("kodekain like ?", fabric) unless fabric.nil?}
+  scope :namafabric, lambda {|fabric| where("namakain in (?)", fabric) unless fabric.nil?}
+  scope :without_acessoris, where("kodejenis in ('KM', 'DV', 'HB', 'SA', 'SB', 'ST')")
+  scope :customer_analyze, lambda {|customer| where("kodebrg like ?", %(___________#{customer}%)) if customer.present?}
+  scope :size_length, lambda {|brand_size| where("kodebrg like ?", %(_______________#{brand_size}%)) if brand_size.present?}
+  scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
+  scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
+  scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
+  scope :sum_jumlah, lambda {sum("jumlah")}
+  scope :sum_amount, select("sum(harganetto2) as sum_harganetto2, sum(jumlah) as sum_jumlah")
   scope :main_category, where("kodejenis in ('km','sa','sb','st')")
   scope :withou_mm, where("customer not like ? and customer not like ?", "ES%",'SOGO%')
   scope :salesman, lambda {|salesman| where("salesman like ?", "#{salesman}%")}
@@ -53,6 +52,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :lebar, lambda {|lebar| where("lebar in (?)", lebar) if lebar.present?}
   scope :brand_on_kodebrg, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :without_empty_brand, where("jenisbrgdisc not like ?", '')
+  scope :without_bonus, where("bonus like ?", '-')
   scope :accessoris_bonus, where("kodejenis not like ? and bonus like ?", 'AC', 'BONUS')
   scope :nosj_to_check, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?",%(#{'SJY'}%), %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 
@@ -358,7 +358,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.weekly_sum_value(cat, from, to)
-    select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2").brand(cat).query_by_date(from.to_date, to.to_date).not_equal_with_nosj
+    select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2").brand(cat).query_by_date(from.to_date, to.to_date).without_acessoris.without_bonus.not_equal_with_nosj
   end
 
   def self.get_percentage(last_month, current_month)

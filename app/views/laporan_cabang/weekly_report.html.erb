@@ -1,12 +1,15 @@
 <% unless params[:periode_week].nil? || params[:periode_week].empty? %>
   <div class="row-fluid">
-    <div class="offset5">
-      <div class="block-content collapse in">
+    <div class="block-content collapse in">
+      <div class="offset4">
         <h2 style="font-size: 17px;"><i>Weekly <%= params[:brand_week].present? ? params[:brand_week].join(",") : "All Brand" %> Sales Report</i></h2>
+      </div>
+      <div class="offset5">
         <h2 style="font-size: 15px;"><i>Week <%= params[:periode_week].to_date.cweek %>, <%= @periode.strftime('%B %Y')  %></i></h2>
       </div>
     </div>
   </div>
+<h5>NB: TIDAK TERMASUK AKSESORIS, BONUS, DISPLAY, DAN PROJECT</h5>
   <div class="span3">
     <p style="text-align: left;">
       <%= form_tag laporan_cabang_weekly_report_path, :method => 'get', :class => "form form-inline" do %>
