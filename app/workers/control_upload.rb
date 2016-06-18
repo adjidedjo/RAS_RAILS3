@@ -27,6 +27,7 @@ class ControlUpload
 
   def intransit_pos
     PosAutoIntransit.insert_delivered_stock_from_jde
+    PosBcpAutoIntransit.insert_delivered_stock_from_jde
   end
 
   def send_mail
