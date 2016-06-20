@@ -37,8 +37,8 @@ class SqlSales < ActiveRecord::Base
   end
 
   def self.migration_sales_report
-    select("*").where("tanggalinput >= ?", Date.today.strftime('%Y-%m-%d')).each do |sql_sales|
-      lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus)
+    select("*").where("month(tanggalsj) = ?", Date.today.month).each do |sql_sales|
+      lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus_and_ketppb(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
           nosj: sql_sales.nosj,
