@@ -41,7 +41,7 @@ class Stock < ActiveRecord::Base
       stock.each do |st|
         free = (st.lipqoh.to_i - st.lihcom.to_i).to_s
         real = (st.lipqoh.to_i + st.lihcom.to_i).to_i.to_s
-        item_master = JdeItemMaster.where(imitm: st.liitm)
+        item_master = JdeItemMaster.where("imitm like ? and imtmpl like ?", st.liitm, "%BJ MATRASS%")
         if item_master.present?
           present_stock = Stock.find_by_kodebrg_and_tanggal_and_cabang_id(item_master.first.imaitm.strip, Date.today.strftime("%Y-%m-%d"), branch_plan(bp))
           if present_stock.nil?
