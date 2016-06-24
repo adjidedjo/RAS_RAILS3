@@ -77,7 +77,6 @@ class ControlUpload
     LaporanCabang.sales_by_customer(Date.today.prev_month.month, Date.today.prev_month.year)
     LaporanCabang.sales_by_customer_by_brand(Date.today.prev_month.month, Date.today.prev_month.year)
     LaporanCabang.sales_by_salesmen(Date.today.prev_month.month, Date.today.prev_month.year)
-    SqlSales.migration_sales_report_prev_month
     (1..31).each do |day|
       LaporanCabang.sales_by_size(day, Date.today.prev_month.month, Date.today.prev_month.year)
     end
