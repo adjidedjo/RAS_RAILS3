@@ -17,7 +17,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
   scope :search_by_date, lambda { |date| where("DAY(tanggalsj) = ?", date)}
   scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
-  scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ?",  %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil)
+  scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ? or nosj is ? or ketppb is ? or ketppb not like ?",  %(#{'SJB'}%), %(#{'SJY'}%), %(#{'SJP'}%), %(#{'RD'}%), nil, nil, %(#{'EXSJ'}%))
   scope :not_equal_with_nofaktur, where("nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ? and nofaktur not like ?", %(#{'FKD'}%), %(#{'FKB'}%), %(#{'FKY'}%), %(#{'FKV'}%), %(#{'FKP'}%))
   scope :no_return, where("nofaktur not like ? and nofaktur not like ? ", %(#{'RTR'}%),%(#{'RET'}%))
   scope :no_pengajuan, where("ketppb not like ?", %(%#{'pengajuan'}%))
