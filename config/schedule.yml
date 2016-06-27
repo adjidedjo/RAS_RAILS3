@@ -63,7 +63,7 @@ jde_migration_order:
   rails_envs: development, production, staging
 
 jde_intransit_to_pos:
-  cron: "0 8-21 * * *"
+  cron: "0 8-24 * * *"
   queue: cron
   class: ControlUpload
   args: "intransit_pos"

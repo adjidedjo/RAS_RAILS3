@@ -26,6 +26,7 @@ class ControlUpload
   end
 
   def intransit_pos
+    JdeSoDetail.import_so_detail
     PosAutoIntransit.insert_delivered_stock_from_jde
   end
 
@@ -91,7 +92,6 @@ class ControlUpload
   end
 
   def daily_migration_jde
-    JdeSoDetail.import_so_detail
     JdeItemMaster.get_new_items_from_jde
   end
 end
