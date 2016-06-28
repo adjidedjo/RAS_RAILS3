@@ -19,6 +19,7 @@ class JdeSoDetail < ActiveRecord::Base
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
+        bonus = a.sdaexp == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(a.sdmcu.to_i.to_s[2..3])
@@ -30,7 +31,6 @@ class JdeSoDetail < ActiveRecord::Base
           harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
           kota = JdeAddressByDate.get_city(a.sdan8.to_i)
           group = JdeCustomerByLine.get_group_customer(a.sdan8.to_i, a.sdkcoo.to_i)
-          bonus = a.sdaexp == 0 ? 0 : a.sdaexp
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
