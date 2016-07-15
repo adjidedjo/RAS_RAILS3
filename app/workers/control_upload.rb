@@ -94,4 +94,9 @@ class ControlUpload
   def daily_migration_jde
     JdeItemMaster.get_new_items_from_jde
   end
+
+  def monthly_net_sales
+    SalesBrand.net_sales_update_cabang
+    SalesBrand.net_sales_update_customer
+  end
 end

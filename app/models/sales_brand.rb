@@ -37,5 +37,33 @@ class SalesBrand < ActiveRecord::Base
     .search_by_type(type).brand(brand).artikel(article)
     .fabric(fabric).size_length(size).customer(customer).customer_modern(customer_modern)
     .customer_modern_all(customer_modern).customer_retail_all(customer_all_retail)
-	end
+  end
+
+  def self.net_sales_update_cabang
+    year = Date.today.year
+    bulan = 1.month.ago.month
+    Cabang.all.each do |cabang|
+      Merk.all.each do |merk|
+        faktur = "FK"+merk.IdMerk+"-"+cabang.IdCabang+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
+        jde_net_sales = JdeInvoiceProcessing.where("rprmr1 like ?", "#{faktur}%").sum(:rpag).to_i
+        sb = SalesBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id(year, bulan, merk.jde_brand, cabang.IdCabang)
+        sb.update_attributes!(val: jde_net_sales) unless sb.nil?
+      end
+    end
+  end
+
+  def self.net_sales_update_customer
+    year = Date.today.year
+    bulan = 1.month.ago.month
+    Cabang.all.each do |cabang|
+      Merk.all.each do |merk|
+        faktur = "FK"+merk.IdMerk+"-"+cabang.IdCabang+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
+        jde_net_sales = JdeInvoiceProcessing.select("rpvr01, sum(rpag) as rpag").where("rprmr1 like ?", "#{faktur}%").group("rpvr01")
+        jde_net_sales.each do |jns|
+          sb = SalesBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id_and_customer(year, bulan, merk.jde_brand, cabang.IdCabang, jns.rpvr01.strip)
+          sb.update_attributes!(val: jns.rpag.to_i) unless sb.nil?
+        end
+      end
+    end
+  end
 end

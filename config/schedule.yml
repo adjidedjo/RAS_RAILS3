@@ -39,7 +39,7 @@ check_sales_reports:
   rails_envs: development, production, staging
 
 check_sales_reports_prev_month:
-  cron: "0 4 1-11 * 1-6"
+  cron: "0 4 1-10 * 1-6"
   queue: cron
   class: ControlUpload
   args: "check_reports_prev_month"
@@ -69,4 +69,13 @@ jde_intransit_to_pos:
   args: "intransit_pos"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
+
+jde_net_sales:
+  cron: "0 4 * 11 * *"
+  queue: cron
+  class: ControlUpload
+  args: "monthly_net_sales"
+  description: migration net sales to sales analytic
+  rails_envs: development, production, staging
+
 
