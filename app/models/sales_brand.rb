@@ -41,10 +41,10 @@ class SalesBrand < ActiveRecord::Base
 
   def self.net_sales_update_cabang
     year = Date.today.year
-    bulan = 1.month.ago.month
+    bulan = Date.today.month
     Cabang.all.each do |cabang|
       Merk.all.each do |merk|
-        faktur = "FK"+merk.IdMerk+"-"+cabang.IdCabang+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
+        faktur = "FK"+merk.IdMerk+"-"+cabang.jde_id+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
         jde_net_sales = JdeInvoiceProcessing.where("rprmr1 like ?", "#{faktur}%").sum(:rpag).to_i
         sb = SalesBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id(year, bulan, merk.jde_brand, cabang.IdCabang)
         sb.update_attributes!(val: jde_net_sales) unless sb.nil?
