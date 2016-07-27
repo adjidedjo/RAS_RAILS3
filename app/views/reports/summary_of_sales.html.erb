@@ -22,7 +22,7 @@
         <% ["KB","KM","DV","SA","SB","HB", "AC"].each do |jenis| %>
           <tr>
             <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
-            <% ["Non Serenity", "Lady Americana", "Royal", "Serenity"].each do |cab| %>
+            <% ["ELITE", "LADY", "Royal", "Serenity"].each do |cab| %>
               <% SalesProduct.summary_of_sales(cab, jenis, "").each do |sum| %>
                 <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_jumlah) %></td>
                 <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_harganetto2) %> </td>
@@ -63,7 +63,7 @@
         <thead>
           <tr>
             <th rowspan="2" style="font-size: 15px; text-align: center;">Type</th>
-            <% ["Elite", "Lady Americana", "Royal", "Serenity"].each do |brand| %>
+            <% ["ELITE", "LADY", "Royal", "Serenity"].each do |brand| %>
               <th style="font-size: 15px; text-align: center" colspan="2"><%= brand %></th>
             <% end %>
           </tr>
@@ -97,7 +97,7 @@
           <% ["KB","KM","DV","SA","SB","HB", "AC"].each do |jenis| %>
             <tr>
               <th scope="row" style="font-size: 15px; height: 10px;"><%= jenis(jenis) %></th>
-              <% ["Non Serenity", "Lady Americana", "Royal", "Serenity"].each do |cab| %>
+              <% ["ELITE", "LADY", "Royal", "Serenity"].each do |cab| %>
                 <% SalesProduct.summary_of_sales(cab, jenis, cabang).each do |sum| %>
                   <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_jumlah.to_i) %></td>
                   <td style="font-size: 15px; height: 40px;"><%= currency(sum.sum_harganetto2.to_i) %> </td>
