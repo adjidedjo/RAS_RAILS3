@@ -2,6 +2,9 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  get "peddlers/peddlers_report"
+  get "peddlers/weekly_report"
+
   get "pos_channel_customers/index"
   get 'pos_channel_customers/view_stock'
   get 'pos_channel_customers/view_selisih_intransit'
