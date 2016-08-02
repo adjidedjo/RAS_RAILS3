@@ -1,5 +1,12 @@
 class UserMailer < ActionMailer::Base
   default from: "admin_sales_analytic@ras.co.id"
+  
+  def kontra_bon
+    recipients = ["wiliam.w@ras.co.id", "endang.l@ras.co.id", "irne@ras.co.id", "daniel@ras.co.id", 
+      "rudy.s@ras.co.id", "haryanto@ras.co.id"]
+    mail(:to => recipients, :cc => ["aji.y@ras.co.id", "fenny@ras.co.id"], 
+    :subject => "Laporan Hasil Kontra Bon JDE")
+  end
 
   def report_stock
     recipient_to = []
@@ -8,7 +15,7 @@ class UserMailer < ActionMailer::Base
       recipient_to << rec.email if rec.cc == false
       recipient_cc << rec.email if rec.cc == true
     end
-	@dates = Date.today.beginning_of_month..Date.today
+	  @dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
     @cabang_get_id = Cabang.get_id
@@ -25,7 +32,7 @@ class UserMailer < ActionMailer::Base
     @dates = Date.today.beginning_of_month..Date.today
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
-    mail(:to => recipient_to, :cc => recipient_cc,:subject => "Laporan Upload Data Penjualan Harian")
+    mail(:to => "aji.y@ras.co.id",:subject => "Laporan Upload Data Penjualan Harian")
   end
 
   def report_previous_month
@@ -35,7 +42,7 @@ class UserMailer < ActionMailer::Base
       recipient_to << rec.email if rec.cc == false
       recipient_cc << rec.email if rec.cc == true
     end
-		@dates = 1.month.ago.beginning_of_month.to_date..1.month.ago.end_of_month.to_date
+    @dates = 1.month.ago.beginning_of_month.to_date..1.month.ago.end_of_month.to_date
     @cabang_get_id_first = Cabang.get_id_to_7
     @cabang_get_id_second = Cabang.get_id_to_22
     mail(:to => recipient_to, :cc => recipient_cc, :subject => "Laporan Upload Data Penjualan Harian Bulan Lalu")

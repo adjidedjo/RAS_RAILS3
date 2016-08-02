@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Laporan Kontra Bon Bulan Lalu</title>
+    <style type="text/css">
+      table.tableizer-table {
+        border: 1px solid #CCC;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        width: "100%";
+      }
+      .tableizer-table td {
+        padding: 4px;
+        margin: 3px;
+        border: 1px solid #ccc;
+      }
+      .tableizer-table th {
+        background-color: #104E8B;
+        color: #FFF;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+
+    <p>Dear All,</p>
+
+    <p>Dengan email ini kami beritahukan cabang-cabang yang telah melakukan kontra bon di JDE untuk penjualan bulan lalu.</p>
+    <p>Jika ada hasil yang masih <b>BELUM SESUAI</b> atau <b>BLANK/KOSONG</b>, mohon untuk konfirmasi kembali ke cabang yang terkait</p>
+    <p>Thanks.</p>
+    <table class="tableizer-table">
+      <tr>
+        <th rowspan="2">CABANG</th>
+        <th colspan="4">Control</th>
+      </tr>
+      <tr>
+        <th>ELITE</th>
+        <th>SERENITY</th>
+        <th>LADY</th>
+        <th>ROYAL</th>
+      </tr>
+      <% Cabang.all.each do |cabang| %>
+        <tr>
+          <td><%= cabang.Cabang.gsub(/Cabang/, '') %></td>
+          <td><%= number_to_currency(SalesBrand.sales_cabang_per_merk("ELITE", cabang.IdCabang, 1.month.ago).first.val, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <td><%= number_to_currency(SalesBrand.sales_cabang_per_merk("SERENITY", cabang.IdCabang, 1.month.ago).first.val, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <td><%= number_to_currency(SalesBrand.sales_cabang_per_merk("LADY", cabang.IdCabang, 1.month.ago).first.val, :precision => 0, :unit => "", :delimiter => ".") %></td>
+          <td><%= number_to_currency(SalesBrand.sales_cabang_per_merk("ROYAL", cabang.IdCabang, 1.month.ago).first.val, :precision => 0, :unit => "", :delimiter => ".") %></td>
+        </tr>
+      <% end %>
+    </table>
+
+  </body>
+</html>

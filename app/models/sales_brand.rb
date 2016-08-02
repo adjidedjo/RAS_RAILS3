@@ -22,6 +22,8 @@ class SalesBrand < ActiveRecord::Base
       merk = ['CLASSIC', 'Classic']
     elsif merk == 'Technogel'
       merk = ['TECHGEL', 'Technogel']
+    else
+      merk
     end
     select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).brand(merk)
   end
@@ -41,7 +43,7 @@ class SalesBrand < ActiveRecord::Base
 
   def self.net_sales_update_cabang
     year = Date.today.year
-    bulan = Date.today.month
+    bulan = 5
     Cabang.all.each do |cabang|
       Merk.all.each do |merk|
         faktur = "FK"+merk.IdMerk+"-"+cabang.jde_id+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
@@ -57,7 +59,7 @@ class SalesBrand < ActiveRecord::Base
     bulan = 1.month.ago.month
     Cabang.all.each do |cabang|
       Merk.all.each do |merk|
-        faktur = "FK"+merk.IdMerk+"-"+cabang.IdCabang+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
+        faktur = "FK"+merk.IdMerk+"-"+cabang.jde_id+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
         jde_net_sales = JdeInvoiceProcessing.select("rpvr01, sum(rpag) as rpag").where("rprmr1 like ?", "#{faktur}%").group("rpvr01")
         jde_net_sales.each do |jns|
           sb = SalesBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id_and_customer(year, bulan, merk.jde_brand, cabang.IdCabang, jns.rpvr01.strip)

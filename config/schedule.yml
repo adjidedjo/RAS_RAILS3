@@ -22,6 +22,14 @@ send_email_prev_month:
   description: send report upload sales branches last month
   rails_envs: production
 
+send_email_kontra_bon:
+  cron: "30 09 5,6 * *"
+  queue: cron
+  class: ControlUpload
+  args: "send_mail_kontra_bon"
+  description: send report upload sales branches last month
+  rails_envs: production
+
 update_price_list:
   cron: "01 0 * * *"
   queue: cron
@@ -71,7 +79,7 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
 
 jde_net_sales:
-  cron: "0 3 1-6 * * *"
+  cron: "0 3 5,6 * * *"
   queue: cron
   class: ControlUpload
   args: "monthly_net_sales"

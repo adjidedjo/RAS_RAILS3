@@ -99,4 +99,8 @@ class ControlUpload
     SalesBrand.net_sales_update_cabang
     SalesBrand.net_sales_update_customer
   end
+  
+  def send_email_kontra_bon
+    UserMailer.kontra_bon.deliver
+  end
 end
