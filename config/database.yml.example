@@ -15,6 +15,8 @@ development:
   username: root
   password: royalabadi
   host: 192.168.101.220
+#  host: 127.0.0.1
+#  port: 3307
 
 jdeoracle:
   adapter: oracle_enhanced
@@ -38,6 +40,17 @@ pos:
   encoding: utf8
   reconnect: false
   database: point_of_sales_staging
+  pool: 5
+  reconnect: true
+  username: root
+  password: royalabadi
+  host: 192.168.101.220
+
+bcp:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: point_of_sales_bcp
   pool: 5
   reconnect: true
   username: root
