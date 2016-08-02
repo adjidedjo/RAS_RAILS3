@@ -1,0 +1,57 @@
+<div class="container-fluid" style="height: 10px;">
+  <div class="row">
+    <h4>Asongan</h4>
+    <h5>Laporan Berdasarkan tanggal <%= Date.today.beginning_of_week.strftime("%d %B %Y") %> - <%= Date.today.end_of_week.strftime("%d %B %Y") %></h5>
+
+    <div class="span12">
+      <p style="text-align: left;">
+        <%= form_tag peddlers_peddlers_report_path, :method => 'get', :class => "form form-inline" do %>
+          <label style="font-size: 13px;">Cabang : </label>
+          <%= select_tag "branch", options_for_select(@branch.collect {|a| [a.Cabang, a.id]}, params[:branch]), :class => "input-small" %>
+          <button type="submit" class="btn btn-primary">
+            Refine Search
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <%= link_to 'Export', url_for(:format => 'xls', :branch => params[:branch]) %>
+          </button>
+        <% end %>
+      </p>
+    </div>
+    <% if params[:branch].present? %>
+      <div>
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+          <div class="span12" style="padding-top: 25px">
+            <div class="block-content collapse in">
+              <table id="test" border="1" class="display">
+                <thead>
+                  <tr>
+                    <th>ITEM NUMBER</th>
+                    <th>DESCRIPTION</th>
+                    <th>FREE STOCK</th>
+                    <th>FORECAST</th>
+                    <th>OUTSTANDING SO</th>
+                    <th>REALIZE</th>
+                    <th>BUFFER</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @get_stock.map do |stock| %>
+                    <tr>
+                      <td><%= stock.kodebrg %></td>
+                      <td><%= stock.namabrg %></td>
+                      <td><%= stock.freestock %></td>
+                      <td></td>
+                      <td><%= stock.outstandingSO%></td>
+                      <td><%= stock.realstock %></td>
+                      <td><%= stock.bufferstock %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
