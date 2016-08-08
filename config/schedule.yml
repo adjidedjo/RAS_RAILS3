@@ -15,7 +15,7 @@ send_email:
   rails_envs: production
 
 send_email_prev_month:
-  cron: "30 09 1-11 * *"
+  cron: "30 09 1-5 * *"
   queue: cron
   class: ControlUpload
   args: "send_mail_previous_month"
@@ -79,7 +79,7 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
 
 jde_net_sales:
-  cron: "0 3 5,6 * * *"
+  cron: "0 3 16 * * *"
   queue: cron
   class: ControlUpload
   args: "monthly_net_sales"
