@@ -43,7 +43,7 @@ class SalesBrand < ActiveRecord::Base
 
   def self.net_sales_update_cabang
     year = Date.today.year
-    bulan = 5
+    bulan = 7
     Cabang.all.each do |cabang|
       Merk.all.each do |merk|
         faktur = "FK"+merk.IdMerk+"-"+cabang.jde_id+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
