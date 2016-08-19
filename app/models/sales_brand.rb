@@ -62,7 +62,7 @@ class SalesBrand < ActiveRecord::Base
         faktur = "FK"+merk.IdMerk+"-"+cabang.jde_id+"-"+year.to_s[2,3]+(sprintf '%02d', bulan.to_s)
         jde_net_sales = JdeInvoiceProcessing.select("rpvr01, sum(rpag) as rpag").where("rprmr1 like ?", "#{faktur}%").group("rpvr01")
         jde_net_sales.each do |jns|
-          sb = SalesBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id_and_customer(year, bulan, merk.jde_brand, cabang.IdCabang, jns.rpvr01.strip)
+          sb = SalesCustomerByBrand.find_by_tahun_and_bulan_and_merk_and_cabang_id_and_customer(year, bulan, merk.jde_brand, cabang.IdCabang, jns.rpvr01.strip)
           sb.update_attributes!(val: jns.rpag.to_i) unless sb.nil?
         end
       end
