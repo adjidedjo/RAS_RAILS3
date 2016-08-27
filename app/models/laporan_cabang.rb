@@ -368,7 +368,9 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.weekly_sum_value(cat, from, to)
-    select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2").brand(cat).query_by_date(from.to_date, to.to_date).not_equal_with_nosj.without_acessoris.without_bonus
+    select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
+    .brand(cat).query_by_date(from.to_date, to.to_date).not_equal_with_nosj
+    .without_acessoris.without_bonus
   end
 
   def self.get_percentage(last_month, current_month)
