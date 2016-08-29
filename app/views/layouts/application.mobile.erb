@@ -41,6 +41,10 @@
           <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
           <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
         <% end %>
+      <% else %>
+        <%= menu_group :pull => :right do %>
+          <%= menu_item "Sign In", new_user_session_path %>
+        <% end %>
       <% end %>
     <% end %>
 
