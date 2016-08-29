@@ -24,6 +24,7 @@ class StockController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.mobile
       format.xls
     end
   end

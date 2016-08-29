@@ -15,4 +15,5 @@
 //= require dataTables.fixedColumns
 //= require jquery.tooltipster
 //= require jquery.bxslider
+//= require stacktable
 //= require_tree .

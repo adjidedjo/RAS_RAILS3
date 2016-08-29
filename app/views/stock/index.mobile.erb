@@ -1,0 +1,91 @@
+<div class="container-fluid" style="height: 10px;">
+  <div class="row">
+    <div class="span3">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="block-content">
+          <%= form_tag stock_index_path, :method => 'get', :class => "stock_index" do %>
+            <div class="block">
+              <div class="navbar navbar-inner block-header">
+                <div class="muted pull-left">Search Stock</div>
+                <div class="pull-right"><span class="badge badge-info"></span>
+
+                </div>
+              </div>
+              <div class="block-content">
+                <div class="control-group">
+                  <%= label_tag 'tanggal' %>
+                  <%= text_field_tag 'date', params[:date].nil? ? nil : params[:date], :placeholder => "Date", :html => {:class => "input-large"}  %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'cabang' %>
+                  <%= select_tag 'cabang_id', options_for_select(@branch.collect {|a| [a.Cabang, a.id]},
+                    params[:cabang_id]), :class => 'multiselect', :multiple => true %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'brand' %>
+                  <%= select_tag 'merk_id', options_for_select(@brand.collect {|a| [a.Merk, a.IdMerk]},
+                    params[:merk_id]), {:class => "select",:prompt => 'Select Brand'} %>
+                </div>
+                <div class="control-group">
+                  <%= label_tag 'type' %>
+                  <%= select_tag 'type_id', options_for_select(@type.collect {|a| [a.Namaroduk, a.KodeProduk]},
+                    params[:type_id]), {:class => "select",:prompt => 'Select Type'} %>
+                </div>
+                <br />
+                <div class="control-group">
+                  <button type="submit" class="btn btn-primary">
+                    <%= params[:branch].blank? ? 'Search' : 'Refine Search' %>
+                  </button>
+                  <%= link_to 'Export', url_for(:format => 'xls', :date => params[:date], :cabang_id => params[:cabang_id],
+                    :merk_id => params[:merk_id], :type_id => params[:type_id], :article_id => params[:article_id]), :class=>"btn btn-info" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="span6">
+  <div class="col-sm-6 col-md-4 col-md-offset-4">
+    <div class="span9" style="padding-top: 25px">
+      <div class="block-content collapse in">
+        <% unless params[:date].nil? %>
+          <table id="stock_a" border="1" class="display responsive no-wrap" cellspacing="0">
+            <thead>
+              <tr>
+                <th>Cabang</th>
+                <th>Brand</th>
+                <th>Jenis</th>
+                <th>Produk</th>
+                <th>Kain</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
+                <th>Free</th>
+                <th>Out SO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @get_stock.map do |stock| %>
+                <tr>
+                  <td><%= Cabang.find_by_id(stock.cabang_id).Cabang.gsub(/Cabang/, "") %></td>
+                  <td><%= brand(Merk.merk_name(stock.kodebrg.slice(2)).first.Merk) unless Merk.merk_name(stock.kodebrg.slice(2)).first.nil? %></td>
+                  <td><%= Product.product_name(stock.kodebrg.slice(0..1)).first.KodeProduk unless Product.product_name(stock.kodebrg.slice(0..1)).first.nil? %></td>
+                  <td><%= Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.Produk unless Artikel.artikel_name(stock.kodebrg.slice(2..5)).first.nil? %></td>
+                  <td><%= Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.NamaKain unless Kain.kain_name_stock(stock.kodebrg.slice(6..10)).first.nil? %></td>
+                  <td><%= stock.kodebrg.slice(12..14) %></td>
+                  <td><%= stock.kodebrg.slice(15..17) %></td>
+                  <td><%= stock.freestock %></td>
+                  <td><%= stock.outstandingSO%></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="freestock">Freestock</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

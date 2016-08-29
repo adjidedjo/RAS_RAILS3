@@ -23,6 +23,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
+      format.mobile
       format.js
     end
   end

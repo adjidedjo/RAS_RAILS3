@@ -239,6 +239,11 @@ class ReportsController < ApplicationController
   end
 
   def quick_view_monthly
+    
+    respond_to do |format|
+      format.html
+      format.mobile
+    end
   end
 
   def quick_view_report

@@ -1,0 +1,83 @@
+<% unless params[:periode_week].nil? || params[:periode_week].empty? %>
+  <div class="row-fluid">
+    <div class="block-content collapse in">
+      <div>
+        <h2 style="font-size: 17px;"><i>Weekly <%= params[:brand_week].present? ? params[:brand_week].join(",") : "All Brand" %> Sales Report</i></h2>
+      </div>
+      <div>
+        <h2 style="font-size: 15px;"><i>Week <%= params[:periode_week].to_date.cweek %>, <%= @periode.strftime('%B %Y')  %></i></h2>
+      </div>
+    </div>
+  </div>
+<h5>NB: TIDAK TERMASUK AKSESORIS, BONUS, DISPLAY, DAN PROJECT</h5>
+  <div class="span3">
+    <p style="text-align: left;">
+      <%= form_tag laporan_cabang_weekly_report_path, :method => 'get', :class => "form form-inline" do %>
+        <label style="font-size: 13px;">Cabang: </label>
+        <%= hidden_field_tag "periode_week", params[:periode_week] %>
+        <%= select_tag 'brand_week', options_for_select(options_for_tipe_price, params[:brand_week]), :class => 'multiselect', :multiple => true %>
+        <button type="submit" class="btn btn-primary">
+          Refine Search
+        </button>
+      <% end %>
+    </p>
+  </div>
+  <hr />
+  <div class="row">
+    <% [7,14,21,28,35].each do |c| %>
+    <div class="table-responsive">
+      <h4 style="text-align: center;">Week <%= (@date.beginning_of_week + c).cweek %> </br><%= (@date.beginning_of_week + c).strftime('%d/%m/%Y') %> -
+            <%= (@date.end_of_week + c).strftime('%d/%m/%Y') %></h4>
+    <table id="weekly_report_sales" data-role="table" class="ui-shadow ui-responsive">
+      <thead>
+        <tr>
+          <th>CABANG</th>
+          <th>QUANTITY</th>
+          <th>VALUE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if current_user.cabang.present? %>
+          <tr>
+            <% merk =  params[:brand_week].present? ? params[:brand_week] : "" %>
+              <% first_day_week_1 = @date.beginning_of_week + c %>
+              <% last_day_week_1 = first_day_week_1.end_of_week %>
+              <td><%= Cabang.find(current_user.cabang) %></td>
+              <% Cabang.find(current_user.cabang).laporan_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
+                <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
+                <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
+              <% end %>
+          </tr>
+        <% else %>
+          <% @cabang_get_id.each do |cabang| %>
+            <tr>
+              <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+              <td><%= cabang.Cabang.gsub(/Cabang/, "") %></td>
+              <% merk =  params[:brand_week].present? ? params[:brand_week] : "" %>
+                <% first_day_week_1 = @date.beginning_of_week + c %>
+                <% last_day_week_1 = first_day_week_1.end_of_week %>
+                <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
+                  <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
+                  <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
+                <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    </div>
+    <% end %>
+  </div>
+<% end %>
+
+<style>
+th {
+    border-bottom: 1px solid #d6d6d6;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background: #e9e9e9;
+    text-align: left;
+}
+</style>

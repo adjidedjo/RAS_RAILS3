@@ -35,6 +35,7 @@ class LaporanCabangController < ApplicationController
       format.html
       format.xls
       format.xml
+      format.mobile
     end
 	end
 

@@ -382,6 +382,8 @@ $(document).ready(function(){
 
     }
   });
+  $('table').stacktable();
+  $('#weekly_report_sales_mobile').stacktable();
   $('#weekly_report_sales').dataTable({
     iDisplayLength: 30,
     bFilter: false,
