@@ -64,7 +64,7 @@ class SqlSales < ActiveRecord::Base
           tanggal_fetched, tanggal_upload) VALUES ('#{sql_sales.idcabang}','#{sql_sales.nosj}','#{sql_sales.tanggalsj}','#{sql_sales.noso}', '#{sql_sales.kodecust}',
             '#{sql_sales.customer}','#{sql_sales.salesman}','#{sql_sales.kodebrg}','#{sql_sales.namabrg}',
             '#{brand}','#{sql_sales.kodejenis}','#{sql_sales.jenisbrg}','#{sql_sales.kodeartikel}',
-            '#{sql_sales.namaartikel}','#{sql_sales.kodekain}','#{sql_sales.namakain}','#{sql_sales.panjang}','#{sql_sales.lebar}',
+            '#{sql_sales.namaartikel}','#{sql_sales.kodekain}','#{sql_sales.panjang}','#{sql_sales.lebar}',
             '#{sql_sales.jumlah}','#{sql_sales.satuan}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
             '#{sql_sales.harganetto2}','#{sql_sales.ketppb}','#{sql_sales.kota}','#{sql_sales.tipecust}','#{sql_sales.namabrand}',
             '#{sql_sales.bonus}','#{sql_sales.groupcust}','#{sql_sales.plankinggroup}','#{Date.today}','#{sql_sales.tanggalinput}')")
