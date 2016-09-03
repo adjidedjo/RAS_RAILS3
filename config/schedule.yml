@@ -79,11 +79,9 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
 
 jde_net_sales:
-  cron: "0 3 5-6 * * *"
+  cron: "0 3 5,6 * * *"
   queue: cron
   class: ControlUpload
   args: "monthly_net_sales"
   description: migration net sales to sales analytic
   rails_envs: development, production, staging
-
-

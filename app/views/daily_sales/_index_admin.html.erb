@@ -1,0 +1,80 @@
+<table id="index_daily_tracking" class="display nowrap" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Brand</th>
+      <th>Cabang</th>
+      <th>Tipe</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+      <th>14</th>
+      <th>15</th>
+      <th>16</th>
+      <th>17</th>
+      <th>18</th>
+      <th>19</th>
+      <th>20</th>
+      <th>21</th>
+      <th>22</th>
+      <th>23</th>
+      <th>24</th>
+      <th>25</th>
+      <th>26</th>
+      <th>27</th>
+      <th>28</th>
+      <th>29</th>
+      <th>30</th>
+      <th>31</th>
+    </tr>
+    </thead>
+  <tbody>
+  <% daily_sales.each do |daily_sale| %>
+    <tr>
+      <td><%= Merk.find(daily_sale.brand).Merk %></td>
+      <td><%= Cabang.find(daily_sale.cabang_id).Cabang %></td>
+      <td><%= daily_sale.tipe %></td>
+      <td><%= daily_sale.day01 %></td>
+      <td><%= daily_sale.day02 %></td>
+      <td><%= daily_sale.day03 %></td>
+      <td><%= daily_sale.day04 %></td>
+      <td><%= daily_sale.day05 %></td>
+      <td><%= daily_sale.day06 %></td>
+      <td><%= daily_sale.day07 %></td>
+      <td><%= daily_sale.day08 %></td>
+      <td><%= daily_sale.day09 %></td>
+      <td><%= daily_sale.day10 %></td>
+      <td><%= daily_sale.day11 %></td>
+      <td><%= daily_sale.day12 %></td>
+      <td><%= daily_sale.day13 %></td>
+      <td><%= daily_sale.day14 %></td>
+      <td><%= daily_sale.day15 %></td>
+      <td><%= daily_sale.day16 %></td>
+      <td><%= daily_sale.day17 %></td>
+      <td><%= daily_sale.day18 %></td>
+      <td><%= daily_sale.day19 %></td>
+      <td><%= daily_sale.day20 %></td>
+      <td><%= daily_sale.day21 %></td>
+      <td><%= daily_sale.day22 %></td>
+      <td><%= daily_sale.day23 %></td>
+      <td><%= daily_sale.day24 %></td>
+      <td><%= daily_sale.day25 %></td>
+      <td><%= daily_sale.day26 %></td>
+      <td><%= daily_sale.day27 %></td>
+      <td><%= daily_sale.day28 %></td>
+      <td><%= daily_sale.day29 %></td>
+      <td><%= daily_sale.day30 %></td>
+      <td><%= daily_sale.day31 %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

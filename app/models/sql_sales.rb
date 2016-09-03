@@ -38,93 +38,24 @@ class SqlSales < ActiveRecord::Base
 
   def self.migration_sales_report
     @sqlnosj = []
-    select("*").where("tanggalinput >= ?", Date.today).each do |sql_sales|
-      lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus_and_ketppb(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb)
-      if lapcab.nil?
-        LaporanCabang.create(cabang_id: sql_sales.idcabang,
-          nosj: sql_sales.nosj,
-          tanggal: sql_sales.tanggalfaktur,
-          tanggalsj: sql_sales.tanggalsj,
-          nofaktur: sql_sales.nofaktur,
-          noso: sql_sales.noso,
-          nopo: sql_sales.nopo,
-          kode_customer: sql_sales.kodecust,
-          customer: sql_sales.customer,
-          alamatkirim: sql_sales.alamatkirim,
-          salesman: sql_sales.salesman,
-          kodebrg: sql_sales.kodebrg,
-          namabrg: sql_sales.namabrg,
-          jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
-          kodejenis: sql_sales.kodejenis,
-          jenisbrg: sql_sales.jenisbrg,
-          kodeartikel: sql_sales.kodeartikel,
-          namaartikel: sql_sales.namaartikel,
-          kodekain: sql_sales.kodekain,
-          namakain: sql_sales.namakain,
-          panjang: sql_sales.panjang,
-          lebar: sql_sales.lebar,
-          jumlah: sql_sales.jumlah,
-          satuan: sql_sales.satuan,
-          hargasatuan: sql_sales.hargasatuan,
-          hargabruto: sql_sales.hargabruto,
-          diskon1: sql_sales.diskon1,
-          diskon2: sql_sales.diskon2,
-          diskon3: sql_sales.diskon3,
-          diskon4: sql_sales.diskon4,
-          diskon5: sql_sales.diskon5,
-          diskonsum: sql_sales.diskonsum,
-          diskonrp: sql_sales.diskonrp,
-          harganetto1: sql_sales.harganetto1,
-          harganetto2: sql_sales.harganetto2,
-          totalnetto1: sql_sales.totalnetto1,
-          totalnetto2: sql_sales.totalnetto2,
-          totalnettofaktur: sql_sales.totalnettofaktur,
-          cashback: sql_sales.cashback,
-          nupgrade: sql_sales.nupgrade,
-          ketppb: sql_sales.ketppb,
-          kota: sql_sales.kota,
-          tipecust: sql_sales.tipecust,
-          namabrand: sql_sales.namabrand,
-          bonus: sql_sales.bonus,
-          groupcust: sql_sales.groupcust,
-          plankinggroup: sql_sales.plankinggroup,
-          tanggal_fetched: Date.today,
-          tanggal_upload: sql_sales.tanggalinput
-        )
-      elsif (lapcab.nosj == sql_sales.nosj) && (lapcab.tanggal_upload.to_formatted_s(:short) != sql_sales.tanggalinput.to_formatted_s(:short))
-        lapcab.update_attributes!(
-          nofaktur: sql_sales.nofaktur,
-          jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
-          kodejenis: sql_sales.kodejenis,
-          jumlah: sql_sales.jumlah,
-          satuan: sql_sales.satuan,
-          hargasatuan: sql_sales.hargasatuan,
-          hargabruto: sql_sales.hargabruto,
-          diskon1: sql_sales.diskon1,
-          diskon2: sql_sales.diskon2,
-          diskon3: sql_sales.diskon3,
-          diskon4: sql_sales.diskon4,
-          diskon5: sql_sales.diskon5,
-          diskonsum: sql_sales.diskonsum,
-          diskonrp: sql_sales.diskonrp,
-          harganetto1: sql_sales.harganetto1,
-          harganetto2: sql_sales.harganetto2,
-          totalnetto1: sql_sales.totalnetto1,
-          totalnetto2: sql_sales.totalnetto2,
-          totalnettofaktur: sql_sales.totalnettofaktur,
-          cashback: sql_sales.cashback,
-          nupgrade: sql_sales.nupgrade,
-          bonus: sql_sales.bonus,
-          tanggal_upload: sql_sales.tanggalinput)
-      end
-      @sqlnosj << sql_sales.nosj
-    end
-    @sqlnosj.each do |sqlnosj|
-      sanosj = LaporanCabang.where(nosj: sqlnosj)
-      sonosj = SqlSales.where(nosj: sqlnosj)
-      if sanosj != sonosj
-        sanosj.delete_all
-        sonosj.each do |sql_sales|
+    ActiveRecord::Base.transaction do
+      SqlSales.find_by_sql("SELECT idcabang, nosj, tanggalfaktur, tanggalsj, nofaktur, noso, nopo,
+        kodecust, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
+        jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
+        hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
+        harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
+        ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang 
+        WHERE DATEDIFF(dd, tanggalinput,'20160901') = 0").each do |sql_sales|
+          lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
+        kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
+        jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
+        hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
+        harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
+        ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggal_fetched, tanggal_upload
+        from tblaporancabang WHERE nosj LIKE ? AND kodebrg LIKE ? AND bonus LIKE ? AND ketppb LIKE ?", 
+        sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb])
+        lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus_and_ketppb(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb)
+        if lapcab.nil?
           LaporanCabang.create(cabang_id: sql_sales.idcabang,
             nosj: sql_sales.nosj,
             tanggal: sql_sales.tanggalfaktur,
@@ -175,6 +106,91 @@ class SqlSales < ActiveRecord::Base
             tanggal_fetched: Date.today,
             tanggal_upload: sql_sales.tanggalinput
           )
+        elsif (lapcab.nosj == sql_sales.nosj) && (lapcab.tanggal_upload.to_formatted_s(:short) != sql_sales.tanggalinput.to_formatted_s(:short))
+          lapcab.update_attributes!(
+            nofaktur: sql_sales.nofaktur,
+            jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
+            kodejenis: sql_sales.kodejenis,
+            jumlah: sql_sales.jumlah,
+            satuan: sql_sales.satuan,
+            hargasatuan: sql_sales.hargasatuan,
+            hargabruto: sql_sales.hargabruto,
+            diskon1: sql_sales.diskon1,
+            diskon2: sql_sales.diskon2,
+            diskon3: sql_sales.diskon3,
+            diskon4: sql_sales.diskon4,
+            diskon5: sql_sales.diskon5,
+            diskonsum: sql_sales.diskonsum,
+            diskonrp: sql_sales.diskonrp,
+            harganetto1: sql_sales.harganetto1,
+            harganetto2: sql_sales.harganetto2,
+            totalnetto1: sql_sales.totalnetto1,
+            totalnetto2: sql_sales.totalnetto2,
+            totalnettofaktur: sql_sales.totalnettofaktur,
+            cashback: sql_sales.cashback,
+            nupgrade: sql_sales.nupgrade,
+            bonus: sql_sales.bonus,
+            tanggal_upload: sql_sales.tanggalinput)
+        end
+        @sqlnosj << sql_sales.nosj
+      end
+      @sqlnosj.each do |sqlnosj|
+        sanosj = LaporanCabang.where(nosj: sqlnosj)
+        sonosj = SqlSales.where(nosj: sqlnosj)
+        if sanosj != sonosj
+          sanosj.delete_all
+          sonosj.each do |sql_sales|
+            LaporanCabang.create(cabang_id: sql_sales.idcabang,
+              nosj: sql_sales.nosj,
+              tanggal: sql_sales.tanggalfaktur,
+              tanggalsj: sql_sales.tanggalsj,
+              nofaktur: sql_sales.nofaktur,
+              noso: sql_sales.noso,
+              nopo: sql_sales.nopo,
+              kode_customer: sql_sales.kodecust,
+              customer: sql_sales.customer,
+              alamatkirim: sql_sales.alamatkirim,
+              salesman: sql_sales.salesman,
+              kodebrg: sql_sales.kodebrg,
+              namabrg: sql_sales.namabrg,
+              jenisbrgdisc: change_brand(sql_sales.jenisbrgdisc),
+              kodejenis: sql_sales.kodejenis,
+              jenisbrg: sql_sales.jenisbrg,
+              kodeartikel: sql_sales.kodeartikel,
+              namaartikel: sql_sales.namaartikel,
+              kodekain: sql_sales.kodekain,
+              namakain: sql_sales.namakain,
+              panjang: sql_sales.panjang,
+              lebar: sql_sales.lebar,
+              jumlah: sql_sales.jumlah,
+              satuan: sql_sales.satuan,
+              hargasatuan: sql_sales.hargasatuan,
+              hargabruto: sql_sales.hargabruto,
+              diskon1: sql_sales.diskon1,
+              diskon2: sql_sales.diskon2,
+              diskon3: sql_sales.diskon3,
+              diskon4: sql_sales.diskon4,
+              diskon5: sql_sales.diskon5,
+              diskonsum: sql_sales.diskonsum,
+              diskonrp: sql_sales.diskonrp,
+              harganetto1: sql_sales.harganetto1,
+              harganetto2: sql_sales.harganetto2,
+              totalnetto1: sql_sales.totalnetto1,
+              totalnetto2: sql_sales.totalnetto2,
+              totalnettofaktur: sql_sales.totalnettofaktur,
+              cashback: sql_sales.cashback,
+              nupgrade: sql_sales.nupgrade,
+              ketppb: sql_sales.ketppb,
+              kota: sql_sales.kota,
+              tipecust: sql_sales.tipecust,
+              namabrand: sql_sales.namabrand,
+              bonus: sql_sales.bonus,
+              groupcust: sql_sales.groupcust,
+              plankinggroup: sql_sales.plankinggroup,
+              tanggal_fetched: Date.today,
+              tanggal_upload: sql_sales.tanggalinput
+            )
+          end
         end
       end
     end

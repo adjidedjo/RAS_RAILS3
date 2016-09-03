@@ -64,6 +64,7 @@
           <%= menu_item "Update Regional & Price List", regionals_path %>
           <%= drop_down "Sales Reports" do %>
             <% unless current_user.roles == 'Accounting' %>
+              <%= menu_item "Daily Tracking Sales", daily_sales_path %>
               <%= menu_item "Analysis", reports_search_main_path %>
               <%= menu_item "Check History PL", show_regional_regionals_path %>
               <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>

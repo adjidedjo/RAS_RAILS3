@@ -30,9 +30,33 @@
               </div>
             </div>
             <div class="control-group">
-              <div class="controls"></div>
+              <label class="control-label" for="inputEmail">Approved</label>
+              <div class="controls">
+                <%= f.text_field :approved, :autofocus => true, :id => "inputEmail", :placeholder => "Approved" %>
+              </div>
             </div>
-          </div>
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">Cabang</label>
+              <div class="controls">
+                <%= f.text_field :cabang, :autofocus => true, :id => "inputEmail", :placeholder => "Cabang" %>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">Roles</label>
+              <div class="controls">
+                <%= f.text_field :roles, :autofocus => true, :id => "inputEmail", :placeholder => "Roles" %>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">User Brand</label>
+              <div class="controls">
+                <%= f.text_field :user_brand, :autofocus => true, :id => "inputEmail", :placeholder => "User brand" %>
+              </div>
+            </div>
+              <div class="control-group">
+                <div class="controls"></div>
+              </div>
+            </div>
 
           <button type="submit" class="btn btn-lg btn-primary btn-block">Sign up</button>
 

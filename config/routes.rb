@@ -2,6 +2,8 @@ require "resque_web"
 
 Rain::Application.routes.draw do
 
+  resources :daily_sales, only: [:index, :new, :create]
+
   get "peddlers/peddlers_report"
   get "peddlers/weekly_report"
 

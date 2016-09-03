@@ -1,0 +1,61 @@
+<div class="row-fluid">
+  <table id="weekly_report_sales" class="pretty">
+    <h1>Daily Tracking Sales</h1>
+    <hr />
+
+    <% if current_user.cabang.nil? %>
+      <%= render "index_admin", daily_sales: @daily_sales %>
+    <% else %>
+
+    <table id="index_daily_tracking">
+      <tr>
+        <th>Brand</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+        <th>10</th>
+        <th>11</th>
+        <th>12</th>
+        <th>13</th>
+        <th>14</th>
+        <th>15</th>
+        <th>16</th>
+        <th>17</th>
+        <th>18</th>
+        <th>19</th>
+        <th>20</th>
+        <th>21</th>
+        <th>22</th>
+        <th>23</th>
+        <th>24</th>
+        <th>25</th>
+        <th>26</th>
+        <th>27</th>
+        <th>28</th>
+        <th>29</th>
+        <th>30</th>
+        <th>31</th>
+      </tr>
+
+      <% @daily_sales.each do |daily_sale| %>
+        <tr>
+          <td><%= Merk.find(daily_sale.brand).Merk %></td>
+          <td><%= daily_sale.total_salesman %></td>
+          <td><%= daily_sale.total_quantity %></td>
+          <td><%= daily_sale.productivity %></td>
+        </tr>
+      <% end %>
+    </table>
+
+    <br />
+
+    <%= link_to 'New Daily sale', new_daily_sale_path %>
+    <% end %>
+</div>
+</div>

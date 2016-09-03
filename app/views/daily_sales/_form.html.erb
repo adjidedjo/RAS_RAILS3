@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <%= form_for(@daily_sale) do |f| %>
+      <% if @daily_sale.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@daily_sale.errors.count, "error") %> prohibited this daily_sale from being saved:</h2>
+    
+          <ul>
+          <% @daily_sale.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+    
+      <div class="form-group">
+        <%= f.label :brand %><br />
+        <%= f.select :brand, options_for_select(@brands.collect {|a| [a.Merk, a.id]}), :prompt => 'Select One' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :total_salesman %><br />
+        <%= text_field_tag :total_salesman %>
+      </div>
+      <div class="actions">
+        <%= f.submit "BUAT", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

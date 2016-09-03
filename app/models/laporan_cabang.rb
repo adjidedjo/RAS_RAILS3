@@ -253,17 +253,19 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
   end
 
   def self.sales_by_brand_by_branch(bulan, tahun, branch)
-    select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
-customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").without_acessoris.without_bonus
-    .search_by_month_and_year(bulan, tahun).search_by_branch(branch).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc).each do |lapcab|
-      sales_brand = SalesBrand.find_by_bulan_and_tahun_and_cabang_id_and_merk(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc)
-      if sales_brand.nil?
-        SalesBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
-          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
-          :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
-          :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
-      else
-        sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+    ActiveRecord::Base.transaction do
+      select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar,
+  customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2").without_acessoris.without_bonus
+      .search_by_month_and_year(bulan, tahun).search_by_branch(branch).not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc).each do |lapcab|
+        sales_brand = SalesBrand.find_by_bulan_and_tahun_and_cabang_id_and_merk(bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc)
+        if sales_brand.nil?
+          SalesBrand.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
+            :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
+            :customer => lapcab.customer, :sales => lapcab.salesman, :merk => lapcab.jenisbrgdisc, :produk => lapcab.jenisbrg,
+            :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        else
+          sales_brand.update_attributes(:qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2)
+        end
       end
     end
   end

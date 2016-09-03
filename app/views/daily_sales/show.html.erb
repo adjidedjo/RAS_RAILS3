@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Brand:</b>
+  <%= @daily_sale.brand %>
+</p>
+
+<p>
+  <b>Cabang:</b>
+  <%= @daily_sale.cabang_id %>
+</p>
+
+<p>
+  <b>Total salesman:</b>
+  <%= @daily_sale.total_salesman %>
+</p>
+
+<p>
+  <b>Total quantity:</b>
+  <%= @daily_sale.total_quantity %>
+</p>
+
+<p>
+  <b>Productivity:</b>
+  <%= @daily_sale.productivity %>
+</p>
+
+
+<%= link_to 'Edit', edit_daily_sale_path(@daily_sale) %> |
+<%= link_to 'Back', daily_sales_path %>
