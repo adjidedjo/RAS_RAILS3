@@ -45,7 +45,7 @@ class SqlSales < ActiveRecord::Base
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
         ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang 
-        WHERE DATEDIFF(dd, tanggalinput,'#{Date.today.strftime('%Y%m%d')}') = 0").each do |sql_sales|
+        WHERE MONTH(tanggalsj) = 8 and YEAR(tanggalsj) = 2016 and idcabang = 4").each do |sql_sales|
           lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
         kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
         jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
@@ -94,33 +94,12 @@ class SqlSales < ActiveRecord::Base
             bonus: sql_sales.bonus,
             tanggal_upload: sql_sales.tanggalinput)
         end
-        @sqlnosj << sql_sales.nosj
-      end
-      @sqlnosj.each do |sqlnosj|
-        sanosj = LaporanCabang.where(nosj: sqlnosj)
-        sonosj = SqlSales.where(nosj: sqlnosj)
-        if sanosj != sonosj
-          sanosj.connection.execute("DELETE FROM tblaporancabang WHERE nosj like '#{sqlnosj}'")
-          sonosj.each do |sql_sales|
-            LaporanCabang.connection.execute("INSERT INTO tblaporancabang (cabang_id, nosj ,tanggalsj, noso, kode_customer,
-          customer, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis, jenisbrg, kodeartikel,
-          namaartikel, kodekain, panjang, lebar, jumlah, hargasatuan, hargabruto, harganetto1, 
-          harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup,
-          tanggal_fetched, tanggal_upload) VALUES ('#{sql_sales.idcabang}','#{sql_sales.nosj}','#{sql_sales.tanggalsj}','#{sql_sales.noso}', '#{sql_sales.kodecust}',
-            '#{sql_sales.customer}','#{sql_sales.salesman}','#{sql_sales.kodebrg}','#{sql_sales.namabrg}',
-            '#{change_brand(sql_sales.jenisbrgdisc)}','#{sql_sales.kodejenis}','#{sql_sales.jenisbrg}','#{sql_sales.kodeartikel}',
-            '#{sql_sales.namaartikel}','#{sql_sales.kodekain}','#{sql_sales.panjang}','#{sql_sales.lebar}',
-            '#{sql_sales.jumlah}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
-            '#{sql_sales.harganetto2}','#{sql_sales.ketppb}','#{sql_sales.kota}','#{sql_sales.tipecust}','#{sql_sales.namabrand}',
-            '#{sql_sales.bonus}','#{sql_sales.groupcust}','#{sql_sales.plankinggroup}','#{Date.today}','#{sql_sales.tanggalinput}')")
-          end
-        end
       end
     end
   end
 
   def self.migration_sales_report_prev_month
-    select("*").where("month(tanggalinput) = ?", 1.month.ago.month).each do |sql_sales|
+    select("*").where("month(tanggalsj) = ?", 1.month.ago.month).each do |sql_sales|
       lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
