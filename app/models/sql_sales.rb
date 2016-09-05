@@ -45,7 +45,7 @@ class SqlSales < ActiveRecord::Base
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
         ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang 
-        WHERE DATEDIFF(dd, tanggalinput,'20160901') = 0").each do |sql_sales|
+        WHERE DATEDIFF(dd, tanggalinput,'#{Date.today.strftime('%Y%m%d')}') = 0").each do |sql_sales|
           lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
         kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
         jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
@@ -60,12 +60,12 @@ class SqlSales < ActiveRecord::Base
           LaporanCabang.connection.execute("INSERT INTO tblaporancabang (cabang_id, nosj ,tanggalsj, noso, kode_customer,
           customer, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis, jenisbrg, kodeartikel,
           namaartikel, kodekain, panjang, lebar, jumlah, hargasatuan, hargabruto, harganetto1, 
-          harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plangkinggroup,
+          harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup,
           tanggal_fetched, tanggal_upload) VALUES ('#{sql_sales.idcabang}','#{sql_sales.nosj}','#{sql_sales.tanggalsj}','#{sql_sales.noso}', '#{sql_sales.kodecust}',
             '#{sql_sales.customer}','#{sql_sales.salesman}','#{sql_sales.kodebrg}','#{sql_sales.namabrg}',
             '#{brand}','#{sql_sales.kodejenis}','#{sql_sales.jenisbrg}','#{sql_sales.kodeartikel}',
             '#{sql_sales.namaartikel}','#{sql_sales.kodekain}','#{sql_sales.panjang}','#{sql_sales.lebar}',
-            '#{sql_sales.jumlah}','#{sql_sales.satuan}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
+            '#{sql_sales.jumlah}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
             '#{sql_sales.harganetto2}','#{sql_sales.ketppb}','#{sql_sales.kota}','#{sql_sales.tipecust}','#{sql_sales.namabrand}',
             '#{sql_sales.bonus}','#{sql_sales.groupcust}','#{sql_sales.plankinggroup}','#{Date.today}','#{sql_sales.tanggalinput}')")
         elsif (lapcab.nosj == sql_sales.nosj) && (lapcab.tanggal_upload.to_formatted_s(:short) != sql_sales.tanggalinput.to_formatted_s(:short))
@@ -105,12 +105,12 @@ class SqlSales < ActiveRecord::Base
             LaporanCabang.connection.execute("INSERT INTO tblaporancabang (cabang_id, nosj ,tanggalsj, noso, kode_customer,
           customer, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis, jenisbrg, kodeartikel,
           namaartikel, kodekain, panjang, lebar, jumlah, hargasatuan, hargabruto, harganetto1, 
-          harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plangkinggroup,
+          harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup,
           tanggal_fetched, tanggal_upload) VALUES ('#{sql_sales.idcabang}','#{sql_sales.nosj}','#{sql_sales.tanggalsj}','#{sql_sales.noso}', '#{sql_sales.kodecust}',
             '#{sql_sales.customer}','#{sql_sales.salesman}','#{sql_sales.kodebrg}','#{sql_sales.namabrg}',
-            '#{brand}','#{sql_sales.kodejenis}','#{sql_sales.jenisbrg}','#{sql_sales.kodeartikel}',
+            '#{change_brand(sql_sales.jenisbrgdisc)}','#{sql_sales.kodejenis}','#{sql_sales.jenisbrg}','#{sql_sales.kodeartikel}',
             '#{sql_sales.namaartikel}','#{sql_sales.kodekain}','#{sql_sales.panjang}','#{sql_sales.lebar}',
-            '#{sql_sales.jumlah}','#{sql_sales.satuan}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
+            '#{sql_sales.jumlah}','#{sql_sales.hargasatuan}','#{sql_sales.hargabruto}','#{sql_sales.harganetto1}',
             '#{sql_sales.harganetto2}','#{sql_sales.ketppb}','#{sql_sales.kota}','#{sql_sales.tipecust}','#{sql_sales.namabrand}',
             '#{sql_sales.bonus}','#{sql_sales.groupcust}','#{sql_sales.plankinggroup}','#{Date.today}','#{sql_sales.tanggalinput}')")
           end
