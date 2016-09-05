@@ -55,6 +55,8 @@ class JdeSoDetail < ActiveRecord::Base
       "01"
     elsif bu == "01"
       "02"
+    elsif bu == "21" || bu == '22'
+      "09"
     end
   end
 end
