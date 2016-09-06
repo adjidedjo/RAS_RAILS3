@@ -49,6 +49,7 @@ class LaporanCabang < ActiveRecord::Base
   scope :brand_on_kodebarang, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :cabang, lambda {|branch| where("cabang_id = ?", branch) if branch.present? }
   scope :size_st, lambda {|size| where("kodebrg like ?", %(___________#{size}%)) if size.present?}
+  scope :channel, lambda {|channel| where("tipecust like ?", channel) if channel.present?}
   scope :lebar, lambda {|lebar| where("lebar in (?)", lebar) if lebar.present?}
   scope :brand_on_kodebrg, lambda{|brand| where("kodebrg like ?", %(__#{brand}%))}
   scope :without_empty_brand, where("jenisbrgdisc not like ?", '')
@@ -373,7 +374,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     ch = channel == "DIRECT" ? "SHOWROOM" : channel
     select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
     .brand(cat).query_by_date(from.to_date, to.to_date).not_equal_with_nosj
-    .without_acessoris.without_bonus.where("tipecust like ?", ch)
+    .without_acessoris.without_bonus.channel(ch)
   end
 
   def self.get_percentage(last_month, current_month)

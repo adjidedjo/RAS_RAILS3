@@ -13,11 +13,11 @@
   <div class="span3">
     <p style="text-align: left;">
       <%= form_tag laporan_cabang_weekly_report_path, :method => 'get', :class => "form form-inline" do %>
-        <label style="font-size: 13px;">Cabang: </label>
+        <label style="font-size: 13px;">BRAND: </label>
         <%= hidden_field_tag "periode_week", params[:periode_week] %>
         <%= select_tag 'brand_week', options_for_select(options_for_tipe_price, params[:brand_week]), :class => 'multiselect', :multiple => true %>
         <label style="font-size: 13px;">CHANNEL: </label>
-        <%= select_tag 'channel', options_for_select(["RETAIL", "DIRECT", "ALL"], (params[:channel].nil? ? "ALL" : params[:channel])) %>
+        <%= select_tag 'channel', options_for_select(["RETAIL", "DIRECT", ["All", nil]], (params[:channel].nil? ? "ALL" : params[:channel])) %>
         <br />
         <button type="submit" class="btn btn-primary">
           Refine Search
