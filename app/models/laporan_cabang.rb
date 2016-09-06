@@ -369,10 +369,11 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
         cabang, "#{cat + merk_id}%", %(#{'SJB'}%), %(#{'SJY'}%), from.to_date, to.to_date, %(#{'SJV'}%), %(#{'SJP'}%)])
   end
 
-  def self.weekly_sum_value(cat, from, to)
+  def self.weekly_sum_value(cat, from, to, channel)
+    ch = channel == "DIRECT" ? "SHOWROOM" : channel
     select("sum(jumlah) as sum_jumlah, sum(harganetto2) as sum_harganetto2")
     .brand(cat).query_by_date(from.to_date, to.to_date).not_equal_with_nosj
-    .without_acessoris.without_bonus
+    .without_acessoris.without_bonus.where("tipecust like ?", ch)
   end
 
   def self.get_percentage(last_month, current_month)

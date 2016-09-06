@@ -16,6 +16,9 @@
         <label style="font-size: 13px;">Cabang: </label>
         <%= hidden_field_tag "periode_week", params[:periode_week] %>
         <%= select_tag 'brand_week', options_for_select(options_for_tipe_price, params[:brand_week]), :class => 'multiselect', :multiple => true %>
+        <label style="font-size: 13px;">CHANNEL: </label>
+        <%= select_tag 'channel', options_for_select(["RETAIL", "DIRECT", "ALL"], (params[:channel].nil? ? "ALL" : params[:channel])) %>
+        <br />
         <button type="submit" class="btn btn-primary">
           Refine Search
         </button>
@@ -81,7 +84,7 @@
               <% [7,14,21,28,35].each do |c| %>
                 <% first_day_week_1 = @date.beginning_of_week + c %>
                 <% last_day_week_1 = first_day_week_1.end_of_week %>
-                <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
+                <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1, params[:channel]).each do |week_1| %>
                   <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
                   <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
                 <% end %>

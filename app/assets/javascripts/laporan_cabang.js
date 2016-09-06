@@ -21,6 +21,11 @@ $(document).ready(function(){
     numberDisplayed: 1,
     maxHeight: 200
   });
+  
+  $('#channel').multiselect({
+    numberDisplayed: 1,
+    maxHeight: 200
+  });
 
   $('.control_branches input[type="text"], .control_branches select').tooltipster({
     trigger: 'custom', // default is 'hover' which is no good here
