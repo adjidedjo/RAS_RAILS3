@@ -33,7 +33,7 @@ class Stock < ActiveRecord::Base
   end
 
   def self.auto_stock_jde
-    jde_branch_plan = ['11001', '11011', '11002']
+    jde_branch_plan = ['11001', '11011', '11002', '11021', '11022']
     first_week_date = Date.today.beginning_of_week
     last_week_date = Date.today.end_of_week
     jde_branch_plan.each do |bp|
@@ -64,6 +64,8 @@ class Stock < ActiveRecord::Base
       2
     elsif branch == '11002'
       2
+    elsif branch == '11021' || branch == '11022'
+      9
     else
       1
     end

@@ -14,7 +14,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?", "580", "565", "SO", date_to_julian(Date.today.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?", 
+    "580", "565", "SO", date_to_julian("05-09-2016".to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -22,7 +23,7 @@ class JdeSoDetail < ActiveRecord::Base
         bonus = a.sdaexp == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
-          cabang = jde_cabang(a.sdmcu.to_i.to_s[2..3])
+          cabang = jde_cabang(a.sdmcu.to_i.to_s[3..4])
           item_master = JdeItemMaster.find_by_imitm(a.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -51,11 +52,12 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   def self.jde_cabang(bu)
-    if bu == "00"
+    raise bu.inspect
+    if bu == "01"
       "01"
-    elsif bu == "01"
+    elsif bu == "11"
       "02"
-    elsif bu == "21" || bu == '22'
+    elsif bu == "21" || bu == "22"
       "09"
     end
   end
