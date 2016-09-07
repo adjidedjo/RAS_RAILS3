@@ -15,7 +15,7 @@ class JdeSoDetail < ActiveRecord::Base
   # #jde to mysql tblaporancabang
   def self.import_so_detail
     where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?", 
-    "580", "565", "SO", date_to_julian("05-09-2016".to_date)).each do |a|
+    "580", "565", "SO", date_to_julian(Date.today.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
