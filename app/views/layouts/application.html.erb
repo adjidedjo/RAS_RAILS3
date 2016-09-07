@@ -37,59 +37,65 @@
   <body>
     <%= nav_bar :responsive => true, :brand => "Sales Analytics" do %>
       <% if current_user %>
-        <%= menu_group do %>
-          <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.roles == 'Admin' || current_user.roles == 'Accounting' || current_user.roles == 'SuperHero' %>
-          <%= menu_item "Users", users_path if current_user.roles == 'SuperHero' %>
-          <% if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
-            <%= drop_down "Accounting" do %>
-              <%= menu_item "Update Regional & Price List", regionals_path %>
-              <%= menu_item "Cek NoFaktur Hilang", sales_reports_path %>
-              <%= menu_item "Cek Price List", accounting_price_lists_path %>
-              <%= menu_item "POS", pos_channel_customers_index_path %>
-              <%= menu_item "Deposit BG", accounting_depositbg_path %>
-              <%= menu_item "Export Laporan", export_excel_accounting_price_lists_path %>
-            <% end %>
-          <% end %>
-          <%= menu_divider %>
-          <%= drop_down "Target" do %>
-            <%= menu_item "Input Target", monthly_targets_path %>
-            <%= menu_item "Target vs Achievment", monthly_targets_target_filter_path %>
-            <%= menu_item "Forecast", forecasts_path %>
-          <% end %>
-          <%= drop_down "Stock" do %>
-            <%= menu_item "Asongan", peddlers_peddlers_report_path %>
+        <% if current_user.user_brand ==  "Gudang"%>
+          <%= menu_group do %>
             <%= menu_item "Stock", stock_index_path %>
           <% end %>
-          <%= menu_item "Update Regional & Price List", regionals_path %>
-          <%= drop_down "Sales Reports" do %>
-            <% unless current_user.roles == 'Accounting' %>
-              <%= menu_item "Daily Tracking Sales", daily_sales_path %>
-              <%= menu_item "Analysis", reports_search_main_path %>
-              <%= menu_item "Check History PL", show_regional_regionals_path %>
-              <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
-            <% end %>
-            <% if current_user.user_brand == 'Admin' %>
-              <%= drop_down_submenu "Quick View" do %>
-                <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
-                <%= drop_down_submenu "Bulanan" do %>
-                  <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
-                  <%= menu_item "Sales Cabang per Brand", reports_sales_cabang_per_brand_path(month: Date.today) %>
-                  <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_path(month: Date.today, cabang_scp: "") %>
-                  <%= menu_item "Sales Cabang per Toko", reports_pilih_cabang_path %>
-                  <%= menu_item "Sales Cabang per Toko dan Produk", reports_sales_cabang_per_toko_per_produk_path(month: Date.today, cabang_scp: "", customer: "") %>
-                <% end %>
-                <%= drop_down_submenu "Tahunan" do %>
-                  <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_by_year_path(year: Date.today, cabang_scp: "") %>
-                  <%= menu_item "Sales Cabang per Cabang dan Produk", reports_sales_cabang_per_cabang_per_produk_by_year_path(year: Date.today, merk: "") %>
-                  <%= menu_item "Sales Cabang per Customer dan Brand", reports_pilih_cabang_path(year: Date.today, merk: "", tipena: "yearly") %>
-                <% end %>
+        <% else %>
+          <%= menu_group do %>
+            <%= menu_item "Control", laporan_cabang_control_branches_sales_path if current_user.roles == 'Admin' || current_user.roles == 'Accounting' || current_user.roles == 'SuperHero' %>
+            <%= menu_item "Users", users_path if current_user.roles == 'SuperHero' %>
+            <% if current_user.roles == 'SuperHero' || current_user.roles == 'Accounting' %>
+              <%= drop_down "Accounting" do %>
+                <%= menu_item "Update Regional & Price List", regionals_path %>
+                <%= menu_item "Cek NoFaktur Hilang", sales_reports_path %>
+                <%= menu_item "Cek Price List", accounting_price_lists_path %>
+                <%= menu_item "POS", pos_channel_customers_index_path %>
+                <%= menu_item "Deposit BG", accounting_depositbg_path %>
+                <%= menu_item "Export Laporan", export_excel_accounting_price_lists_path %>
               <% end %>
-            <% else %>
-              <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
-              <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
             <% end %>
+            <%= menu_divider %>
+            <%= drop_down "Target" do %>
+              <%= menu_item "Input Target", monthly_targets_path %>
+              <%= menu_item "Target vs Achievment", monthly_targets_target_filter_path %>
+              <%= menu_item "Forecast", forecasts_path %>
+            <% end %>
+            <%= drop_down "Stock" do %>
+              <%= menu_item "Asongan", peddlers_peddlers_report_path %>
+              <%= menu_item "Stock", stock_index_path %>
+            <% end %>
+            <%= menu_item "Update Regional & Price List", regionals_path %>
+            <%= drop_down "Sales Reports" do %>
+              <% unless current_user.roles == 'Accounting' %>
+                <%= menu_item "Daily Tracking Sales", daily_sales_path %>
+                <%= menu_item "Analysis", reports_search_main_path %>
+                <%= menu_item "Check History PL", show_regional_regionals_path %>
+                <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
+              <% end %>
+              <% if current_user.user_brand == 'Admin' %>
+                <%= drop_down_submenu "Quick View" do %>
+                  <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
+                  <%= drop_down_submenu "Bulanan" do %>
+                    <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
+                    <%= menu_item "Sales Cabang per Brand", reports_sales_cabang_per_brand_path(month: Date.today) %>
+                    <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_path(month: Date.today, cabang_scp: "") %>
+                    <%= menu_item "Sales Cabang per Toko", reports_pilih_cabang_path %>
+                    <%= menu_item "Sales Cabang per Toko dan Produk", reports_sales_cabang_per_toko_per_produk_path(month: Date.today, cabang_scp: "", customer: "") %>
+                  <% end %>
+                  <%= drop_down_submenu "Tahunan" do %>
+                    <%= menu_item "Sales Cabang per Produk dan Brand", reports_sales_cabang_per_produk_per_brand_by_year_path(year: Date.today, cabang_scp: "") %>
+                    <%= menu_item "Sales Cabang per Cabang dan Produk", reports_sales_cabang_per_cabang_per_produk_by_year_path(year: Date.today, merk: "") %>
+                    <%= menu_item "Sales Cabang per Customer dan Brand", reports_pilih_cabang_path(year: Date.today, merk: "", tipena: "yearly") %>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
+                <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
+              <% end %>
+            <% end %>
+            <%= menu_item "How To", docs_index_path %>
           <% end %>
-          <%= menu_item "How To", docs_index_path %>
         <% end %>
         <%= menu_group :pull => :right do %>
           <%= menu_item "Log Out", destroy_user_session_path %>
