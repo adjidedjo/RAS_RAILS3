@@ -69,7 +69,7 @@
             <% [7,14,21,28,35].each do |c| %>
               <% first_day_week_1 = @date.beginning_of_week + c %>
               <% last_day_week_1 = first_day_week_1.end_of_week %>
-              <% Cabang.find(current_user.cabang).laporan_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
+              <% Cabang.find(current_user.cabang).laporan_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1, params[:channel]).each do |week_1| %>
                 <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
                 <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
               <% end %>
