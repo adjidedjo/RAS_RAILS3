@@ -45,7 +45,7 @@ class SqlSales < ActiveRecord::Base
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
         ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang 
-        WHERE MONTH(tanggalsj) = 8 and YEAR(tanggalsj) = 2016 and idcabang = 4").each do |sql_sales|
+        WHERE CAST(tanggalsj AS DATE) = '#{Date.today}'").each do |sql_sales|
           lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
         kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
         jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
