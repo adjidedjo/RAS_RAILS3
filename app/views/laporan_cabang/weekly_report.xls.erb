@@ -44,20 +44,35 @@
         </tr>
       </tfoot>
       <tbody>
-        <% @cabang_get_id.each do |cabang| %>
+        <% if current_user.cabang.present? %>
           <tr>
-            <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
-            <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+            <th scope="row"><%= Cabang.find(current_user.cabang).Cabang.gsub(/Cabang/, "") %></th>
             <% merk =  params[:brand_week].present? ? params[:brand_week] : "" %>
             <% [7,14,21,28,35].each do |c| %>
               <% first_day_week_1 = @date.beginning_of_week + c %>
               <% last_day_week_1 = first_day_week_1.end_of_week %>
-              <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1).each do |week_1| %>
+              <% Cabang.find(current_user.cabang).laporan_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1, params[:channel]).each do |week_1| %>
                 <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
                 <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
               <% end %>
             <% end %>
           </tr>
+        <% else %>
+          <% @cabang_get_id.each do |cabang| %>
+            <tr>
+              <% laporan_cabang_by_cabang =  cabang.laporan_cabang %>
+              <th scope="row"><%= cabang.Cabang.gsub(/Cabang/, "") %></th>
+              <% merk =  params[:brand_week].present? ? params[:brand_week] : "" %>
+              <% [7,14,21,28,35].each do |c| %>
+                <% first_day_week_1 = @date.beginning_of_week + c %>
+                <% last_day_week_1 = first_day_week_1.end_of_week %>
+                <% laporan_cabang_by_cabang.weekly_sum_value(merk, first_day_week_1, last_day_week_1, params[:channel]).each do |week_1| %>
+                  <td><%= week_1.sum_jumlah.nil? ? 0 : currency(week_1.sum_jumlah) %></td>
+                  <td><%= week_1.sum_harganetto2.nil? ? 0 : currency(week_1.sum_harganetto2) %></td>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>
