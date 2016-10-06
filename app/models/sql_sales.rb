@@ -44,22 +44,22 @@ class SqlSales < ActiveRecord::Base
         jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
-        ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang 
-        WHERE CAST(tanggalsj AS DATE) = '#{Date.today}'").each do |sql_sales|
+        ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang
+        WHERE DATENAME(DAY, tanggalsj) = '#{Date.today.strftime("%d")}'").each do |sql_sales|
           lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
         kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
         jenisbrg, kodeartikel, namaartikel, kodekain, namakain, panjang, lebar, jumlah, satuan,
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
         ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggal_fetched, tanggal_upload
-        from tblaporancabang WHERE nosj LIKE ? AND kodebrg LIKE ? AND bonus LIKE ? AND ketppb LIKE ?", 
+        from tblaporancabang WHERE nosj LIKE ? AND kodebrg LIKE ? AND bonus LIKE ? AND ketppb LIKE ?",
         sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb])
         lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus_and_ketppb(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus, sql_sales.ketppb)
         if lapcab.nil?
           brand = change_brand(sql_sales.jenisbrgdisc)
           LaporanCabang.connection.execute("INSERT INTO tblaporancabang (cabang_id, nosj ,tanggalsj, noso, kode_customer,
           customer, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis, jenisbrg, kodeartikel,
-          namaartikel, kodekain, panjang, lebar, jumlah, hargasatuan, hargabruto, harganetto1, 
+          namaartikel, kodekain, panjang, lebar, jumlah, hargasatuan, hargabruto, harganetto1,
           harganetto2, ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup,
           tanggal_fetched, tanggal_upload) VALUES ('#{sql_sales.idcabang}','#{sql_sales.nosj}','#{sql_sales.tanggalsj}','#{sql_sales.noso}', '#{sql_sales.kodecust}',
             '#{sql_sales.customer}','#{sql_sales.salesman}','#{sql_sales.kodebrg}','#{sql_sales.namabrg}',
