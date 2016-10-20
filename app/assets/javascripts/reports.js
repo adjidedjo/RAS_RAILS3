@@ -833,17 +833,41 @@ $(document).ready(function(){
 
       var iTotalQtyMonth1 = 0;
       var iTotalValueMonth1 = 0;
+      var iTotalQtyMonth2 = 0;
+      var iTotalValueMonth2 = 0;
+      var iTotalQtyMonth3 = 0;
+      var iTotalValueMonth3 = 0;
+      var iTotalQtyMonth4 = 0;
+      var iTotalValueMonth4 = 0;
+      var iTotalQtyMonth5 = 0;
+      var iTotalValueMonth5 = 0;
 
       for ( var i=0 ; i<aaData.length ; i++ )
       {
         iTotalQtyMonth1 += parseCurrency(aaData[i][1])*1;
         iTotalValueMonth1 += parseCurrency(aaData[i][2])*1;
+        iTotalQtyMonth2 += parseCurrency(aaData[i][3])*1;
+        iTotalValueMonth2 += parseCurrency(aaData[i][4])*1;
+        iTotalQtyMonth3 += parseCurrency(aaData[i][5])*1;
+        iTotalValueMonth3 += parseCurrency(aaData[i][6])*1;
+        iTotalQtyMonth4 += parseCurrency(aaData[i][7])*1;
+        iTotalValueMonth4 += parseCurrency(aaData[i][8])*1;
+        iTotalQtyMonth5 += parseCurrency(aaData[i][9])*1;
+        iTotalValueMonth5 += parseCurrency(aaData[i][10])*1;
       }
 
       /* Modify the footer row to match what we want */
       var nCells = nRow.getElementsByTagName('td');
       nCells[0].innerHTML = addCommas(parseInt(iTotalQtyMonth1))
       nCells[1].innerHTML = addCommas(parseInt(iTotalValueMonth1))
+      nCells[2].innerHTML = addCommas(parseInt(iTotalQtyMonth2))
+      nCells[3].innerHTML = addCommas(parseInt(iTotalValueMonth2))
+      nCells[4].innerHTML = addCommas(parseInt(iTotalQtyMonth3))
+      nCells[5].innerHTML = addCommas(parseInt(iTotalValueMonth3))
+      nCells[6].innerHTML = addCommas(parseInt(iTotalQtyMonth4))
+      nCells[7].innerHTML = addCommas(parseInt(iTotalValueMonth4))
+      nCells[8].innerHTML = addCommas(parseInt(iTotalQtyMonth5))
+      nCells[9].innerHTML = addCommas(parseInt(iTotalValueMonth5))
     }
   });
 
