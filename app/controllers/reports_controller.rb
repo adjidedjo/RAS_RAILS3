@@ -232,9 +232,9 @@ class ReportsController < ApplicationController
   def quick_view_monthly_process
     branch = current_user.branch == nil ? nil : current_user.branch
     redirect_to reports_quick_view_monthly_result_path(:brand_scb => params[:quick_view_brand], :group_by => 'cabang_id',
-      :month => Date.today, :branch => branch ) if params[:type] == 'scb'
+      :month => Date.today, :branch => branch, :channel => params[:channel] ) if params[:type] == 'scb'
     redirect_to reports_quick_view_monthly_result_path(:brand_scm => params[:quick_view_brand], :group_by => 'cabang_id',
-      :month => Date.today, :branch => branch ) if params[:type] == 'scm'
+      :month => Date.today, :branch => branch, :channel => params[:channel] ) if params[:type] == 'scm'
     redirect_to laporan_cabang_weekly_report_path(periode_week: 1.week.ago, brand_week: params[:quick_view_brand]) if params[:type] == 'week'
   end
 
@@ -268,12 +268,11 @@ class ReportsController < ApplicationController
       @month = ((params[:to].to_date.month - params[:from].to_date.month + 1) * 2)
       @sum_month = (params[:to].to_date.month - params[:from].to_date.month + 1)
       @customerstore = LaporanCabang.select("sum(jumlah) as sum_jumlah, customer, sum(harganetto2) as sum_harga, kota, kodebrg, kodeartikel,
-     cabang_id, kodekain, kota, jenisbrgdisc, namaartikel, namakain, panjang, lebar")
+     cabang_id, kodekain, kota, jenisbrgdisc, namaartikel, namakain, panjang, lebar, tipcust")
       .between_date_sales(params[:from], params[:to]).search_by_branch(params[:branch])
       .search_by_type(params[:type]).brand(params[:brand]).kode_barang_like(params[:article]).fabric(params[:fabric])
       .size_length(params[:size]).size_length(params[:panjang]).customer(params[:customer])
-      .brand_size(params[:size_type]).customer_modern(params[:customer_modern]).customer_modern_all(params[:customer_modern])
-      .not_equal_with_nosj.group(params[:group_by]).customer_retail_all(params[:customer_all_retail])
+      .brand_size(params[:size_type]).customer_group(params[:channel]).not_equal_with_nosj.group(params[:group_by])
 		end
 	end
 end

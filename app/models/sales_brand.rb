@@ -12,6 +12,7 @@ class SalesBrand < ActiveRecord::Base
   scope :customer_modern_all, lambda {|parameter| where("customer like ? or customer like ?", "ES%",'SOGO%') if parameter == 'all'}
   scope :customer_retail_all, lambda {|parameter| where("customer not like ? and customer not like ?", "ES%",'SOGO%') if parameter == 'all'}
   scope :customer_modern, lambda {|customer| where("customer like ?", %(#{customer}%)) if customer != 'all'}
+  scope :customer_group, lambda {|group| where("group_customer like ?", group) if group != 'all'}
 
   def self.sales_cabang_per_merk(merk, cabang, date)
     if merk == 'Non Serenity'
@@ -28,8 +29,8 @@ class SalesBrand < ActiveRecord::Base
     select("sum(qty) as qty, sum(val) as val").where("bulan = ? and tahun = ? and merk is not null", date.month, date.year).search_by_branch(cabang).brand(merk)
   end
 
-  def self.customer_quick_monthly(month, year, branch, brand)
-    select("sum(qty) as qty, sum(val) as val").search_by_month_and_year(month, year).search_by_branch(branch).brand(brand)
+  def self.customer_quick_monthly(month, year, branch, brand, group)
+    select("sum(qty) as qty, sum(val) as val").search_by_month_and_year(month, year).customer_group(group).search_by_branch(branch).brand(brand)
   end
 
   def self.customer_monthly(month, year,branch, type, brand, article, kodebrg, fabric, size, customer, size_type, customer_modern,

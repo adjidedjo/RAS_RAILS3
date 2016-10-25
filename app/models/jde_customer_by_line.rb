@@ -7,10 +7,14 @@ class JdeCustomerByLine < ActiveRecord::Base
     grup = where(aian8: address_number, aico: co)
     if grup.empty?
       '-'
-    elsif grup.first.aicpgp.strip == 'DEANASIO'
+    elsif grup.first.aisic.strip == 'DEA' || grup.first.aisic.strip == 'RET'
       'RETAIL'
-    elsif grup.first.aicpgp.strip == 'SHONASIO'
+    elsif grup.first.aisic.strip == 'SHO'
       'SHOWROOM'
+    elsif grup.first.aisic.strip == 'MOD'
+      'MODERN'
+    elsif grup.first.aisic.strip == 'DIR'
+      'DIRECT'
     else
       '-'
     end

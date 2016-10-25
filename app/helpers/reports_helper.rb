@@ -7,4 +7,8 @@ module ReportsHelper
       }
     end
   end
+  
+  def group
+    ["RETAIL", "DIRECT", "SHOWROOM", "MODERN", ["All", 'all']]
+  end
 end
