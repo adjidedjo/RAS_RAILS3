@@ -103,16 +103,16 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
     end
   end
 
-  def self.sales_by_size(tanggal, bulan, tahun)
+  def self.sales_by_size(bulan, tahun)
     select("cabang_id, namaartikel, namakain, kodebrg,panjang, lebar, kodejenis, kodeartikel,
 customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harganetto2) as sum_harganetto2, namabrand")
-    .search_by_month_and_year(bulan, tahun).search_by_date(tanggal).without_acessoris.without_bonus
+    .search_by_month_and_year(bulan, tahun).without_acessoris.without_bonus
     .not_equal_with_nosj.group(:cabang_id, :jenisbrgdisc, :kodejenis, :kodeartikel, :lebar).each do |lapcab|
-      sales_brand = SalesSize.find_by_tanggal_and_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(tanggal,
+      sales_brand = SalesSize.find_by_bulan_and_tahun_and_cabang_id_and_merk_and_kode_produk_and_kode_artikel_and_lebar(
         bulan, tahun, lapcab.cabang_id, lapcab.jenisbrgdisc, lapcab.kodejenis, lapcab.kodeartikel, lapcab.lebar)
       if sales_brand.nil?
         SalesSize.create(:cabang_id => lapcab.cabang_id, :artikel => lapcab.namaartikel, :kain => lapcab.namakain,
-          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar, tanggal: tanggal,
+          :ukuran => lapcab.kodebrg[11,1], :panjang => lapcab.panjang, :lebar => lapcab.lebar,
           :customer => lapcab.customer, :sales => lapcab.salesman, :merk => combine_group(lapcab.jenisbrgdisc), :produk => lapcab.jenisbrg,
           :bulan => bulan, :tahun => tahun, :qty => lapcab.sum_jumlah, :val => lapcab.sum_harganetto2, :series => lapcab.namabrand,
           :kode_produk => lapcab.kodejenis, :kode_artikel => lapcab.kodeartikel)
@@ -294,7 +294,7 @@ customer, salesman, jenisbrgdisc, jenisbrg, SUM(jumlah) as sum_jumlah, SUM(harga
           Artikel.create(:KodeBrand => lap.kodeartikel[0,2],:KodeCollection => lap.kodeartikel,
             :Produk => lap.namaartikel, :KodeProduk => lap.kodebrg[0,2], :Aktif => 1)
         end
-        if Kain.where("KodeKain = ?", lap.kodekain).empty?
+        if Kain.where("KodeKain = ?", lap.kodekain).empty? && (lap.namakain.present? || !lap.namakain.blank?)
           Kain.create(:KodeKain => lap.kodekain,:NamaKain => lap.namakain,
             :KodeCollection => lap.kodeartikel, :Aktif => 1)
         end
