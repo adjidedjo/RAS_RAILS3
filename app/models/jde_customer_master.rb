@@ -1,7 +1,6 @@
 class JdeCustomerMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "proddta.f0101"
-  
   def self.get_group_customer(address_number)
     grup = where(aban8: address_number)
     if grup.empty?
@@ -17,4 +16,5 @@ class JdeCustomerMaster < ActiveRecord::Base
     else
       '-'
     end
+  end
 end
