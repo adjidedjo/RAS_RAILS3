@@ -31,7 +31,7 @@ class JdeSoDetail < ActiveRecord::Base
           groupitem = JdeUdc.group_item_udc(a.sdsrp3.strip)
           harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
           kota = JdeAddressByDate.get_city(a.sdan8.to_i)
-          group = JdeCustomerByLine.get_group_customer(a.sdan8.to_i, a.sdkcoo.to_i)
+          group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
