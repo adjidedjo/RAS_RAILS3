@@ -5,7 +5,7 @@ class JdeCustomerMaster < ActiveRecord::Base
     grup = where(aban8: address_number)
     if grup.empty?
       '-'
-    elsif grup.first.absic.strip == 'DEA' || grup.first.aisic.strip == 'RET'
+    elsif grup.first.absic.strip == 'DEA' || grup.first.absic.strip == 'RET'
       'RETAIL'
     elsif grup.first.absic.strip == 'SHO'
       'SHOWROOM'
