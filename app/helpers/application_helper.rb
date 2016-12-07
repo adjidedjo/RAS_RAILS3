@@ -1,15 +1,32 @@
 module ApplicationHelper
+  
+  def find_sales(sales)
+    Salesman.find(sales)
+  end
+  
+  def month
+    [1,2,3,4,5,6,7,8,9,10,11,12]
+  end
 
 
   def access_by_brand(user)
     if user == 'Admin' || 'Accounting'
-      ['ELITE', 'NON SERENITY', 'SERENITY', 'LADY', 'LADY AMERICANA', 'Royal']
+      ['ELITE', 'SERENITY', 'LADY', 'ROYAL']
     elsif user == 'Elite'
-      ['ELITE', 'NON SERENITY', 'SERENITY']
+      ['ELITE', 'SERENITY']
     elsif user == 'Lady Americana'
-      ['LADY', 'LADY AMERICANA']
+      ['LADY']
     elsif user == 'Royal'
-      ['Royal']
+      ['ROYAL']
+    end
+  end
+  
+  def access_by_branch(user)
+    if user.nil?
+      Cabang.all.map {|i| [i.Cabang, i.id]}
+    else
+      cabang = Cabang.find(user)
+      [cabang.Cabang, Cabang.id]
     end
   end
 

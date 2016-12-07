@@ -6,6 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require best_in_place
 //= require highcharts
 //= require twitter/bootstrap
 //= require bootstrap-multiselect

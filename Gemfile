@@ -5,6 +5,7 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead: gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2', '~> 0.3.17'
+gem 'best_in_place'
 
 
 # Gems used only for assets and not required in production environments by default.
@@ -45,6 +46,8 @@ gem "activerecord-oracle_enhanced-adapter", "~> 1.4.0"
 # Use oracle as the database for Active Record
 gem 'ruby-oci8'
 gem 'turnout'
+gem "highcharts-rails"
+gem 'lazy_high_charts'
 
 # To use ActiveModel has_secure_password gem 'bcrypt-ruby', '~> 3.0.0'
 
