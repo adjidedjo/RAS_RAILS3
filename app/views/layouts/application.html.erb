@@ -75,6 +75,7 @@
               <% end %>
               <% if current_user.user_brand == 'Admin' %>
                 <%= drop_down_submenu "Quick View" do %>
+                  <%= menu_item "Harian", dailies_index_path %>
                   <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
                   <%= drop_down_submenu "Bulanan" do %>
                     <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
@@ -90,6 +91,7 @@
                   <% end %>
                 <% end %>
               <% else %>
+                <%= menu_item "Harian", dailies_index_path %>
                 <%= menu_item "Mingguan", reports_quick_view_monthly_path(type: "week") %>
                 <%= menu_item "Sales Cabang per Bulan", reports_quick_view_monthly_path(type: "scb") %>
               <% end %>
