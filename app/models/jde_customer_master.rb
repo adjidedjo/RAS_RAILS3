@@ -17,4 +17,8 @@ class JdeCustomerMaster < ActiveRecord::Base
       '-'
     end
   end
+  
+  def self.find_salesman_name(salesman_id)
+    find_by_sql("SELECT abalph FROM proddta.f0101 WHERE aban8 like '%#{salesman_id}%'").first.abalph.strip
+  end
 end
