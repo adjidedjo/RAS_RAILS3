@@ -1,17 +1,8 @@
 <div class="row-fluid">
-  <div class="offset5">
-    <div class="block-content collapse in">
-      <h2 style="font-size: 17px;"><i>Laporan Sales Cabang HARIAN</i></h2>
-    </div>
-  </div>
-</div>
-<h5>NB: TIDAK TERMASUK AKSESORIS, BONUS, DISPLAY, DAN PROJECT;</h5>
-<hr />
-<div class="row-fluid">
   <div class="span10">
-    <%= form_tag dailies_index_path, :method => 'get', :class => "form-inline" do %>
+    <%= form_tag report_graph_sales_productivities_path, :method => 'get', :class => "form-inline" do %>
     <label style="font-size: 13px;">CABANG: </label>
-    <%= select_tag 'branch', options_for_select(access_by_branch(current_user), params[:branch]) %>
+    <%= select_tag 'branch', options_for_select(Province.all.map {|i| [i.name, i.id]}, params[:branch]) %>
     <label style="font-size: 13px;">BRAND: </label>
     <%= select_tag 'brand', options_for_select(access_by_brand(current_user.user_brand), params[:brand]) %>
     <label style="font-size: 13px;">BULAN: </label>
@@ -24,6 +15,5 @@
     <% end %>
   </div>
 </div>
-<!-- <div id="container" style="width:100%; height:400px;"></div> -->
-
-<%= high_chart("container", @chart) if params.present? %>
+<br />
+<%= high_chart("average_call_day", @sales) if params.present? %>

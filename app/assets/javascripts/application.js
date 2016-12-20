@@ -17,4 +17,5 @@
 //= require jquery.tooltipster
 //= require jquery.bxslider
 //= require stacktable
+//= require custom
 //= require_tree .

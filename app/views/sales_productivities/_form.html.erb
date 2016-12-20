@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      Form Sales Productivity <%= Cabang.find(current_user.cabang).Cabang.gsub(/Cabang/,"") %>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <%= form_for(@sales_productivity, {:class => "form-horizontal"}) do |f| %>
+        <div class="span10">
+          <% if @sales_productivity.errors.any? %>
+          <div id="error_explanation">
+            <h4>Not Saved. Click <%= link_to "this", new_sales_productivity_path %> for a new productivity 
+              or fill correctly Form Below </h4>
+
+            <ul>
+              <% @sales_productivity.errors.full_messages.each do |msg| %>
+              <li>
+                <%= msg %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <% end %>
+        </div>
+        <div class="span4">
+          <div class="form-group">
+            <label class="control-labe;" for="email">NAMA SALES:</label>
+            <%= f.select "salesmen_id", options_for_select(@salesman.map {|a| [a.nama, a.id]}) %>
+          </div>
+        </div>
+        <div class="span8">
+          <div class="form-group">
+            <label class="control-labe;" for="email">BRAND:</label>
+            <%= f.select "brand_id", options_for_select(@brand.map {|a| [a.jde_brand, a.id]}) %>
+          </div>
+        </div>
+        <%= f.hidden_field :branch_id, value: current_user.cabang %>
+        <div class="devider"></div>
+        <div class="span3">
+          <div class="form-group">
+            <label class="control-labe;" for="email">NUMBER PLAN NEW VISIT CUSTOMER:</label>
+            <%= f.number_field :npvnc, :size=>"50" %>
+          </div>
+          <div class="form-group">
+            <label class="control-labe;" for="email">NUMBER VISIT CUSTOMER:</label>
+            <%= f.number_field :nvc %>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="form-group">
+            <label class="control-labe;" for="email">NUMBER CLOSE DEAL VISIT:</label>
+            <%= f.number_field :ncdv %>
+          </div>
+          <div class="form-group">
+            <label class="control-labe;" for="email">NUMBER CALL CUSTOMER:</label>
+            <%= f.number_field :ncc %>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="form-group">
+            <label class="control-labe;" for="email">NUMBER CLOSE DEAL CALL:</label>
+            <%= f.number_field :ncdc %>
+          </div>
+          <div class="form-group">
+            <label class="control-labe;" for="email">TARGET PRODUCT SALE:</label>
+            <%= f.number_field :tjp %>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="form-group">
+            <label class="control-labe;" for="email">ACTUAL SOLD PRODUCT:</label>
+            <%= f.number_field :apt %>
+          </div>
+        </div>
+        <div class="span3 offset11">
+          <div class="actions">
+            <%= f.submit "CREATE", class: "btn btn-primary" %>
+          </div>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

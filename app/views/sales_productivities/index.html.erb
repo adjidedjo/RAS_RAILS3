@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="span12">
+    <%= form_tag sales_productivities_path, :method => 'get', :class => "form form-inline" do %>
+      <label style="font-size: 13px;"><b>PENCARIAN:</b> </label>
+      <label style="font-size: 13px; margin-left: 40px;">CABANG: </label>
+      <%= select_tag 'channel', options_for_select(Cabang.all.map {|u| [u.Cabang, u.IdCabang]}, params[:channel]) %>
+      <label style="font-size: 13px;">BRAND: </label>
+      <%= select_tag 'brand', options_for_select(options_for_tipe_price, params[:brand]) %>
+      <button type="submit" class="btn btn-primary">
+        Refine Search
+      </button>
+    <% end %>
+  </div>
+  <hr />
+  <div class="table-responsive">
+    <table id="new_productivity" class="table table-bordered table-striped table-highlight">
+      <thead>
+        <tr>
+          <th style="width: auto;">Salesman</th>
+          <th style="width: auto;">PLAN VISIT CUSTOMER</th>
+          <th>VISIT CUSTOMER</th>
+          <th>CD VISIT</th>
+          <th>CALL CUSTUMER</th>
+          <th>CD CALL</th>
+          <th>Target Sales</th>
+          <th>Actual Sales</th>
+        </tr>
+      </thead>
+      <tfoot></tfoot>
+      <tbody>
+        <% @sales_productivities.each do |sm| %>
+          <tr>
+            <td> <%= find_sales(sm.salesmen_id).nama %> </td>
+            <td class="editable_<%= sm.id %>_npnvc"> <%= best_in_place sm, :npnvc, as: :input , activator: ".editable_#{sm.id}_npnvc " %> </td>
+            <td class="editable_<%= sm.id %>_nvc"> <%= best_in_place sm, :nvc, as: :input , activator: ".editable_#{sm.id}_nvc " %> </td>
+            <td class="editable_<%= sm.id %>_ncdv"> <%= best_in_place sm, :ncdv, as: :input , activator: ".editable_#{sm.id}_ncdv " %> </td>
+            <td class="editable_<%= sm.id %>_ncc"> <%= best_in_place sm, :ncc, as: :input , activator: ".editable_#{sm.id}_ncc " %> </td>
+            <td class="editable_<%= sm.id %>_ncdc"> <%= best_in_place sm, :ncdc, as: :input , activator: ".editable_#{sm.id}_ncdc " %> </td>
+            <td class="editable_<%= sm.id %>_tjp"> <%= best_in_place sm, :tjp, as: :input , activator: ".editable_#{sm.id}_tjp " %> </td>
+            <td class="editable_<%= sm.id %>_apt"> <%= best_in_place sm, :apt, as: :input , activator: ".editable_#{sm.id}_apt " %> </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

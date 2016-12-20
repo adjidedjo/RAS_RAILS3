@@ -22,11 +22,22 @@ module ApplicationHelper
   end
   
   def access_by_branch(user)
-    if user.nil?
+    cabang = []
+    if current_user.nil?
       Cabang.all.map {|i| [i.Cabang, i.id]}
     else
-      cabang = Cabang.find(user)
-      [cabang.Cabang, Cabang.id]
+      cabang << Cabang.find(user.cabang)
+      cabang.map {|i| [i.Cabang.gsub(/Cabang/, ""), i.id]}
+    end
+  end
+  
+  def access_by_province(user)
+    prov = []
+    if current_user.cabang.nil?
+      Province.all.map {|i| [i.name, i.id]}
+    else
+      prov << Cabang.find(user.cabang)
+      cabang.map {|i| [i.Cabang.gsub(/Cabang/, ""), i.id]}
     end
   end
 

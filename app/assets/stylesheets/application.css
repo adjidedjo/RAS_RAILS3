@@ -6,6 +6,7 @@
  *= require jquery-ui
  *= require dataTables/jquery.dataTables
  *= require bootstrap
+ *= require custom
  *= require bootstrap-responsive
  *= require bootstrap-multiselect
  *= require tooltipster

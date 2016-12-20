@@ -4,7 +4,11 @@ Rain::Application.routes.draw do
 
   get "dailies/index"
 
-  resources :sales_productivities
+  resources :sales_productivities, only: [:index, :new, :create] do
+    collection do
+      get "report_graph"
+    end
+  end
 
   resources :daily_sales, only: [:index, :new, :create]
 
