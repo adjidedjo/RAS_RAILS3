@@ -56,11 +56,7 @@
               <% end %>
             <% end %>
             <%= menu_divider %>
-            <%= drop_down "Target" do %>
-              <%= menu_item "Input Target", monthly_targets_path %>
-              <%= menu_item "Target vs Achievment", monthly_targets_target_filter_path %>
-              <%= menu_item "Forecast", forecasts_path %>
-            <% end %>
+            <%= menu_item "Sales Productivity", new_sales_productivity_path %>
             <%= drop_down "Stock" do %>
               <%= menu_item "Asongan", peddlers_peddlers_report_path %>
               <%= menu_item "Stock", stock_index_path %>
@@ -72,6 +68,7 @@
                 <%= menu_item "Analysis", reports_search_main_path %>
                 <%= menu_item "Check History PL", show_regional_regionals_path %>
                 <%= menu_item "Point of Sales", url_with_protocol, :target => '_blank' %>
+                <%= menu_item "Salesmen Productivity", report_graph_sales_productivities_path %>
               <% end %>
               <% if current_user.user_brand == 'Admin' %>
                 <%= drop_down_submenu "Quick View" do %>
