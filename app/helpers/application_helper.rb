@@ -36,8 +36,8 @@ module ApplicationHelper
     if current_user.cabang.nil?
       Province.all.map {|i| [i.name, i.id]}
     else
-      prov << Cabang.find(user.cabang)
-      cabang.map {|i| [i.Cabang.gsub(/Cabang/, ""), i.id]}
+      prov << Province.find(current_user.province)
+      prov.map {|i| [i.name, i.id]}
     end
   end
 

@@ -2,7 +2,7 @@
   <div class="span10">
     <%= form_tag report_graph_sales_productivities_path, :method => 'get', :class => "form-inline" do %>
     <label style="font-size: 13px;">CABANG: </label>
-    <%= select_tag 'branch', options_for_select(Province.all.map {|i| [i.name, i.id]}, params[:branch]) %>
+    <%= select_tag 'branch', options_for_select(access_by_province(current_user), params[:branch]) %>
     <label style="font-size: 13px;">BRAND: </label>
     <%= select_tag 'brand', options_for_select(access_by_brand(current_user.user_brand), params[:brand]) %>
     <label style="font-size: 13px;">BULAN: </label>

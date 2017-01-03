@@ -60,93 +60,65 @@
             </tfoot>
             <tbody>
               <% if current_user.cabang.present? %>
-                <tr>
-                  <td scope="row"><%= Cabang.find(current_user.cabang).Cabang.gsub(/Cabang/,'') %></td>
-                    <% if SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, current_user.cabang,
-                    params[:brand_scb], params[:channel]).empty? %>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                    <% else %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 4.month).month,(params[:month].to_date - 4.month).year, current_user.cabang,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 3.month).month, (params[:month].to_date - 3.month).year, current_user.cabang,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 2.month).month, (params[:month].to_date - 2.month).year, current_user.cabang,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 1.month).month, (params[:month].to_date - 1.month).year, current_user.cabang,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, current_user.cabang,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                    <% end %>
-                </tr>
-              <% else %>
-                <% Cabang.get_id.each do |laporan| %>
-                  <tr>
-                    <td scope="row"><%= laporan.Cabang.gsub(/Cabang/,'') %></td>
-                      <% if SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, laporan.id,
-                      params[:brand_scb], params[:channel]).empty? %>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    <% else %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 4.month).month, (params[:month].to_date - 4.month).year, laporan.id,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 3.month).month, (params[:month].to_date - 3.month).year, laporan.id,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 2.month).month, (params[:month].to_date - 2.month).year, laporan.id,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly((params[:month].to_date - 1.month).month, (params[:month].to_date - 1.month).year, laporan.id,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                      <% SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, laporan.id,
-                      params[:brand_scb], params[:channel]).each do |a| %>
-                        <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
-                        <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
-                      <% end %>
-                    <% end %>
-                  </tr>
+              <tr>
+                <td scope="row"><%= Cabang.find(current_user.cabang).Cabang.gsub(/Cabang/,'') %></td>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 4.month).month,(params[:month].to_date - 4.month).year, current_user.cabang,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
                 <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 3.month).month, (params[:month].to_date - 3.month).year, current_user.cabang,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 2.month).month, (params[:month].to_date - 2.month).year, current_user.cabang,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 1.month).month, (params[:month].to_date - 1.month).year, current_user.cabang,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, current_user.cabang,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+              </tr>
+              <% else %>
+              <% Cabang.get_id.each do |laporan| %>
+              <tr>
+                <td scope="row"><%= laporan.Cabang.gsub(/Cabang/,'') %></td>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 4.month).month, (params[:month].to_date - 4.month).year, laporan.id,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 3.month).month, (params[:month].to_date - 3.month).year, laporan.id,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 2.month).month, (params[:month].to_date - 2.month).year, laporan.id,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly((params[:month].to_date - 1.month).month, (params[:month].to_date - 1.month).year, laporan.id,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+                <% SalesBrand.customer_quick_monthly(params[:month].to_date.month, params[:month].to_date.year, laporan.id,
+                params[:brand_scb], params[:channel]).each do |a| %>
+                <td><%= a.qty.nil? ? "0" : currency(a.qty.to_i) %></td>
+                <td><%= a.val.nil? ? "0" : number_with_delimiter(a.val.to_i, delimiter: ".") %></td>
+                <% end %>
+              </tr>
+              <% end %>
               <% end %>
             </tbody>
           </table>
