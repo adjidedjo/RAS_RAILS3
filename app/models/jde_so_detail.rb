@@ -23,7 +23,7 @@ class JdeSoDetail < ActiveRecord::Base
         bonus = a.sdaexp == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
-          cabang = jde_cabang(a.sdmcu.to_i.to_s[3..4])
+          cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
           item_master = JdeItemMaster.find_by_imitm(a.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -54,18 +54,26 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   def self.jde_cabang(bu)
-    if bu == "01" || bu == "02"
+    if bu == "11001" || bu == "11002" #pusat
       "01"
-    elsif bu == "11"
+    elsif bu == "11011" || bu == "11012" #jabar
       "02"
-    elsif bu == "21" || bu == "22"
+    elsif bu == "11021" || bu == "11022" #cirebon
       "09"
-    elsif bu == "61" || bu == "62"
+    elsif bu == "12061" || bu == "12062" || bu == "12001" #bestari mulia
       "07"
-    elsif bu == "51" || bu == "52"
+    elsif bu == "11151" || bu == "11152" #cikupa
       "23"
-    elsif bu == "31" || bu == "32"
+    elsif bu == "11031" || bu == "11032" #narogong
       "03"
+    elsif bu == "12111" || bu == "12112" #makasar
+      "19"
+    elsif bu == "12071" || bu == "12072" #bali
+      "04"
+    elsif bu == "12071" || bu == "12072" #jember
+      "04"
+    elsif bu == "12131" || bu == "12132" #jember
+      "04"
     end
   end
 end
