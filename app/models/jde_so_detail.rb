@@ -70,10 +70,8 @@ class JdeSoDetail < ActiveRecord::Base
       "19"
     elsif bu == "12071" || bu == "12072" #bali
       "04"
-    elsif bu == "12071" || bu == "12072" #jember
-      "04"
     elsif bu == "12131" || bu == "12132" #jember
-      "04"
+      "22"
     end
   end
 end
