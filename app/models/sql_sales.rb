@@ -100,7 +100,7 @@ class SqlSales < ActiveRecord::Base
   end
 
   def self.migration_sales_report_prev_month
-    select("*").where("month(tanggalsj) = ?", 1.month.ago.month).each do |sql_sales|
+    select("*").where("month(tanggalsj) = ? and year(tanggalsj) = ?", 1.month.ago.month, 1.month.ago.year).each do |sql_sales|
       lapcab = LaporanCabang.find_by_nosj_and_kodebrg_and_bonus(sql_sales.nosj, sql_sales.kodebrg, sql_sales.bonus)
       if lapcab.nil?
         LaporanCabang.create(cabang_id: sql_sales.idcabang,
