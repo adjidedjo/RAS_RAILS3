@@ -9,4 +9,8 @@ class JdeSalesman < ActiveRecord::Base
     salesman_name = commision_table.present? ? JdeCustomerMaster.find_salesman_name(commision_table.first.saslsm.to_i) : '-'
     return salesman_name
   end
+
+  def self.date_to_julian(date)
+    1000*(date.year-1900)+date.yday
+  end
 end
