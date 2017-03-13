@@ -1,5 +1,5 @@
 daily_migration:
-  cron: "0 7-18 * * 1-6"
+  cron: "0 7-24 * * 1-7"
   queue: cron
   class: ControlUpload
   args: "daily_migration"
@@ -22,22 +22,6 @@ send_email_prev_month:
   description: send report upload sales branches last month
   rails_envs: production
 
-send_email_kontra_bon:
-  cron: "30 09 5,6 * *"
-  queue: cron
-  class: ControlUpload
-  args: "send_mail_kontra_bon"
-  description: send report upload sales branches last month
-  rails_envs: production
-
-update_price_list:
-  cron: "01 0 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "update_price_list"
-  description: update price list
-  rails_envs: development, production, staging
-
 check_sales_reports:
   cron: "30 3 * * 1-6"
   queue: cron
@@ -53,14 +37,6 @@ check_sales_reports_prev_month:
   args: "check_reports_prev_month"
   description: check sales_reports
   rails_envs: development, production, staging
-
-check_stock:
-  cron: "0 08,13 * * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "check_stock"
-  description: check stock
-  rails_envs: development, production, stagings
 
 jde_migration_order:
   cron: "0 3 * * *"
