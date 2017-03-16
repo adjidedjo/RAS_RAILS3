@@ -14,8 +14,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?",
-    "580", "565", "SO", date_to_julian(Date.today)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
+    "580", "565", date_to_julian(Date.today)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -32,22 +32,23 @@ class JdeSoDetail < ActiveRecord::Base
           harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
           kota = JdeAddressByDate.get_city(a.sdan8.to_i)
           group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
+          variance = (julian_to_date(a.sdaddj)-julian_to_date(a.sddrqj)).to_i
          sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
-          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
+          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales)
+            salesman: sales, diskon5: variance)
         end
       end
     end
   end
 
   #use this if sales of a branch not working
-  def self.import_so_detail_with_range(branch)
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj BETWEEN ? and ?",
-    "580", "565", "SO", date_to_julian("01/01/2017".to_date), date_to_julian(Date.today)).each do |a|
+  def self.import_so_detail_with_range(from)
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?",
+    "580", "565", "SO", date_to_julian(from.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -55,7 +56,7 @@ class JdeSoDetail < ActiveRecord::Base
         bonus = a.sdaexp == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
-          cabang = jde_cabang(branch)
+          cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
           item_master = JdeItemMaster.find_by_imitm(a.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -86,9 +87,9 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   def self.jde_cabang(bu)
-    if bu == "11001" || bu == "11002" #pusat
+    if bu == "11001" #pusat
       "01"
-    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" #jabar
+    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" || bu == "11002" #jabar
       "02"
     elsif bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" #cirebon
       "09"
@@ -104,6 +105,18 @@ class JdeSoDetail < ActiveRecord::Base
       "04"
     elsif bu == "12131" || bu == "12132" || bu == "13131" || bu == "12131C" || bu == "12131D" || bu == "13131C" || bu == "13131D" #jember
       "22"
+    elsif bu == "11101" || bu == "11102" || bu == "13101" || bu == "11101C" || bu == "11101D" || bu == "13101C" || bu == "13101D" #lampung
+      "13"  
+    elsif bu == "11091" || bu == "11092" || bu == "13091" || bu == "11091C" || bu == "11091D" || bu == "13091C" || bu == "13091D" #palembang
+      "11"
+    elsif bu == "11041" || bu == "11042" || bu == "13041" || bu == "11041C" || bu == "11041D" || bu == "13041C" || bu == "13041D" #yogyakarta
+      "10"
+    elsif bu == "11051" || bu == "11052" || bu == "13051" || bu == "11051C" || bu == "11051D" || bu == "13051C" || bu == "13051D" #semarang
+      "08"
+    elsif bu == "11081" || bu == "11082" || bu == "13081" || bu == "11081C" || bu == "11081D" || bu == "13081C" || bu == "13081D" #medan
+      "05"
+    elsif bu == "11121" || bu == "11122" || bu == "13121" || bu == "11121C" || bu == "11121D" || bu == "13121C" || bu == "13121D" #pekanbaru
+      "20"
     end
   end
 end
