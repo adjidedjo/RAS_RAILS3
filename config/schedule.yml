@@ -6,38 +6,6 @@ daily_migration:
   description: migrate sales_report
   rails_envs: development, production, staging
 
-send_email:
-  cron: "30 09 * * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "send_mail"
-  description: send report upload sales branches
-  rails_envs: production
-
-send_email_prev_month:
-  cron: "30 09 1-5 * *"
-  queue: cron
-  class: ControlUpload
-  args: "send_mail_previous_month"
-  description: send report upload sales branches last month
-  rails_envs: production
-
-check_sales_reports:
-  cron: "30 3 * * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "check_reports"
-  description: check sales_reports
-  rails_envs: development, production, staging
-
-check_sales_reports_prev_month:
-  cron: "0 2 1-6 * 1-6"
-  queue: cron
-  class: ControlUpload
-  args: "check_reports_prev_month"
-  description: check sales_reports
-  rails_envs: development, production, staging
-
 jde_migration_order:
   cron: "0 3 * * *"
   queue: cron
@@ -53,6 +21,15 @@ jde_intransit_to_pos:
   args: "intransit_pos"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
+  
+jde_return_items:
+  cron: "0 3 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "retur_jde"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
 
 jde_net_sales:
   cron: "0 4 6 * * *"

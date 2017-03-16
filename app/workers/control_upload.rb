@@ -24,6 +24,10 @@ class ControlUpload
     end
 
   end
+  
+  def retur_jde
+    JdeSoDetail.import_retur
+  end
 
   def intransit_pos
     JdeSoDetail.import_so_detail

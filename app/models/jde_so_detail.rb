@@ -39,7 +39,39 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance)
+            salesman: sales, diskon5: variance, orty: a.sddcto.strip)
+        end
+      end
+    end
+  end
+  
+  #import retur
+  def self.import_retur
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
+    "999", "620", date_to_julian(Date.yesterday)).each do |a|
+      find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
+      if find_sj.empty?
+        fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
+        customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
+        bonus = a.sdaexp == 0 ?  'BONUS' : '-'
+        if customer.abat1.strip == "C"
+          namacustomer = customer.abalph.strip
+          cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
+          item_master = JdeItemMaster.find_by_imitm(a.sditm)
+          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
+          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
+          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
+          groupitem = JdeUdc.group_item_udc(a.sdsrp3.strip)
+          harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
+          kota = JdeAddressByDate.get_city(a.sdan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
+         sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
+          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdtrdj),kodebrg: a.sdaitm.strip,
+            namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
+            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
+            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+            hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
+            salesman: sales, orty: a.sddcto.strip)
         end
       end
     end
