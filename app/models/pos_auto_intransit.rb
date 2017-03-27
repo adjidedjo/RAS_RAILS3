@@ -4,7 +4,7 @@ class PosAutoIntransit < ActiveRecord::Base
 
   def self.insert_delivered_stock_from_jde(date)
     PosChannelCustomer.where("address_number > ?", 0).each do |pcc|
-      SalesOrderHistoryJde.find_sales_transfer_to_showroom(date, pcc.address_number).each do |soh|
+      SalesOrderHistoryJde.find_sales_transfer_to_showroom(date.to_date, pcc.address_number).each do |soh|
         stocking_type = (soh.sdmcu.include? "D") ? "RE" : "CS"
         jde_date_today = jde_date_to_date(soh.sdaddj.to_i)
         nama_brg = soh.sddsc1.strip + " " + soh.sddsc2.strip
