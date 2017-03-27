@@ -22,11 +22,11 @@ jde_intransit_to_pos:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-jde_return_items:
+jde_import_sales_items:
   cron: "0 3 * * *"
   queue: cron
   class: ControlUpload
-  args: "retur_jde"
+  args: "import_sales_jde"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   

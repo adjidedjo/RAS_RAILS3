@@ -24,14 +24,14 @@ class ControlUpload
     end
 
   end
-  
-  def retur_jde
+
+  def import_sales_jde
+    JdeSoDetail.import_so_detail
     JdeSoDetail.import_retur
   end
 
   def intransit_pos
-    JdeSoDetail.import_so_detail
-    PosAutoIntransit.insert_delivered_stock_from_jde
+    PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
   end
 
   def send_mail
@@ -103,7 +103,7 @@ class ControlUpload
     SalesBrand.net_sales_update_cabang
     SalesBrand.net_sales_update_customer
   end
-  
+
   def send_email_kontra_bon
     UserMailer.kontra_bon.deliver
   end
