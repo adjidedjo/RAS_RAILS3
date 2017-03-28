@@ -1,16 +1,16 @@
-daily_migration:
-  cron: "0 7-24 * * 1-7"
-  queue: cron
-  class: ControlUpload
-  args: "daily_migration"
-  description: migrate sales_report
-  rails_envs: development, production, staging
+# daily_migration:
+#  cron: "0 7-24 * * 1-7"
+#  queue: cron
+#  class: ControlUpload
+#  args: "daily_migration"
+#  description: migrate sales_report
+#  rails_envs: development, production, staging
 
-jde_migration_order:
+jde_new_item:
   cron: "0 3 * * *"
   queue: cron
   class: ControlUpload
-  args: "daily_migration_jde"
+  args: "daily_new_item"
   description: sales reports jde
   rails_envs: development, production, staging
 
@@ -31,10 +31,10 @@ jde_import_sales_items:
   rails_envs: development, production, staging
   
 
-jde_net_sales:
-  cron: "0 4 6 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "monthly_net_sales"
-  description: migration net sales to sales analytic
-  rails_envs: development, production, staging
+# jde_net_sales:
+#  cron: "0 4 6 * * *"
+#  queue: cron
+#  class: ControlUpload
+#  args: "monthly_net_sales"
+#  description: migration net sales to sales analytic
+#  rails_envs: development, production, staging

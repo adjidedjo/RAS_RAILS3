@@ -95,7 +95,7 @@ class ControlUpload
     LaporanCabang.sales_by_brand(Date.today.month, Date.today.year)
   end
 
-  def daily_migration_jde
+  def daily_new_item
     JdeItemMaster.get_new_items_from_jde
   end
 
