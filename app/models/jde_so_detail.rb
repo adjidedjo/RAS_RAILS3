@@ -40,7 +40,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id)
+            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: tanggalsj.to_date.year,
+            fiscal_month: tanggalsj.to_date.month)
         end
       end
     end
