@@ -32,7 +32,7 @@ class JdeSoDetail < ActiveRecord::Base
           harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
           kota = JdeAddressByDate.get_city(a.sdan8.to_i)
           group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
-          variance = (julian_to_date(a.sdaddj)-julian_to_date(a.sddrqj)).to_i
+          variance = (julian_to_date(a.sdaddj)-julian_to_date(a.sdrsdj)).to_i
          sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
@@ -73,7 +73,7 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, orty: a.sddcto.strip)
+            salesman: sales, orty: a.sddcto.strip, fiscal_month: tanggalsj.to_date.month, fiscal_year: tanggalsj.to_date.year)
         end
       end
     end
