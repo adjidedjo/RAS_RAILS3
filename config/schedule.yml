@@ -30,6 +30,14 @@ jde_import_sales_items:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
+jde_import_credit_note:
+  cron: "45 19 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_sales_jde"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
 
 # jde_net_sales:
 #  cron: "0 4 6 * * *"

@@ -81,8 +81,8 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import credit note
   def self.import_credit_note
-    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdgj = 
-    '#{date_to_julian(Date.yesterday)}' AND rpdct LIKE '%RM%'")
+    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpfy = 
+    '%17%' AND rpdct LIKE '%RM%'")
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
       no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
