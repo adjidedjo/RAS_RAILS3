@@ -40,8 +40,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: tanggalsj.to_date.year,
-            fiscal_month: tanggalsj.to_date.month)
+            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(a.sdtrdj).to_date.year,
+            fiscal_month: julian_to_date(a.sdtrdj).to_date.month)
         end
       end
     end
@@ -73,8 +73,33 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, orty: a.sddcto.strip, fiscal_month: tanggalsj.to_date.month, fiscal_year: tanggalsj.to_date.year)
+            salesman: sales, orty: a.sddcto.strip, fiscal_month: julian_to_date(a.sdtrdj).to_date.month, fiscal_year: julian_to_date(a.sdtrdj).to_date.year)
         end
+      end
+    end
+  end
+  
+  #import credit note
+  def self.import_credit_note
+    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdgj BETWEEN 
+    '#{date_to_julian('01/01/2017'.to_date)}' AND '#{date_to_julian('28/03/2017'.to_date)}'
+    AND rpdct LIKE '%RM%'")
+    credit_note.each do |cr|
+      no_doc = cr.rprmk[0..7].to_i.to_s
+      no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
+      FROM PRODDTA.F4211 WHERE sddoc LIKE '%#{no_doc}%'")
+      if no_doc.length == 8 || no_so.present?
+        no_so = no_so.first
+        namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
+        cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
+        group = JdeCustomerMaster.get_group_customer(no_so.sdan8.to_i)
+        kota = JdeAddressByDate.get_city(no_so.sdan8.to_i)
+        sales = JdeSalesman.find_salesman(no_so.sdan8.to_i, no_so.sdsrp1.strip)
+        sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
+        LaporanCabang.create(cabang_id: cabang, noso: no_so.sddoco.to_i, tanggal: julian_to_date(no_so.sdtrdj), nosj: no_so.sddeln.to_i, 
+          tanggalsj: julian_to_date(no_so.sdtrdj), kode_customer: no_so.sdan8.to_i, customer: namacustomer, 
+          harganetto1: cr.rpag, kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip, 
+          fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id)
       end
     end
   end
