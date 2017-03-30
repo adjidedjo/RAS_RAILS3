@@ -122,7 +122,7 @@ class JdeSoDetail < ActiveRecord::Base
       cabang = jde_cabang(st.limcu.to_i.to_s.strip)
       BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: Date.today.year, 
       fiscal_month: Date.today.month, item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
-      article: artikel, long: imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000)
+      article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000)
     end
   end
 
