@@ -81,13 +81,13 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import credit note
   def self.import_credit_note
-    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpfy = 
-    '%17%' AND rpdct LIKE '%RM%' AND rprmr1 NOT LIKE '%RO%'")
+    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    AND rpdct LIKE '%RM%' AND rprmk LIKE '1%' AND rprmr1 NOT LIKE '%RO%'")
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
       no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
       FROM PRODDTA.F4211 WHERE sddoc LIKE '%#{no_doc}%'")
-      if no_doc.length == 8 || no_so.present?
+      if no_doc.length == 8 && no_so.present?
         no_so = no_so.first
         namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
         cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
@@ -95,11 +95,34 @@ class JdeSoDetail < ActiveRecord::Base
         kota = JdeAddressByDate.get_city(no_so.sdan8.to_i)
         sales = JdeSalesman.find_salesman(no_so.sdan8.to_i, no_so.sdsrp1.strip)
         sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
-        LaporanCabang.create(cabang_id: cabang, noso: no_so.sddoco.to_i, tanggal: julian_to_date(no_so.sdtrdj), nosj: no_so.sddeln.to_i, 
-          tanggalsj: julian_to_date(no_so.sdtrdj), kode_customer: no_so.sdan8.to_i, customer: namacustomer, 
-          harganetto1: cr.rpag, kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip, 
-          fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id)
+        LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, noso: no_so.sddoco.to_i, tanggal: julian_to_date(no_so.sdtrdj), 
+          nosj: no_so.sddeln.to_i, tanggalsj: julian_to_date(no_so.sdtrdj), 
+          kode_customer: no_so.sdan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
+          kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip,
+          fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, 
+          fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id)
       end
+    end
+  end
+
+  
+  #import bom stock
+  def self.import_beginning_of_stock
+    stock = self.find_by_sql("SELECT IA.liitm AS liitm, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom, 
+    IM.imlitm, IM.imdsc1, IM.imdsc2, IB.ibsafe, MAX(IM.imaitm) AS imaitm, MAX(IM.imseg1) AS imseg1, 
+    MAX(IM.imseg2) AS imseg2, MAX(IB.ibmcu) AS ibmcu, MAX(IM.imseg2) AS imseg2,
+    MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
+    JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
+    WHERE IB.ibmcu LIKE '%11011' AND IA.lipqoh >= 1
+    GROUP BY IA.liitm, IM.imlitm, IM.imdsc1, IM.imdsc2, IB.ibsafe")
+    stock.each do |st|
+      item_master = JdeItemMaster.find_by_imitm(st.liitm)
+      artikel = JdeUdc.artikel_udc(st.imseg2.strip)
+      description = st.imdsc1+' '+st.imdsc2
+      cabang = jde_cabang(st.ibmcu.to_i.to_s.strip)
+      BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: '#{Date.today.year}', 
+      fiscal_month: '#{Date.today.month}', item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
+      article: artikel, wide: st.imseg6.to_i, qty: st.lipqoh/10000)
     end
   end
 

@@ -25,11 +25,16 @@ class ControlUpload
 
   end
   
+  def import_beginning_of_month
+    JdeSoDetail.import_beginning_of_stock
+  end
+  
   def import_credit_note
     JdeSoDetail.import_credit_note
   end
 
   def import_sales_jde
+    JdeSoDetail.import_credit_note
     JdeSoDetail.import_so_detail
     JdeSoDetail.import_retur
   end
