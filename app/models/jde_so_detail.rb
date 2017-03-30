@@ -113,7 +113,7 @@ class JdeSoDetail < ActiveRecord::Base
     MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6,
     MAX(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.limcu LIKE '%11011' AND IA.lipqoh >= 1
+    WHERE IA.limcu LIKE '%11011' AND IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%'
     GROUP BY IA.liitm, IM.imlitm, IM.imdsc1, IM.imdsc2")
     stock.each do |st|
       item_master = JdeItemMaster.find_by_imitm(st.liitm)
