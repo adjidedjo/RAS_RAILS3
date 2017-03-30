@@ -110,7 +110,7 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_beginning_of_stock
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom, 
     IM.imlitm, IM.imdsc1, IM.imdsc2, MAX(IM.imaitm) AS imaitm, MAX(IM.imseg1) AS imseg1, 
-    MAX(IM.imseg2) AS imseg2, MAX(IM.immcu) AS immcu, MAX(IM.imseg2) AS imseg2,
+    MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2,
     MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
     WHERE IA.limcu LIKE '%11011' AND IA.lipqoh >= 1
@@ -119,7 +119,7 @@ class JdeSoDetail < ActiveRecord::Base
       item_master = JdeItemMaster.find_by_imitm(st.liitm)
       artikel = JdeUdc.artikel_udc(st.imseg2.strip)
       description = st.imdsc1+' '+st.imdsc2
-      cabang = jde_cabang(st.immcu.to_i.to_s.strip)
+      cabang = jde_cabang(st.limcu.to_i.to_s.strip)
       BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: '#{Date.today.year}', 
       fiscal_month: '#{Date.today.month}', item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
       article: artikel, wide: st.imseg6.to_i, qty: st.lipqoh/10000)
