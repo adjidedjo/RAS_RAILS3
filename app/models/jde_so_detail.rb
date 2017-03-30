@@ -110,8 +110,8 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_beginning_of_stock
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom, 
     IM.imlitm, IM.imdsc1, IM.imdsc2, MAX(IM.imaitm) AS imaitm, MAX(IM.imseg1) AS imseg1, 
-    MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6
-    MAS(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
+    MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6,
+    MAX(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
     WHERE IA.limcu LIKE '%11011' AND IA.lipqoh >= 1
     GROUP BY IA.liitm, IM.imlitm, IM.imdsc1, IM.imdsc2")
