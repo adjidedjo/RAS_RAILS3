@@ -15,7 +15,7 @@ class JdeSoDetail < ActiveRecord::Base
   # #jde to mysql tblaporancabang
   def self.import_so_detail
     where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "580", "565", date_to_julian(Date.yesterday)).each do |a|
+    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -50,7 +50,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import retur
   def self.import_retur
     where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "620", date_to_julian(Date.yesterday)).each do |a|
+    "999", "620", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -81,7 +81,8 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import credit note
   def self.import_credit_note
-    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%' AND rprmk LIKE '1%' AND rprmr1 NOT LIKE '%RO%'")
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
@@ -113,7 +114,7 @@ class JdeSoDetail < ActiveRecord::Base
     MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6,
     MAX(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.limcu LIKE '%11011' AND IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%'
+    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%'
     GROUP BY IA.liitm, IM.imlitm, IM.imdsc1, IM.imdsc2")
     stock.each do |st|
       item_master = JdeItemMaster.find_by_imitm(st.liitm)
