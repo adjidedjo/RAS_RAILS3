@@ -50,7 +50,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import retur
   def self.import_retur
     where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "620", date_to_julian(Date.yesterday.to_date)).each do |a|
+    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
