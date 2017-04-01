@@ -34,7 +34,6 @@ class ControlUpload
   end
 
   def import_sales_jde
-    JdeSoDetail.import_credit_note
     JdeSoDetail.import_so_detail
     JdeSoDetail.import_retur
   end

@@ -23,7 +23,7 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
   
 jde_import_sales_items:
-  cron: "0 6 * * *"
+  cron: "0 13 * * *"
   queue: cron
   class: ControlUpload
   args: "import_sales_jde"

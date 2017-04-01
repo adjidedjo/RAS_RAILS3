@@ -14,8 +14,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj BETWEEN ? AND ?",
+    "580", "565", date_to_julian('2017-03-01'.to_date), date_to_julian('2017-03-31'.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -49,8 +49,8 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import retur
   def self.import_retur
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj BETWEEN ? AND ?",
+    "999", "580", date_to_julian('2017-03-01'.to_date), date_to_julian('2017-03-31'.to_date)).each do |a|
       find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -175,7 +175,7 @@ class JdeSoDetail < ActiveRecord::Base
       "02"
     elsif bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" #cirebon
       "09"
-    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" #bestari mulia
+    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "13061"|| bu == "13001" || bu == "13061C" || bu == "13061D" #bestari mulia
       "07"
     elsif bu == "11151" || bu == "11152" || bu == "13151" || bu == "13151C" || bu == "13151D" || bu == "11151C" || bu == "11151D" #cikupa
       "23"
