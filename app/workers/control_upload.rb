@@ -25,8 +25,8 @@ class ControlUpload
 
   end
   
-  def import_beginning_of_month
-    JdeSoDetail.import_beginning_of_stock
+  def import_beginning_of_week
+    JdeSoDetail.import_beginning_week_of_stock
   end
   
   def import_credit_note
