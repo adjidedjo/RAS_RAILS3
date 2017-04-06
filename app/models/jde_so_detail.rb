@@ -116,7 +116,7 @@ class JdeSoDetail < ActiveRecord::Base
     MAX(IM.imseg2) AS imseg2, IA.limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6,
     MAX(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%'
+    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       item_master = JdeItemMaster.find_by_imitm(st.liitm)
@@ -125,7 +125,7 @@ class JdeSoDetail < ActiveRecord::Base
       cabang = jde_cabang(st.limcu.to_i.to_s.strip)
       BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: Date.today.year, 
       fiscal_month: Date.today.month, week: Date.today.cweek, item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
-      article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000)
+      article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000, status: st.limcu.strip.last)
     end
   end
 
