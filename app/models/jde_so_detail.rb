@@ -112,8 +112,8 @@ class JdeSoDetail < ActiveRecord::Base
   #import bom stock
   def self.import_beginning_of_stock
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom, 
-    IM.imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2, MAX(IM.imaitm) AS imaitm, MAX(IM.imseg1) AS imseg1, 
-    MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, IM.imseg6,
+    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2, MAX(IM.imaitm) AS imaitm, MAX(IM.imseg1) AS imseg1, 
+    MAX(IM.imseg2) AS imseg2, MAX(IA.limcu) AS limcu, MAX(IM.imseg2) AS imseg2, MAX(IM.imseg6) AS imseg6,
     MAX(IM.imseg5) AS imseg5, MAX(IM.imprgr) AS imprgr FROM PRODDTA.F41021 IA 
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
     WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%'
