@@ -14,8 +14,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj BETWEEN ? AND ?",
-    "580", "565", date_to_julian('2017-03-01'.to_date), date_to_julian('2017-03-31'.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
+    "580", "565", date_to_julian(Date.today.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -40,8 +40,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(a.sdtrdj).to_date.year,
-            fiscal_month: julian_to_date(a.sdtrdj).to_date.month)
+            salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(a.sdaddj).to_date.year,
+            fiscal_month: julian_to_date(a.sdaddj).to_date.month, week: julian_to_date(a.sdaddj).to_date.cweek)
         end
       end
     end
@@ -49,8 +49,8 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import retur
   def self.import_retur
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj BETWEEN ? AND ?",
-    "999", "580", date_to_julian('2017-03-01'.to_date), date_to_julian('2017-03-31'.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
+    "999", "580", date_to_julian(Date.today.to_date)).each do |a|
       find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -73,7 +73,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, orty: a.sddcto.strip, fiscal_month: julian_to_date(a.sdtrdj).to_date.month, fiscal_year: julian_to_date(a.sdtrdj).to_date.year)
+            salesman: sales, orty: a.sddcto.strip, fiscal_month: julian_to_date(a.sdtrdj).to_date.month, fiscal_year: julian_to_date(a.sdtrdj).to_date.year,
+            week: julian_to_date(a.sdtrdj).to_date.cweek)
         end
       end
     end
@@ -82,7 +83,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    rpdgj = '#{date_to_julian(Date.today.to_date)}' 
     AND rpdct LIKE '%RM%' AND rprmk LIKE '1%' AND rprmr1 NOT LIKE '%RO%'")
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
@@ -101,7 +102,8 @@ class JdeSoDetail < ActiveRecord::Base
           kode_customer: no_so.sdan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
           kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip,
           fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, 
-          fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id)
+          fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id,
+          week: julian_to_date(no_so.sdtrdj).to_date.cweek)
       end
     end
   end
