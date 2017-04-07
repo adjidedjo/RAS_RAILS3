@@ -15,7 +15,7 @@ class JdeSoDetail < ActiveRecord::Base
   # #jde to mysql tblaporancabang
   def self.import_so_detail
     where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "580", "565", date_to_julian(Date.today.to_date)).each do |a|
+    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -50,7 +50,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import retur
   def self.import_retur
     where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "580", date_to_julian(Date.today.to_date)).each do |a|
+    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -83,27 +83,29 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdgj = '#{date_to_julian(Date.today.to_date)}' 
+    rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%' AND rprmk LIKE '1%' AND rprmr1 NOT LIKE '%RO%'")
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
       no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
       FROM PRODDTA.F4211 WHERE sddoc LIKE '%#{no_doc}%'")
       if no_doc.length == 8 && no_so.present?
-        no_so = no_so.first
-        namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
-        cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
-        group = JdeCustomerMaster.get_group_customer(no_so.sdan8.to_i)
-        kota = JdeAddressByDate.get_city(no_so.sdan8.to_i)
-        sales = JdeSalesman.find_salesman(no_so.sdan8.to_i, no_so.sdsrp1.strip)
-        sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
-        LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, noso: no_so.sddoco.to_i, tanggal: julian_to_date(no_so.sdtrdj), 
-          nosj: no_so.sddeln.to_i, tanggalsj: julian_to_date(no_so.sdtrdj), 
-          kode_customer: no_so.sdan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
-          kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip,
-          fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, 
-          fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id,
-          week: julian_to_date(no_so.sdtrdj).to_date.cweek)
+        if LaporanCabang.where(orty: "RM", nofaktur: cr.rpdoc).empty?
+          no_so = no_so.first
+          namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
+          cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
+          group = JdeCustomerMaster.get_group_customer(no_so.sdan8.to_i)
+          kota = JdeAddressByDate.get_city(no_so.sdan8.to_i)
+          sales = JdeSalesman.find_salesman(no_so.sdan8.to_i, no_so.sdsrp1.strip)
+          sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
+          LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, noso: no_so.sddoco.to_i, tanggal: julian_to_date(cr.rpdgj), 
+            nosj: no_so.sddeln.to_i, tanggalsj: julian_to_date(no_so.sdtrdj), 
+            kode_customer: no_so.sdan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
+            kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip,
+            fiscal_month: julian_to_date(no_so.sdtrdj).to_date.month, 
+            fiscal_year: julian_to_date(no_so.sdtrdj).to_date.year, nopo: sales_id,
+            week: julian_to_date(no_so.sdtrdj).to_date.cweek)
+        end
       end
     end
   end
