@@ -141,12 +141,12 @@ class JdeSoDetail < ActiveRecord::Base
     WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
-      status = (st.limcu.strip.last.is_a? Numeric) ? 'N' : st.limcu.strip.last
+      status = (st.limcu.strip.last.to_i.is_a? Numeric) ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cek_stock = self.find_by_sql("SELECT * FROM stocks WHERE item_number = '#{st.imlitm.strip}' AND 
-      branch = '#{jde_cabang(st.limcu.to_i.to_s.strip).to_i}' AND status = '#{status}'")
+      branch = '#{st.limcu.strip}' AND status = '#{status}'")
       if cek_stock.empty? 
-        Stock.create(branch: jde_cabang(st.limcu.to_i.to_s.strip), brand: st.imprgr.strip, description: description,
+        Stock.create(branch: st.limcu.strip, brand: st.imprgr.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
       end
     end
