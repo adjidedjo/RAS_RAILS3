@@ -126,9 +126,10 @@ class JdeSoDetail < ActiveRecord::Base
       artikel = JdeUdc.artikel_udc(st.imseg2.strip)
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cabang = jde_cabang(st.limcu.to_i.to_s.strip)
+      status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
       BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: Date.today.year, 
       fiscal_month: Date.today.month, week: Date.today.cweek, item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
-      article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000, status: st.limcu.strip.last)
+      article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000, status: status)
     end
   end
   

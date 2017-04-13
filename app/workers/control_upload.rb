@@ -25,6 +25,10 @@ class ControlUpload
 
   end
   
+  def import_stock_hourly
+    JdeSoDetail.import_stock_hourly
+  end
+  
   def import_beginning_of_week
     JdeSoDetail.import_beginning_week_of_stock
   end
