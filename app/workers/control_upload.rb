@@ -40,6 +40,7 @@ class ControlUpload
   def import_sales_jde
     JdeSoDetail.import_so_detail
     JdeSoDetail.import_retur
+    # JdeSoDetail.import_credit_note
   end
 
   def intransit_pos
