@@ -141,7 +141,7 @@ class JdeSoDetail < ActiveRecord::Base
     WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
-      status = (st.limcu.strip.last.is_a? Numeric) ? 'N' : st.limcu.strip.last
+      status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
       if cek_stock.empty? 
