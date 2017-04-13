@@ -84,7 +84,8 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdgj = '#{date_to_julian(Date.yesterday.to_date)}' 
-    AND rpdct LIKE '%RM%' AND rprmk LIKE '1%' AND rprmr1 NOT LIKE '%RO%'")
+    AND rpdct LIKE '%RM%' AND rprmk LIKE '1%'")
+    raise credit_note.first.rprmk[0..7].inspect
     credit_note.each do |cr|
       no_doc = cr.rprmk[0..7].to_i.to_s
       no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
@@ -98,7 +99,8 @@ class JdeSoDetail < ActiveRecord::Base
           kota = JdeAddressByDate.get_city(no_so.sdan8.to_i)
           sales = JdeSalesman.find_salesman(no_so.sdan8.to_i, no_so.sdsrp1.strip)
           sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
-          LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, noso: no_so.sddoco.to_i, tanggal: julian_to_date(cr.rpdgj), 
+          LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, noso: no_so.sddoco.to_i, 
+            tanggal: julian_to_date(cr.rpdgj), 
             nosj: no_so.sddeln.to_i, tanggalsj: julian_to_date(no_so.sdtrdj), 
             kode_customer: no_so.sdan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
             kota: kota, tipecust: group, salesman: sales, orty: cr.rpdct.strip,
@@ -127,6 +129,25 @@ class JdeSoDetail < ActiveRecord::Base
       BomStock.create!(branch: cabang, brand: st.imprgr.strip, fiscal_year: Date.today.year, 
       fiscal_month: Date.today.month, week: Date.today.cweek, item_number: st.imaitm.strip, description: description, product: st.imseg1.strip,
       article: artikel, long: st.imseg5.to_i, wide: st.imseg6.to_i, qty: st.lipqoh/10000, status: st.limcu.strip.last)
+    end
+  end
+  
+  #import stock hourly
+  def self.import_stock_hourly
+    stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh,$
+    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
+    JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
+    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    GROUP BY IA.liitm, IA.limcu")
+    stock.each do |st|
+      status = (st.limcu.strip.last.is_a? Numeric) ? 'N' : st.limcu.strip.last
+      description = st.imdsc1+' '+st.imdsc2
+      cek_stock = self.find_by_sql("SELECT * FROM stocks WHERE item_number = '#{st.imlitm.strip}', 
+      branch = '#{jde_cabang(st.limcu.to_i.to_s.strip).to_i}', status = '#{status}'")
+      if cek_stock.empty? 
+        Stock.create(branch: jde_cabang(st.limcu.to_i.to_s.strip), brand: st.imsrp1.strip, description: description,
+        item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
+      end
     end
   end
 
