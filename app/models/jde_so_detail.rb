@@ -134,7 +134,7 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import stock hourly
   def self.import_stock_hourly
-    stock = self.find_by_sql("SELECT MAX(imprgr) AS imprgr, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, IA.limcu AS limcu, 
+    stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, IA.limcu AS limcu, 
     SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
@@ -145,10 +145,10 @@ class JdeSoDetail < ActiveRecord::Base
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
       if cek_stock.empty? 
-        Stock.create(branch: st.limcu.strip, brand: st.imprgr.strip, description: description,
+        Stock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
-      elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && st.imprgr.strip == cek_stock.first.brand && status == cek_stock.first.status) || 
-        (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available  && st.limcu.strip == cek_stock.first.branch && st.imprgr.strip == cek_stock.first.brand && status == cek_stock.first.status)  
+      elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status) || 
+        (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available  && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status)  
         st.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000) 
       end
     end
