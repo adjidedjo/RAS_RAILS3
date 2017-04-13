@@ -147,7 +147,8 @@ class JdeSoDetail < ActiveRecord::Base
       if cek_stock.empty? 
         Stock.create(branch: st.limcu.strip, brand: st.imprgr.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
-      elsif ((st.lipqoh/10000) != cek_stock.first.onhand) || (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available)  
+      elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && st.imprgr.strip == cek_stock.first.brand && status == cek_stock.first.status) || 
+        (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available  && st.limcu.strip == cek_stock.first.branch && st.imprgr.strip == cek_stock.first.brand && status == cek_stock.first.status)  
         st.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000) 
       end
     end
