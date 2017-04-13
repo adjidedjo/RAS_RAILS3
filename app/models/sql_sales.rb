@@ -1,14 +1,15 @@
 class SqlSales < ActiveRecord::Base
-  self.abstract_class = true
-  establish_connection "sqlserver"
-  #  set_table_name "VLaporanCabang"
-  set_table_name "tbLaporanCabang"
+  # self.abstract_class = true
+  # establish_connection "sqlserver"
+  # #  set_table_name "VLaporanCabang"
+  # set_table_name "tbLaporanCabang"
 
   scope :without_batal, where("kodebrg not like ? and kodebrg not like ?", "batal", "")
   scope :search_by_branch, lambda {|branch| where("idcabang in (?)", branch) if branch.present? }
   scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
   scope :search_by_year, lambda { |year| where("YEAR(tanggalsj) = ?", year)}
   scope :not_equal_with_nosj, where("nosj not like ? and nosj not like ? and ketppb not like ?", %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
+
 
   def self.sales_by_brand_by_branch_sql_sales(bulan, tahun, branch)
     select("idcabang, jenisbrgdisc, SUM(jumlah) sum_jumlah, SUM(harganetto2) sum_harganetto2").search_by_month_and_year(bulan, tahun).search_by_branch(branch).not_equal_with_nosj.group(:idcabang, :jenisbrgdisc).each do |lapcab|
@@ -45,7 +46,7 @@ class SqlSales < ActiveRecord::Base
         hargasatuan, hargabruto, diskon1, diskon2, diskon3, diskon4, diskon5, diskonsum, diskonrp,
         harganetto1, harganetto2, totalnetto1, totalnetto2, totalnettofaktur, cashback, nupgrade,
         ketppb, kota, tipecust, namabrand, bonus, groupcust, plankinggroup, tanggalinput FROM tbLaporanCabang
-        WHERE DAY(tanggalsj) = '#{Date.today.strftime("%d").to_i}' AND MONTH(tanggalsj) = '#{Date.today.month}'
+        WHERE MONTH(tanggalsj) = '#{Date.today.month}'
         AND YEAR(tanggalsj) = '#{Date.today.year}'").each do |sql_sales|
           lapcab = LaporanCabang.find_by_sql(["SELECT nosj, tanggal, tanggalsj, nofaktur, noso, nopo,
         kode_customer, customer, alamatkirim, salesman, kodebrg, namabrg, jenisbrgdisc, kodejenis,
