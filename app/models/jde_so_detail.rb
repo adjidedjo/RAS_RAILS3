@@ -143,8 +143,7 @@ class JdeSoDetail < ActiveRecord::Base
     stock.each do |st|
       status = (st.limcu.strip.last.to_i.is_a? Numeric) ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
-      cek_stock = self.find_by_sql("SELECT * FROM stocks WHERE item_number = '#{st.imlitm.strip}' AND 
-      branch = '#{st.limcu.strip}' AND status = '#{status}'")
+      cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
       if cek_stock.empty? 
         Stock.create(branch: st.limcu.strip, brand: st.imprgr.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
