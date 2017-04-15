@@ -145,12 +145,65 @@ class JdeSoDetail < ActiveRecord::Base
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
-      if cek_stock.empty? 
+      if cek_stock.empty? || cek_stock.nil?
         Stock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
       elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status) || 
         (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available  && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status)  
         st.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000) 
+      end
+    end
+  end
+  
+  # monthly calculate success rate
+  def self.calculate_success_rate
+    sales = self.find_by_sql("SELECT name, user_id FROM sales_targets GROUP BY user_id")
+    sales.each do |sl|
+      unless sl.user_id.nil? || sl.user_id == 0
+        sum_visit = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("nvc")
+        sum_close_deal_visit = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncdv")
+        sum_sold_product = self.find_by_sql("SELECT jumlah from tblaporancabang WHERE fiscal_month = '#{(1.month.ago - 2.days).month}' AND
+        fiscal_year = '#{(1.month.ago - 2.days).year}' AND nopo = '#{User.find(sl.user_id).address_number}' AND jenisbrgdisc IN ('KM, DV, HB, KB')").sum("jumlah")
+        sum_call_close_deal = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncdc")
+        sum_call_customer = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncc")
+        sum_available = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month)
+        unless sum_available.empty?
+        average_visit_day = (sum_visit.to_f/sum_available.count.to_f)%100.0
+        success_rate_visit = (sum_close_deal_visit.to_f/sum_visit.to_f)%100.0
+        order_visit = (sum_sold_product.to_f/sum_call_close_deal.to_f)%100.0
+        call_day = (sum_sold_product.to_f/sum_available.count.to_f)%100.0
+        
+        SalesProductivityReport.create(salesmen_id: sl.user_id, branch_id: User.find(sl.user_id).branch1, 
+        month: (1.month.ago - 2.days).month, year: (1.month.ago - 2.days).year,
+        average_visit_day: average_visit_day, success_rate_visit: success_rate_visit,
+        average_order_deal: order_visit, average_call_day: call_day)
+        end
+      end
+    end
+  end
+  
+  # import account receivable
+  def self.import_acc_receivable
+    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpddj BETWEN '#{date_to_julian("1/03/2017".to_date)}' AND '#{date_to_julian("15/04/2017".to_date)}'")
+    ar.each do |ars|
+      cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
+      if cek_ava.empty?
+        dpd = Date.today - julian_to_date(ars.rpddj)
+        group = JdeCustomerMaster.get_group_customer(ars.rpan8.to_i)
+        # sales = JdeSalesman.find_salesman(ars.rpan8.to_i, a.sdsrp1.strip)
+        # sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
+        AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip, 
+        invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap, 
+        due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: ars.rpmcu.strip, 
+        pay_status: ars.rppst, remark: ars.rprmk.strip, customer_number: ars.rpan8, 
+        customer: ars.rpalph.strip, gl_date: julian_to_date(ars.rpdgj), 
+        actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj), 
+        fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year, 
+        pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now)
+      elsif cek_ava.first.open_amount != ars.rpaap
+        dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
+        AccountReceivable.update_attributes!(open_amount: ars.rpaap, days_past_due: dpd, pay_status: ars.rppst)
       end
     end
   end
@@ -193,7 +246,11 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   def self.julian_to_date(jd_date)
-    Date.parse((jd_date+1900000).to_s, 'YYYYYDDD')
+    if jd_date.nil? || jd_date == 0
+      0
+    else
+      Date.parse((jd_date+1900000).to_s, 'YYYYYDDD')
+    end
   end
 
   def self.jde_cabang(bu)

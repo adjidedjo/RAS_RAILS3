@@ -25,6 +25,10 @@ class ControlUpload
 
   end
   
+  def import_acc_receivable
+    JdeSoDetail.import_acc_receivable
+  end
+  
   def import_stock_hourly
     JdeSoDetail.import_stock_hourly
   end

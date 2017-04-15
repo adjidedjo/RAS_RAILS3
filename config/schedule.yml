@@ -46,6 +46,14 @@ jde_import_stock_hourly:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
+jde_import_acc_receivable:
+  cron: "0 12 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_acc_receivable"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
 
 # jde_net_sales:
 #  cron: "0 4 6 * * *"
