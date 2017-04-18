@@ -158,26 +158,27 @@ class JdeSoDetail < ActiveRecord::Base
   
   # monthly calculate success rate
   def self.calculate_success_rate
-    sales = self.find_by_sql("SELECT name, user_id FROM sales_targets GROUP BY user_id")
+    sales = SalesTarget.find_by_sql("SELECT name, user_id, brand FROM sales_targets WHERE address_number IS NOT NULL GROUP BY user_id, brand")
     sales.each do |sl|
       unless sl.user_id.nil? || sl.user_id == 0
-        sum_visit = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("nvc")
-        sum_close_deal_visit = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncdv")
-        sum_sold_product = self.find_by_sql("SELECT jumlah from tblaporancabang WHERE fiscal_month = '#{(1.month.ago - 2.days).month}' AND
-        fiscal_year = '#{(1.month.ago - 2.days).year}' AND nopo = '#{User.find(sl.user_id).address_number}' AND jenisbrgdisc IN ('KM, DV, HB, KB')").sum("jumlah")
-        sum_call_close_deal = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncdc")
-        sum_call_customer = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month).sum("ncc")
-        sum_available = SalesProductivity.where(salesmen_id: sl.user_id, month: (1.month.ago - 2.days).month)
+        sum_visit = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("nvc")
+        sum_close_deal_visit = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncdv")
+        sum_sold_product = LaporanCabang.select("SUM(jumlah) AS jumlah").where("fiscal_month = '#{(1.month.ago - 2.days).month}' AND fiscal_year = '#{(1.month.ago - 2.days).year}' 
+        AND nopo = '#{User.find(sl.user_id).address_number}' AND jenisbrgdisc LIKE '#{sl.brand}' 
+        AND kodejenis IN ('KM', 'KB') AND bonus = '-' AND orty = 'SO'")
+        sum_call_close_deal = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncdc")
+        sum_call_customer = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncc")
+        sum_available = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month)
         unless sum_available.empty?
-        average_visit_day = (sum_visit.to_f/sum_available.count.to_f)%100.0
-        success_rate_visit = (sum_close_deal_visit.to_f/sum_visit.to_f)%100.0
-        order_visit = (sum_sold_product.to_f/sum_call_close_deal.to_f)%100.0
-        call_day = (sum_sold_product.to_f/sum_available.count.to_f)%100.0
-        
-        SalesProductivityReport.create(salesmen_id: sl.user_id, branch_id: User.find(sl.user_id).branch1, 
-        month: (1.month.ago - 2.days).month, year: (1.month.ago - 2.days).year,
-        average_visit_day: average_visit_day, success_rate_visit: success_rate_visit,
-        average_order_deal: order_visit, average_call_day: call_day)
+          average_visit_day = (sum_visit.to_f/sum_available.count.to_f)%100.0
+          success_rate_visit = (sum_close_deal_visit.to_f/sum_visit.to_f)%100.0
+          order_visit = (sum_sold_product.first.jumlah.to_f/sum_call_close_deal.to_f)%100.0
+          call_day = (sum_sold_product.first.jumlah.to_f/sum_available.count.to_f)%100.0
+          
+          SalesProductivityReport.create(salesmen_id: sl.user_id, branch_id: User.find(sl.user_id).branch1, 
+          month: (1.month.ago - 2.days).month, year: (1.month.ago - 2.days).year,
+          average_visit_day: average_visit_day, success_rate_visit: success_rate_visit,
+          average_order_deal: order_visit, average_call_day: call_day, brand: sl.brand)
         end
       end
     end
@@ -185,7 +186,7 @@ class JdeSoDetail < ActiveRecord::Base
   
   # import account receivable
   def self.import_acc_receivable
-    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj ='#{date_to_julian(Date.yesterday.to_date)}'")
+    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpupmj ='#{date_to_julian(Date.yesterday.to_date)}'")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
       if cek_ava.empty?
