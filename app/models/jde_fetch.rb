@@ -15,8 +15,7 @@ class JdeFetch < ActiveRecord::Base
   end
   
   def self.update_salesman
-    LaporanCabang.where("fiscal_month = 4 and fiscal_year = 2017 and nopo is null
-    and cabang_id = 2").each do |lc|
+    LaporanCabang.where("fiscal_month = 4 and fiscal_year = 2017 and nopo is null").each do |lc|
       sales_id = JdeSalesman.find_salesman_id(lc.kode_customer, lc.jenisbrgdisc[0])
       lc.update_attributes!(nopo: sales_id)
     end
