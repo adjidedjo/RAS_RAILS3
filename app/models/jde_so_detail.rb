@@ -187,8 +187,8 @@ class JdeSoDetail < ActiveRecord::Base
   # import account receivable
   def self.import_acc_receivable
     ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj BETWEEN 
-    '#{date_to_julian('01/03/2017'.to_date)}' AND '#{date_to_julian('31/03/2017'.to_date)}' 
-    AND rpdct LIKE '%RI%' AND rpag > 0")
+    '#{date_to_julian('01/04/2017'.to_date)}' AND '#{date_to_julian('03/04/2017'.to_date)}' 
+    AND rpomod LIKE '%3%' AND rpag > 0 AND ars.rpar10 IS NOT NULL")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
       if cek_ava.empty?
