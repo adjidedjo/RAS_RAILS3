@@ -205,7 +205,7 @@ class JdeSoDetail < ActiveRecord::Base
           actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
           fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
           pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
-          salesman_id: sales_id)
+          salesman_no: sales_id)
         end
       elsif cek_ava.first.open_amount != ars.rpaap
         # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
