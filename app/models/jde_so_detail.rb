@@ -196,7 +196,7 @@ class JdeSoDetail < ActiveRecord::Base
         if group == 'RETAIL'
           dpd = Date.today - julian_to_date(ars.rpddj)
           sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
-          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
+          sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
           AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
           invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
           due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: ars.rpmcu.strip,
