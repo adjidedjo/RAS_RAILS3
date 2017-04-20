@@ -11,6 +11,38 @@ class JdeSoDetail < ActiveRecord::Base
     select("sum(sdsoqs) as sdsoqs").where("sditm = ? and sdnxtr = ? and sdlttr = ? and sddcto like ? and sdaddj = ?",
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
+  
+  # import account receivable
+  def self.import_acc_receivable
+    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj BETWEEN 
+    '#{date_to_julian('01/04/2017'.to_date)}' AND '#{date_to_julian('02/04/2017'.to_date)}' 
+    AND rpomod LIKE '%3%' AND rpag > 0")
+    ar.each do |ars|
+      cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
+      if cek_ava.empty?
+        group = JdeCustomerMaster.get_group_customer(ars.rpan8.to_i)
+        if group == 'RETAIL'
+          cabang = jde_cabang(ars.rpmcu.to_i.to_s.strip)
+          dpd = Date.today - julian_to_date(ars.rpddj)
+          sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
+          sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
+          item_master = JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'")
+          AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
+          invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
+          due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+          pay_status: ars.rppst, remark: ars.rprmk.strip, customer_number: ars.rpan8,
+          customer: ars.rpalph.strip, gl_date: julian_to_date(ars.rpdgj),
+          actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
+          fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
+          pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
+          salesman_no: sales_id, brand: item_master.first.imprgr.strip)
+        end
+      elsif cek_ava.first.open_amount != ars.rpaap
+        # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
+        cek_ava.first.update_attributes!(open_amount: ars.rpaap, actual_close_date: julian_to_date(ars.rpjcl), pay_status: ars.rppst)
+      end
+    end
+  end
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
@@ -180,36 +212,6 @@ class JdeSoDetail < ActiveRecord::Base
           average_visit_day: average_visit_day, success_rate_visit: success_rate_visit,
           average_order_deal: order_visit, average_call_day: call_day, brand: sl.brand)
         end
-      end
-    end
-  end
-  
-  # import account receivable
-  def self.import_acc_receivable
-    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj BETWEEN 
-    '#{date_to_julian('01/04/2017'.to_date)}' AND '#{date_to_julian('03/04/2017'.to_date)}' 
-    AND rpomod LIKE '%3%' AND rpag > 0 AND ars.rpar10 IS NOT NULL")
-    ar.each do |ars|
-      cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
-      if cek_ava.empty?
-        group = JdeCustomerMaster.get_group_customer(ars.rpan8.to_i)
-        if group == 'RETAIL'
-          dpd = Date.today - julian_to_date(ars.rpddj)
-          sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
-          sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
-          AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
-          invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
-          due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: ars.rpmcu.strip,
-          pay_status: ars.rppst, remark: ars.rprmk.strip, customer_number: ars.rpan8,
-          customer: ars.rpalph.strip, gl_date: julian_to_date(ars.rpdgj),
-          actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
-          fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
-          pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
-          salesman_no: sales_id, brand: ars.rpar10.strip)
-        end
-      elsif cek_ava.first.open_amount != ars.rpaap
-        # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
-        cek_ava.first.update_attributes!(open_amount: ars.rpaap, actual_close_date: julian_to_date(ars.rpjcl), pay_status: ars.rppst)
       end
     end
   end
