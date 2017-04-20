@@ -47,7 +47,7 @@ jde_import_stock_hourly:
   rails_envs: development, production, staging
   
 jde_import_acc_receivable:
-  cron: "10 0 * * *"
+  cron: "0 2 * * *"
   queue: cron
   class: ControlUpload
   args: "import_acc_receivable"
