@@ -5,6 +5,14 @@
 #  args: "daily_migration"
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
+  
+jde_weekly_fetch_on_sunday:
+  cron: "1 0 * * 0"
+  queue: cron
+  class: ControlUpload
+  args: "sunday_weekly_batch"
+  description: fetching item costs and buffer
+  rails_envs: development, production, staging
 
 jde_new_item:
   cron: "0 3 * * *"

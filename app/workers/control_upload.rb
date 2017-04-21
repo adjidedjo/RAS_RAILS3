@@ -25,6 +25,11 @@ class ControlUpload
 
   end
   
+  def sunday_weekly_batch
+    JdeFetch.checking_buffer
+    JdeFetch.checking_item_cost
+  end
+  
   def import_acc_receivable
     JdeSoDetail.import_acc_receivable
   end
