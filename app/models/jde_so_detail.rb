@@ -12,11 +12,11 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
   
-  # import account receivable
+  # import account receivable 
   def self.import_acc_receivable
-    ar = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj between 
-    '#{date_to_julian(Date.yesterday.beginning_of_month.to_date)}' AND 
-    '#{date_to_julian(Date.yesterday.end_of_month.to_date)}' AND rpomod LIKE '%3%' AND rpag > 0")
+    ar = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj between
+    '#{date_to_julian('4/04/2017'.to_date)}' AND
+    '#{date_to_julian('30/04/2017'.to_date)}' AND REGEXP_LIKE(rpomod, '0|3') ")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
       if cek_ava.empty?
@@ -26,7 +26,7 @@ class JdeSoDetail < ActiveRecord::Base
           dpd = Date.today - julian_to_date(ars.rpddj)
           sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
           sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
-          item_master = JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'")
+          item_master = ars.rpomod == '3' ? JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'").first.imprgr.strip : '-'
           AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
           invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
           due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
@@ -35,7 +35,7 @@ class JdeSoDetail < ActiveRecord::Base
           actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
           fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
           pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
-          salesman_no: sales_id, brand: item_master.first.imprgr.strip)
+          salesman_no: sales_id, brand: item_master)
         end
       elsif cek_ava.first.open_amount != ars.rpaap
         # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
@@ -78,7 +78,7 @@ class JdeSoDetail < ActiveRecord::Base
       end
     end
   end
-  
+
   #import retur
   def self.import_retur
     where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
