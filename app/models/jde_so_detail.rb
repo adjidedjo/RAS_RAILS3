@@ -126,10 +126,10 @@ class JdeSoDetail < ActiveRecord::Base
       # if no_doc.length == 8 && no_so.present?
         if LaporanCabang.where(orty: "RM", nofaktur: cr.rpdoc, lnid: cr.rpsfx).empty?
           # no_so = no_so.first
-          namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
-          cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
+          namacustomer = JdeCustomerMaster.find_by_aban8(cr.sdan8).abalph.strip
+          cabang = jde_cabang(cr.sdmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          group = JdeCustomerMaster.get_group_customer(no_so.sdan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(cr.sdan8.to_i)
           kota = JdeAddressByDate.get_city(cr.rpan8.to_i)
           # sales = JdeSalesman.find_salesman(cr.rpan8.to_i, cr.sdsrp1.strip)
           # sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
