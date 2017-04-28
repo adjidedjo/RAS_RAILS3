@@ -56,6 +56,7 @@ class JdeSoDetail < ActiveRecord::Base
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
+          area = find_area(cabang)
           item_master = JdeItemMaster.find_by_imitm(a.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -73,7 +74,8 @@ class JdeSoDetail < ActiveRecord::Base
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(a.sdaddj).to_date.year,
-            fiscal_month: julian_to_date(a.sdaddj).to_date.month, week: julian_to_date(a.sdaddj).to_date.cweek)
+            fiscal_month: julian_to_date(a.sdaddj).to_date.month, week: julian_to_date(a.sdaddj).to_date.cweek,
+            area_id: area)
         end
       end
     end
@@ -256,6 +258,34 @@ class JdeSoDetail < ActiveRecord::Base
       0
     else
       Date.parse((jd_date+1900000).to_s, 'YYYYYDDD')
+    end
+  end
+  
+  def self.area(cabang)
+    if cabang == "02"
+      2
+    elsif cabang == "03" || cabang == "23"
+      3
+    elsif cabang == "07" || cabang == "22"
+      7
+    elsif cabang == "09"
+      9
+    elsif cabang == "04"
+      4
+    elsif cabang == "05"
+      5
+    elsif cabang == "08"
+      8
+    elsif cabang == "10"
+      10
+    elsif cabang == "11"
+      11
+    elsif cabang == "13"
+      13
+    elsif cabang == "19"
+      19
+    elsif cabang == "20"
+      20
     end
   end
 
