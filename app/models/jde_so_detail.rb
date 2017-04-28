@@ -117,7 +117,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj =  #{date_to_julian(Date.yesterday.to_date)}' 
+    rpdivj BETWEEN '#{date_to_julian('01/03/2017'.to_date)}' AND'#{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%'")
     credit_note.each do |cr|
       # no_doc = cr.rprmk[0..7].to_i.to_s
