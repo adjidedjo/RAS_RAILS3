@@ -117,7 +117,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/03/2017'.to_date)}' AND'#{date_to_julian(Date.yesterday.to_date)}' 
+    rpdivj =  #{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%'")
     credit_note.each do |cr|
       # no_doc = cr.rprmk[0..7].to_i.to_s
@@ -128,6 +128,7 @@ class JdeSoDetail < ActiveRecord::Base
           # no_so = no_so.first
           namacustomer = JdeCustomerMaster.find_by_aban8(no_so.sdan8).abalph.strip
           cabang = jde_cabang(no_so.sdmcu.to_i.to_s.strip)
+          area = find_area(cabang)
           group = JdeCustomerMaster.get_group_customer(no_so.sdan8.to_i)
           kota = JdeAddressByDate.get_city(cr.rpan8.to_i)
           # sales = JdeSalesman.find_salesman(cr.rpan8.to_i, cr.sdsrp1.strip)
@@ -138,7 +139,7 @@ class JdeSoDetail < ActiveRecord::Base
             kota: kota, tipecust: group, orty: cr.rpdct.strip,
             fiscal_month: julian_to_date(cr.rpdivj).to_date.month, 
             fiscal_year: julian_to_date(cr.rpdivj).to_date.year,
-            week: julian_to_date(cr.rpdivj).to_date.cweek, lnid: cr.rpsfx)
+            week: julian_to_date(cr.rpdivj).to_date.cweek, lnid: cr.rpsfx, area_id: area)
         end
       # end
     end
