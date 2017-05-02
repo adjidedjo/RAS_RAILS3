@@ -126,10 +126,10 @@ class JdeSoDetail < ActiveRecord::Base
       # if no_doc.length == 8 && no_so.present?
         if LaporanCabang.where(orty: "RM", nofaktur: cr.rpdoc, lnid: cr.rpsfx).empty?
           # no_so = no_so.first
-          namacustomer = JdeCustomerMaster.find_by_aban8(cr.sdan8).abalph.strip
-          cabang = jde_cabang(cr.sdmcu.to_i.to_s.strip)
+          namacustomer = JdeCustomerMaster.find_by_aban8(cr.rpan8).abalph.strip
+          cabang = jde_cabang(cr.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          group = JdeCustomerMaster.get_group_customer(cr.sdan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(cr.rpan8.to_i)
           kota = JdeAddressByDate.get_city(cr.rpan8.to_i)
           # sales = JdeSalesman.find_salesman(cr.rpan8.to_i, cr.sdsrp1.strip)
           # sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
@@ -189,6 +189,51 @@ class JdeSoDetail < ActiveRecord::Base
     end
   end
   
+  def self.import_stock_hourly_display
+    stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
+    IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, CM.abalph FROM 
+    (
+      SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn FROM PRODDTA.F41021 
+      WHERE lipqoh >= 1 AND limcu LIKE '%D' 
+      GROUP BY liitm, limcu, lilotn
+    ) IA
+    LEFT JOIN
+    (
+      SELECT MAX(ildoc) AS ildoc, illotn, ilitm FROM PRODDTA.F4111 WHERE ildcto LIKE '%ST%'
+      GROUP BY illotn, ilitm ORDER BY ildoc DESC
+    ) IL ON IA.lilotn = IL.illotn
+    LEFT JOIN
+    (
+      SELECT sdshan, sdlotn, sddoco FROM PRODDTA.F4211
+      GROUP BY sdshan, sdlotn, sddoco
+    ) ST ON IL.ildoc = ST.sddoco AND IL.illotn = ST.sdlotn
+    LEFT JOIN
+    (
+      SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
+      MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2 FROM PRODDTA.F4101
+      WHERE imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(imsrp2,'KM|HB|DV|SA|SB|ST|KB') GROUP BY imitm
+    ) IM ON IL.ilitm = IM.imitm
+    LEFT JOIN
+    (
+      SELECT abalph, aban8 FROM PRODDTA.F0101 
+    ) CM ON ST.sdshan = CM.aban8")
+    stock.each do |st|
+      status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
+      description = st.imdsc1.strip+' '+st.imdsc2.strip
+      cek_stock = DisplayStock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
+      if cek_stock.empty? || cek_stock.nil?
+        DisplayStock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
+        item_number: st.imlitm.strip, onhand: st.lipqoh/10000, 
+        available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph,
+        lot_serial: st.lilotn)
+      elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && 
+       st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status) ||
+        (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status)
+         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+      end
+    end
+  end
+
   # monthly calculate success rate
   def self.calculate_success_rate
     sales = SalesTarget.find_by_sql("SELECT name, user_id, brand FROM sales_targets WHERE address_number IS NOT NULL GROUP BY user_id, brand")
