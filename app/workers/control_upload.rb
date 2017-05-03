@@ -25,10 +25,6 @@ class ControlUpload
 
   end
   
-  def test_display_stocks
-    JdeSoDetail.import_stock_hourly_display
-  end
-  
   def sunday_weekly_batch
     JdeFetch.checking_buffer
     JdeFetch.checking_item_cost
@@ -40,6 +36,7 @@ class ControlUpload
   
   def import_stock_hourly
     JdeSoDetail.import_stock_hourly
+    JdeSoDetail.import_stock_hourly_display
   end
   
   def import_beginning_of_week
