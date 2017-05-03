@@ -307,7 +307,7 @@ class JdeSoDetail < ActiveRecord::Base
     end
   end
   
-  def self.area(cabang)
+  def self.find_area(cabang)
     if cabang == "02"
       2
     elsif cabang == "03" || cabang == "23"
