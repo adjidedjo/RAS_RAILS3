@@ -191,15 +191,17 @@ class JdeSoDetail < ActiveRecord::Base
   
   def self.import_stock_hourly_display
     stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
-    IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, CM.abalph FROM 
+    IL.ildoc, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
+    NVL(CM.abalph, IL.iltrex) AS abalph FROM 
     (
       SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn FROM PRODDTA.F41021 
-      WHERE lipqoh >= 1 AND limcu LIKE '%D' 
-      GROUP BY liitm, limcu, lilotn
+      WHERE lipqoh >= 1 AND limcu LIKE '%D%' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+      AND lipbin LIKE '%S' GROUP BY liitm, limcu, lilotn
     ) IA
     LEFT JOIN
     (
-      SELECT MAX(ildoc) AS ildoc, illotn, ilitm FROM PRODDTA.F4111 WHERE ildcto LIKE '%ST%'
+      SELECT MAX(ildoc) AS ildoc, illotn, ilitm, MAX(iltrex) AS iltrex FROM PRODDTA.F4111 
+      WHERE REGEXP_LIKE(ildct,'ST|RO|IA')
       GROUP BY illotn, ilitm ORDER BY ildoc DESC
     ) IL ON IA.lilotn = IL.illotn
     LEFT JOIN
@@ -212,7 +214,7 @@ class JdeSoDetail < ActiveRecord::Base
       SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
       MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2 FROM PRODDTA.F4101
       WHERE imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(imsrp2,'KM|HB|DV|SA|SB|ST|KB') GROUP BY imitm
-    ) IM ON IL.ilitm = IM.imitm
+    ) IM ON IA.liitm = IM.imitm
     LEFT JOIN
     (
       SELECT abalph, aban8 FROM PRODDTA.F0101 
@@ -220,16 +222,17 @@ class JdeSoDetail < ActiveRecord::Base
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
-      cek_stock = DisplayStock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
+      cek_stock = DisplayStock.where(lot_serial: st.lilotn.strip)
       if cek_stock.empty? || cek_stock.nil?
         DisplayStock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
         item_number: st.imlitm.strip, onhand: st.lipqoh/10000, 
-        available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph,
-        lot_serial: st.lilotn)
-      elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && 
-       st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status) ||
-        (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status)
-         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+        available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph.strip,
+        lot_serial: st.lilotn.strip, doc_number: st.ildoc)
+      elsif st.lilotn.strip == cek_stock.first.lot_serial && 
+        (st.ildoc != cek_stock.first.doc_number || st.lipqoh/10000 != cek_stock.first.onhand || 
+        st.lihcom/10000 != cek_stock.first.available)
+         cek_stock.first.update_attributes!( doc_number: st.ildoc, customer: st.abalph.strip,
+         onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
       end
     end
   end
