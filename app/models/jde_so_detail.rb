@@ -191,24 +191,20 @@ class JdeSoDetail < ActiveRecord::Base
   
   def self.import_stock_hourly_display
     stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
-    IL.ildoc, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
-    NVL(CM.abalph, IL.iltrex) AS abalph FROM 
+    IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
+    NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
     (
-      SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn FROM PRODDTA.F41021 
-      WHERE liupmj = '#{date_to_julian(Date.today)}' AND limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+      SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn,
+      MAX(lilrcj) AS lilrcj FROM PRODDTA.F41021 
+      WHERE lipqoh >= 1 AND limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
       AND lipbin LIKE '%S' GROUP BY liitm, limcu, lilotn
     ) IA
     LEFT JOIN
     (
-      SELECT MAX(ildoc) AS ildoc, illotn, ilitm, MAX(iltrex) AS iltrex FROM PRODDTA.F4111 
-      WHERE REGEXP_LIKE(ildct,'ST|RO|IA')
+      SELECT MAX(ildoc) AS ildoc, illotn, ilitm, MAX(iltrex) AS iltrex, MAX(ilcrdj) AS ilcrdj 
+      FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA')
       GROUP BY illotn, ilitm ORDER BY ildoc DESC
     ) IL ON IA.lilotn = IL.illotn
-    LEFT JOIN
-    (
-      SELECT sdshan, sdlotn, sddoco FROM PRODDTA.F4211
-      GROUP BY sdshan, sdlotn, sddoco
-    ) ST ON IL.ildoc = ST.sddoco AND IL.illotn = ST.sdlotn
     LEFT JOIN
     (
       SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
@@ -223,12 +219,13 @@ class JdeSoDetail < ActiveRecord::Base
         unless st.imdsc1.nil?
         status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
         description = st.imdsc1.nil? ? '-' : (st.imdsc1.strip+' '+st.imdsc2.strip)
+        v_age = Date.today - julian_to_date(st.ilcrdj)
         cek_stock = DisplayStock.where(lot_serial: st.lilotn.strip)
         if cek_stock.empty? || cek_stock.nil?
           DisplayStock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
           item_number: st.imlitm.strip, onhand: st.lipqoh/10000, 
           available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph,
-          lot_serial: st.lilotn.strip, doc_number: st.ildoc)
+          lot_serial: st.lilotn.strip, doc_number: st.ildoc, age: v_age, doc_type: st.ildct)
         elsif st.lilotn.strip == cek_stock.first.lot_serial && 
           (st.ildoc != cek_stock.first.doc_number || st.lipqoh/10000 != cek_stock.first.onhand || 
           st.lihcom/10000 != cek_stock.first.available)
