@@ -198,17 +198,26 @@ class JdeSoDetail < ActiveRecord::Base
     IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
     NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
     (
-      SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn,
-      MAX(lilrcj) AS lilrcj FROM PRODDTA.F41021 
-      WHERE lipqoh >= 1 AND limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
-      AND lipbin LIKE '%S' GROUP BY liitm, limcu, lilotn
+      SELECT TOD.liitm, TOD.limcu, SUM(AU.lipqoh) AS lipqoh, SUM(AU.lihcom) AS lihcom, TOD.lilotn FROM PRODDTA.F41021 TOD
+      LEFT JOIN
+      (
+        SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 GROUP BY liitm, limcu
+      ) AU ON TOD.liitm = AU.liitm AND TOD.limcu = AU.limcu
+      WHERE TOD.liupmj = '#{date_to_julian(Date.today)}' AND TOD.limcu LIKE '%D' AND 
+      REGEXP_LIKE(TOD.liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+      AND TOD.lipbin LIKE '%S' GROUP BY TOD.liitm, TOD.limcu, TOD.lilotn
     ) IA
     LEFT JOIN
     (
-      SELECT MAX(ildoc) AS ildoc, illotn, ilitm, MAX(iltrex) AS iltrex, MAX(ilcrdj) AS ilcrdj 
+      SELECT MAX(ildoc) AS ildoc, max(ildct) as ildct, illotn, ilitm, MAX(iltrex) AS iltrex, MAX(ilcrdj) AS ilcrdj 
       FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA')
       GROUP BY illotn, ilitm ORDER BY ildoc DESC
     ) IL ON IA.lilotn = IL.illotn
+    LEFT JOIN
+    (
+      SELECT sdshan, sdlotn, sddoco FROM PRODDTA.F4211
+      GROUP BY sdshan, sdlotn, sddoco
+    ) ST ON IL.ildoc = ST.sddoco AND IL.illotn = ST.sdlotn
     LEFT JOIN
     (
       SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
