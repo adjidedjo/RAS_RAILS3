@@ -172,7 +172,7 @@ class JdeSoDetail < ActiveRecord::Base
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    WHERE IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
@@ -196,7 +196,7 @@ class JdeSoDetail < ActiveRecord::Base
     (
       SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom, lilotn,
       MAX(lilrcj) AS lilrcj FROM PRODDTA.F41021 
-      WHERE lipqoh >= 1 AND limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+      WHERE limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
       AND lipbin LIKE '%S' GROUP BY liitm, limcu, lilotn
     ) IA
     LEFT JOIN
