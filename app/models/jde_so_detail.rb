@@ -172,7 +172,7 @@ class JdeSoDetail < ActiveRecord::Base
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    WHERE IA.lipqoh >= 0 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
