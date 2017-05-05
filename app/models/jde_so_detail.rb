@@ -172,7 +172,8 @@ class JdeSoDetail < ActiveRecord::Base
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.lipqoh >= 0 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    AND IA.limcu LIKE '%D'
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
@@ -196,10 +197,11 @@ class JdeSoDetail < ActiveRecord::Base
     IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
     NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
     (
-      SELECT TOD.liitm, TOD.limcu, SUM(AU.lipqoh) AS lipqoh, SUM(AU.lihcom) AS lihcom, TOD.lilotn FROM PRODDTA.F41021 TOD
+      SELECT TOD.liitm, TOD.limcu, SUM(TOD.lipqoh) AS lipqoh, SUM(TOD.lihcom) AS lihcom, TOD.lilotn FROM PRODDTA.F41021 TOD
       LEFT JOIN
       (
-        SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 GROUP BY liitm, limcu
+        SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 
+        WHERE limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') GROUP BY liitm, limcu
       ) AU ON TOD.liitm = AU.liitm AND TOD.limcu = AU.limcu
       WHERE TOD.liupmj = '#{date_to_julian(Date.today)}' AND TOD.limcu LIKE '%D' AND 
       REGEXP_LIKE(TOD.liglpt,'KM|HB|DV|SA|SB|ST|KB') 
