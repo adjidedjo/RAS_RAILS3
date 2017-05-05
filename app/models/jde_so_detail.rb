@@ -170,13 +170,9 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_stock_hourly
     stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
-    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 TOD
-    LEFT JOIN
-    (
-      SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 GROUP BY liitm, limcu
-    ) IA ON TOD.liitm = IA.liitm AND TOD.limcu = IA.limcu
-    JOIN PRODDTA.F4101 IM ON TOD.liitm = IM.imitm
-    WHERE TOD.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
+    JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
+    WHERE IA.lipqoh >= 1 AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
@@ -184,11 +180,13 @@ class JdeSoDetail < ActiveRecord::Base
       cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
       if cek_stock.empty? || cek_stock.nil?
         Stock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
-        item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, status: status)
+        item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+        status: status, product: st.imlitm.strip[0..1])
       elsif ((st.lipqoh/10000) != cek_stock.first.onhand && st.limcu.strip == cek_stock.first.branch && 
        st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status) ||
         (((st.lipqoh - st.lihcom)/10000) != cek_stock.first.available  && st.limcu.strip == cek_stock.first.branch && st.imsrp1.strip == cek_stock.first.brand && status == cek_stock.first.status)
-         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, 
+         available: (st.lipqoh - st.lihcom)/10000, product: st.imlitm.strip[0..1])
       end
     end
   end
