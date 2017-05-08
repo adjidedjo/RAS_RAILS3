@@ -173,7 +173,6 @@ class JdeSoDetail < ActiveRecord::Base
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
     WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
-    AND IA.limcu LIKE '%D'
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
@@ -238,12 +237,12 @@ class JdeSoDetail < ActiveRecord::Base
           DisplayStock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
           item_number: st.imlitm.strip, onhand: st.lipqoh/10000, 
           available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph,
-          lot_serial: st.lilotn.strip, doc_number: st.ildoc, age: v_age, doc_type: st.ildct)
+          lot_serial: st.lilotn.strip, doc_number: st.ildoc, age: v_age, doc_type: st.ildct, product: st.imlitm.strip[0..1])
         elsif st.lilotn.strip == cek_stock.first.lot_serial && 
           (st.ildoc != cek_stock.first.doc_number || st.lipqoh/10000 != cek_stock.first.onhand || 
           st.lihcom/10000 != cek_stock.first.available)
            cek_stock.first.update_attributes!( doc_number: st.ildoc, customer: st.abalph.strip,
-           onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+           onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, product: st.imlitm.strip[0..1])
         end
       end
     end
