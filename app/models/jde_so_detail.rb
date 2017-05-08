@@ -169,10 +169,10 @@ class JdeSoDetail < ActiveRecord::Base
   #import stock hourly
   def self.import_stock_hourly
     stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, 
-    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
+    MAX(IA.liglpt) AS liglpt, IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
     MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2 FROM PRODDTA.F41021 IA
     JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(IM.imsrp2,'KM|HB|DV|SA|SB|ST|KB')
+    WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND REGEXP_LIKE(IA.liglpt,'KM|HB|DV|SA|SB|ST|KB') AND IA.limcu LIKE '%D'
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
@@ -194,17 +194,13 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_stock_hourly_display
     stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
     IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
-    NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
+    IA.liglpt, NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
     (
-      SELECT TOD.liitm, TOD.limcu, SUM(TOD.lipqoh) AS lipqoh, SUM(TOD.lihcom) AS lihcom, TOD.lilotn FROM PRODDTA.F41021 TOD
-      LEFT JOIN
-      (
-        SELECT liitm, limcu, SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 
-        WHERE limcu LIKE '%D' AND REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') GROUP BY liitm, limcu
-      ) AU ON TOD.liitm = AU.liitm AND TOD.limcu = AU.limcu
-      WHERE TOD.liupmj = '#{date_to_julian(Date.today)}' AND TOD.limcu LIKE '%D' AND 
-      REGEXP_LIKE(TOD.liglpt,'KM|HB|DV|SA|SB|ST|KB') 
-      AND TOD.lipbin LIKE '%S' GROUP BY TOD.liitm, TOD.limcu, TOD.lilotn
+      SELECT MAX(liitm) AS liitm, limcu, SUM(lipqoh) AS lipqoh, 
+      SUM(lihcom) AS lihcom, lilotn, MAX(liglpt) AS liglpt FROM PRODDTA.F41021
+      WHERE liupmj = '#{date_to_julian(Date.today)}' AND
+      REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+      GROUP BY limcu, lilotn
     ) IA
     LEFT JOIN
     (
@@ -234,10 +230,11 @@ class JdeSoDetail < ActiveRecord::Base
         v_age = Date.today - julian_to_date(st.ilcrdj)
         cek_stock = DisplayStock.where(lot_serial: st.lilotn.strip)
         if cek_stock.empty? || cek_stock.nil?
-          DisplayStock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
+          DisplayStock.create(branch: st.limcu.strip, brand: st.liglpt.strip[2], description: description,
           item_number: st.imlitm.strip, onhand: st.lipqoh/10000, 
           available: (st.lipqoh - st.lihcom)/10000, status: status, customer: st.abalph,
-          lot_serial: st.lilotn.strip, doc_number: st.ildoc, age: v_age, doc_type: st.ildct, product: st.imlitm.strip[0..1])
+          lot_serial: st.lilotn.strip, doc_number: st.ildoc, age: v_age, doc_type: st.ildct, 
+          product: st.imlitm.strip[0..1])
         elsif st.lilotn.strip == cek_stock.first.lot_serial && 
           (st.ildoc != cek_stock.first.doc_number || st.lipqoh/10000 != cek_stock.first.onhand || 
           st.lihcom/10000 != cek_stock.first.available)
