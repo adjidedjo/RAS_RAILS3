@@ -47,11 +47,19 @@ jde_import_beginning_of_week:
   rails_envs: development, production, staging
   
 jde_import_stock_hourly:
-  cron: "0 7-21 * * *"
+  cron: "0,15,30,45 7-21 * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_hourly"
   description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
+jde_import_stock_hourly_display:
+  cron: "0 7-21 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_stock_hourly_dislay"
+  description: import hourly display
   rails_envs: development, production, staging
   
 #jde_import_acc_receivable:

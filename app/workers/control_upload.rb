@@ -34,9 +34,12 @@ class ControlUpload
     JdeSoDetail.import_acc_receivable
   end
   
+  def import_stock_hourly_display
+    JdeSoDetail.import_stock_hourly_display
+  end
+  
   def import_stock_hourly
     JdeSoDetail.import_stock_hourly
-    JdeSoDetail.import_stock_hourly_display
   end
   
   def import_beginning_of_week
