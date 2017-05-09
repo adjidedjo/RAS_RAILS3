@@ -198,14 +198,15 @@ class JdeSoDetail < ActiveRecord::Base
     (
       SELECT MAX(liitm) AS liitm, limcu, SUM(lipqoh) AS lipqoh, 
       SUM(lihcom) AS lihcom, lilotn, MAX(liglpt) AS liglpt FROM PRODDTA.F41021
-      WHERE liupmj = '#{date_to_julian(Date.today)}' AND
+      WHERE liupmj = '#{date_to_julian(Date.today)}' AND limcu LIKE '%D' AND
       REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
       GROUP BY limcu, lilotn
     ) IA
     LEFT JOIN
     (
-      SELECT MAX(ildoc) AS ildoc, max(ildct) as ildct, illotn, ilitm, MAX(iltrex) AS iltrex, MAX(ilcrdj) AS ilcrdj 
-      FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA')
+      SELECT MAX(ildoc) AS ildoc, max(ildct) as ildct, illotn, ilitm, MAX(iltrex) AS iltrex, 
+      MAX(ilcrdj) AS ilcrdj FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA|IT') AND
+      iltrdj = '#{date_to_julian(Date.today)}' AND ilmcu LIKE '%D'
       GROUP BY illotn, ilitm ORDER BY ildoc DESC
     ) IL ON IA.lilotn = IL.illotn
     LEFT JOIN
@@ -237,8 +238,9 @@ class JdeSoDetail < ActiveRecord::Base
           product: st.imlitm.strip[0..1])
         elsif st.lilotn.strip == cek_stock.first.lot_serial && 
           (st.ildoc != cek_stock.first.doc_number || st.lipqoh/10000 != cek_stock.first.onhand || 
-          st.lihcom/10000 != cek_stock.first.available)
-           cek_stock.first.update_attributes!( doc_number: st.ildoc, customer: st.abalph.strip,
+          st.lihcom/10000 != cek_stock.first.available || 
+          (st.abalph.nil? ? st.abalph : st.abalph.strip) != cek_stock.first.customer)
+           cek_stock.first.update_attributes!( doc_number: st.ildoc, customer: (st.abalph.nil? ? st.abalph : st.abalph.strip),
            onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, product: st.imlitm.strip[0..1])
         end
       end
