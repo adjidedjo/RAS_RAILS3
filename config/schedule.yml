@@ -6,8 +6,16 @@
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
   
-jde_weekly_fetch_on_sunday:
+jde_base_price:
   cron: "1 0 * * 0"
+  queue: cron
+  class: ControlUpload
+  args: "import_base_prices"
+  description: fetching base prices
+  rails_envs: development, production, staging
+  
+jde_weekly_fetch_on_sunday:
+  cron: "0 22 * * *"
   queue: cron
   class: ControlUpload
   args: "sunday_weekly_batch"
@@ -55,7 +63,7 @@ jde_import_stock_hourly:
   rails_envs: development, production, staging
   
 jde_import_stock_hourly_display:
-  cron: "0 7-21 * * *"
+  cron: "5 7,12,15,20 * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_hourly_display"

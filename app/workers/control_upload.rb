@@ -25,6 +25,10 @@ class ControlUpload
 
   end
   
+  def import_base_prices
+    JdeBasePrice.import_base_price
+  end
+  
   def sunday_weekly_batch
     JdeFetch.checking_buffer
     JdeFetch.checking_item_cost
@@ -53,7 +57,6 @@ class ControlUpload
   def import_sales_jde
     JdeSoDetail.import_so_detail
     JdeSoDetail.import_retur
-    JdeSoDetail.import_credit_note
   end
 
   def intransit_pos
