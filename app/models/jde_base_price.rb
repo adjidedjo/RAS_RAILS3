@@ -18,7 +18,8 @@ class JdeBasePrice < ActiveRecord::Base
         SELECT DISTINCT MAX(bplitm) AS bplitm, bpitm, bpmcu, MAX(bpuprc) AS bpuprc,
         MAX(bpeftj) AS bpeftj, MAX(bpexdj) AS bpexdj FROM PRODDTA.F4106
         WHERE LENGTH(TRIM(TRANSLATE(bpmcu, ' +-.0123456789',' '))) IS NULL AND
-        REGEXP_LIKE(bplitm,'KM|HB|DV|SA|SB|ST|KB')
+        REGEXP_LIKE(bplitm,'KM|HB|DV|SA|SB|ST|KB') AND 
+        REGEXP_LIKE(bplitm,'11002|11011|13011|11012|12111|12112|13111|11091|11092|13091|11081|11082|13081')
         GROUP BY bpitm, bpmcu ORDER BY bpexdj, bpeftj DESC
       ) BP
       LEFT JOIN
