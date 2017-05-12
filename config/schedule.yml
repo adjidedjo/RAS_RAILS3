@@ -7,7 +7,7 @@
 #  rails_envs: development, production, staging
   
 jde_base_price:
-  cron: "30 11 * * *"
+  cron: "30 13 * * *"
   queue: cron
   class: ControlUpload
   args: "import_base_prices"
