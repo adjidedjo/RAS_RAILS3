@@ -25,6 +25,10 @@ class ControlUpload
 
   end
   
+  def import_customers
+    JdeCustomerMaster.customer_import
+  end
+  
   def import_base_prices
     JdeBasePrice.import_base_price
   end

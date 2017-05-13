@@ -17,8 +17,38 @@ class JdeCustomerMaster < ActiveRecord::Base
       '-'
     end
   end
-  
+
   def self.find_salesman_name(salesman_id)
     find_by_sql("SELECT abalph FROM proddta.f0101 WHERE aban8 like '%#{salesman_id}%'").first.abalph.strip
+  end
+
+  def self.customer_import
+    customer = find_by_sql("
+      SELECT AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1 FROM PRODDTA.F03012 AI
+      LEFT JOIN(
+        SELECT aban8, abalph, absic FROM PRODDTA.F0101
+      ) AB ON AI.aian8 = AB.aban8
+      LEFT JOIN
+      (
+        SELECT aladd1, alcty1, alan8 FROM PRODDTA.F0116
+      ) AL ON AI.aian8 = AL.alan8
+      WHERE AND AI.aico LIKE '%0000%'
+    ")
+    customer.each do |nc|
+      Customer.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
+        city: nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj))
+    end
+  end
+  
+  def self.date_to_julian(date)
+    1000*(date.year-1900)+date.yday
+  end
+
+  def self.julian_to_date(jd_date)
+    if jd_date.nil? || jd_date == 0
+      0
+    else
+      Date.parse((jd_date+1900000).to_s, 'YYYYYDDD')
+    end
   end
 end

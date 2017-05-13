@@ -6,6 +6,14 @@
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
   
+jde_customer:
+  cron: "0 12 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_customers"
+  description: fetching customers
+  rails_envs: development, production, staging
+  
 jde_base_price:
   cron: "0 12 * * 0"
   queue: cron

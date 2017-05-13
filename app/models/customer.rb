@@ -1,4 +1,6 @@
 class Customer < ActiveRecord::Base
+  self.table_name = "jde_customers"
+  
   scope :search_by_branch, lambda {|branch| where("cabang_id in (?)", branch) if branch.present? }
   scope :customer, lambda {|customer| where("nama_customer in (?)", customer) if customer.present? }
   scope :customer_channel, lambda {|channel| where("tipe_customer in (?)", channel) if channel.present?}
