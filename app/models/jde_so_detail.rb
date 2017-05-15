@@ -68,6 +68,10 @@ class JdeSoDetail < ActiveRecord::Base
           variance = (julian_to_date(a.sdaddj)-julian_to_date(a.sdppdj)).to_i
          sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
+         customer_master = Customer.find(address_number: a.sdan8.to_i)
+         unless customer_master.nil?
+           Customer.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
+         end
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,

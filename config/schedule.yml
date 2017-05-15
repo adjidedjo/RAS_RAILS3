@@ -7,7 +7,7 @@
 #  rails_envs: development, production, staging
   
 jde_customer:
-  cron: "0 12 * * *"
+  cron: "1 0 * * *"
   queue: cron
   class: ControlUpload
   args: "import_customers"
