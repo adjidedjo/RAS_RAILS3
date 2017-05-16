@@ -70,7 +70,7 @@ class JdeSoDetail < ActiveRecord::Base
          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
          customer_master = Customer.where(address_number: a.sdan8.to_i)
          unless customer_master.nil?
-           Customer.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
+           customer_master.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
          end
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -121,8 +121,8 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/03/2017'.to_date)}' AND'#{date_to_julian(Date.yesterday.to_date)}' 
-    AND rpdct LIKE '%RM%'")
+    rpdivj BETWEEN '#{date_to_julian('10/04/2017'.to_date)}' AND'#{date_to_julian(Date.yesterday.to_date)}' 
+    AND rpdct LIKE '%RM%' AND rpsdoc > '1'")
     credit_note.each do |cr|
       # no_doc = cr.rprmk[0..7].to_i.to_s
       # no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
