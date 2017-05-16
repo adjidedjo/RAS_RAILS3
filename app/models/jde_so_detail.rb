@@ -68,7 +68,7 @@ class JdeSoDetail < ActiveRecord::Base
           variance = (julian_to_date(a.sdaddj)-julian_to_date(a.sdppdj)).to_i
          sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
-         customer_master = Customer.find(address_number: a.sdan8.to_i)
+         customer_master = Customer.where(address_number: a.sdan8.to_i)
          unless customer_master.nil?
            Customer.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
          end
