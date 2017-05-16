@@ -70,7 +70,7 @@ class JdeSoDetail < ActiveRecord::Base
          sales_id = JdeSalesman.find_salesman_id(a.sdan8.to_i, a.sdsrp1.strip)
          customer_master = Customer.where(address_number: a.sdan8.to_i)
          unless customer_master.nil?
-           customer_master.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
+           customer_master.first.update_attributes!(last_order_date: julian_to_date(a.sdaddj))
          end
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
