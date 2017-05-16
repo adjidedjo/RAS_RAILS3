@@ -32,7 +32,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT aladd1, alcty1, alan8 FROM PRODDTA.F0116
       ) AL ON AI.aian8 = AL.alan8
-      WHERE AND AI.aico LIKE '%0000%' AND AI.aidaoj = '#{julian_to_date(Date.yesterday.to_date)}'
+      WHERE AI.aico LIKE '%0000%' AND AI.aidaoj = '#{date_to_julian(Date.yesterday)}'
     ")
     customer.each do |nc|
       find_cus = Customer.where(addres_number: nc.aian8)
