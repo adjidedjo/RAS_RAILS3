@@ -120,31 +120,29 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import credit note
   def self.import_credit_note
-    credit_note = self.find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('10/04/2017'.to_date)}' AND'#{date_to_julian(Date.yesterday.to_date)}' 
+    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%' AND rpsdoc > '1'")
     credit_note.each do |cr|
-      # no_doc = cr.rprmk[0..7].to_i.to_s
-      # no_so = self.find_by_sql("SELECT sdtrdj, sdan8, sdmcu, sddoco, sddeln, sdsrp1
-      # FROM PRODDTA.F4211 WHERE sddoc LIKE '%#{no_doc}%'")
-      # if no_doc.length == 8 && no_so.present?
-        if LaporanCabang.where(orty: "RM", nofaktur: cr.rpdoc, lnid: cr.rpsfx).empty?
-          # no_so = no_so.first
-          namacustomer = JdeCustomerMaster.find_by_aban8(cr.rpan8).abalph.strip
-          cabang = jde_cabang(cr.rpmcu.to_i.to_s.strip)
-          area = find_area(cabang)
-          group = JdeCustomerMaster.get_group_customer(cr.rpan8.to_i)
-          kota = JdeAddressByDate.get_city(cr.rpan8.to_i)
-          # sales = JdeSalesman.find_salesman(cr.rpan8.to_i, cr.sdsrp1.strip)
-          # sales_id = JdeSalesman.find_salesman_id(no_so.sdan8.to_i, no_so.sdsrp1.strip)
-          LaporanCabang.create(cabang_id: cabang, nofaktur: cr.rpdoc, 
-            tanggal: julian_to_date(cr.rpdgj), tanggalsj: julian_to_date(cr.rpdivj), 
-            kode_customer: cr.rpan8.to_i, customer: namacustomer, harganetto1: cr.rpag, 
-            kota: kota, tipecust: group, orty: cr.rpdct.strip,
-            fiscal_month: julian_to_date(cr.rpdivj).to_date.month, 
-            fiscal_year: julian_to_date(cr.rpdivj).to_date.year,
-            week: julian_to_date(cr.rpdivj).to_date.cweek, lnid: cr.rpsfx, area_id: area)
+      no_doc = cr.rpsdoc
+      lp = LaporanCabang.where("noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'")
+      if lp.present?
+        if LaporanCabang.where(orty: "RM", noso: cr.rpsdoc, lnid: cr.rpsfx, kodebrg: cr.rprmk.strip).empty?
+          LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
+            nosj: lp.first.nosj, tanggalsj: lp.first.tanggalsj, kodebrg: lp.first.kodebrg,
+            namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
+            jumlah: lp.first.jumlah, satuan: "PC",
+            jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
+            kodeartikel: lp.first.kodeartikel, namaartikel: lp.first.namaartikel,
+            kodekain: lp.first.kodekain, namakain: lp.first.namakain, panjang: lp.first.panjang, 
+            lebar: lp.first.lebar, namabrand: lp.first.namabrand, hargasatuan: lp.first.hargasatuan, 
+            harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.first.kota, 
+            tipecust: lp.first.tipecust, bonus: lp.first.bonus, lnid: cr.rpsfx, ketppb: "", 
+            salesman: lp.first.salesman, diskon5: lp.first.diskon5, orty: 'RM', 
+            nopo: lp.first.nopo, fiscal_year: lp.first.fiscal_year, fiscal_month: lp.first.fiscal_month, week: lp.first.week,
+            area_id: lp.first.area_id)
         end
+      end
       # end
     end
   end
