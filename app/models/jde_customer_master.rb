@@ -40,8 +40,8 @@ class JdeCustomerMaster < ActiveRecord::Base
         Customer.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
           city: nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), area_id: find_area(jde_cabang(customer.first.abmcu.strip)), state: customer.first.aicusts)
-       else
-        find_cus.first.update_attributes!(state: nc.aicusts)   
+       elsif find_cus.present?
+         find_cus.first.update_attributes!(state: nc.aicusts)   
       end
     end
   end
