@@ -35,7 +35,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       WHERE AI.aico LIKE '%0000%' AND AI.aidaoj = '#{date_to_julian(Date.yesterday)}'
     ")
     customer.each do |nc|
-      find_cus = Customer.where(addres_number: nc.aian8)
+      find_cus = Customer.where(address_number: nc.aian8)
       if find_cus.nil?
         Customer.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
           city: nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
