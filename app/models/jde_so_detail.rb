@@ -308,6 +308,16 @@ class JdeSoDetail < ActiveRecord::Base
       end
     end
   end
+  
+  def self.update_item_master
+    a = LaporanCabang.where("fiscal_year = 2017")
+    a.each do |lp|
+      if lp.kodebrg.length == 18
+        item_master = JdeItemMaster.find_by_imaitm(lp.kodebrg)
+        lp.update_attributes!(kodebrg: item_master.imlitm.strip)
+      end
+    end
+  end
 
   private
   def self.date_to_julian(date)
