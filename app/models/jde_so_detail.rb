@@ -117,11 +117,11 @@ class JdeSoDetail < ActiveRecord::Base
       end
     end
   end
-  
+
   #import credit note
   def self.import_credit_note
     credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    rpupmj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND rpdct LIKE '%RM%' AND rpsdoc > '1'")
     credit_note.each do |cr|
       no_doc = cr.rpsdoc
@@ -298,23 +298,13 @@ class JdeSoDetail < ActiveRecord::Base
           kota = JdeAddressByDate.get_city(a.sdan8.to_i)
           group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
          sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
-          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdaitm.strip,
+          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
             salesman: sales)
         end
-      end
-    end
-  end
-  
-  def self.update_item_master
-    a = LaporanCabang.where("fiscal_year = 2017")
-    a.each do |lp|
-      if lp.kodebrg.length == 18
-        item_master = JdeItemMaster.find_by_imaitm(lp.kodebrg)
-        lp.update_attributes!(kodebrg: item_master.imlitm.strip)
       end
     end
   end
