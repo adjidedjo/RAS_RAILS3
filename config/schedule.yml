@@ -6,14 +6,6 @@
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
   
-jde_update_item_mater:
-  cron: "0 17 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "update_item_master"
-  description: update_item_master
-  rails_envs: development, production, staging
-  
 jde_import_credit_note:
   cron: "0 7 * * *"
   queue: cron

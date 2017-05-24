@@ -25,10 +25,6 @@ class ControlUpload
 
   end
   
-  def update_item_master
-    JdeSoDetail.update_item_master
-  end
-  
   def import_customers
     JdeCustomerMaster.customer_import
   end
