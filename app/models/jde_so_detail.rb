@@ -74,7 +74,7 @@ class JdeSoDetail < ActiveRecord::Base
          end
           LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdaddj),kodebrg: a.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..5], namaartikel: artikel,
+            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: a.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(a.sdaddj).to_date.year,
@@ -305,6 +305,17 @@ class JdeSoDetail < ActiveRecord::Base
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
             salesman: sales)
         end
+      end
+    end
+  end
+  
+  def self.update_salesman
+    reports = LaporanCabang.select("kode_customer, nopo, salesman, jenisbrgdisc").where("fiscal_year = 2017 and nopo is null or nopo = ''")
+    reports.each do |rp|
+      if rp.jenisbrgdisc.present?
+        sales = JdeSalesman.find_salesman(rp.kode_customer, rp.jenisbrgdisc[0])
+        sales_id = JdeSalesman.find_salesman_id(rp.kode_customer, rp.jenisbrgdisc[0])
+        rp.update_attributes!(salesman: sales, nopo: sales_id)
       end
     end
   end
