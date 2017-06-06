@@ -61,6 +61,8 @@ class JdeCustomerMaster < ActiveRecord::Base
   def self.find_area(cabang)
     if cabang == "02"
       2
+    elsif cabang == "01"
+      1
     elsif cabang == "03" || cabang == "23"
       3
     elsif cabang == "07" || cabang == "22"
@@ -83,23 +85,25 @@ class JdeCustomerMaster < ActiveRecord::Base
       19
     elsif cabang == "20"
       20
+    elsif cabang == "50"
+      50
     end
   end
 
   def self.jde_cabang(bu)
-    if bu == "11001" #pusat
+    if bu == "11001"|| bu == "11001D" || bu == "11001C" #pusat
       "01"
-    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" || bu == "11002" #jabar
+    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" #jabar
       "02"
     elsif bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" #cirebon
       "09"
-    elsif bu == "12001" || bu == "12002" #bestari mulia
+    elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
     elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "13061"|| bu == "13001" || bu == "13061C" || bu == "13061D" #surabay
       "07"
     elsif bu == "11151" || bu == "11152" || bu == "13151" || bu == "13151C" || bu == "13151D" || bu == "11151C" || bu == "11151D" #cikupa
       "23"
-    elsif bu == "11031" || bu == "11032" || bu == "11031C" || bu == "11031D" #narogong
+    elsif bu == "11031" || bu == "11032" || bu == "11031C" || bu == "11031D" || bu == "13031C" || bu == "13031D" || bu == "13031" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "13111" || bu == "12111C" || bu == "12111D" || bu == "13111C" || bu == "13111D" #makasar
       "19"

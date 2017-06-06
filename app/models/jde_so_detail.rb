@@ -46,8 +46,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ? and sdan8 = ?",
+    "580", "565", date_to_julian('24/05/2017'.to_date), '511991').each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -97,6 +97,7 @@ class JdeSoDetail < ActiveRecord::Base
         if customer.abat1.strip == "C"
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
+          area = find_area(cabang)
           item_master = JdeItemMaster.find_by_imitm(a.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -112,7 +113,7 @@ class JdeSoDetail < ActiveRecord::Base
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
             salesman: sales, orty: a.sddcto.strip, fiscal_month: julian_to_date(a.sdtrdj).to_date.month, fiscal_year: julian_to_date(a.sdtrdj).to_date.year,
-            week: julian_to_date(a.sdtrdj).to_date.cweek)
+            week: julian_to_date(a.sdtrdj).to_date.cweek, area_id: area)
         end
       end
     end
@@ -120,18 +121,17 @@ class JdeSoDetail < ActiveRecord::Base
 
   #import credit note
   def self.import_credit_note
-    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpupmj = '#{date_to_julian(Date.yesterday.to_date)}' 
-    AND rpdct LIKE '%RM%' AND rpsdoc > '1'")
+    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdct LIKE '%RM%' AND 
+    rpsdoc > '1' AND rpdoc LIKE '%17008997'")
     credit_note.each do |cr|
       no_doc = cr.rpsdoc
       lp = LaporanCabang.where("noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'")
       if lp.present?
-        if LaporanCabang.where(orty: "RM", noso: cr.rpsdoc, lnid: cr.rpsfx, kodebrg: cr.rprmk.strip).empty?
+        if LaporanCabang.where(orty: "RM", noso: cr.rpsdoc, lnid: cr.rpsfx, kodebrg: cr.rprmk.strip, nofaktur: cr.rpdoc).empty?
           LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
             nosj: lp.first.nosj, tanggalsj: lp.first.tanggalsj, kodebrg: lp.first.kodebrg,
             namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
-            jumlah: lp.first.jumlah, satuan: "PC",
+            jumlah: lp.first.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
             jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
             kodeartikel: lp.first.kodeartikel, namaartikel: lp.first.namaartikel,
             kodekain: lp.first.kodekain, namakain: lp.first.namakain, panjang: lp.first.panjang, 
@@ -336,6 +336,8 @@ class JdeSoDetail < ActiveRecord::Base
   def self.find_area(cabang)
     if cabang == "02"
       2
+    elsif cabang == "01"
+      1
     elsif cabang == "03" || cabang == "23"
       3
     elsif cabang == "07" || cabang == "22"
@@ -358,23 +360,25 @@ class JdeSoDetail < ActiveRecord::Base
       19
     elsif cabang == "20"
       20
+    elsif cabang == "50"
+      50
     end
   end
 
   def self.jde_cabang(bu)
-    if bu == "11001" #pusat
+    if bu == "11001"|| bu == "11001D" || bu == "11001C" #pusat
       "01"
-    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" || bu == "11002" #jabar
+    elsif bu == "11011" || bu == "11012" || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" #jabar
       "02"
     elsif bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" #cirebon
       "09"
-    elsif bu == "12001" || bu == "12002" #bestari mulia
+    elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
     elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "13061"|| bu == "13001" || bu == "13061C" || bu == "13061D" #surabay
       "07"
     elsif bu == "11151" || bu == "11152" || bu == "13151" || bu == "13151C" || bu == "13151D" || bu == "11151C" || bu == "11151D" #cikupa
       "23"
-    elsif bu == "11031" || bu == "11032" || bu == "11031C" || bu == "11031D" #narogong
+    elsif bu == "11031" || bu == "11032" || bu == "11031C" || bu == "11031D" || bu == "13031C" || bu == "13031D" || bu == "13031" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "13111" || bu == "12111C" || bu == "12111D" || bu == "13111C" || bu == "13111D" #makasar
       "19"
