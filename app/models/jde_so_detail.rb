@@ -46,9 +46,9 @@ class JdeSoDetail < ActiveRecord::Base
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ? and sdan8 = ?",
-    "580", "565", date_to_julian('24/05/2017'.to_date), '511991').each do |a|
-      find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
+    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
+      find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i, kodebrg: a.sdlitm.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(a.sdan8)

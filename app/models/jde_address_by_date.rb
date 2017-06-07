@@ -4,6 +4,7 @@ class JdeAddressByDate < ActiveRecord::Base
   #al
 
   def self.get_city(address_number)
-    where(alan8: address_number).first.alcty1.strip
+    city = where(alan8: address_number).first.alcty1.strip
+    city.first.alcty1.nil? ? '-' : city.first.alcty1.strip
   end
 end
