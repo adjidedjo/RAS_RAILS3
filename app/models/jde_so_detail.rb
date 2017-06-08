@@ -18,7 +18,7 @@ class JdeSoDetail < ActiveRecord::Base
     rpdivj BETWEEN '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('07/06/2017'.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX')")
     invoices.each do |iv|
-      order = where("sddoco = ? and sdlitm = ? sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')", 
+      order = where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')", 
       iv.rpsdoc, iv.rprmk.strip, "999", "580").first
       find_sj = LaporanCabang.where(noso: iv.rpsdoc.to_i, lnid: iv.rplnid.to_i, kodebrg: order.sdlitm.strip)
       if find_sj.empty?
