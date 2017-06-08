@@ -15,12 +15,12 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('07/06/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX')")
+    rpdivj = '#{date_to_julian('03/06/2017'.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RI|RX') AND rpmcu LIKE '%11001'")
     invoices.each do |iv|
-      order = where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')", 
+      order = where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')",
       iv.rpsdoc, iv.rprmk.strip, "999", "580").first
-      find_sj = LaporanCabang.where(noso: iv.rpsdoc.to_i, lnid: iv.rplnid.to_i, kodebrg: order.sdlitm.strip)
+      find_sj = LaporanCabang.where(noso: iv.rpsdoc.to_i, lnid: iv.rplnid.to_i, kodebrg: iv.rprmk.strip)
       if find_sj.empty?
         fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
@@ -61,9 +61,8 @@ class JdeSoDetail < ActiveRecord::Base
   # #jde to mysql tblaporancabang
   def self.import_so_detail
     where("sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
+    "999", "580", date_to_julian('06/06/2017'.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i, kodebrg: a.sdlitm.strip)
-      if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
         bonus = a.sdaexp == 0 ?  'BONUS' : '-'
@@ -95,7 +94,6 @@ class JdeSoDetail < ActiveRecord::Base
             fiscal_month: julian_to_date(a.sdaddj).to_date.month, week: julian_to_date(a.sdaddj).to_date.cweek,
             area_id: area)
         end
-      end
     end
   end
   
