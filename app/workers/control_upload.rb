@@ -25,6 +25,10 @@ class ControlUpload
 
   end
   
+  def import_sales
+    JdeSoDetail.import_sales
+  end
+  
   def import_customers
     JdeCustomerMaster.customer_import
   end

@@ -11,43 +11,57 @@ class JdeSoDetail < ActiveRecord::Base
     select("sum(sdsoqs) as sdsoqs").where("sditm = ? and sdnxtr = ? and sdlttr = ? and sddcto like ? and sdaddj = ?",
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
-  
-  # import account receivable 
-  def self.import_acc_receivable
-    ar = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj between
-    '#{date_to_julian('4/04/2017'.to_date)}' AND
-    '#{date_to_julian('30/04/2017'.to_date)}' AND REGEXP_LIKE(rpomod, '0|3') ")
-    ar.each do |ars|
-      cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
-      if cek_ava.empty?
-        group = JdeCustomerMaster.get_group_customer(ars.rpan8.to_i)
-        if group == 'RETAIL'
-          cabang = jde_cabang(ars.rpmcu.to_i.to_s.strip)
-          dpd = Date.today - julian_to_date(ars.rpddj)
-          sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
-          sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
-          item_master = ars.rpomod == '3' ? JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'").first.imprgr.strip : '-'
-          AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
-          invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
-          due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
-          pay_status: ars.rppst, remark: ars.rprmk.strip, customer_number: ars.rpan8,
-          customer: ars.rpalph.strip, gl_date: julian_to_date(ars.rpdgj),
-          actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
-          fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
-          pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
-          salesman_no: sales_id, brand: item_master)
+
+  #import sales order from standard invoices
+  def self.import_sales
+    invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpdivj BETWEEN '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('07/06/2017'.to_date)}' 
+    AND rpdct LIKE '%RI%'")
+    invoices.each do |iv|
+      order = where("sddoco = ? and sdlitm = ? sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')", 
+      iv.rpsdoc, iv.rprmk.strip, "999", "580").first
+      find_sj = LaporanCabang.where(noso: iv.rpsdoc.to_i, lnid: iv.rplnid.to_i, kodebrg: order.sdlitm.strip)
+      if find_sj.empty?
+        fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
+        customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
+        bonus = order.sdaexp == 0 ?  'BONUS' : '-'
+        if customer.abat1.strip == "C"
+          namacustomer = customer.abalph.strip
+          cabang = jde_cabang(order.sdmcu.to_i.to_s.strip)
+          area = find_area(cabang)
+          item_master = JdeItemMaster.find_by_imitm(order.sditm)
+          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
+          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
+          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
+          groupitem = JdeUdc.group_item_udc(order.sdsrp3.strip)
+          harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
+          kota = JdeAddressByDate.get_city(order.sdan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(order.sdan8.to_i)
+          variance = (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+         sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
+         sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
+         customer_master = Customer.where(address_number: order.sdan8.to_i)
+         unless customer_master.nil? || customer_master.blank?
+           customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+         end
+          LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+            kodebrg: order.sdlitm.strip,
+            namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: iv.rpsfx.to_i, ketppb: "",
+            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(order.sdaddj).to_date.year,
+            fiscal_month: julian_to_date(order.sdaddj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
+            area_id: area)
         end
-      elsif cek_ava.first.open_amount != ars.rpaap
-        # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
-        cek_ava.first.update_attributes!(open_amount: ars.rpaap, actual_close_date: julian_to_date(ars.rpjcl), pay_status: ars.rppst)
       end
     end
   end
 
   # #jde to mysql tblaporancabang
   def self.import_so_detail
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto IN ('SO','ZO') and sdaddj = ?",
-    "580", "565", date_to_julian(Date.yesterday.to_date)).each do |a|
+    where("sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO') and sdaddj = ?",
+    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i, kodebrg: a.sdlitm.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -84,12 +98,44 @@ class JdeSoDetail < ActiveRecord::Base
       end
     end
   end
+  
+  # import account receivable 
+  def self.import_acc_receivable
+    ar = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj between
+    '#{date_to_julian('4/04/2017'.to_date)}' AND
+    '#{date_to_julian('30/04/2017'.to_date)}' AND REGEXP_LIKE(rpomod, '0|3') ")
+    ar.each do |ars|
+      cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
+      if cek_ava.empty?
+        group = JdeCustomerMaster.get_group_customer(ars.rpan8.to_i)
+        if group == 'RETAIL'
+          cabang = jde_cabang(ars.rpmcu.to_i.to_s.strip)
+          dpd = Date.today - julian_to_date(ars.rpddj)
+          sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
+          sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
+          item_master = ars.rpomod == '3' ? JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'").first.imprgr.strip : '-'
+          AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
+          invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
+          due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+          pay_status: ars.rppst, remark: ars.rprmk.strip, customer_number: ars.rpan8,
+          customer: ars.rpalph.strip, gl_date: julian_to_date(ars.rpdgj),
+          actual_close_date: julian_to_date(ars.rpjcl), date_updated: julian_to_date(ars.rpupmj),
+          fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
+          pay_item: ars.rpsfx, customer_group: group, updated_at: Time.zone.now, salesman: sales, 
+          salesman_no: sales_id, brand: item_master)
+        end
+      elsif cek_ava.first.open_amount != ars.rpaap
+        # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
+        cek_ava.first.update_attributes!(open_amount: ars.rpaap, actual_close_date: julian_to_date(ars.rpjcl), pay_status: ars.rppst)
+      end
+    end
+  end
 
   #import retur
   def self.import_retur
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "580", date_to_julian(Date.yesterday.to_date)).each do |a|
-      find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip)
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj between ? and ?",
+    "999", "580", date_to_julian('01/05/2017'.to_date), date_to_julian('31/05/2017'.to_date)).each do |a|
+      find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip, kodebrg: a.sdlitm.strip)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
@@ -121,15 +167,16 @@ class JdeSoDetail < ActiveRecord::Base
 
   #import credit note
   def self.import_credit_note
-    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpdct LIKE '%RM%' AND 
-    rpsdoc > '1' AND rpdoc LIKE '%17008997'")
+    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpdgj between '#{date_to_julian('02/05/2017'.to_date)}' and '#{date_to_julian('31/05/2017'.to_date)}'  
+    AND rpdct LIKE '%RM%' AND rpsdoc > '1' and rpmcu LIKE '%11011'")
     credit_note.each do |cr|
       no_doc = cr.rpsdoc
-      lp = LaporanCabang.where("noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'")
+      lp = LaporanCabang.where("nofaktur = '#{cr.rpdoc.strip}' and noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'")
       if lp.present?
         if LaporanCabang.where(orty: "RM", noso: cr.rpsdoc, lnid: cr.rpsfx, kodebrg: cr.rprmk.strip, nofaktur: cr.rpdoc).empty?
           LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
-            nosj: lp.first.nosj, tanggalsj: lp.first.tanggalsj, kodebrg: lp.first.kodebrg,
+            nosj: lp.first.nosj, tanggalsj: julian_to_date(cr.rpdivj), kodebrg: lp.first.kodebrg,
             namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
             jumlah: lp.first.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
             jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
@@ -139,7 +186,7 @@ class JdeSoDetail < ActiveRecord::Base
             harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.first.kota, 
             tipecust: lp.first.tipecust, bonus: lp.first.bonus, lnid: cr.rpsfx, ketppb: "", 
             salesman: lp.first.salesman, diskon5: lp.first.diskon5, orty: 'RM', 
-            nopo: lp.first.nopo, fiscal_year: lp.first.fiscal_year, fiscal_month: lp.first.fiscal_month, week: lp.first.week,
+            nopo: lp.first.nopo, fiscal_year: julian_to_date(cr.rpdivj).year, fiscal_month: julian_to_date(cr.rpdivj).month, week: julian_to_date(cr.rpdivj).cweek,
             area_id: lp.first.area_id)
         end
       end
