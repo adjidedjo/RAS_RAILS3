@@ -6,20 +6,20 @@
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
   
-jde_sales_trial:
-  cron: "10 9 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_sales"
-  description: fetching sales
-  rails_envs: development, production, staging
-  
 jde_import_credit_note:
   cron: "0 7 * * *"
   queue: cron
   class: ControlUpload
   args: "import_credit_note"
   description: fetching credit note
+  rails_envs: development, production, staging
+  
+jde_import_sales_items:
+  cron: "0 4 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_sales_jde"
+  description: intransit jde to point of sales
   rails_envs: development, production, staging
   
 jde_customer:
@@ -59,14 +59,6 @@ jde_intransit_to_pos:
   queue: cron
   class: ControlUpload
   args: "intransit_pos"
-  description: intransit jde to point of sales
-  rails_envs: development, production, staging
-  
-jde_import_sales_items:
-  cron: "0 4 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_sales_jde"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
