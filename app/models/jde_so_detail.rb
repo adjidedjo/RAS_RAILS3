@@ -16,7 +16,7 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RO') AND rpsdoc > 1")
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO') AND rpsdoc > 1")
     invoices.each do |iv|
       order = where("sddoco = ? and sdlnid = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rplnid, "999", "580", "999").first
