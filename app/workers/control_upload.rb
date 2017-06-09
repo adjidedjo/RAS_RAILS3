@@ -24,13 +24,13 @@ class ControlUpload
     end
 
   end
-  
-  def import_credit_note
-    JdeSoDetail.import_credit_note
-  end
 
   def import_sales_jde
     JdeSoDetail.import_sales
+  end
+  
+  def import_credit_note
+    JdeSoDetail.import_credit_note
   end
   
   def import_customers

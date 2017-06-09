@@ -16,7 +16,7 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO') AND rpsdoc > 1")
+    AND REGEXP_LIKE(rpdct,'RO') AND rpsdoc > 1")
     invoices.each do |iv|
       order = where("sddoco = ? and sdlnid = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rplnid, "999", "580", "999").first
@@ -58,26 +58,29 @@ class JdeSoDetail < ActiveRecord::Base
   #import credit note
   def self.import_credit_note
     credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdicj = '#{date_to_julian(Date.yesterday.to_date)}'  
-    AND rpdct LIKE '%RM%' AND rpsdoc > 1")
+    rpupmj = '#{date_to_julian(Date.yesterday.to_date)}'  
+    AND rpdct LIKE '%RM' AND rpsdoc > 1")
     credit_note.each do |cr|
       no_doc = cr.rpsdoc
-      lp = LaporanCabang.where("nofaktur = '#{cr.rpdoc}' and noso = '#{no_doc}' 
-      AND kodebrg = '#{cr.rprmk.strip}'")
-      if lp.present?
-        LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
-          nosj: lp.first.nosj, tanggalsj: julian_to_date(cr.rpdivj), kodebrg: lp.first.kodebrg,
-          namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
-          jumlah: lp.first.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
-          jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
-          kodeartikel: lp.first.kodeartikel, namaartikel: lp.first.namaartikel,
-          kodekain: lp.first.kodekain, namakain: lp.first.namakain, panjang: lp.first.panjang, 
-          lebar: lp.first.lebar, namabrand: lp.first.namabrand, hargasatuan: lp.first.hargasatuan, 
-          harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.first.kota, 
-          tipecust: lp.first.tipecust, bonus: lp.first.bonus, lnid: cr.rpsfx, ketppb: "", 
-          salesman: lp.first.salesman, diskon5: lp.first.diskon5, orty: 'RM', 
-          nopo: lp.first.nopo, fiscal_year: julian_to_date(cr.rpdivj).year, fiscal_month: julian_to_date(cr.rpdivj).month, week: julian_to_date(cr.rpdivj).cweek,
-          area_id: lp.first.area_id)
+      lp = LaporanCabang.where("noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'").first
+      unless lp.nil?
+        rm = LaporanCabang.where("noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}' AND orty = 'RM' AND
+        lnid = '#{cr.rpsfx}' AND kode_customer = 'cr.rpan8'").first
+        if rm.nil?
+          LaporanCabang.create(cabang_id: lp.cabang_id, noso: lp.noso, tanggal: lp.tanggal, 
+            nosj: lp.nosj, tanggalsj: julian_to_date(cr.rpdivj), kodebrg: lp.kodebrg,
+            namabrg: lp.namabrg, kode_customer: lp.kode_customer, customer: lp.customer, 
+            jumlah: lp.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
+            jenisbrgdisc: lp.jenisbrgdisc, kodejenis: lp.kodejenis, jenisbrg: lp.jenisbrg, 
+            kodeartikel: lp.kodeartikel, namaartikel: lp.namaartikel,
+            kodekain: lp.kodekain, namakain: lp.namakain, panjang: lp.panjang, 
+            lebar: lp.lebar, namabrand: lp.namabrand, hargasatuan: lp.hargasatuan, 
+            harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.kota, 
+            tipecust: lp.tipecust, bonus: lp.bonus, lnid: cr.rpsfx, ketppb: "", 
+            salesman: lp.salesman, diskon5: lp.diskon5, orty: 'RM', 
+            nopo: lp.nopo, fiscal_year: julian_to_date(cr.rpdivj).year, fiscal_month: julian_to_date(cr.rpdivj).month, week: julian_to_date(cr.rpdivj).cweek,
+            area_id: lp.area_id)
+        end
       end
       # end
     end
