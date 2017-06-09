@@ -25,6 +25,14 @@ class ControlUpload
 
   end
   
+  def import_credit_note
+    JdeSoDetail.import_credit_note
+  end
+
+  def import_sales_jde
+    JdeSoDetail.import_sales
+  end
+  
   def import_customers
     JdeCustomerMaster.customer_import
   end
@@ -52,15 +60,6 @@ class ControlUpload
   
   def import_beginning_of_week
     JdeSoDetail.import_beginning_week_of_stock
-  end
-  
-  def import_credit_note
-    JdeSoDetail.import_credit_note
-  end
-
-  def import_sales_jde
-    JdeSoDetail.import_sales
-    JdeSoDetail.import_retur
   end
 
   def intransit_pos

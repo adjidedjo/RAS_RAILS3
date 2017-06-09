@@ -12,14 +12,14 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
 
-  #import sales order from standard invoices
+  #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX') AND rpsdoc > 1")
+    AND REGEXP_LIKE(rpdct,'RO') AND rpsdoc > 1")
     invoices.each do |iv|
-      order = where("sddoco = ? and sdlnid = ? and sdnxtr = ? and sdlttr = ? and sddcto IN ('SO','ZO')",
-      iv.rpsdoc, iv.rplnid, "999", "580").first
+      order = where("sddoco = ? and sdlnid = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
+      and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rplnid, "999", "580", "999").first
       fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
       customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
       bonus = order.sdaexp == 0 ?  'BONUS' : '-'
@@ -54,6 +54,34 @@ class JdeSoDetail < ActiveRecord::Base
       end
     end
   end
+
+  #import credit note
+  def self.import_credit_note
+    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
+    rpdicj = '#{date_to_julian(Date.yesterday.to_date)}'  
+    AND rpdct LIKE '%RM%' AND rpsdoc > 1")
+    credit_note.each do |cr|
+      no_doc = cr.rpsdoc
+      lp = LaporanCabang.where("nofaktur = '#{cr.rpdoc}' and noso = '#{no_doc}' 
+      AND kodebrg = '#{cr.rprmk.strip}'")
+      if lp.present?
+        LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
+          nosj: lp.first.nosj, tanggalsj: julian_to_date(cr.rpdivj), kodebrg: lp.first.kodebrg,
+          namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
+          jumlah: lp.first.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
+          jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
+          kodeartikel: lp.first.kodeartikel, namaartikel: lp.first.namaartikel,
+          kodekain: lp.first.kodekain, namakain: lp.first.namakain, panjang: lp.first.panjang, 
+          lebar: lp.first.lebar, namabrand: lp.first.namabrand, hargasatuan: lp.first.hargasatuan, 
+          harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.first.kota, 
+          tipecust: lp.first.tipecust, bonus: lp.first.bonus, lnid: cr.rpsfx, ketppb: "", 
+          salesman: lp.first.salesman, diskon5: lp.first.diskon5, orty: 'RM', 
+          nopo: lp.first.nopo, fiscal_year: julian_to_date(cr.rpdivj).year, fiscal_month: julian_to_date(cr.rpdivj).month, week: julian_to_date(cr.rpdivj).cweek,
+          area_id: lp.first.area_id)
+      end
+      # end
+    end
+  end
   
   # import account receivable 
   def self.import_acc_receivable
@@ -83,69 +111,6 @@ class JdeSoDetail < ActiveRecord::Base
         # dpd = julian_to_date(ars.rpjcl) - julian_to_date(ars.rpddj)
         cek_ava.first.update_attributes!(open_amount: ars.rpaap, actual_close_date: julian_to_date(ars.rpjcl), pay_status: ars.rppst)
       end
-    end
-  end
-
-  #import retur
-  def self.import_retur
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = 'CO' and sdtrdj = ?",
-    "999", "580", date_to_julian(Date.yesteday.to_date)).each do |a|
-      find_sj = LaporanCabang.where(noso: a.sddoco.to_i, orty: a.sddcto.strip, kodebrg: a.sdlitm.strip)
-      if find_sj.empty?
-        fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
-        customer = JdeCustomerMaster.find_by_aban8(a.sdan8)
-        bonus = a.sdaexp == 0 ?  'BONUS' : '-'
-        if customer.abat1.strip == "C"
-          namacustomer = customer.abalph.strip
-          cabang = jde_cabang(a.sdmcu.to_i.to_s.strip)
-          area = find_area(cabang)
-          item_master = JdeItemMaster.find_by_imitm(a.sditm)
-          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
-          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
-          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
-          groupitem = JdeUdc.group_item_udc(a.sdsrp3.strip)
-          harga = JdeBasePrice.harga_satuan(a.sditm, a.sdmcu.strip, a.sdtrdj)
-          kota = JdeAddressByDate.get_city(a.sdan8.to_i)
-          group = JdeCustomerMaster.get_group_customer(a.sdan8.to_i)
-         sales = JdeSalesman.find_salesman(a.sdan8.to_i, a.sdsrp1.strip)
-          LaporanCabang.create(cabang_id: cabang, noso: a.sddoco.to_i, tanggal: julian_to_date(a.sdtrdj), nosj: a.sddeln.to_i, tanggalsj: julian_to_date(a.sdtrdj),kodebrg: a.sdlitm.strip,
-            namabrg: fullnamabarang, kode_customer: a.sdan8.to_i, customer: namacustomer, jumlah: a.sdsoqs.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..9], namaartikel: artikel,
-            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-            hargasatuan: harga/10000, harganetto1: a.sdaexp, harganetto2: a.sdaexp, kota: kota, tipecust: group, bonus: bonus, lnid: a.sdlnid.to_i, ketppb: "",
-            salesman: sales, orty: a.sddcto.strip, fiscal_month: julian_to_date(a.sdtrdj).to_date.month, fiscal_year: julian_to_date(a.sdtrdj).to_date.year,
-            week: julian_to_date(a.sdtrdj).to_date.cweek, area_id: area)
-        end
-      end
-    end
-  end
-
-  #import credit note
-  def self.import_credit_note
-    credit_note = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdgj = '#{date_to_julian(Date.yesterday.to_date)}'}'  
-    AND rpdct LIKE '%RM%' AND rpsdoc > '1'")
-    credit_note.each do |cr|
-      no_doc = cr.rpsdoc
-      lp = LaporanCabang.where("nofaktur = '#{cr.rpdoc.strip}' and noso = '#{no_doc}' AND kodebrg = '#{cr.rprmk.strip}'")
-      if lp.present?
-        if LaporanCabang.where(orty: "RM", noso: cr.rpsdoc, lnid: cr.rpsfx, kodebrg: cr.rprmk.strip, nofaktur: cr.rpdoc).empty?
-          LaporanCabang.create(cabang_id: lp.first.cabang_id, noso: lp.first.noso, tanggal: lp.first.tanggal, 
-            nosj: lp.first.nosj, tanggalsj: julian_to_date(cr.rpdivj), kodebrg: lp.first.kodebrg,
-            namabrg: lp.first.namabrg, kode_customer: lp.first.kode_customer, customer: lp.first.customer, 
-            jumlah: lp.first.jumlah, satuan: "PC", nofaktur: cr.rpdoc,
-            jenisbrgdisc: lp.first.jenisbrgdisc, kodejenis: lp.first.kodejenis, jenisbrg: lp.first.jenisbrg, 
-            kodeartikel: lp.first.kodeartikel, namaartikel: lp.first.namaartikel,
-            kodekain: lp.first.kodekain, namakain: lp.first.namakain, panjang: lp.first.panjang, 
-            lebar: lp.first.lebar, namabrand: lp.first.namabrand, hargasatuan: lp.first.hargasatuan, 
-            harganetto1: cr.rpaap, harganetto2: cr.rpaap, kota: lp.first.kota, 
-            tipecust: lp.first.tipecust, bonus: lp.first.bonus, lnid: cr.rpsfx, ketppb: "", 
-            salesman: lp.first.salesman, diskon5: lp.first.diskon5, orty: 'RM', 
-            nopo: lp.first.nopo, fiscal_year: julian_to_date(cr.rpdivj).year, fiscal_month: julian_to_date(cr.rpdivj).month, week: julian_to_date(cr.rpdivj).cweek,
-            area_id: lp.first.area_id)
-        end
-      end
-      # end
     end
   end
 
