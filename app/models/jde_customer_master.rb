@@ -13,8 +13,10 @@ class JdeCustomerMaster < ActiveRecord::Base
       'MODERN'
     elsif grup.first.absic.strip == 'DIR'
       'DIRECT'
+    elsif grup.first.absic.strip == 'PRO'
+      'PROJECT'
     else
-      '-'
+      grup
     end
   end
 
