@@ -146,7 +146,7 @@ class JdeSoDetail < ActiveRecord::Base
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
-      if cek_stock.present?
+      if cek_stock.present? && cek_stock.first.onhand != st.lipqoh/10000
         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
       else
         item_master = ItemMaster.find_by_short_item_no(st.liitm)
