@@ -140,27 +140,27 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import stock hourly
   def self.import_stock_hourly
-    stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, 
-    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
-    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2, MAX(IM.imitm) AS imitm 
-    FROM PRODDTA.F41021 IA, PRODDTA.F4101 IM
-    WHERE IM.imtmpl LIKE '%BJ MATRASS%' AND IM.imitm = IA.liitm 
+    stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+    FROM PRODDTA.F41021 IA WHERE IA.lipqoh >= 10000
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
-      status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-      description = st.imdsc1.strip+' '+st.imdsc2.strip
-      cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
-      if cek_stock.empty? || cek_stock.nil?
-        Stock.create(branch: st.limcu.strip, brand: st.imsrp1.strip, description: description,
-        item_number: st.imlitm.strip, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-        status: status, product: st.imlitm.strip[0..1])
-      elsif
-        cek_stock.first.update_attributes!(onhand: summaries.lipqoh/10000, 
-        available: (summaries.lipqoh - summaries.lihcom)/10000, product: st.imlitm.strip[0..1])
+      cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+      if cek_stock.present?
+        cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+      else
+        item_master = ItemMaster.find_by_short_item_no(st.liitm)
+        unless item_master.nil?
+          status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
+          description = item_master.desc+' '+item_master.desc2
+          Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
+            item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+            status: status, product: item_master.segment2)
+        end   
       end
     end
   end
-  
+
   def self.import_stock_hourly_display
     stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
     IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
