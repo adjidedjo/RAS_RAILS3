@@ -3,9 +3,7 @@ class JdeCustomerMaster < ActiveRecord::Base
   self.table_name = "proddta.f0101"
   def self.get_group_customer(address_number)
     grup = where(aban8: address_number)
-    if grup.empty?
-      '-'
-    elsif grup.first.absic.strip == 'DEA' || grup.first.absic.strip == 'RET'
+    if grup.first.absic.strip == 'DEA' || grup.first.absic.strip == 'RET'
       'RETAIL'
     elsif grup.first.absic.strip == 'SHO'
       'SHOWROOM'
@@ -16,7 +14,7 @@ class JdeCustomerMaster < ActiveRecord::Base
     elsif grup.first.absic.strip == 'PRO'
       'PROJECT'
     else
-      grup
+      '-'
     end
   end
 

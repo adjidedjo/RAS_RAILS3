@@ -140,15 +140,13 @@ class JdeSoDetail < ActiveRecord::Base
   
   #import stock hourly
   def self.import_stock_hourly
-    stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, MAX(IM.imlitm) AS imlitm, 
-    MAX(IA.liglpt) AS liglpt, IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
-    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2, MAX(IM.imitm) AS imitm FROM PRODDTA.F41021 IA
-    JOIN PRODDTA.F4101 IM ON IA.liitm = IM.imitm
-    WHERE IA.liupmj = '#{date_to_julian(Date.today)}' AND IM.imtmpl LIKE '%#{'BJ MATRASS'}%' 
+    stock = self.find_by_sql("SELECT MAX(imsrp1) AS imsrp1, IA.liitm AS liitm, 
+    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom,
+    MAX(IM.imlitm) AS imlitm, MAX(IM.imdsc1) AS imdsc1, MAX(IM.imdsc2) AS imdsc2, MAX(IM.imitm) AS imitm 
+    FROM PRODDTA.F41021 IA, PRODDTA.F4101 IM
+    WHERE IM.imtmpl LIKE '%BJ MATRASS%' AND IM.imitm = IA.liitm 
     GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
-      summaries = find_by_sql("SELECT SUM(lipqoh) AS lipqoh, SUM(lihcom) AS lihcom FROM PRODDTA.F41021 WHERE 
-        liitm LIKE '%#{st.imitm}' AND limcu LIKE '%#{st.limcu}'").first
       status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
       description = st.imdsc1.strip+' '+st.imdsc2.strip
       cek_stock = Stock.where(item_number: st.imlitm.strip, branch: st.limcu.strip, status: status)
