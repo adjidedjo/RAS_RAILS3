@@ -150,13 +150,13 @@ class JdeSoDetail < ActiveRecord::Base
         cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
       else
         item_master = ItemMaster.find_by_short_item_no(st.liitm)
-        unless item_master.nil?
+        unless item_master.nil? && cek_stock.first.onhand == st.lipqoh/10000
           status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
           description = item_master.desc+' '+item_master.desc2
           Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
             item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-            status: status, product: item_master.segment2)
-        end   
+            status: status, product: item_master.segment2, short_item: item_master.short_item_no)
+        end
       end
     end
   end
