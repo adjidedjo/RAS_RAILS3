@@ -1,6 +1,6 @@
 class JdeCustomerByLine < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f03012"
+  self.table_name = "proddta.f0116"
   #ai
 
   def self.get_group_customer(address_number, co)
@@ -15,6 +15,8 @@ class JdeCustomerByLine < ActiveRecord::Base
       'MODERN'
     elsif grup.first.aisic.strip == 'DIR'
       'DIRECT'
+    elsif grup.first.aisic.strip == 'PRO'
+      'PROJECT'
     else
       '-'
     end
