@@ -5,13 +5,15 @@
 #  args: "daily_migration"
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
+
+# DONT CHANGE!!!! FIXED!!! ###########################
   
-jde_import_credit_note:
-  cron: "0 7 * * *"
+jde_masters:
+  cron: "1 0 * * *"
   queue: cron
   class: ControlUpload
-  args: "import_credit_note"
-  description: fetching credit note
+  args: "import_masters"
+  description: fetching all masters
   rails_envs: development, production, staging
   
 jde_import_sales_items:
@@ -22,36 +24,28 @@ jde_import_sales_items:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-jde_customer:
-  cron: "1 0 * * *"
+jde_import_credit_note:
+  cron: "0 7 * * *"
   queue: cron
   class: ControlUpload
-  args: "import_customers"
-  description: fetching customers
+  args: "import_credit_note"
+  description: fetching credit note
   rails_envs: development, production, staging
   
-jde_base_price:
-  cron: "0 12 * * 0"
+jde_import_stock_hourly:
+  cron: "0 7,8,9,14,15,18 * * *"
   queue: cron
   class: ControlUpload
-  args: "import_base_prices"
-  description: fetching base prices
-  rails_envs: development, production, staging
-  
-jde_weekly_fetch_on_sunday:
-  cron: "0 22 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "sunday_weekly_batch"
-  description: fetching item costs and buffer
+  args: "import_stock_hourly"
+  description: intransit jde to point of sales
   rails_envs: development, production, staging
 
-jde_new_item:
-  cron: "0 3 * * *"
+jde_import_stock_hourly_display:
+  cron: "0 23 * * *"
   queue: cron
   class: ControlUpload
-  args: "daily_new_item"
-  description: sales reports jde
+  args: "import_stock_hourly_display"
+  description: import hourly display
   rails_envs: development, production, staging
 
 jde_intransit_to_pos:
@@ -62,28 +56,30 @@ jde_intransit_to_pos:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
+#####################################################
+  
+jde_base_price:
+  cron: "1 0 1 * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_base_prices"
+  description: fetching base prices
+  rails_envs: development, production, staging
+  
+jde_weekly_fetch_on_sunday:
+  cron: "0 21 * * 0"
+  queue: cron
+  class: ControlUpload
+  args: "sunday_weekly_batch"
+  description: fetching item costs and buffer
+  rails_envs: development, production, staging
+  
 jde_import_beginning_of_week:
-  cron: "1 0 * * 1"
+  cron: "1 0 1 * *"
   queue: cron
   class: ControlUpload
   args: "import_beginning_of_week"
   description: intransit jde to point of sales
-  rails_envs: development, production, staging
-  
-jde_import_stock_hourly:
-  cron: "0 7-21 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_stock_hourly"
-  description: intransit jde to point of sales
-  rails_envs: development, production, staging
-  
-jde_import_stock_hourly_display:
-  cron: "0 11 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_stock_hourly_display"
-  description: import hourly display
   rails_envs: development, production, staging
   
 #jde_import_acc_receivable:
