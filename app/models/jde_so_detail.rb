@@ -88,8 +88,12 @@ class JdeSoDetail < ActiveRecord::Base
   
   # import account receivable 
   def self.import_acc_receivable
-    ar = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE rpddj =
-    '#{date_to_julian(Date.yesterday.to_date)}' AND REGEXP_LIKE(rpomod, '0|3') ")
+    ar = find_by_sql("SELECT MAX(RPDOC) AS RPDOC, MAX(RPDCT) AS RPDCT, SUM(RPAG) AS RPAG,
+    SUM(RPAAP) AS RPAAP, MAX(RPMCU) AS RPMCU, MAX(RPPST) AS RPPST, MAX(RPRMK) AS RPRMK,
+    MAX(RPAN8) AS RPAN8, MAX(RPALPH) AS RPALPH, MAX(RPSFX) AS RPSFX, MAX(RPAR10) AS RPAR10 
+    FROM PRODDTA.F03B11 WHERE rpdivj BETWEEN
+    '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('21/06/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 GROUP BY RPDOC, RPDCT, RPAN8")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
       if cek_ava.empty?

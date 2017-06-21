@@ -82,13 +82,13 @@ jde_import_beginning_of_week:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-#jde_import_acc_receivable:
-#  cron: "0 2 * * *"
-#  queue: cron
-#  class: ControlUpload
-#  args: "import_acc_receivable"
-#  description: intransit jde to point of sales
-#  rails_envs: development, production, staging
+jde_import_acc_receivable:
+ cron: "0 21 * * *"
+ queue: cron
+ class: ControlUpload
+ args: "import_acc_receivable"
+ description: fetching data A/R
+ rails_envs: development, production, staging
   
 
 # jde_net_sales:
