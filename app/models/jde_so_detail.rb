@@ -90,9 +90,10 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_acc_receivable
     ar = find_by_sql("SELECT MAX(RPDOC) AS RPDOC, MAX(RPDCT) AS RPDCT, SUM(RPAG) AS RPAG,
     SUM(RPAAP) AS RPAAP, MAX(RPMCU) AS RPMCU, MAX(RPPST) AS RPPST, MAX(RPRMK) AS RPRMK,
-    MAX(RPAN8) AS RPAN8, MAX(RPALPH) AS RPALPH, MAX(RPSFX) AS RPSFX, MAX(RPAR10) AS RPAR10 
-    FROM PRODDTA.F03B11 WHERE rpdivj BETWEEN
-    '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('21/06/2017'.to_date)}' 
+    MAX(RPAN8) AS RPAN8, MAX(RPALPH) AS RPALPH, MAX(RPSFX) AS RPSFX, MAX(RPAR10) AS RPAR10,
+    MAX(RPDDJ) AS RPDDJ, MAX(RPOMOD) AS RPOMOD, MAX(RPDIVJ) AS RPDIVJ, MAX(RPDGJ) AS RPDGJ,
+    MAX(RPJCL) AS RPJCL, MAX(RPUPMJ) AS RPUPMJ FROM PRODDTA.F03B11 WHERE rpdivj BETWEEN
+    '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('21/06/2017'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 GROUP BY RPDOC, RPDCT, RPAN8")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
@@ -103,7 +104,8 @@ class JdeSoDetail < ActiveRecord::Base
           dpd = Date.today - julian_to_date(ars.rpddj)
           sales = JdeSalesman.find_salesman(ars.rpan8.to_i, ars.rpar10.strip)
           sales_id = JdeSalesman.find_salesman_id(ars.rpan8.to_i, ars.rpar10.strip)
-          item_master = ars.rpomod == '3' ? JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'").first.imprgr.strip : '-'
+          im = JdeItemMaster.where("imlitm LIKE '%#{ars.rprmk.strip}%'").first
+          item_master = ars.rpomod == '3' ? (im.nil? ? '-' : im.imprgr.strip) : '-'
           AccountReceivable.create(doc_number: ars.rpdoc, doc_type: ars.rpdct.strip,
           invoice_date: julian_to_date(ars.rpdivj), gross_amount: ars.rpag, open_amount: ars.rpaap,
           due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
