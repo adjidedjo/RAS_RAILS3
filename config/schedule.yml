@@ -9,7 +9,7 @@
 # DONT CHANGE!!!! FIXED!!! ###########################
   
 jde_masters:
-  cron: "1 0 * * *"
+  cron: "15 8 * * *"
   queue: cron
   class: ControlUpload
   args: "import_masters"
@@ -17,7 +17,7 @@ jde_masters:
   rails_envs: development, production, staging
   
 jde_import_sales_items:
-  cron: "0 4 * * *"
+  cron: "15 8 * * *"
   queue: cron
   class: ControlUpload
   args: "import_sales_jde"
@@ -25,7 +25,7 @@ jde_import_sales_items:
   rails_envs: development, production, staging
   
 jde_import_credit_note:
-  cron: "0 7 * * *"
+  cron: "15 8 * * *"
   queue: cron
   class: ControlUpload
   args: "import_credit_note"
