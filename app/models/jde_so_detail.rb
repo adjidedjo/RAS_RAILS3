@@ -12,6 +12,28 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
 
+  #import oustanding shipment
+  def self.import_outstanding_shipments
+    outstanding = find_by_sql("SELECT MAX(so.sdopdj) AS sdopdj, so.sddoco, so.sdan8, MAX(so.sdshan), MAX(so.sddrqj), 
+    MAX(cust.abalph) AS abalph, MAX(so.sdshan), MAX(cust1.abalph) AS salesman, SUM(so.sduorg) AS jumlah,
+    MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu
+    FROM PRODDTA.F4211 so
+    JOIN PRODDTA.F0101 cust ON so.sdshan = cust.aban8
+    JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
+    JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
+    JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
+    WHERE cust.absic LIKE '%RET%' AND so.sdcomm NOT LIKE '%#{'K'}%' 
+    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND sddcto LIKE '%#{'SO'}%' AND 
+    so.sdnxtr LIKE '%#{560}%'
+    AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
+    outstanding.each do |ou|
+      OutstandingShipment.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
+      promised_delivery: julian_to_date(ou.sdopdj), branch: jde_cabang(ou.sdmcu.strip), 
+      brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
+      salesman: ou.salesman.strip)
+    end
+  end
+
   #import oustanding order
   def self.import_outstanding_orders
     outstanding = find_by_sql("SELECT MAX(so.sdopdj) AS sdopdj, so.sddoco, so.sdan8, MAX(so.sdshan), MAX(so.sddrqj), 
@@ -30,7 +52,7 @@ class JdeSoDetail < ActiveRecord::Base
       OutstandingOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
       promised_delivery: julian_to_date(ou.sdopdj), branch: jde_cabang(ou.sdmcu.strip), 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
-      salesman: ou.salesman)
+      salesman: ou.salesman.strip)
     end
   end
 
