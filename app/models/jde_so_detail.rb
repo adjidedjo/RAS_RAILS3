@@ -13,7 +13,7 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   #import hold orders
-  def self.import_outstanding_shipments
+  def self.import_hold_orders
     hold = find_by_sql("SELECT MAX(ho.hoan8) AS hohoan8, ho.hodoco, MAX(ho.hohcod) AS hohcod,
     MAX(cust.abalph) AS shipto, MAX(cust1.abalph) AS salesman, MAX(ho.hotrdj) AS order_date,
     MAX(ho.homcu) AS homcu, MAX(so.sdsrp1) AS sdsrp1
