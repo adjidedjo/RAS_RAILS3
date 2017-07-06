@@ -27,6 +27,9 @@ class ControlUpload
 
   def import_sales_jde
     JdeSoDetail.import_sales
+    JdeSoDetail.import_outstanding_orders
+    JdeSoDetail.import_outstanding_shipments
+    JdeSoDetail.import_hold_orders
   end
   
   def import_credit_note
