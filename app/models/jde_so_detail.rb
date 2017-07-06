@@ -14,8 +14,8 @@ class JdeSoDetail < ActiveRecord::Base
 
   #import oustanding order
   def self.import_outstanding_orders
-    invoices = find_by_sql("SELECT * FROM PRODDTA.f4211 WHERE 
-    sdlttr < 580 GROUP BY SDDOCO, SDLITM, SDAN8")
+    invoices = find_by_sql("SELECT MAX(SDDOCO) AS SDDOCO, MAX(SDLITM) AS SDLITM, MAX(SDAN8) AS SDAN8,* 
+    FROM PRODDTA.f4211 WHERE sdlttr < 580 GROUP BY SDDOCO, SDLITM, SDAN8")
     invoices.each do |iv|
       order = OutstandingOrder.where(noso: iv.sddoco, kodebrg: iv.sdlitm.strip).first
       fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
