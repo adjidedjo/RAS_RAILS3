@@ -25,7 +25,7 @@ class JdeSoDetail < ActiveRecord::Base
     WHERE ho.hordc = ' ' 
     AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sddcto,'SO|ZO')
     AND so.sdnxtr LIKE '%#{525}%' AND cust.absic LIKE '%RET%' GROUP BY ho.hodoco, ho.hohcod, ho.homcu, so.sdsrp1")
-    outstanding.each do |ou|
+    hold.each do |ou|
       HoldOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
       promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, hdcd: ou.hohcod.strip, 
