@@ -12,6 +12,27 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
 
+  #import hold orders
+  def self.import_outstanding_shipments
+    hold = find_by_sql("SELECT MAX(ho.hoan8) AS hohoan8, ho.hodoco, MAX(ho.hohcod) AS hohcod,
+    MAX(cust.abalph) AS shipto, MAX(cust1.abalph) AS salesman, MAX(ho.hotrdj) AS order_date,
+    MAX(ho.homcu) AS homcu, MAX(so.sdsrp1) AS sdsrp1
+    FROM PRODDTA.F4209 ho
+    JOIN PRODDTA.F4211 so ON ho.hodoco = so.sddoco
+    JOIN PRODDTA.F0101 cust ON ho.hoshan = cust.aban8
+    JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
+    JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
+    WHERE ho.hordc = ' ' 
+    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sddcto,'SO|ZO')
+    AND so.sdnxtr LIKE '%#{525}%' AND cust.absic LIKE '%RET%' GROUP BY ho.hodoco, ho.hohcod, ho.homcu, so.sdsrp1")
+    outstanding.each do |ou|
+      HoldOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
+      promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
+      brand: ou.sdsrp1.strip, hdcd: ou.hohcod.strip, 
+      salesman: ou.salesman.strip)
+    end
+  end
+
   #import oustanding shipment
   def self.import_outstanding_shipments
     outstanding = find_by_sql("SELECT MAX(so.sdopdj) AS sdopdj, so.sddoco, so.sdan8, MAX(so.sdshan), MAX(so.sddrqj), 
@@ -28,7 +49,7 @@ class JdeSoDetail < ActiveRecord::Base
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     outstanding.each do |ou|
       OutstandingShipment.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
-      promised_delivery: julian_to_date(ou.sdopdj), branch: jde_cabang(ou.sdmcu.strip), 
+      promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
       salesman: ou.salesman.strip)
     end
@@ -50,7 +71,7 @@ class JdeSoDetail < ActiveRecord::Base
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     outstanding.each do |ou|
       OutstandingOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
-      promised_delivery: julian_to_date(ou.sdopdj), branch: jde_cabang(ou.sdmcu.strip), 
+      promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
       salesman: ou.salesman.strip)
     end
