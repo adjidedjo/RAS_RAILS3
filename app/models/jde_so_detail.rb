@@ -12,6 +12,51 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
 
+  #import oustanding order
+  def self.import_outstanding_orders
+    invoices = find_by_sql("SELECT * FROM PRODDTA.f4211 WHERE 
+    sdlttr < 580 GROUP BY SDDOCO, SDLITM, SDAN8")
+    invoices.each do |iv|
+      order = OutstandingOrder.where(noso: iv.sddoco, kodebrg: iv.sdlitm.strip).first
+      fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
+      customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
+      bonus = order.sdaexp == 0 ?  'BONUS' : '-'
+      if order.present?
+        if customer.abat1.strip == "C"
+          namacustomer = customer.abalph.strip
+          cabang = jde_cabang(order.sdmcu.to_i.to_s.strip)
+          area = find_area(cabang)
+          item_master = JdeItemMaster.find_by_imitm(order.sditm)
+          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
+          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
+          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
+          groupitem = JdeUdc.group_item_udc(order.sdsrp3.strip)
+          harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
+          kota = JdeAddressByDate.get_city(order.sdan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(order.sdan8.to_i)
+          variance = (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+          sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
+          sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
+          customer_master = Customer.where(address_number: order.sdan8.to_i)
+          unless customer_master.nil? || customer_master.blank?
+            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+          end
+          OutstandingOrder.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+            kodebrg: order.sdlitm.strip,
+            namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: iv.rpsfx.to_i, ketppb: "",
+            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(order.sdaddj).to_date.year,
+            fiscal_month: julian_to_date(order.sdaddj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
+            area_id: area, updated_at: Time.now)
+        end
+      else
+        order.update_attributes!(updated_at: Time.now)
+      end
+    end
+  end
+
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
