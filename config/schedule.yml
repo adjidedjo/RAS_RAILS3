@@ -83,7 +83,7 @@ jde_import_beginning_of_week:
   rails_envs: development, production, staging
   
 jde_import_acc_receivable:
- cron: "0 17 * * *"
+ cron: "0 6 * * *"
  queue: cron
  class: ControlUpload
  args: "import_acc_receivable"
