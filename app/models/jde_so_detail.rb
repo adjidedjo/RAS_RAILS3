@@ -157,8 +157,9 @@ class JdeSoDetail < ActiveRecord::Base
     SUM(RPAAP) AS RPAAP, MAX(RPMCU) AS RPMCU, MAX(RPPST) AS RPPST, MAX(RPRMK) AS RPRMK,
     MAX(RPAN8) AS RPAN8, MAX(RPALPH) AS RPALPH, MAX(RPSFX) AS RPSFX, MAX(RPAR10) AS RPAR10,
     MAX(RPDDJ) AS RPDDJ, MAX(RPOMOD) AS RPOMOD, MAX(RPDIVJ) AS RPDIVJ, MAX(RPDGJ) AS RPDGJ,
-    MAX(RPJCL) AS RPJCL, MAX(RPUPMJ) AS RPUPMJ FROM PRODDTA.F03B11 WHERE rpupmj =
-    '#{date_to_julian(Date.yesterday.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 GROUP BY RPDOC, RPDCT, RPAN8")
+    MAX(RPJCL) AS RPJCL, MAX(RPUPMJ) AS RPUPMJ, MAX(RPAR10) AS RPAR10 FROM PRODDTA.F03B11 WHERE rpddj between
+    '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('30/06/2017'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') 
+    AND rpsdoc > 1 GROUP BY RPDOC, RPDCT, RPMCU, RPAN8")
     ar.each do |ars|
       cek_ava = AccountReceivable.where(doc_number: ars.rpdoc, doc_type: ars.rpdct, branch: ars.rpmcu.strip, pay_item: ars.rpsfx)
       if cek_ava.empty?
