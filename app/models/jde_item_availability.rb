@@ -34,16 +34,14 @@ class JdeItemAvailability < ActiveRecord::Base
     (
       SELECT MAX(liitm) AS liitm, limcu, SUM(lipqoh) AS lipqoh, 
       SUM(lihcom) AS lihcom, lilotn, MAX(liglpt) AS liglpt FROM PRODDTA.F41021
-      WHERE liupmj = '#{date_to_julian(Date.today)}' AND limcu LIKE '%D' AND
+      WHERE limcu LIKE '%D' AND
       REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
       GROUP BY limcu, lilotn
-    ) IA
+    ) IA                  
     LEFT JOIN
     (
-      SELECT MAX(ildoc) AS ildoc, max(ildct) as ildct, illotn, ilitm, MAX(iltrex) AS iltrex, 
-      MAX(ilcrdj) AS ilcrdj FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA|IT') AND
-      iltrdj = '#{date_to_julian(Date.today)}' AND ilmcu LIKE '%D'
-      GROUP BY illotn, ilitm ORDER BY ildoc DESC
+      SELECT MAX(ilukid), MAX(ildoc) AS ildoc, max(ildct) as ildct, MAX(iltrex) AS iltrex, 
+      MAX(ilcrdj) AS ilcrdj FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA|IT') ORDER BY ilukid DESC
     ) IL ON IA.lilotn = IL.illotn
     LEFT JOIN
     (

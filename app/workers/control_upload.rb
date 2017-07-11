@@ -57,6 +57,7 @@ class ControlUpload
   
   def import_stock_hourly_display
     JdeItemAvailability.import_stock_hourly_display
+    SalesProductivity.generate_productivity
   end
   
   def import_stock_hourly
