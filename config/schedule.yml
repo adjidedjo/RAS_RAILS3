@@ -41,7 +41,7 @@ jde_import_stock_hourly:
   rails_envs: development, production, staging
 
 jde_import_stock_hourly_display:
-  cron: "0 12 * * *"
+  cron: "0 17 * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_hourly_display"

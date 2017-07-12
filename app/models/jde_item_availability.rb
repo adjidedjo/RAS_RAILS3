@@ -28,39 +28,36 @@ class JdeItemAvailability < ActiveRecord::Base
   end
 
   def self.import_stock_hourly_display
-    stock = find_by_sql("SELECT imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
+    stock = find_by_sql("Select ST.sdshan, IL.ildoco, imsrp1, IA.liitm AS liitm, IM.imlitm, IA.limcu,
     IL.ildoc, IL.ildct, IA.lipqoh, IA.lihcom, IA.lilotn, IM.imlitm, IM.imdsc1, IM.imdsc2, 
-    IA.liglpt, NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM 
-    (
-      SELECT MAX(liitm) AS liitm, limcu, SUM(lipqoh) AS lipqoh, 
-      SUM(lihcom) AS lihcom, lilotn, MAX(liglpt) AS liglpt FROM PRODDTA.F41021
-      WHERE limcu LIKE '%11011D' AND
-      REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
-      GROUP BY limcu, lilotn
-    ) IA                  
-    LEFT JOIN
-    (
-      SELECT ilcrdj, ildoc, ildct, illotn, iltrex FROM (
-        SELECT MAX(ilcrdj) AS ilcrdj, ildoc, ildct, illotn, MAX(iltrex) AS iltrex 
-        FROM PRODDTA.F4111 WHERE REGEXP_LIKE(ildct,'ST|RO|IA|IT') 
-        GROUP BY ildoc, ildct, illotn ORDER BY ilcrdj DESC
-      ) WHERE ROWNUM <= 1
-    ) IL ON IA.lilotn = IL.illotn
-    LEFT JOIN
-    (
-      SELECT sdshan, sdlotn, sddoco FROM PRODDTA.F4211
-      GROUP BY sdshan, sdlotn, sddoco
-    ) ST ON IL.ildoc = ST.sddoco AND IL.illotn = ST.sdlotn
-    LEFT JOIN
-    (
-      SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
-      MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2 FROM PRODDTA.F4101
-      WHERE imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(imsrp2,'KM|HB|DV|SA|SB|ST|KB') GROUP BY imitm
-    ) IM ON IA.liitm = IM.imitm
-    LEFT JOIN
-    (
-      SELECT abalph, aban8 FROM PRODDTA.F0101 
-    ) CM ON ST.sdshan = CM.aban8")
+    IA.liglpt, NVL(CM.abalph, IL.iltrex) AS abalph, IL.ilcrdj FROM (
+      (
+        SELECT MAX(lilrcj) AS lilrcj, MAX(liitm) AS liitm, limcu, SUM(lipqoh) AS lipqoh, 
+        SUM(lihcom) AS lihcom, lilotn, MAX(liglpt) AS liglpt FROM PRODDTA.F41021
+        WHERE REGEXP_LIKE(liglpt,'KM|HB|DV|SA|SB|ST|KB') 
+        GROUP BY limcu, lilotn
+      ) IA                  
+      LEFT JOIN
+      (
+        SELECT MAX(ilcrdj) AS ilcrdj, ildoco, ildoc, ildct, illotn, MAX(iltrex) AS iltrex 
+          FROM PRODDTA.F4111 GROUP BY ildoco, ildoc, ildct, illotn ORDER BY ilcrdj DESC
+      ) IL ON IA.lilotn = IL.illotn AND IA.lilrcj = IL.ilcrdj
+      LEFT JOIN
+      (
+        SELECT sdshan, sdlotn, sddoco, MAX(sdrorn) AS sdrorn FROM PRODDTA.F4211
+        GROUP BY sdshan, sdlotn, sddoco
+      ) ST ON IL.ildoco LIKE ST.sdrorn AND IL.illotn = ST.sdlotn
+      LEFT JOIN
+      (
+        SELECT imitm, MAX(imsrp1) AS imsrp1, MAX(imlitm) AS imlitm, 
+        MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2 FROM PRODDTA.F4101
+        WHERE imtmpl LIKE '%BJ MATRASS%' AND REGEXP_LIKE(imsrp2,'KM|HB|DV|SA|SB|ST|KB') GROUP BY imitm
+      ) IM ON IA.liitm = IM.imitm
+      LEFT JOIN
+      (
+        SELECT abalph, aban8 FROM PRODDTA.F0101 
+      ) CM ON ST.sdshan = CM.aban8
+    )")
     stock.each do |st|
         unless st.imdsc1.nil?
         status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
