@@ -38,6 +38,7 @@ class ControlUpload
   
   def import_masters
     JdeCustomerMaster.customer_import
+    JdeCustomerMaster.checking_customer_limit
     JdeItemMaster.item_masters_fetch
     JdeItemMaster.get_new_items_from_jde
   end
@@ -70,5 +71,9 @@ class ControlUpload
 
   def intransit_pos
     PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
+  end
+  
+  def test_import
+    JdeCustomerMaster.checking_customer_limit
   end
 end
