@@ -63,7 +63,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE REGEXP_LIKE(rpdct,'RI|RX|RO|RM') 
         AND rpdivj >= '#{date_to_julian('15/03/2017'.to_date)}' AND rppst NOT LIKE '%P%'
-        GROUP BY rpan8, rpkco
+        GROUP BY rpan8, rpkco ORDER BY rpmcu
       ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
       WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' 
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
