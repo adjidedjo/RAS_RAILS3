@@ -74,7 +74,7 @@ class JdeCustomerMaster < ActiveRecord::Base
         CustomerLimit.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
           city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
-          area_id: find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
+          area_id: nc.rpmcu.nil? ? nc.rpmcu : find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
           limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, limit: nc.aiacl.to_i, 
