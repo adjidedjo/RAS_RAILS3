@@ -65,7 +65,8 @@ class JdeCustomerMaster < ActiveRecord::Base
         AND rpdivj BETWEEN '#{date_to_julian('15/03/2017'.to_date)}' AND rppst NOT LIKE '%P%'
         GROUP BY rpan8, rpkco
       ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aian8 LIKE '%102039%' 
+      GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu
     ")
     customer.each do |nc|
