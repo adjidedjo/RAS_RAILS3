@@ -79,7 +79,7 @@ class JdeCustomerMaster < ActiveRecord::Base
           limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, limit: nc.aiacl.to_i, 
-         area_id: find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag, open_amount: nc.aiaprc)   
+         area_id: nc.rpmcu.nil? ? nc.rpmcu : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag, open_amount: nc.aiaprc)   
       end
     end
   end
