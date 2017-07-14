@@ -61,8 +61,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       ) AL ON AI.aian8 = AL.alan8
       LEFT JOIN
       (
-        SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE REGEXP_LIKE(rpdct,'RI|RX|RO|RM') 
-        AND rppst NOT LIKE '%P%'
+        SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
         GROUP BY rpan8, rpkco ORDER BY rpmcu
       ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
       WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' 
