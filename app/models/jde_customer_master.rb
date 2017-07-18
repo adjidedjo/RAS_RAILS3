@@ -68,13 +68,13 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT rpan8, rpkco, SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
         AND '#{date_to_julian(3.months.ago.end_of_month)}' THEN rpag END) three,
-        SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
-        AND '#{date_to_julian(3.months.ago.end_of_month)}' THEN rpag END) two,
         SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(2.months.ago.beginning_of_month)}'
+        AND '#{date_to_julian(2.months.ago.end_of_month)}' THEN rpag END) two,
+        SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(1.months.ago.beginning_of_month)}'
         AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aian8 LIKE '%100373%'
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one
     ")
