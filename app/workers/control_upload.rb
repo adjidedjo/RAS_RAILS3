@@ -74,6 +74,6 @@ class ControlUpload
   end
   
   def test_import
-    JdeCustomerMaster.checking_customer_limit
+    JdeSoDetail.import_sales
   end
 end
