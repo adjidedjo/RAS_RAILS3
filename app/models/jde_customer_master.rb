@@ -66,14 +66,17 @@ class JdeCustomerMaster < ActiveRecord::Base
       ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
       LEFT JOIN
       (
-        SELECT rpan8, rpkco, SUM(CASE WHEN rppn LIKE '#{3.months.ago.month}' THEN rpag END) three,
-        SUM(CASE WHEN rppn LIKE '#{2.months.ago.month}' THEN rpag END) two,
-        SUM(CASE WHEN rppn LIKE '#{1.months.ago.month}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
-        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 GROUP BY rpan8, rpkco
+        SELECT rpan8, rpkco, SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
+        AND '#{date_to_julian(3.months.ago.end_of_month)}' THEN rpag END) three,
+        SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
+        AND '#{date_to_julian(3.months.ago.end_of_month)}' THEN rpag END) two,
+        SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(2.months.ago.beginning_of_month)}'
+        AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
+        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
       WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aian8 LIKE '%100373%'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one
     ")
     customer.each do |nc|
       find_cus = CustomerLimit.where(address_number: nc.aian8, co: nc.aico)
