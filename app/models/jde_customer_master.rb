@@ -50,7 +50,7 @@ class JdeCustomerMaster < ActiveRecord::Base
   def self.checking_customer_limit
     customer = find_by_sql("
       SELECT AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu FROM PRODDTA.F03012 AI
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one FROM PRODDTA.F03012 AI
       LEFT JOIN (
         SELECT aban8, abalph, absic, abmcu FROM PRODDTA.F0101
         GROUP BY aban8, abalph, absic, abmcu
@@ -64,7 +64,14 @@ class JdeCustomerMaster < ActiveRecord::Base
         SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
         GROUP BY rpan8, rpkco ORDER BY rpmcu
       ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%'
+      LEFT JOIN
+      (
+        SELECT rpan8, rpkco, SUM(CASE WHEN rppn LIKE '#{3.months.ago.month}' THEN rpag END) three,
+        SUM(CASE WHEN rppn LIKE '#{2.months.ago.month}' THEN rpag END) two,
+        SUM(CASE WHEN rppn LIKE '#{1.months.ago.month}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
+        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 GROUP BY rpan8, rpkco
+      ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aian8 LIKE '%100373%'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu
     ")
@@ -75,16 +82,32 @@ class JdeCustomerMaster < ActiveRecord::Base
           city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
           area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
-          limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc)
+          limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc,
+          three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, limit: nc.aiacl.to_i, 
-         area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag, open_amount: nc.aiaprc)   
+         area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag,
+         open_amount: nc.aiaprc, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
       end
     end
   end
   
   def self.sales_average
-    find_by_sql("")
+    find_by_sql("
+      SELECT CS.address_number, CS.co, AR.rpag FROM customer_limits CS
+      LEFT JOIN
+      (
+        SELECT rpan8, rpkco,
+        SUM(CASE WHEN rppn = '#{3.month.ago.month}' THEN rpag END) three,
+        SUM(CASE WHEN rppn = '#{2.month.ago.month}' THEN rpag END) two,
+        SUM(CASE WHEN rppn = '#{1.month.ago.month}' THEN rpag END) one, 
+        
+        
+        
+        FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
+        GROUP BY rpan8, rpkco ORDER BY rpmcu
+      )
+    ")
   end
   
   def self.date_to_julian(date)
