@@ -85,10 +85,10 @@ class JdeSoDetail < ActiveRecord::Base
     invoices.each do |iv|
       order = where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580", "999").first
-      checking = LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}' 
-      AND kode_barang LIKE '#{order.sdlitm}'")
       if order.present?
-        unless checking.present?
+        checking = LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+        AND kode_barang LIKE '#{order.sdlitm.strip}'")
+        unless checking.nil?
         fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
         bonus = order.sdaexp == 0 ?  'BONUS' : '-'
