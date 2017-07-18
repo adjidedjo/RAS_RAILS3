@@ -80,8 +80,8 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO') AND rpsdoc > 1 AND rpdoc LIKE '%17000645%' AND rpdct LIKE '%RO%'")
+    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('02/07/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = where("sddoco = ? and sdlnid = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rplnid, "999", "580", "999").first
@@ -100,7 +100,7 @@ class JdeSoDetail < ActiveRecord::Base
         harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
         kota = JdeAddressByDate.get_city(order.sdan8.to_i)
         group = JdeCustomerMaster.get_group_customer(order.sdan8.to_i)
-          variance = order.sdaddj == 0 ? 0 : order.sdaddj(julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+        variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
         sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
         sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
         customer_master = Customer.where(address_number: order.sdan8.to_i)
