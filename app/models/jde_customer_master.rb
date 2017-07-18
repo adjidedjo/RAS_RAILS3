@@ -77,11 +77,14 @@ class JdeCustomerMaster < ActiveRecord::Base
           area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
           limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc)
        elsif find_cus.present?
-         raise nc.rpmcu.inspect
          find_cus.first.update_attributes!(state: nc.aicusts, limit: nc.aiacl.to_i, 
          area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag, open_amount: nc.aiaprc)   
       end
     end
+  end
+  
+  def self.sales_average
+    find_by_sql("")
   end
   
   def self.date_to_julian(date)
