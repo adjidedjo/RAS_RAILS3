@@ -85,10 +85,10 @@ class JdeCustomerMaster < ActiveRecord::Base
           city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
           area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
-          limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc,
+          credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc,
           three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
-         find_cus.first.update_attributes!(state: nc.aicusts, limit: nc.aiacl.to_i, 
+         find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
          area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag,
          open_amount: nc.aiaprc, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
       end
