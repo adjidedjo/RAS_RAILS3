@@ -74,7 +74,7 @@ class JdeCustomerMaster < ActiveRecord::Base
         AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%'
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aian8 LIKE '%101186%'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one
     ")
@@ -158,9 +158,9 @@ class JdeCustomerMaster < ActiveRecord::Base
   end
 
   def self.jde_cabang(bu)
-    if bu.include?("1300") || bu.include?("1100") || bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
       "01"
-    elsif bu.include?("1301") || bu == "11010" || bu.include?("1101") || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" || bu == "11011S" || bu == "13011S" #jabar
+    elsif bu.include?("1301") || bu.include?("1101") || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" || bu == "11011S" || bu == "13011S" #jabar
       "02"
     elsif bu.include?("1302") || bu.include?("1102") || bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" || bu == "11021S" || bu == "13021S" #cirebon
       "09"
