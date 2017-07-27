@@ -74,6 +74,6 @@ class ControlUpload
   end
   
   def test_import
-    JdeSoDetail.import_sales
+    JdeSoDetail.test_import_sales
   end
 end
