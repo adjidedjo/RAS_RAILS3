@@ -80,18 +80,31 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('17/07/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
+    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('26/07/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc LIKE '%160735%'
+    AND rpan8 LIKE '%100304%'")
     invoices.each do |iv|
-      order = where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr >= ? and sdlttr < ? 
-      and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580", "999").first
+      order = 
+      if iv.rpdct.strip == 'RM'
+        where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
+      and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
+      else
+        where("sddoco = ? and sdnxtr = ? and sdlttr = ?
+      and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc, "999", "580").first
+      end
       if order.present?
-        checking = LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
-        AND kodebrg LIKE '#{order.sdlitm.strip}'")
-        unless checking.nil?
+        checking =
+        if iv.rpdct.strip == 'RM'
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}'")
+        else
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+        AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
+        end
+        if checking.empty?
         fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
         customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
-        bonus = order.sdaexp == 0 ?  'BONUS' : '-'
+        bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C" && order.sdaddj != 0
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(order.sdmcu.to_i.to_s.strip)
@@ -116,7 +129,7 @@ class JdeSoDetail < ActiveRecord::Base
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: iv.rpsfx.to_i, ketppb: "",
+            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(order.sdaddj).to_date.year,
             fiscal_month: julian_to_date(order.sdaddj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
             area_id: area)
