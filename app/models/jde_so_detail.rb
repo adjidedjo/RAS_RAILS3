@@ -281,16 +281,15 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('30/07/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc LIKE '%151932%' AND rpan8 LIKE '%100363%'")
+    rpdivj BETWEEN '#{date_to_julian('01/06/2017'.to_date)}' AND '#{date_to_julian('30/06/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RO') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
         where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
       else
-        where("sddoco = ? and sdnxtr = ? and sdlttr = ?
-      and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc, "999", "580").first
+        where("sddoco = ? and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc).first
       end
       if order.present?
         checking =
