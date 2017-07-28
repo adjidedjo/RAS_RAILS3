@@ -88,8 +88,7 @@ class JdeSoDetail < ActiveRecord::Base
         where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
       else
-        where("sddoco = ? and sdnxtr = ? and sdlttr = ?
-      and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc, "999", "580").first
+        where("sddoco = ? and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc).first
       end
       if order.present?
         checking =
