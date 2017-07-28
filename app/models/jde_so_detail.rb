@@ -129,8 +129,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(order.sdaddj).to_date.year,
-            fiscal_month: julian_to_date(order.sdaddj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
+            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
             area_id: area)
          end
         end
@@ -281,8 +281,8 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('26/07/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
+    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('30/07/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc LIKE '%151932%' AND rpan8 LIKE '%100363%'")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
@@ -330,8 +330,8 @@ class JdeSoDetail < ActiveRecord::Base
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(order.sdaddj).to_date.year,
-            fiscal_month: julian_to_date(order.sdaddj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
+            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
             area_id: area)
          end
         end

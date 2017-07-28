@@ -91,7 +91,7 @@ jde_import_acc_receivable:
  rails_envs: development, production, staging
   
 jde_test_import:
- cron: "30 19 * * *"
+ cron: "15 17 * * *"
  queue: cron
  class: ControlUpload
  args: "test_import"
