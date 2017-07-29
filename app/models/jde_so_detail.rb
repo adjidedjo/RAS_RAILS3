@@ -385,6 +385,8 @@ class JdeSoDetail < ActiveRecord::Base
   def self.jde_cabang(bu)
     if bu.include?("1300") || bu.include?("1100") || bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
       "01"
+    elsif bu.include?("1310") || bu.include?("1110") || bu == "11101" || bu == "11102" || bu == "13101" || bu == "11101C" || bu == "11101D" || bu == "13101C" || bu == "13101D" || bu == "11101S" || bu == "13101S" #lampung
+      "13" 
     elsif bu.include?("1301") || bu == "11010" || bu.include?("1101") || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" || bu == "11011S" || bu == "13011S" #jabar
       "02"
     elsif bu.include?("1302") || bu.include?("1102") || bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" || bu == "11021S" || bu == "13021S" #cirebon
@@ -402,9 +404,7 @@ class JdeSoDetail < ActiveRecord::Base
     elsif bu.include?("1307") || bu.include?("1207") || bu == "12071" || bu == "12072" || bu == "13071" || bu == "12071C" || bu == "12071D" || bu == "13071C" || bu == "13071D" || bu == "12111S" || bu == "13071S" #bali
       "04"
     elsif bu.include?("1313") || bu.include?("1213") || bu == "12131" || bu == "12132" || bu == "13131" || bu == "12131C" || bu == "12131D" || bu == "13131C" || bu == "13131D" || bu == "12131S" || bu == "13131S" #jember
-      "22"
-    elsif bu.include?("1310") || bu.include?("1110") || bu == "11101" || bu == "11102" || bu == "13101" || bu == "11101C" || bu == "11101D" || bu == "13101C" || bu == "13101D" || bu == "11101S" || bu == "13101S" #lampung
-      "13"  
+      "22" 
     elsif bu.include?("1309") || bu.include?("1109") || bu == "11091" || bu == "11092" || bu == "13091" || bu == "11091C" || bu == "11091D" || bu == "13091C" || bu == "13091D" || bu == "11091S" || bu == "13091S" #palembang
       "11"
     elsif bu.include?("1304") || bu.include?("1104") || bu == "11041" || bu == "11042" || bu == "13041" || bu == "11041C" || bu == "11041D" || bu == "13041C" || bu == "13041D" || bu == "11041S" || bu == "13041S"#yogyakarta
