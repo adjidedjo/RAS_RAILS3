@@ -280,8 +280,8 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('27/07/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND rpan8 LIKE '%108358%'")
+    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND rpan8 LIKE '%100534%'")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
