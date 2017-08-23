@@ -10,9 +10,9 @@ class PosAutoIntransit < ActiveRecord::Base
         nama_brg = soh.sddsc1.strip + " " + soh.sddsc2.strip
         duplicate_stock = self.where(channel_customer_id: pcc.id, serial: soh.sdlotn, kode_barang: soh.sdaitm.strip, no_sj: soh.sddeln)
         if duplicate_stock.blank?
-          self.create(channel_customer_id: pcc.id, serial: soh.sdlotn.strip, kode_barang: soh.sdaitm.strip, no_sj: soh.sddeln.to_i, nama: nama_brg,
+          self.create(channel_customer_id: pcc.id, serial: soh.sdlotn.strip, kode_barang: soh.sdlitm.strip, no_sj: soh.sddeln.to_i, nama: nama_brg,
             jumlah: soh.sdsoqs.to_i.to_s[0..-5], stok_awal: soh.sdsoqs.to_i.to_s[0..-5], no_so: soh.sddoco.to_i, tanggal_sj: jde_date_today, stocking_type: stocking_type)
-          item_masters = PosItemMaster.find_by_kode_barang(soh.sdaitm.strip)
+          item_masters = PosItemMaster.find_by_kode_barang(soh.sdlitm.strip)
           if item_masters.present?
             item_masters.update_attributes!(nama: nama_brg)
           end
