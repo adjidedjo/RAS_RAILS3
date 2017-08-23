@@ -75,6 +75,6 @@ class ControlUpload
   end
   
   def test_import
-    JdeSoDetail.test_import_sales
+    JdeSalesman.upgrated_customer_brands
   end
 end
