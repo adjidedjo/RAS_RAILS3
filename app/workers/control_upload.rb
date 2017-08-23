@@ -41,6 +41,7 @@ class ControlUpload
     JdeCustomerMaster.checking_customer_limit
     JdeItemMaster.item_masters_fetch
     JdeItemMaster.get_new_items_from_jde
+    JdeSalesman.customer_brands
   end
   
   def import_base_prices

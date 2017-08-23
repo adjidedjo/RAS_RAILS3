@@ -19,4 +19,13 @@ class JdeSalesman < ActiveRecord::Base
   def self.date_to_julian(date)
     1000*(date.year-1900)+date.yday
   end
+  
+  def self.customer_brands
+    commision_table = find_by_sql("SELECT saan8, sait44 FROM proddta.f40344 WHERE
+    saexdj > '#{date_to_julian(Date.today.to_date)}'")
+    commision_table.each do |ct|
+      cb = CustomerBrand.where(address_number: ct.saan8.to_i, brand: ct.sait44.strip)
+      CustomerBrand.create!(address_number: ct.saan8.to_i, brand: ct.sait44.strip) if cb.empty?
+    end
+  end
 end
