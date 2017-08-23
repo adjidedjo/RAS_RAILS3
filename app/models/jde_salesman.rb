@@ -30,9 +30,9 @@ class JdeSalesman < ActiveRecord::Base
   end
   
   def self.upgrated_customer_brands
-    CustomerBrand.where("id >= 2020").each do |cb|
+    CustomerBrand.all.each do |cb|
       a = LaporanCabang.where(fiscal_year: '2017', kode_customer: cb.address_number, jenisbrgdisc: cb.brand).last
-      cb.update_attributes!(branch: a.area_id, customer: a.customer) unless a.nil?
+      cb.update_attributes!(channel_group: a.tipecust) unless a.nil?
     end
   end
   
