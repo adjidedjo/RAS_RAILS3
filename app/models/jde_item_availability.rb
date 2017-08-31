@@ -8,8 +8,7 @@ class JdeItemAvailability < ActiveRecord::Base
   def self.import_stock_hourly
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE IA.lipqoh >= 10000
-    GROUP BY IA.liitm, IA.limcu")
+    FROM PRODDTA.F41021 IA GROUP BY IA.liitm, IA.limcu")
     stock.each do |st|
       cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
       if cek_stock.present? && cek_stock.first.available != st.lihcom/10000
