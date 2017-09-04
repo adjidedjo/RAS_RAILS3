@@ -5,7 +5,7 @@ class JdeItemAvailability < ActiveRecord::Base
   # self.primary_key = 'lilotn'
   
   def self.update_stock_june
-    us = Stock.where("MONTH(updated_at) = 9 and onhand = 0")
+    us = Stock.where("MONTH(updated_at) < 6 and onhand >= 1")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
@@ -38,7 +38,7 @@ class JdeItemAvailability < ActiveRecord::Base
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND limcu = '#{fus.limcu}' GROUP BY IA.liitm, IA.limcu")
+      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND limcu = '%#{fus.limcu}' GROUP BY IA.liitm, IA.limcu")
       fus.update_attributes!(onhand: 0, available: 0) if stock.empty?
       stock.each do |st|
         cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
