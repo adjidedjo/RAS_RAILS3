@@ -33,7 +33,7 @@ jde_import_credit_note:
   rails_envs: development, production, staging
   
 jde_import_stock_hourly:
-  cron: "* 6-23 * * *"
+  cron: "*/30 6-23 * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_hourly"
@@ -90,13 +90,13 @@ jde_import_acc_receivable:
  description: fetching data A/R
  rails_envs: development, production, staging
   
-jde_test_import:
- cron: "15 17 * * *"
- queue: cron
- class: ControlUpload
- args: "test_import"
- description: testing
- rails_envs: development, production, staging
+#jde_test_import:
+# cron: "15 17 * * *"
+# queue: cron
+# class: ControlUpload
+# args: "test_import"
+# description: testing
+# rails_envs: development, production, staging
   
 
 # jde_net_sales:
