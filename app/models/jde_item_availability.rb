@@ -6,21 +6,27 @@ class JdeItemAvailability < ActiveRecord::Base
   
   #import stock hourly
   def self.import_stock_hourly
-    stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+    us = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA GROUP BY IA.liitm, IA.limcu")
-    stock.each do |st|
-      cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
-      if cek_stock.present? && cek_stock.first.available != st.lihcom/10000
-        cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
-      elsif cek_stock.nil?
-        item_master = ItemMaster.find_by_short_item_no(st.liitm)
-        unless item_master.nil?
-          status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-          description = item_master.desc+' '+item_master.desc2
-          Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
-            item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-            status: status, product: item_master.segment2, short_item: item_master.short_item_no)
+    FROM PRODDTA.F41021 IA WHERE liupmj = '#{date_to_julian(Date.today)}' AND 
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') GROUP BY IA.liitm, IA.limcu")
+    us.each do |fus|
+      stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+      IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND limcu = '#{fus.limcu}' GROUP BY IA.liitm, IA.limcu")
+      stock.each do |st|
+        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+        if cek_stock.present? && cek_stock.first.available != st.lihcom/10000
+          cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+        elsif cek_stock.nil?
+          item_master = ItemMaster.find_by_short_item_no(st.liitm)
+          unless item_master.nil?
+            status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
+            description = item_master.desc+' '+item_master.desc2
+            Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
+              item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+              status: status, product: item_master.segment2, short_item: item_master.short_item_no)
+          end
         end
       end
     end
