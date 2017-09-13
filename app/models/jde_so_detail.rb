@@ -311,7 +311,7 @@ class JdeSoDetail < ActiveRecord::Base
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C" && order.sdaddj != 0
           namacustomer = customer.abalph.strip
-          cabang = jde_cabang(order.sdmcu.to_i.to_s.strip)
+          cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
           item_master = JdeItemMaster.find_by_imitm(order.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
