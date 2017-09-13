@@ -111,7 +111,7 @@ class JdeSoDetail < ActiveRecord::Base
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C" && order.sdaddj != 0
           namacustomer = customer.abalph.strip
-          cabang = jde_cabang(order.sdmcu.to_i.to_s.strip)
+          cabang = jde_cabang(order.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
           item_master = JdeItemMaster.find_by_imitm(order.sditm)
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
@@ -287,7 +287,7 @@ class JdeSoDetail < ActiveRecord::Base
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND rpmcu LIKE '%11041'")
+    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
