@@ -1,6 +1,12 @@
 class JdeSoDetail < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "proddta.f4211" #sd
+  
+  def self.get_list_of_item(so_num, type_so)
+    find_by_sql("SELECT MAX(sddsc1) AS sddsc1, 
+    MAX(sddsc2) AS sddsc2, SUM(sduorg) AS sduorg FROM PRODDTA.F4211 
+    WHERE sddoco = '#{so_num}' AND sddcto = '#{type_so}' GROUP BY sditm")
+  end
 
   def self.outstanding_so(item_number, first_week, branch_plan)
     select("sum(sduorg) as sduorg").where("sditm = ? and sdnxtr < ? and sdlttr < ? and sddcto like ? and sdtrdj = ? and sdmcu like ?",
@@ -280,8 +286,8 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}' 
-    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND rpan8 LIKE '%100534%'")
+    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
