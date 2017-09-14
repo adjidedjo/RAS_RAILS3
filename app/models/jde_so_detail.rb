@@ -100,7 +100,7 @@ class JdeSoDetail < ActiveRecord::Base
         checking =
         if iv.rpdct.strip == 'RM'
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
-        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{order.sddcto}'")
+        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
@@ -287,10 +287,11 @@ class JdeSoDetail < ActiveRecord::Base
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND REGEXP_LIKE (rpmcu, '13011|13011D|13011C') ")
+    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND REGEXP_LIKE (rpmcu, '13151|13151D|13151C') ")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
+        
         where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
       else
@@ -300,7 +301,7 @@ class JdeSoDetail < ActiveRecord::Base
         checking =
         if iv.rpdct.strip == 'RM'
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
-        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{order.sddcto}'")
+        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
