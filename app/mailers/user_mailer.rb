@@ -1,5 +1,20 @@
 class UserMailer < ActionMailer::Base
-  default from: "admin_sales_analytic@ras.co.id"
+  default from: "Royal Corporation <noreply@ras.co.id>"
+  
+  def order(email, user, name, add1, add2, city, req_date, detail, order_number, cus_city, cus_add)
+    @user = user.upcase
+    @mlname = name.blank? ? '-' : name.strip 
+    @add1 = add1
+    @add2 = add2
+    @city = city
+    @date = req_date
+    @detail = detail
+    @order_no = order_number
+    @req_date = req_date
+    @cuscity = cus_city
+    @cusadd = cus_add
+    mail(:to => email, :subject => "(TRIAL) Order Confirmation")
+  end
   
   def kontra_bon
     recipients = ["wiliam.w@ras.co.id", "endang.l@ras.co.id", "irne@ras.co.id", "daniel@ras.co.id", 

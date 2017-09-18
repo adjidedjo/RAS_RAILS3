@@ -125,18 +125,24 @@ class JdeSoDetail < ActiveRecord::Base
           sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
           sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
           customer_master = Customer.where(address_number: order.sdan8.to_i)
-          unless customer_master.nil? || customer_master.blank?
-            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+          customer_brand = CustomerBrand.where(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip)
+          if customer_brand.empty? || customer_brand.nil?
+            CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
+            last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
+          elsif customer_brand.first.last_order_date != julian_to_date(order.sdaddj)
+            customer_brand.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj), branch: area)
           end
+          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddctio.strip
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+            salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-            area_id: area)
+            area_id: area, ketppb: iv.rpmcu.strip)
          end
         end
       end
@@ -287,11 +293,10 @@ class JdeSoDetail < ActiveRecord::Base
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
     rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RM|RO') AND rpsdoc > 1 AND REGEXP_LIKE (rpmcu, '13151|13151D|13151C') ")
+    AND REGEXP_LIKE(rpdct,'RM|RX|RX|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
-        
         where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
       and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
       else
@@ -300,7 +305,7 @@ class JdeSoDetail < ActiveRecord::Base
       if order.present?
         checking =
         if iv.rpdct.strip == 'RM'
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{i.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
@@ -329,15 +334,16 @@ class JdeSoDetail < ActiveRecord::Base
           unless customer_master.nil? || customer_master.blank?
             customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
+          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddctio.strip
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
-            salesman: sales, diskon5: variance, orty: order.sddcto.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+            salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
-            area_id: area)
+            area_id: area, ketppb: iv.rpmcu.strip)
          end
         end
       end

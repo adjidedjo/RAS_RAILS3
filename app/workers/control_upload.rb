@@ -74,6 +74,10 @@ class ControlUpload
     PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
   end
   
+  def mailer_confirmation_order
+    Customer.notification_order
+  end
+  
   def test_import
     JdeSalesman.upgrated_customer_brands
   end
