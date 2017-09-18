@@ -90,13 +90,13 @@ jde_import_acc_receivable:
  description: fetching data A/R
  rails_envs: development, production, staging
  
-jde_mailer_order_confirmation:
- cron: "0 * * * *"
- queue: cron
- class: ControlUpload
- args: "mailer_confirmation_order"
- description: Mail Confirmation Order
- rails_envs: development, production, staging
+#jde_mailer_order_confirmation:
+# cron: "0 * * * *"
+# queue: cron
+# class: ControlUpload
+# args: "mailer_confirmation_order"
+# description: Mail Confirmation Order
+# rails_envs: development, production, staging
  
   
 #jde_test_import:
