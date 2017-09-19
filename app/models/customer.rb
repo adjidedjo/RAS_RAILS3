@@ -12,7 +12,6 @@ class Customer < ActiveRecord::Base
       find_by_sql("SELECT * FROM jde_customers WHERE address_number = '#{oje.shan8.to_i}'").each do |c|
         unless c.email.nil?
           JdeSoDetail.get_list_of_item(oje.shdoco, oje.shdcto)
-          raise oje.inspect
           UserMailer.order(c.email, c.name, oje.oamlnm, oje.oaadd1, oje.oaadd2, oje.oacty1, 
           JdeSoHeader.julian_to_date(oje.shdrqj), JdeSoDetail.get_list_of_item(oje.shdoco, oje.shdcto), oje.shdoco,
           oje.alcty1, oje.aladd1).deliver
