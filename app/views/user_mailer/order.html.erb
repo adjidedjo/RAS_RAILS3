@@ -251,7 +251,7 @@
               
                   <% end %>
                 </table>
-                <% if @add1 == '' %>
+                <% if @add1.nil? || @add1 == '' %>
                   <p>Alamat Kirim : <%= @cusadd %>, <%= @cuscity %></p>
                 <% else %>
                   <p>Alamat Kirim : <%= @add1 %> <%= @add2 %>, <%= @city %></p>
