@@ -251,7 +251,11 @@
               
                   <% end %>
                 </table>
-                <p>Alamat Kirim : <%= @add1 %> <%= @add2 %>, <%= @city %></p>
+                <% if @add1 == '' %>
+                  <p>Alamat Kirim : <%= @add1 %> <%= @add2 %>, <%= @city %></p>
+                <% else %>
+                  p>Alamat Kirim : <%= @cusadd %>, <%= @cuscity %></p>
+                <% end %>
                 <br>
      
                 <p>Pesanan yang sudah masuk tidak dapat diubah atau dibatalkan.<br>
