@@ -129,7 +129,7 @@ class JdeSoDetail < ActiveRecord::Base
           if customer_brand.empty? || customer_brand.nil?
             CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
             last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
-          elsif customer_brand.first.last_order_date != julian_to_date(order.sdaddj)
+          elsif customer_brand.first.last_order != julian_to_date(order.sdaddj)
             customer_brand.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
             customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj), branch: area)
           end
