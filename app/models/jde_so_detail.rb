@@ -130,10 +130,10 @@ class JdeSoDetail < ActiveRecord::Base
             CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
             last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
           elsif customer_brand.first.last_order != julian_to_date(order.sdaddj)
-            customer_brand.first.update_attributes!(last_order: julian_to_date(order.sdaddj))
-            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj), branch: area)
+            customer_brand.first.update_attributes!(last_order: julian_to_date(order.sdaddj), branch: area)
+            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
-          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddctio.strip
+          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -334,7 +334,7 @@ class JdeSoDetail < ActiveRecord::Base
           unless customer_master.nil? || customer_master.blank?
             customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
-          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddctio.strip
+          vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
