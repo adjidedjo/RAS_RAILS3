@@ -124,14 +124,14 @@ class JdeSoDetail < ActiveRecord::Base
           variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
           sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
           sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
-          customer_master = Customer.where(address_number: order.sdan8.to_i)
+          # customer_master = Customer.where(address_number: order.sdan8.to_i)
           customer_brand = CustomerBrand.where(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip)
           if customer_brand.empty? || customer_brand.nil?
             CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
             last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
           elsif customer_brand.first.last_order != julian_to_date(order.sdaddj)
             customer_brand.first.update_attributes!(last_order: julian_to_date(order.sdaddj), branch: area)
-            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+            # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
           vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
