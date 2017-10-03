@@ -24,6 +24,20 @@ class ControlUpload
     end
 
   end
+  
+  ############################ PPC 
+  
+  def planning_order
+    Production.production_import_outstanding_orders
+    Production.production_import_sales_orders
+    Production.production_import_stock_hourly
+  end
+  
+  def generate_planning_production
+    Pdc::OutstandingProduction.generate_outstanding_stock
+  end
+  
+  ########################### END PPC
 
   def import_sales_jde
     JdeSoDetail.import_sales

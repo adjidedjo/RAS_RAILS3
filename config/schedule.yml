@@ -57,6 +57,26 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
   
 #####################################################
+
+########################### PPC
+
+jde_planning_order:
+  cron: "30 4 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "planning_order"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
+jde_generate_planning_order:
+  cron: "0 6 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "generate_planning_production"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
+########################## END PPC
   
 jde_base_price:
   cron: "1 0 1 * *"
