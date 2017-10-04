@@ -1,5 +1,5 @@
 class Pdc::OutstandingProduction < ActiveRecord::Base
-  establish_connection "production_analysis"
+  establish_connection "production-analysis"
   self.table_name = "outstanding_productions" #sd
   
   def self.generate_outstanding_stock
