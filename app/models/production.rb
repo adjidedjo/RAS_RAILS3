@@ -13,6 +13,7 @@ class Production < JdeSoDetail
     so.sdnxtr LIKE '%#{525}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002')
     GROUP BY so.sddoco, so.sditm")
     Pdc::OutstandingOrder.delete_all
+      item_master = ItemMaster.find_by_short_item_no(st.liitm)
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
       unless op
@@ -40,6 +41,7 @@ class Production < JdeSoDetail
     so.sdlttr NOT LIKE '%#{980}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002')
     GROUP BY so.sdmcu, so.sditm")
     Pdc::SalesOrder.delete_all
+      item_master = ItemMaster.find_by_short_item_no(st.liitm)
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
       unless op
