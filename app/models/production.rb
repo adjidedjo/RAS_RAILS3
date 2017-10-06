@@ -5,7 +5,7 @@ class Production < JdeSoDetail
     outstanding = find_by_sql("SELECT so.sddoco, MAX(so.sddrqj) AS sddrqj, 
     SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
     MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
-    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2
+    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE so.sdcomm NOT LIKE '%#{'K'}%' 
@@ -13,17 +13,17 @@ class Production < JdeSoDetail
     so.sdnxtr LIKE '%#{525}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002')
     GROUP BY so.sddoco, so.sditm")
     Pdc::OutstandingOrder.delete_all
-      item_master = ItemMaster.find_by_short_item_no(st.liitm)
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
+      item_master = ItemMaster.find_by_short_item_no(ou.sditm.to_i)
       unless op
-        Pdc::OutstandingProduction.create!(short_item: ou.short_item, 
-        description: ou.description, brand: ou.brand, branch: ou.branch, item_number: ou.item_number)
+        Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
+        description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, item_number: ou.sdlitm.strip)
       end
       Pdc::OutstandingOrder.create(order_no: ou.sddoco.to_i, 
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
-      order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, segment1: item_master.segment1)
+      order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, segment1: ou.imseg1.strip)
     end
   end
 
@@ -41,12 +41,12 @@ class Production < JdeSoDetail
     so.sdlttr NOT LIKE '%#{980}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002')
     GROUP BY so.sdmcu, so.sditm")
     Pdc::SalesOrder.delete_all
-      item_master = ItemMaster.find_by_short_item_no(st.liitm)
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
+      item_master = ItemMaster.find_by_short_item_no(ou.sditm.to_i)
       unless op
-        Pdc::OutstandingProduction.create!(short_item: ou.short_item, 
-        description: ou.description, brand: ou.brand, branch: ou.branch, item_number: ou.item_number)
+        Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
+        description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, item_number: ou.sdlitm.strip)
       end
       Pdc::SalesOrder.create(branch: ou.sdmcu.strip, brand: ou.sdsrp1.strip, 
       item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, 

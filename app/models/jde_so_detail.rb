@@ -292,7 +292,7 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/07/2017'.to_date)}' AND '#{date_to_julian('31/07/2017'.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('01/09/2017'.to_date)}' AND '#{date_to_julian('30/07/2017'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RM|RX|RX|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
