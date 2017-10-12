@@ -15,11 +15,11 @@ class Production < JdeSoDetail
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
-      item_master = ItemMaster.find_by_short_item_no(ou.sditm.to_i)
+      item_master = JdeItemMaster.get_item_number(ou.sditm.to_i)
       unless op
         Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
         description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
-        item_number: ou.sdlitm.strip, segment1: item_master.segment1)
+        item_number: ou.sdlitm.strip, segment1: ou.imseg1.strip)
       end
       Pdc::OutstandingOrder.create(order_no: ou. sddoco.to_i, 
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
@@ -48,7 +48,7 @@ class Production < JdeSoDetail
       unless op
         Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
         description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
-        item_number: ou.sdlitm.strip, segment1: item_master.segment1)
+        item_number: ou.sdlitm.strip, segment1: ou.imseg1.strip)
       end
       Pdc::SalesOrder.create(branch: ou.sdmcu.strip, brand: ou.sdsrp1.strip, 
       item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, 
