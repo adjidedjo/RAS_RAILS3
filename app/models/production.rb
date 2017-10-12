@@ -19,7 +19,7 @@ class Production < JdeSoDetail
       unless op
         Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
         description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
-        item_number: ou.sdlitm.strip, segment1: item_master.seg1.strip)
+        item_number: ou.sdlitm.strip, segment1: item_master.segment1)
       end
       Pdc::OutstandingOrder.create(order_no: ou. sddoco.to_i, 
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
@@ -48,7 +48,7 @@ class Production < JdeSoDetail
       unless op
         Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
         description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
-        item_number: ou.sdlitm.strip, segment1: item_master.seg1.strip)
+        item_number: ou.sdlitm.strip, segment1: item_master.segment1)
       end
       Pdc::SalesOrder.create(branch: ou.sdmcu.strip, brand: ou.sdsrp1.strip, 
       item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, 
