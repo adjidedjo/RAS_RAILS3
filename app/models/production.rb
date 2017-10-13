@@ -33,7 +33,7 @@ class Production < JdeSoDetail
     outstanding = find_by_sql("SELECT MAX(so.sddrqj), 
     SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
     MAX(so.sdsrp1) AS sdsrp1, so.sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
-    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2
+    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE so.sdcomm NOT LIKE '%#{'K'}%' AND so.sdtrdj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' 
@@ -44,7 +44,6 @@ class Production < JdeSoDetail
     Pdc::SalesOrder.delete_all
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
-      item_master = ItemMaster.find_by_short_item_no(ou.sditm.to_i)
       unless op
         Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
         description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
