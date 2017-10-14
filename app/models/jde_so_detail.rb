@@ -76,7 +76,7 @@ class JdeSoDetail < ActiveRecord::Base
     so.sdnxtr LIKE '%#{525}%'
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     outstanding.each do |ou|
-      OutstandingOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
+      SalesOutstandingOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
       promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
       salesman: ou.salesman.strip)
