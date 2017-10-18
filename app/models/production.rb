@@ -8,7 +8,7 @@ class Production < JdeSoDetail
     MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
-    WHERE so.sdcomm NOT LIKE '%#{'K'}%' AND so.sdtrdj <= '#{date_to_julian(Date.yesterday)}'
+    WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
     so.sdnxtr <= '560' AND REGEXP_LIKE(so.sdmcu,'11001$|11002$')
     GROUP BY so.sddoco, so.sditm")
@@ -59,7 +59,7 @@ class Production < JdeSoDetail
   def self.production_import_stock_hourly
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE NOT REGEXP_LIKE(liglpt, 'WIP|MAT') 
+    FROM PRODDTA.F41021 IA
     AND REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
     AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
     Pdc::ProductionStock.delete_all
