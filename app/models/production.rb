@@ -59,8 +59,8 @@ class Production < JdeSoDetail
   def self.production_import_stock_hourly
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE liupmj = '#{date_to_julian(Date.today)}' AND 
-    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND REGEXP_LIKE(limcu,'11001') GROUP BY IA.liitm, IA.limcu")
+    FROM PRODDTA.F41021 IA WHERE NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND REGEXP_LIKE(limcu,'11001') 
+    GROUP BY IA.liitm, IA.limcu")
     Pdc::ProductionStock.delete_all
     stock.each do |st|
       item_master = ItemMaster.find_by_short_item_no(st.liitm)
