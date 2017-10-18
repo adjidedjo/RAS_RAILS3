@@ -8,6 +8,7 @@ class Production < JdeSoDetail
     MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
+    JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
     so.sdnxtr <= '560' AND REGEXP_LIKE(so.sdmcu,'11001$|11002$')
@@ -24,7 +25,8 @@ class Production < JdeSoDetail
       Pdc::OutstandingOrder.create(order_no: ou. sddoco.to_i, 
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
-      order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, segment1: ou.imseg1.strip)
+      order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
+      segment1: ou.imseg1.strip, customer: cus.abalph.strip)
     end
   end
 
