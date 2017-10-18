@@ -10,7 +10,7 @@ class Production < JdeSoDetail
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
-    so.sdnxtr LIKE '%#{525}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002') AND NOT REGEXP_LIKE(so.sdmcu,'C|D')
+    so.sdnxtr <= '560' AND REGEXP_LIKE(so.sdmcu,'11001$|11002$')
     GROUP BY so.sddoco, so.sditm")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
@@ -39,7 +39,7 @@ class Production < JdeSoDetail
     WHERE so.sdcomm NOT LIKE '%#{'K'}%' AND so.sdtrdj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' 
     AND '#{date_to_julian(Date.today.to_date)}' AND itm.imtmpl LIKE '%BJ MATRASS%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND 
-    so.sdlttr NOT LIKE '%#{980}%' AND REGEXP_LIKE(so.sdmcu,'11001|11002') AND NOT REGEXP_LIKE(so.sdmcu,'C|D')
+    so.sdlttr NOT LIKE '%#{980}%' AND REGEXP_LIKE(so.sdmcu,'11001$|11002$')
     GROUP BY so.sdmcu, so.sditm")
     Pdc::SalesOrder.delete_all
     outstanding.each do |ou|
@@ -59,8 +59,9 @@ class Production < JdeSoDetail
   def self.production_import_stock_hourly
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND REGEXP_LIKE(limcu,'11001') 
-    GROUP BY IA.liitm, IA.limcu")
+    FROM PRODDTA.F41021 IA WHERE NOT REGEXP_LIKE(liglpt, 'WIP|MAT') 
+    AND REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
+    AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
     Pdc::ProductionStock.delete_all
     stock.each do |st|
       item_master = ItemMaster.find_by_short_item_no(st.liitm)
