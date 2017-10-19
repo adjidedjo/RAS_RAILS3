@@ -58,24 +58,57 @@ class Production < JdeSoDetail
   end
   
   #import stock hourly for planning production
+  # def self.production_import_stock_hourly
+    # stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+    # IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+    # FROM PRODDTA.F41021 IA
+    # WHERE REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
+    # AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
+    # Pdc::ProductionStock.delete_all
+    # stock.each do |st|
+      # item_master = ItemMaster.find_by_short_item_no(st.liitm)
+      # jdbuffer = self.find_by_sql("SELECT MAX(IB.ibsafe) AS ibsafe
+        # FROM PRODDTA.F4102 IB WHERE IB.ibitm = '#{st.liitm}'")
+      # unless item_master.nil?
+        # status = /\A\d+\z/ === st.limcu.strip.last ? 'FG' : 'CP'
+        # description = item_master.desc+' '+item_master.desc2
+        # Pdc::ProductionStock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
+          # item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+          # status: status, product: item_master.segment2, short_item: item_master.short_item_no, 
+          # buffer: jdbuffer.first.ibsafe/10000)
+      # end
+    # end
+  # end
+  
+  
   def self.production_import_stock_hourly
-    stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+    us = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA
-    WHERE REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
-    AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
-    Pdc::ProductionStock.delete_all
-    stock.each do |st|
-      item_master = ItemMaster.find_by_short_item_no(st.liitm)
-      jdbuffer = self.find_by_sql("SELECT MAX(IB.ibsafe) AS ibsafe
-        FROM PRODDTA.F4102 IB WHERE IB.ibitm = '#{st.liitm}'")
-      unless item_master.nil?
-        status = /\A\d+\z/ === st.limcu.strip.last ? 'FG' : 'CP'
-        description = item_master.desc+' '+item_master.desc2
-        Pdc::ProductionStock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
-          item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-          status: status, product: item_master.segment2, short_item: item_master.short_item_no, 
-          buffer: jdbuffer.first.ibsafe/10000)
+    FROM PRODDTA.F41021 IA WHERE liupmj BETWEEN '#{date_to_julian(Date.yesterday)}' AND '#{date_to_julian(Date.today)}' AND  
+    REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') GROUP BY IA.liitm, IA.limcu")
+    us.each do |fus|
+      stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+      IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND limcu LIKE '%#{fus.limcu}' 
+      GROUP BY IA.liitm, IA.limcu")
+      stock.each do |st|
+        cek_stock = Pdc::ProductionStock.where(short_item: st.liitm, branch: st.limcu.strip)
+        st.update_attributes!(onhand: 0, available: 0) if stock.empty?
+        jdbuffer = self.find_by_sql("SELECT MAX(IB.ibsafe) AS ibsafe
+          FROM PRODDTA.F4102 IB WHERE IB.ibitm = '#{st.liitm}'")
+        if cek_stock.present?
+          cek_stock.first.update_attributes!(buffer: jdbuffer.first.ibsafe/10000,onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
+        elsif cek_stock.nil?
+          item_master = ItemMaster.find_by_short_item_no(st.liitm)
+          unless item_master.nil?
+            status = /\A\d+\z/ === st.limcu.strip.last ? 'FG' : 'CP'
+            description = item_master.desc+' '+item_master.desc2
+            Pdc::ProductionStock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
+              item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+              status: status, product: item_master.segment2, short_item: item_master.short_item_no, 
+              buffer: jdbuffer.first.ibsafe/10000)
+          end
+        end
       end
     end
   end
