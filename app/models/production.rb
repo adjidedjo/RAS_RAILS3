@@ -26,7 +26,7 @@ class Production < JdeSoDetail
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
       order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
-      segment1: ou.imseg1.strip, customer: cus.abalph.strip)
+      segment1: ou.imseg1.strip, customer: ou.abalph.strip)
     end
   end
 
@@ -62,7 +62,7 @@ class Production < JdeSoDetail
     stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
     FROM PRODDTA.F41021 IA
-    AND REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
+    WHERE REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
     AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
     Pdc::ProductionStock.delete_all
     stock.each do |st|
