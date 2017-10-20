@@ -5,7 +5,8 @@ class Production < JdeSoDetail
     outstanding = find_by_sql("SELECT so.sddoco, MAX(so.sddrqj) AS sddrqj, 
     SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
     MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
-    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1
+    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1,
+    MAX(cus.abalph) AS abalph, MAX(so.sdshan) AS sdshan, MAX(cus.abat1) AS abat1
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
@@ -26,7 +27,7 @@ class Production < JdeSoDetail
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
       order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
-      segment1: ou.imseg1.strip, customer: ou.abalph.strip)
+      segment1: ou.imseg1.strip, customer: ou.abalph.strip, ship_to: ou.sdshan.strip, typ: ou.abat1.strip)
     end
   end
 
@@ -58,28 +59,6 @@ class Production < JdeSoDetail
   end
   
   #import stock hourly for planning production
-  # def self.production_import_stock_hourly
-    # stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
-    # IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    # FROM PRODDTA.F41021 IA
-    # WHERE REGEXP_LIKE(limcu,'11001$|11001DH$|11001MT$') 
-    # AND IA.lipqoh >= 1 GROUP BY IA.liitm, IA.limcu")
-    # Pdc::ProductionStock.delete_all
-    # stock.each do |st|
-      # item_master = ItemMaster.find_by_short_item_no(st.liitm)
-      # jdbuffer = self.find_by_sql("SELECT MAX(IB.ibsafe) AS ibsafe
-        # FROM PRODDTA.F4102 IB WHERE IB.ibitm = '#{st.liitm}'")
-      # unless item_master.nil?
-        # status = /\A\d+\z/ === st.limcu.strip.last ? 'FG' : 'CP'
-        # description = item_master.desc+' '+item_master.desc2
-        # Pdc::ProductionStock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
-          # item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-          # status: status, product: item_master.segment2, short_item: item_master.short_item_no, 
-          # buffer: jdbuffer.first.ibsafe/10000)
-      # end
-    # end
-  # end
-  
   
   def self.production_import_stock_hourly
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
@@ -110,6 +89,43 @@ class Production < JdeSoDetail
           end
         end
       end
+    end
+  end
+  
+  def self.production_branch_order_and_buffer
+    outstanding_pusat = Pdc::OutstandingOrder.find_by_sql("
+      SELECT short_item, description, item_number, ship_to, branch, SUM(quantity) AS qty, brand, 
+      segment1 FROM 
+      outstanding_orders GROUP BY short_item, ship_to
+    ")
+    
+    outstanding_pusat.each do |op|
+      
+      outstanding_cabang = find_by_sql("
+          SELECT MAX(sddrqj) AS sddrqj, 
+          SUM(sduorg) AS jumlah, MAX(sdmcu) AS sdmcu, sditm
+          FROM PRODDTA.F4211 WHERE sdcomm NOT LIKE 'K'
+          AND REGEXP_LIKE(sddcto, 'SO') AND sditm = '#{op.short_item}' AND sdmcu LIKE '%#{op.ship_to}%'
+          AND sdnxtr <= '560'
+          GROUP BY sditm, sdmcu
+        ")
+        
+      buffer_cabang = find_by_sql("
+          SELECT MAX(ibsafe) AS ibsafe, MAX(ibmcu) AS ibmcu, MAX(ibitm) AS ibitm
+          FROM PRODDTA.F4102 WHERE ibitm = '#{op.short_item}' AND ibmcu LIKE '%#{op.ship_to}%'
+        ")
+        
+       oh = Stock.find_by_sql("
+          SELECT SUM(onhand) AS onhand FROM stocks WHERE short_item = '#{op.short_item}' AND 
+          branch = '#{op.ship_to}' GROUP BY branch 
+        ")
+        
+        Pdc::BranchNeed.create(item_number: op.item_number, qty_order: 
+        (outstanding_cabang.first.nil? ? 0 : outstanding_cabang.first.jumlah/10000), segment1: op.segment1,
+        short_item: op.short_item, item_number: op.item_number, description: op.description, brand: op.brand,
+        branch: (outstanding_cabang.first.nil? ? op.ship_to : outstanding_cabang.first.sdmcu.strip), 
+        qty_requested: op.qty, buffer: buffer_cabang.first.ibsafe/10000, 
+        onhand_branch: (oh.first.nil? ? 0 : oh.first.onhand))
     end
   end
 end
