@@ -96,7 +96,7 @@ class Production < JdeSoDetail
     Pdc::BranchNeed.delete_all
     outstanding_pusat = Pdc::OutstandingOrder.find_by_sql("
       SELECT short_item, description, item_number, ship_to, branch, SUM(quantity) AS qty, brand, 
-      segment1 FROM 
+      segment1, customer FROM 
       outstanding_orders WHERE typ IN ('F', 'O') GROUP BY short_item, ship_to
     ")
     
@@ -106,7 +106,7 @@ class Production < JdeSoDetail
           SELECT MAX(sddrqj) AS sddrqj, 
           SUM(sduorg) AS jumlah, MAX(sdmcu) AS sdmcu, sditm
           FROM PRODDTA.F4211 WHERE sdcomm NOT LIKE 'K'
-          AND REGEXP_LIKE(sddcto, 'SO') AND sditm = '#{op.short_item}' AND sdmcu LIKE '%#{op.ship_to}'
+          AND REGEXP_LIKE(sddcto, 'SO|ZO') AND sditm = '#{op.short_item}' AND sdmcu LIKE '%#{op.ship_to}'
           AND sdnxtr <= '560'
           GROUP BY sditm, sdmcu
         ")
@@ -126,7 +126,7 @@ class Production < JdeSoDetail
         short_item: op.short_item, item_number: op.item_number, description: op.description, brand: op.brand,
         branch: (outstanding_cabang.first.nil? ? op.ship_to : outstanding_cabang.first.sdmcu.strip), 
         qty_requested: op.qty, buffer: buffer_cabang.first.ibsafe.nil? ? 0 : buffer_cabang.first.ibsafe/10000, 
-        onhand_branch: (oh.first.nil? ? 0 : oh.first.onhand))
+        onhand_branch: (oh.first.nil? ? 0 : oh.first.onhand), name: op.customer)
     end
   end
 end
