@@ -27,7 +27,7 @@ class Production < JdeSoDetail
       promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
       order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
-      segment1: ou.imseg1.strip, customer: ou.abalph.strip, ship_to: ou.sdshan, typ: ou.abat1.strip)
+      segment1: ou.imseg1.strip, customer: ou.abalph.strip, ship_to: ou.sdshan.to_i, typ: ou.abat1.strip)
     end
   end
 
@@ -96,7 +96,7 @@ class Production < JdeSoDetail
     outstanding_pusat = Pdc::OutstandingOrder.find_by_sql("
       SELECT short_item, description, item_number, ship_to, branch, SUM(quantity) AS qty, brand, 
       segment1 FROM 
-      outstanding_orders GROUP BY short_item, ship_to
+      outstanding_orders WHERE typ IN ('F', 'O') GROUP BY short_item, ship_to
     ")
     
     outstanding_pusat.each do |op|
