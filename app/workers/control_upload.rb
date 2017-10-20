@@ -33,6 +33,10 @@ class ControlUpload
     Production.production_import_stock_hourly
   end
   
+  def generate_order_buffer
+    Production.production_branch_order_and_buffer
+  end
+  
   def generate_planning_production
     Pdc::OutstandingProduction.generate_outstanding_stock
   end
