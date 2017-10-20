@@ -93,6 +93,7 @@ class Production < JdeSoDetail
   end
   
   def self.production_branch_order_and_buffer
+    Pdc::BranchNeed.delete_all
     outstanding_pusat = Pdc::OutstandingOrder.find_by_sql("
       SELECT short_item, description, item_number, ship_to, branch, SUM(quantity) AS qty, brand, 
       segment1 FROM 
@@ -105,14 +106,14 @@ class Production < JdeSoDetail
           SELECT MAX(sddrqj) AS sddrqj, 
           SUM(sduorg) AS jumlah, MAX(sdmcu) AS sdmcu, sditm
           FROM PRODDTA.F4211 WHERE sdcomm NOT LIKE 'K'
-          AND REGEXP_LIKE(sddcto, 'SO') AND sditm = '#{op.short_item}' AND sdmcu LIKE '%#{op.ship_to}%'
+          AND REGEXP_LIKE(sddcto, 'SO') AND sditm = '#{op.short_item}' AND sdmcu LIKE '%#{op.ship_to}'
           AND sdnxtr <= '560'
           GROUP BY sditm, sdmcu
         ")
         
       buffer_cabang = find_by_sql("
           SELECT MAX(ibsafe) AS ibsafe, MAX(ibmcu) AS ibmcu, MAX(ibitm) AS ibitm
-          FROM PRODDTA.F4102 WHERE ibitm = '#{op.short_item}' AND ibmcu LIKE '%#{op.ship_to}%'
+          FROM PRODDTA.F4102 WHERE ibitm = '#{op.short_item}' AND ibmcu LIKE '%#{op.ship_to}'
         ")
         
        oh = Stock.find_by_sql("
