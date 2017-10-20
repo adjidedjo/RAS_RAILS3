@@ -124,7 +124,7 @@ class Production < JdeSoDetail
         (outstanding_cabang.first.nil? ? 0 : outstanding_cabang.first.jumlah/10000), segment1: op.segment1,
         short_item: op.short_item, item_number: op.item_number, description: op.description, brand: op.brand,
         branch: (outstanding_cabang.first.nil? ? op.ship_to : outstanding_cabang.first.sdmcu.strip), 
-        qty_requested: op.qty, buffer: buffer_cabang.first.ibsafe/10000, 
+        qty_requested: op.qty, buffer: buffer_cabang.first.ibsafe.nil? ? 0 : buffer_cabang.first.ibsafe/10000, 
         onhand_branch: (oh.first.nil? ? 0 : oh.first.onhand))
     end
   end
