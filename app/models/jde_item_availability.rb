@@ -4,31 +4,6 @@ class JdeItemAvailability < ActiveRecord::Base
   # attr_accessible :lilotn, :lilrcj
   # self.primary_key = 'lilotn'
   
-  def self.update_stock_june
-    us = Stock.where("MONTH(updated_at) = 8 and onhand >= 1")
-    us.each do |fus|
-      stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
-      IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.short_item}' AND limcu LIKE '%#{fus.branch}' GROUP BY IA.liitm, IA.limcu")
-      fus.update_attributes!(onhand: 0, available: 0) if stock.empty?
-      stock.each do |st|
-        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
-        if cek_stock.present?
-          cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
-        elsif cek_stock.nil?
-          item_master = ItemMaster.find_by_short_item_no(st.liitm)
-          unless item_master.nil?
-            status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-            description = item_master.desc+' '+item_master.desc2
-            Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
-              item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-              status: status, product: item_master.segment2, short_item: item_master.short_item_no)
-          end
-        end
-      end
-    end
-  end
-  
   #import stock hourly
   def self.import_stock_hourly
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
@@ -51,7 +26,7 @@ class JdeItemAvailability < ActiveRecord::Base
             description = item_master.desc+' '+item_master.desc2
             Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
               item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-              status: status, product: item_master.segment2, short_item: item_master.short_item_no)
+              status: status, product: item_master.segment2, short_item: item_master.short_item_no, area_id: jde_cabang(st.limcu.strip))
           end
         end
       end
