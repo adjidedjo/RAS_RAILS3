@@ -32,12 +32,11 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT aladd1, alcty1, alan8 FROM PRODDTA.F0116
       ) AL ON AI.aian8 = AL.alan8
-      WHERE AI.aico LIKE '%0000%' AND AI.aidaoj = '#{date_to_julian(Date.yesterday)}'
+      WHERE AI.aico LIKE '%0000%' AND AI.aidaoj BETWEEN '#{date_to_julian('2017-09-01'.to_date)}' AND '#{date_to_julian('2017-11-06'.to_date)}'
     ")
     customer.each do |nc|
       find_cus = Customer.where(address_number: nc.aian8)
-      if find_cus.nil?
-        raise nc.abmcu.inspect
+      if find_cus.empty?
         Customer.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
           city: nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), area_id: find_area(jde_cabang(nc.abmcu.strip)), state: customer.first.aicusts)

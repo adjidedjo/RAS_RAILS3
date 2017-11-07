@@ -85,6 +85,7 @@ class ControlUpload
   end
   
   def import_beginning_of_week
+    JdeItemAvailability.import_buffer_daily
     JdeItemAvailability.import_beginning_week_of_stock
   end
 

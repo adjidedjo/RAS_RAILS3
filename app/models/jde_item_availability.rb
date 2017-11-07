@@ -4,6 +4,22 @@ class JdeItemAvailability < ActiveRecord::Base
   # attr_accessible :lilotn, :lilrcj
   # self.primary_key = 'lilotn'
   
+  #import buffer daily
+  def self.import_buffer_daily
+    ibranch = find_by_sql("SELECT ibitm, MAX(iblitm) AS iblitm, ibmcu,
+      MAX(ibsafe) AS ibsafe FROM PRODDTA.F4102 WHERE ibsafe > 0 GROUP BY ibitm, ibmcu 
+    ")
+    ibranch.each do |ib|
+      get_ib = ItemBranch.where("short_item = ? AND area = ?", ib.ibitm, jde_cabang(ib.ibmcu.strip))
+      if get_ib.present?
+        get_ib.first.update_attributes!(quantity: ib.ibsafe.to_i/10000)
+      else
+        ItemBranch.create!(item_number: ib.iblitm, short_item: ib.ibitm, area: jde_cabang(ib.ibmcu.strip), 
+        branch: ib.ibmcu.strip, quantity: ib.ibsafe.to_i/10000)
+      end
+    end
+  end
+  
   #import stock hourly
   def self.import_stock_hourly
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
