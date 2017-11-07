@@ -17,6 +17,31 @@ class JdeSoDetail < ActiveRecord::Base
     select("sum(sdsoqs) as sdsoqs").where("sditm = ? and sdnxtr = ? and sdlttr = ? and sddcto like ? and sdaddj = ?",
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
+  
+  def self.import_transfers_consigment
+    cons = find_by_sql("SELECT ph.phrorn, MAX(ph.phrcto) AS phrcto, MAX(ph.phmcu) AS phmcu
+    FROM PRODDTA.F4301 ph WHERE ph.phtrdj BETWEEN '#{date_to_julian('01/11/2017'.to_date)}' 
+    AND '#{date_to_julian('06/11/2017'.to_date)}' AND ph.phmcu LIKE '%#{'K'}' GROUP BY ph.phrorn
+    ")
+    cons.each do |c|
+      st = find_by_sql("SELECT MAX(sditm) AS sditm, MAX(sdtrdj), MAX(sdcomm), MAX(sdshan) AS sdshan, MAX(sdmcu) AS sdmcu, 
+        MAX(sddeln) AS sddeln, MAX(sddrqj) AS sddrqj, SUM(sduorg) AS jumlah, MAX(sdsrp1) AS sdsrp1, 
+        MAX(sddcto) AS sddcto, MAX(sddoco) AS sddoco, MAX(sddsc1) AS sddsc1, MAX(sddsc2) AS sddsc2,
+        MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj
+        FROM PRODDTA.F4211
+        WHERE sddoco = '#{c.phrorn}' AND sdcomm NOT LIKE '%#{'K'}%' AND sdnxtr = '999' AND sdlttr = '580' 
+        GROUP BY sditm, sdlotn")
+      st.each do |det|
+        item_master = JdeItemMaster.find_by_imitm(det.sditm)
+        customer = JdeCustomerMaster.find_by_aban8(det.sdshan.to_i)
+        Consigment.create!(order_no: c.phrorn, sales_id: det.sdshan.to_i, branch: jde_cabang(det.sdmcu),
+          brand: item_master.imprgr, item_number: det.sdlitm.strip, description: "#{det.sddsc1.strip} " "#{det.sddsc2.strip}",
+          quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj.to_i), lot_number: det.sdlotn.strip,
+          sales_name: customer.abalph.strip, delivery_date: julian_to_date(det.sdaddj)
+        )
+      end
+    end
+  end
 
   #import hold orders
   def self.import_hold_orders
@@ -29,7 +54,7 @@ class JdeSoDetail < ActiveRecord::Base
     JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     WHERE ho.hordc = ' ' 
-    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sddcto,'SO|ZO')
+    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sd dcto,'SO|ZO')
     AND so.sdnxtr LIKE '%#{525}%' AND cust.absic LIKE '%RET%' GROUP BY ho.hodoco, ho.hohcod, ho.homcu, so.sdsrp1")
     hold.each do |ou|
       HoldOrder.create(order_no: ou.hodoco.to_i, customer: ou.shipto.strip, 
@@ -134,6 +159,7 @@ class JdeSoDetail < ActiveRecord::Base
             # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
           vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
+          sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -142,7 +168,7 @@ class JdeSoDetail < ActiveRecord::Base
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-            area_id: area, ketppb: iv.rpmcu.strip)
+            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type)
          end
         end
       end
@@ -220,30 +246,6 @@ class JdeSoDetail < ActiveRecord::Base
 
   # monthly calculate success rate
   def self.calculate_success_rate
-    sales = SalesTarget.find_by_sql("SELECT name, user_id, brand FROM sales_targets WHERE address_number IS NOT NULL GROUP BY user_id, brand")
-    sales.each do |sl|
-      unless sl.user_id.nil? || sl.user_id == 0
-        sum_visit = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("nvc")
-        sum_close_deal_visit = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncdv")
-        sum_sold_product = LaporanCabang.select("SUM(jumlah) AS jumlah").where("fiscal_month = '#{(1.month.ago - 2.days).month}' AND fiscal_year = '#{(1.month.ago - 2.days).year}' 
-        AND nopo = '#{User.find(sl.user_id).address_number}' AND jenisbrgdisc LIKE '#{sl.brand}' 
-        AND kodejenis IN ('KM', 'KB') AND bonus = '-' AND orty = 'SO'")
-        sum_call_close_deal = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncdc")
-        sum_call_customer = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month).sum("ncc")
-        sum_available = SalesProductivity.where(salesmen_id: sl.user_id, brand: sl.brand, month: (1.month.ago - 2.days).month)
-        unless sum_available.empty?
-          average_visit_day = (sum_visit.to_f/sum_available.count.to_f)%100.0
-          success_rate_visit = (sum_close_deal_visit.to_f/sum_visit.to_f)%100.0
-          order_visit = (sum_sold_product.first.jumlah.to_f/sum_call_close_deal.to_f)%100.0
-          call_day = (sum_sold_product.first.jumlah.to_f/sum_available.count.to_f)%100.0
-          
-          SalesProductivityReport.create(salesmen_id: sl.user_id, branch_id: User.find(sl.user_id).branch1, 
-          month: (1.month.ago - 2.days).month, year: (1.month.ago - 2.days).year,
-          average_visit_day: average_visit_day, success_rate_visit: success_rate_visit,
-          average_order_deal: order_visit, average_call_day: call_day, brand: sl.brand)
-        end
-      end
-    end
   end
 
   #use this if sales of a branch not working
@@ -335,6 +337,7 @@ class JdeSoDetail < ActiveRecord::Base
             customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
           vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
+          sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
           LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
             kodebrg: order.sdlitm.strip,
             namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -343,7 +346,7 @@ class JdeSoDetail < ActiveRecord::Base
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
-            area_id: area, ketppb: iv.rpmcu.strip)
+            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type)
          end
         end
       end
@@ -400,7 +403,7 @@ class JdeSoDetail < ActiveRecord::Base
       "01"
     elsif bu.include?("1110") || bu == "11101" || bu == "11102" || bu == "13101" || bu == "11101C" || bu == "11101D" || bu == "13101C" || bu == "13101D" || bu == "11101S" || bu == "13101S" #lampung
       "13" 
-    elsif bu == "11010" || bu.include?("1101") || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" || bu == "11011S" || bu == "13011S" #jabar
+    elsif bu == "11010" || bu.include?("1101") || bu == "11011C" || bu == "11011D" || bu == "11002" || bu == "13011D" || bu == "13011" || bu == "13011C" || bu == "11011S" || bu == "13011S" || bu == "11011K" || bu == "13011K" #jabar
       "02"
     elsif bu.include?("1102") || bu == "11021" || bu == "11022" || bu == "13021" || bu == "13021D" || bu == "13021C" || bu == "11021C" || bu == "11021D" || bu == "11021S" || bu == "13021S" #cirebon
       "09"

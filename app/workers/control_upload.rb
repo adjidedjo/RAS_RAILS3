@@ -48,6 +48,7 @@ class ControlUpload
     JdeSoDetail.import_outstanding_orders
     JdeSoDetail.import_outstanding_shipments
     JdeSoDetail.import_hold_orders
+    JdeSoDetail.import_transfers_consigment
   end
   
   def import_credit_note
