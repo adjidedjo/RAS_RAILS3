@@ -54,7 +54,7 @@ class JdeSoDetail < ActiveRecord::Base
     JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     WHERE ho.hordc = ' ' 
-    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sd dcto,'SO|ZO')
+    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sddcto,'SO|ZO')
     AND so.sdnxtr LIKE '%#{525}%' AND cust.absic LIKE '%RET%' GROUP BY ho.hodoco, ho.hohcod, ho.homcu, so.sdsrp1")
     hold.each do |ou|
       HoldOrder.create(order_no: ou.hodoco.to_i, customer: ou.shipto.strip, 
