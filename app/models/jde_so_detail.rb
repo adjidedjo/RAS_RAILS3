@@ -18,10 +18,32 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
   
+  def self.import_sales_consigment
+    st = find_by_sql("SELECT MAX(sditm) AS sditm, MAX(sdtrdj), MAX(sdcomm), MAX(sdshan) AS sdshan, 
+      sdmcu, MAX(sddeln) AS sddeln, MAX(sddrqj) AS sddrqj, SUM(sduorg) AS jumlah, MAX(sdsrp1) AS sdsrp1, 
+      MAX(sddcto) AS sddcto, sddoco, MAX(sddsc1) AS sddsc1, MAX(sddsc2) AS sddsc2,
+      MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
+      MAX(sdvr01) AS vr
+      FROM PRODDTA.F4211
+      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj BETWEEN 
+      '#{date_to_julian('01/11/2017'.to_date)}' AND '#{date_to_julian('10/11/2017'.to_date)}'
+      GROUP BY sditm, sdlotn, sdmcu, sddoco")
+    st.each do |det|
+      item_master = JdeItemMaster.find_by_imitm(det.sditm)
+      sales_name = det.vr.strip == "" ? det.sdshan : det.vr.strip.split("/")[0]
+      customer = JdeCustomerMaster.find_by_aban8(sales_name)
+      ConsigmentSales.create!(order_no: det.sddoco.to_i, sales_id: det.sdshan.to_i, branch: jde_cabang(det.sdmcu),
+        brand: item_master.imprgr, item_number: det.sdlitm.strip, description: "#{det.sddsc1.strip} " "#{det.sddsc2.strip}",
+        quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj.to_i), lot_number: det.sdlotn.strip,
+        sales_name: customer.nil? ? "-" : customer.abalph.strip, delivery_date: julian_to_date(det.sdaddj)
+      )
+    end
+  end
+  
   def self.import_transfers_consigment
     cons = find_by_sql("SELECT ph.phrorn, MAX(ph.phrcto) AS phrcto, MAX(ph.phmcu) AS phmcu
-    FROM PRODDTA.F4301 ph WHERE ph.phtrdj BETWEEN '#{date_to_julian('01/11/2017'.to_date)}' 
-    AND '#{date_to_julian('06/11/2017'.to_date)}' AND ph.phmcu LIKE '%#{'K'}' GROUP BY ph.phrorn
+    FROM PRODDTA.F4301 ph WHERE ph.phtrdj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    AND ph.phmcu LIKE '%#{'K'}' GROUP BY ph.phrorn
     ")
     cons.each do |c|
       st = find_by_sql("SELECT MAX(sditm) AS sditm, MAX(sdtrdj), MAX(sdcomm), MAX(sdshan) AS sdshan, MAX(sdmcu) AS sdmcu, 
@@ -111,7 +133,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    rpdivj = '#{date_to_julian('31/10/2017'.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
