@@ -25,8 +25,8 @@ class JdeSoDetail < ActiveRecord::Base
       MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
       MAX(sdvr01) AS vr
       FROM PRODDTA.F4211
-      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj BETWEEN 
-      '#{date_to_julian('01/11/2017'.to_date)}' AND '#{date_to_julian('10/11/2017'.to_date)}'
+      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj = 
+      '#{date_to_julian(Date.yesterday.to_date)}'
       GROUP BY sditm, sdlotn, sdmcu, sddoco")
     st.each do |det|
       item_master = JdeItemMaster.find_by_imitm(det.sditm)
@@ -133,7 +133,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj = '#{date_to_julian('31/10/2017'.to_date)}' 
+    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
