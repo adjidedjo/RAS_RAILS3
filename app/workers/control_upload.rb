@@ -102,4 +102,8 @@ class ControlUpload
   def test_import
     JdeSalesman.upgrated_customer_brands
   end
+  
+  def auto_create_marketshare
+    Marketshare.auto_create_next_month
+  end
 end
