@@ -35,7 +35,7 @@ class JdeItemMaster < ActiveRecord::Base
     item_masters.each do |im|
       check_item = ItemMaster.find_by_short_item_no(im.imitm)
       if check_item.nil? || check_item.nil?
-        ItemMaster.create(short_item_no: im.imitm, item_number: im.imlitm, desc: im.imdsc1.strip, 
+        ItemMaster.create(short_item_no: im.imitm.to_i, item_number: im.imlitm, desc: im.imdsc1.strip, 
         desc2: im.imdsc2.strip, slscd1: im.imsrp1, slscd2: im.imsrp3, catcd9: im.imsrp9, 
         group: im.imprgr.strip, template: im.imtmpl, segment1: im.imseg1, segment2: im.imseg2, 
         segment3: im.imseg3, segment4: im.imseg4, segment5: im.imseg5, segment6: im.imseg6, 
