@@ -24,8 +24,8 @@ class JdeItemAvailability < ActiveRecord::Base
   def self.import_stock_hourly
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE liupmj = '#{date_to_julian(Date.today)}' AND 
-    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') GROUP BY IA.liitm, IA.limcu")
+    FROM PRODDTA.F41021 IA WHERE liupmj = '#{date_to_julian(Date.today)}' AND
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND lipbin LIKE '%P%' GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
@@ -35,14 +35,15 @@ class JdeItemAvailability < ActiveRecord::Base
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
-        elsif cek_stock.nil?
-          item_master = ItemMaster.find_by_short_item_no(st.liitm)
+        elsif cek_stock.empty?
+          item_master = ItemMaster.find_by_short_item_no(st.liitm.to_i)
           unless item_master.nil?
             status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-            description = item_master.desc+' '+item_master.desc2
+            description = item_master.desc.strip+' '+item_master.desc2
             Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
               item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-              status: status, product: item_master.segment2, short_item: item_master.short_item_no, area_id: jde_cabang(st.limcu.strip))
+              status: status, product: item_master.segment1, short_item: item_master.short_item_no, area_id: jde_cabang(st.limcu.strip),
+              article: item_master.segment2, size: item_master.segment6)
           end
         end
       end
