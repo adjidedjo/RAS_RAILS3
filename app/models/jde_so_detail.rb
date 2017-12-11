@@ -133,7 +133,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    rpupmj = '#{date_to_julian(Date.yesterday.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
@@ -149,7 +149,7 @@ class JdeSoDetail < ActiveRecord::Base
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE nosj LIKE '#{order.sddeln.to_i}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
         end
         if checking.empty?
@@ -316,7 +316,7 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/12/2017'.to_date)}' AND '#{date_to_julian('11/12/2017'.to_date)}' 
+    rpupmj = '#{date_to_julian('30/11/2017'.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
@@ -332,7 +332,7 @@ class JdeSoDetail < ActiveRecord::Base
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE nosj LIKE '#{order.sddeln.to_i}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
         end
         if checking.empty?
