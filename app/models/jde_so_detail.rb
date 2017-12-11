@@ -25,8 +25,8 @@ class JdeSoDetail < ActiveRecord::Base
       MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
       MAX(sdvr01) AS vr
       FROM PRODDTA.F4211
-      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj = 
-      '#{date_to_julian(Date.yesterday.to_date)}'
+      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj =
+      '#{date_to_julian('01/11/2017'.to_date)}'
       GROUP BY sditm, sdlotn, sdmcu, sddoco")
     st.each do |det|
       item_master = JdeItemMaster.find_by_imitm(det.sditm)
@@ -316,8 +316,8 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('01/09/2017'.to_date)}' AND '#{date_to_julian('30/07/2017'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RM|RX|RX|RM') AND rpsdoc > 1")
+    rpdivj BETWEEN '#{date_to_julian('01/12/2017'.to_date)}' AND '#{date_to_julian('11/12/2017'.to_date)}' 
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
       if iv.rpdct.strip == 'RM'
@@ -329,7 +329,7 @@ class JdeSoDetail < ActiveRecord::Base
       if order.present?
         checking =
         if iv.rpdct.strip == 'RM'
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{i.sddoco}'
+          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
         AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
         else
           LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
@@ -354,9 +354,14 @@ class JdeSoDetail < ActiveRecord::Base
           variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
           sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
           sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
-          customer_master = Customer.where(address_number: order.sdan8.to_i)
-          unless customer_master.nil? || customer_master.blank?
-            customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+          # customer_master = Customer.where(address_number: order.sdan8.to_i)
+          customer_brand = CustomerBrand.where(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip)
+          if customer_brand.empty? || customer_brand.nil?
+            CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
+            last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
+          elsif customer_brand.first.last_order != julian_to_date(order.sdaddj)
+            customer_brand.first.update_attributes!(last_order: julian_to_date(order.sdaddj), branch: area)
+            # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
           vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
           sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
@@ -367,7 +372,7 @@ class JdeSoDetail < ActiveRecord::Base
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
             hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
             salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(order.sdaddj).to_date.cweek,
+            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
             area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type)
          end
         end
