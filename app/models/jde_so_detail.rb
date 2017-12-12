@@ -133,7 +133,7 @@ class JdeSoDetail < ActiveRecord::Base
   #import sales order, tax and return from standard invoices
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpupmj = '#{date_to_julian(Date.yesterday.to_date)}' 
+    rpdicj BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'  
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
@@ -316,7 +316,7 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpupmj = '#{date_to_julian('30/11/2017'.to_date)}' 
+    rpdicj = '#{date_to_julian('30/11/2017'.to_date)}' 
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
