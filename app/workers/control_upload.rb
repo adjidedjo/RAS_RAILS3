@@ -100,7 +100,7 @@ class ControlUpload
   end
   
   def test_import
-    JdeSalesman.upgrated_customer_brands
+    JdeSoDetai.import_sales_for_asong
   end
   
   def auto_create_marketshare

@@ -8,7 +8,7 @@ class JdeItemAvailability < ActiveRecord::Base
     us = self.find_by_sql("SELECT TRIM(IA.lilotn) AS lilotn 
     FROM PRODDTA.F41021 IA WHERE
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND lihcom < '10000' AND lipqoh >= '10000'
-    AND limcu LIKE '%#{branch_plant}%' AND liitm = '#{short_item}' AND lipbin LIKE '%S%'")
+    AND limcu LIKE '%#{branch_plant}%' AND liitm = '#{short_item}'")
   end
   
   #import buffer daily
