@@ -4,6 +4,13 @@ class JdeItemAvailability < ActiveRecord::Base
   # attr_accessible :lilotn, :lilrcj
   # self.primary_key = 'lilotn'
   
+  def self.checking_stock_asong(short_item, branch_plant)
+    us = self.find_by_sql("SELECT TRIM(IA.lilotn) AS lilotn 
+    FROM PRODDTA.F41021 IA WHERE
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND lihcom < '10000' AND lipqoh >= '10000'
+    AND limcu LIKE '%#{branch_plant}%' AND liitm = '#{short_item}' AND lipbin LIKE '%S%'")
+  end
+  
   #import buffer daily
   def self.import_buffer_daily
     ibranch = find_by_sql("SELECT ibitm, MAX(iblitm) AS iblitm, ibmcu,
@@ -27,7 +34,7 @@ class JdeItemAvailability < ActiveRecord::Base
     FROM PRODDTA.F41021 IA WHERE
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND 
     liupmj = '#{date_to_julian(Date.today)}' AND litday BETWEEN 
-    '#{1.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}' 
+    '#{1.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 

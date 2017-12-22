@@ -18,25 +18,23 @@ class JdeSoDetail < ActiveRecord::Base
       item_number, "999", "580", "SO", date_to_julian(first_week))
   end
   
-  def self.import_sales_consigment
+  def self.import_sales_for_asong
     st = find_by_sql("SELECT MAX(sditm) AS sditm, MAX(sdtrdj), MAX(sdcomm), MAX(sdshan) AS sdshan, 
       sdmcu, MAX(sddeln) AS sddeln, MAX(sddrqj) AS sddrqj, SUM(sduorg) AS jumlah, MAX(sdsrp1) AS sdsrp1, 
       MAX(sddcto) AS sddcto, sddoco, MAX(sddsc1) AS sddsc1, MAX(sddsc2) AS sddsc2,
       MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
-      MAX(sdvr01) AS vr
-      FROM PRODDTA.F4211
-      WHERE sdmcu LIKE '%#{'K'}' AND sdnxtr = '999' AND sdlttr = '580' AND sdaddj =
-      '#{date_to_julian('01/11/2017'.to_date)}'
-      GROUP BY sditm, sdlotn, sdmcu, sddoco")
+      MAX(sdvr01) AS vr, MAX(sdtday) AS sdtday, MAX(sdan8) AS sdan8 FROM PRODDTA.F4211 WHERE sdmcu LIKE '%#{'11011'}%' AND 
+      sdtrdj = '#{date_to_julian(Date.today.to_date)}' AND sdtday BETWEEN 
+      '#{5.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
+      AND sddcto IN ('SO','ZO') AND sdsrp1 LIKE '%S%' AND REGEXP_LIKE(sdsrp2,'KM|DV|HB|SA|SB|ST') 
+      GROUP BY sditm, sdmcu, sddoco ORDER BY sdtday")
     st.each do |det|
       item_master = JdeItemMaster.find_by_imitm(det.sditm)
-      sales_name = det.vr.strip == "" ? det.sdshan : det.vr.strip.split("/")[0]
-      customer = JdeCustomerMaster.find_by_aban8(sales_name)
-      ConsigmentSales.create!(order_no: det.sddoco.to_i, sales_id: det.sdshan.to_i, branch: jde_cabang(det.sdmcu),
-        brand: item_master.imprgr, item_number: det.sdlitm.strip, description: "#{det.sddsc1.strip} " "#{det.sddsc2.strip}",
-        quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj.to_i), lot_number: det.sdlotn.strip,
-        sales_name: customer.nil? ? "-" : customer.abalph.strip, delivery_date: julian_to_date(det.sdaddj)
-      )
+      sales = JdeSalesman.find_salesman(det.sdan8.to_i, det.sdsrp1.strip)
+      AsongOrder.create!(branch_plant: det.sdmcu.strip, item_number: det.sdlitm.strip, branch: jde_cabang(det.sdmcu.strip), short_item: det.sditm.to_i,
+        description: det.sddsc1.strip + ' ' + det.sddsc2.strip, brand: item_master.imprgr.strip, 
+        quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj), order_number: det.sddoco.to_i,
+        order_time: det.sdtday.to_i, sales_name: sales)
     end
   end
   
