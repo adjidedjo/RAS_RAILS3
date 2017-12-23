@@ -24,8 +24,9 @@ class JdeSoDetail < ActiveRecord::Base
       MAX(sddcto) AS sddcto, sddoco, MAX(sddsc1) AS sddsc1, MAX(sddsc2) AS sddsc2,
       MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
       MAX(sdvr01) AS vr, MAX(sdtday) AS sdtday, MAX(sdan8) AS sdan8 FROM PRODDTA.F4211 WHERE 
-      sdtrdj = '#{date_to_julian(Date.today.to_date)}' 
-      AND sddcto IN ('SO','ZO') AND REGEXP_LIKE(sdsrp2,'KM|DV|HB|SA|SB|ST') 
+      sdtrdj = '#{date_to_julian(Date.today.to_date)}' AND sdtday BETWEEN 
+      '#{5.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
+      AND sddcto IN ('SO','ZO') AND REGEXP_LIKE(sdsrp2,'KB|KM|DV|HB|SA|SB|ST') 
       GROUP BY sditm, sdmcu, sddoco ORDER BY sdtday")
     st.each do |det|
       item_master = JdeItemMaster.find_by_imitm(det.sditm)
