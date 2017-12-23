@@ -24,17 +24,20 @@ class JdeSoDetail < ActiveRecord::Base
       MAX(sddcto) AS sddcto, sddoco, MAX(sddsc1) AS sddsc1, MAX(sddsc2) AS sddsc2,
       MAX(sdlitm) AS sdlitm, MAX(sdtrdj) AS sdtrdj, MAX(sdlotn) AS sdlotn, MAX(sdaddj) AS sdaddj,
       MAX(sdvr01) AS vr, MAX(sdtday) AS sdtday, MAX(sdan8) AS sdan8 FROM PRODDTA.F4211 WHERE 
-      sdtrdj = '#{date_to_julian(Date.today.to_date)}' AND sdtday BETWEEN 
+      sdtrdj = '#{date_to_julian(Date.today.to_date)}' AND  sdtday BETWEEN 
       '#{5.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
       AND sddcto IN ('SO','ZO') AND REGEXP_LIKE(sdsrp2,'KB|KM|DV|HB|SA|SB|ST') 
       GROUP BY sditm, sdmcu, sddoco ORDER BY sdtday")
     st.each do |det|
       item_master = JdeItemMaster.find_by_imitm(det.sditm)
       sales = JdeSalesman.find_salesman(det.sdan8.to_i, det.sdsrp1.strip)
-      AsongOrder.create!(branch_plant: det.sdmcu.strip, item_number: det.sdlitm.strip, branch: jde_cabang(det.sdmcu.strip), short_item: det.sditm.to_i,
-        description: det.sddsc1.strip + ' ' + det.sddsc2.strip, brand: item_master.imprgr.strip, 
-        quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj), order_number: det.sddoco.to_i,
-        order_time: det.sdtday.to_i, sales_name: sales)
+      check_order = AsongOrder.find_by_sql("SELECT order_number FROM asong_orders WHERE order_number = '#{det.sddoco.to_i}'")
+      unless check_order.present?
+        AsongOrder.create!(branch_plant: det.sdmcu.strip, item_number: det.sdlitm.strip, branch: jde_cabang(det.sdmcu.strip), short_item: det.sditm.to_i,
+          description: det.sddsc1.strip + ' ' + det.sddsc2.strip, brand: item_master.imprgr.strip, 
+          quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj), order_number: det.sddoco.to_i,
+          order_time: det.sdtday.to_i, sales_name: sales)
+      end
     end
   end
   
