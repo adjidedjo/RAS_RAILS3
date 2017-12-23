@@ -33,7 +33,7 @@ class JdeSoDetail < ActiveRecord::Base
       sales = JdeSalesman.find_salesman(det.sdan8.to_i, det.sdsrp1.strip)
       check_order = AsongOrder.find_by_sql("SELECT order_number FROM asong_orders WHERE order_number = '#{det.sddoco.to_i}'")
       unless check_order.present?
-        AsongOrder.create!(branch_plant: det.sdmcu.strip, item_number: det.sdlitm.strip, branch: jde_cabang(det.sdmcu.strip), short_item: det.sditm.to_i,
+        AsongOrder.create!(branch_plant: det.sdmcu.strip, item_number: det.sdlitm.strip, branch: find_area(jde_cabang(det.sdmcu.strip)), short_item: det.sditm.to_i,
           description: det.sddsc1.strip + ' ' + det.sddsc2.strip, brand: item_master.imprgr.strip, 
           quantity: det.jumlah/10000, order_date: julian_to_date(det.sdtrdj), order_number: det.sddoco.to_i,
           order_time: det.sdtday.to_i, sales_name: sales)
