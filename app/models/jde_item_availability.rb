@@ -47,14 +47,16 @@ class JdeItemAvailability < ActiveRecord::Base
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
         elsif cek_stock.empty?
-          item_master = ItemMaster.find_by_short_item_no(st.liitm.to_i)
+          item_master = self.find_by_sql("SELECT MAX(imitm) AS imitm, MAX(imseg2) AS imseg2, MAX(imdsc1) AS imdsc1,
+          MAX(imdsc2) AS imdsc2, MAX(imlitm) AS imlitm, MAX(imsrp1) AS imsrp1,
+          MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im WHERE imitm LIKE '%#{st.liitm}%'")
           unless item_master.nil?
             status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-            description = item_master.desc.strip+' '+item_master.desc2
-            Stock.create(branch: st.limcu.strip, brand: item_master.slscd1, description: description,
-              item_number: item_master.item_number, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
-              status: status, product: item_master.segment1, short_item: item_master.short_item_no, area_id: jde_cabang(st.limcu.strip),
-              article: item_master.segment2, size: item_master.segment6)
+            description = item_master.dsc1.strip+' '+item_master.dsc2.strip
+            Stock.create(branch: st.limcu.strip, brand: item_master.imsrp1, description: description,
+              item_number: item_master.imlitm, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
+              status: status, product: item_master.imseg1, short_item: item_master.imitm, 
+              area_id: jde_cabang(st.limcu.strip), article: item_master.imseg2, size: item_master.imseg6)
           end
         end
       end
