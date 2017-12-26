@@ -429,7 +429,7 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   def self.jde_cabang(bu)
-    if bu.include?("1100") || bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
       "01"
     elsif bu.include?("1110") || bu == "11101" || bu == "11102" || bu == "13101" || bu == "11101C" || bu == "11101D" || bu == "13101C" || bu == "13101D" || bu == "11101S" || bu == "13101S" #lampung
       "13" 
