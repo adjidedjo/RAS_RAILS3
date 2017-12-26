@@ -52,7 +52,7 @@ class JdeItemAvailability < ActiveRecord::Base
           MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im WHERE imitm LIKE '%#{st.liitm}%'")
           unless item_master.nil?
             status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-            description = item_master.dsc1.strip+' '+item_master.dsc2.strip
+            description = item_master.imdsc1.strip+' '+item_master.imdsc2.strip
             Stock.create(branch: st.limcu.strip, brand: item_master.imsrp1, description: description,
               item_number: item_master.imlitm, onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000, 
               status: status, product: item_master.imseg1, short_item: item_master.imitm, 
