@@ -89,6 +89,7 @@ class JdeSoDetail < ActiveRecord::Base
 
   #import oustanding shipment
   def self.import_outstanding_shipments
+    OutstandingShipment.delete_all
     outstanding = find_by_sql("SELECT MAX(so.sdopdj) AS sdopdj, so.sddoco, so.sdan8, MAX(so.sdshan), MAX(so.sddrqj), 
     MAX(cust.abalph) AS abalph, MAX(so.sdshan), MAX(cust1.abalph) AS salesman, SUM(so.sduorg) AS jumlah,
     MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu
@@ -97,9 +98,9 @@ class JdeSoDetail < ActiveRecord::Base
     JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
-    WHERE cust.absic LIKE '%RET%' AND so.sdcomm NOT LIKE '%#{'K'}%' 
+    WHERE cust.absic LIKE '%RET%' AND itm.imseg4 NOT LIKE '%#{'K'}%' 
     AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND sddcto LIKE '%#{'SO'}%' AND 
-    so.sdnxtr LIKE '%#{560}%'
+    so.sdnxtr LIKE '%#{560}%' AND itm.imstkt NOT LIKE '%K%' 
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     outstanding.each do |ou|
       OutstandingShipment.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
@@ -113,21 +114,22 @@ class JdeSoDetail < ActiveRecord::Base
   def self.import_outstanding_orders
     outstanding = find_by_sql("SELECT MAX(so.sdopdj) AS sdopdj, so.sddoco, so.sdan8, MAX(so.sdshan), MAX(so.sddrqj), 
     MAX(cust.abalph) AS abalph, MAX(so.sdshan), MAX(cust1.abalph) AS salesman, SUM(so.sduorg) AS jumlah,
-    MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu
+    MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, MAX(so.sddrqj) AS sddrqj, MAX(so.sdtrdj) AS sdtrdj
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F0101 cust ON so.sdshan = cust.aban8
     JOIN PRODDTA.F40344 sls ON so.sdshan = sls.saan8
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
-    WHERE cust.absic LIKE '%RET%' AND so.sdcomm NOT LIKE '%#{'K'}%' 
-    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND sddcto LIKE '%#{'SO'}%' AND 
+    WHERE cust.absic LIKE '%RET%' AND itm.imseg4 NOT LIKE '%K%' 
+    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(sddcto,'SO|ZO') AND 
     so.sdnxtr LIKE '%#{525}%'
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
+    SalesOutstandingOrder.delete_all
     outstanding.each do |ou|
       SalesOutstandingOrder.create(order_no: ou.sddoco.to_i, customer: ou.abalph.strip, 
-      promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
+      promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
-      salesman: ou.salesman.strip)
+      salesman: ou.salesman.strip, order_date: julian_to_date(ou.sdtrdj), area: find_area(jde_cabang(ou.sdmcu.strip)))
     end
   end
 
