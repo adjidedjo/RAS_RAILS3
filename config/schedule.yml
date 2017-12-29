@@ -49,7 +49,7 @@ jde_import_stock_daily:
   rails_envs: development, production, staging
   
 jde_import_stock_weekly:
-  cron: "0 14 * * *"
+  cron: "0 2 * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_weekly"
