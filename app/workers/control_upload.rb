@@ -48,8 +48,8 @@ class ControlUpload
     JdeSoDetail.import_outstanding_orders
     JdeSoDetail.import_outstanding_shipments
     JdeSoDetail.import_hold_orders
-    JdeSoDetail.import_transfers_consigment
-    JdeSoDetail.import_sales_consigment
+    #JdeSoDetail.import_transfers_consigment
+    #JdeSoDetail.import_sales_consigment
   end
   
   def import_credit_note
@@ -80,6 +80,14 @@ class ControlUpload
   def import_stock_hourly_display
     JdeItemAvailability.import_stock_hourly_display
     SalesProductivity.generate_productivity
+  end
+  
+  def import_stock_weekly
+    JdeItemAvailability.checking_stock_weekly
+  end
+  
+  def import_stock_daily
+    JdeItemAvailability.checking_stock_daily
   end
   
   def import_stock_hourly

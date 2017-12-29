@@ -33,10 +33,26 @@ jde_import_credit_note:
   rails_envs: development, production, staging
   
 jde_import_stock_hourly:
-  cron: "*/5 6-23 * * *"
+  cron: "*/5 * * * *"
   queue: cron
   class: ControlUpload
   args: "import_stock_hourly"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
+jde_import_stock_daily:
+  cron: "0 2 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_stock_daily"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+  
+jde_import_stock_weekly:
+  cron: "0 14 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_stock_weekly"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
 
