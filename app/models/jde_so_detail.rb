@@ -274,9 +274,9 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   #use this if sales of a branch not working
-  def self.import_so_detail_with_range(from)
-    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj = ?",
-    "580", "565", "SO", date_to_julian(from.to_date)).each do |a|
+  def self.import_so_detail_with_range
+    where("sdnxtr >= ? and sdlttr >= ? and sddcto = ? and sdaddj BETWEEN ? AND ?",
+    "580", "565", "SO", date_to_julian('01/01/2018'.to_date), date_to_julian('09/01/2017'.to_date)).each do |a|
       find_sj = LaporanCabang.where(nosj: a.sddeln.to_i, lnid: a.sdlnid.to_i)
       if find_sj.empty?
         fullnamabarang = "#{a.sddsc1.strip} " "#{a.sddsc2.strip}"
@@ -319,7 +319,7 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdicj = '#{date_to_julian('30/11/2017'.to_date)}' 
+    rpdicj BETWEEN '#{date_to_julian('01/01/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'  
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
       order = 
