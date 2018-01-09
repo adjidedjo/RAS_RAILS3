@@ -5,9 +5,9 @@ class Stock < ActiveRecord::Base
       stock.update_attributes!(area_id: jde_cabang(stock.branch))
     end
   end
-
+  
   def self.jde_cabang(bu)
-    if bu == "11001" || bu == "11001D" || bu == "11001C" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" #pusat
       "01"
     elsif bu == "11101" || bu == "11102" || bu == "11101C" || bu == "11101D" || bu == "11101S" || bu == "18101" || bu == "18101C" || bu == "18101D" || bu == "18102" || bu == "18101S" || bu == "18101K" #lampung
       "13" 
@@ -17,9 +17,9 @@ class Stock < ActiveRecord::Base
       "09"
     elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
-    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabay
+    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabaya
       "07"
-    elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" #cikupa
+    elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
     elsif bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
       "03"
