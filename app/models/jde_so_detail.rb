@@ -99,7 +99,7 @@ class JdeSoDetail < ActiveRecord::Base
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE cust.absic LIKE '%RET%' AND itm.imseg4 NOT LIKE '%#{'K'}%' 
-    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND sddcto LIKE '%#{'SO'}%' AND 
+    AND so.sddrqj > '#{date_to_julian(Date.today.to_date)}' AND sddcto LIKE '%#{'SO'}%' AND 
     so.sdnxtr LIKE '%#{560}%' AND itm.imstkt NOT LIKE '%K%' 
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     outstanding.each do |ou|
@@ -121,7 +121,7 @@ class JdeSoDetail < ActiveRecord::Base
     JOIN PRODDTA.F0101 cust1 ON cust1.aban8 = sls.saslsm
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE cust.absic LIKE '%RET%' AND itm.imseg4 NOT LIKE '%K%' 
-    AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(sddcto,'SO|ZO') AND 
+    AND so.sddrqj < '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(sddcto,'SO|ZO') AND 
     so.sdnxtr LIKE '%#{525}%'
     AND REGEXP_LIKE(so.sdsrp2,'KM|HB|DV|SA|SB|KB') GROUP BY so.sddoco, so.sdan8, so.sdsrp1, so.sdmcu")
     SalesOutstandingOrder.delete_all
@@ -439,7 +439,7 @@ class JdeSoDetail < ActiveRecord::Base
       "09"
     elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
-    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || #surabay
+    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S"#surabaya
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" #cikupa
       "23"

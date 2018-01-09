@@ -12,7 +12,7 @@ class JdeSoHeader < ActiveRecord::Base
       LEFT JOIN PRODDTA.F0006 bp ON cs.shmcu = bp.mcmcu
       WHERE cs.shtrdj = '#{date_to_julian(Date.today)}' AND cs.shtday BETWEEN '#{1.hour.ago.change(min: 0).strftime('%k%M%S')}'
       AND '#{Time.now.change(min: 0).strftime('%k%M%S')}' AND cs.shdcto = 'SO' AND cs.shjobn LIKE '%JDE%'
-      AND bp.mcdl01 NOT LIKE '%Foam%' GROUP BY cs.shan8
+      AND bp.mcdl01 NOT LIKE '%Foam%' AND NOT REGEXP_LIKE(cs.shmcu,'D|C') GROUP BY cs.shan8
     ")
   end
 
