@@ -16,6 +16,36 @@ class JdeSoHeader < ActiveRecord::Base
     ")
   end
 
+  def self.delete_outstanding
+    JdeSoDetail.connection.execute("
+        UPDATE PRODDTA.F4211 SET SDNXTR = '999', SDLTTR = '980', SDUORG = '0',
+        SDSOQS = '0', SDSOBK = '0', SDSOCN = SDSQOR, SDCNDJ = '117305', SDRFRV = 'CBS'
+        WHERE SDNXTR LIKE '561' AND REGEXP_LIKE(SDDCTO, 'WR')
+        AND SDTRDJ < '117305'
+      ")
+  end
+
+  def self.delete_outstanding_ppb_wr
+    ou_540 = JdeSoDetail.find_by_sql("
+          SELECT SDITM, SDMCU, SDDOCO, SDSOQS FROM PRODDTA.F4211
+          WHERE SDNXTR LIKE '%561%' AND SDDCTO LIKE '%WR%'
+          AND SDMCU LIKE '%11001' AND SDTRDJ < '117305'
+        ")
+    ou_540.each do |ou|
+    # if ou.sdlotn != ' '
+    # JdeSoDetail.connection.execute("
+    # UPDATE PRODDTA.F41021 SET LIPCOM = LIPCOM - '#{ou.sdsoqs.to_i}'
+    # WHERE LILOTN LIKE '#{ou.sdlotn.strip}%' AND LIMCU LIKE '%#{ou.sdmcu.strip}' AND LIITM LIKE '#{ou.sditm.to_i}'
+    # ")
+    # else
+      JdeSoDetail.connection.execute("
+            UPDATE PRODDTA.F41021 SET LIPCOM = LIPCOM - '#{ou.sdsoqs.to_i}'
+            WHERE LIMCU LIKE '%#{ou.sdmcu.strip}' AND LIITM LIKE '#{ou.sditm.to_i}'
+          ")
+    end
+  #end
+  end
+
   private
 
   def self.date_to_julian(date)
