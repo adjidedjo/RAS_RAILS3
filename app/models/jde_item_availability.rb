@@ -102,7 +102,7 @@ class JdeItemAvailability < ActiveRecord::Base
   end
   
   def self.trial_stock_cam
-    stock_cek = Stock.find_by_sql("SELECT * FROM stocks WHERE MONTH(updated_at) >= 1 AND YEAR(updated_at) = 2018")
+    stock_cek = Stock.find_by_sql("SELECT * FROM stocks WHERE updated_at <= '2018-02-02'")
     stock_cek.each do |sc|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
