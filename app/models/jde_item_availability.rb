@@ -32,17 +32,17 @@ class JdeItemAvailability < ActiveRecord::Base
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
     FROM PRODDTA.F41021 IA WHERE  
-    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND 
-    liupmj = '#{date_to_julian(Date.today)}' AND litday BETWEEN 
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND REGEXP_LIKE(limcu, '18021')
+     AND lipbin = 'P' AND liupmj = '#{date_to_julian(Date.today)}' AND litday BETWEEN
     '#{2.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND 
-      limcu LIKE '#{fus.limcu}' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
-        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+        cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
@@ -51,7 +51,7 @@ class JdeItemAvailability < ActiveRecord::Base
           MAX(imdsc1) AS imdsc1,
           MAX(imdsc2) AS imdsc2, MAX(imlitm) AS imlitm, MAX(imsrp1) AS imsrp1,
           MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im 
-          WHERE imitm LIKE '%#{st.liitm.to_i}%'")
+          WHERE imitm LIKE '%#{st.liitm.to_i}%' AND imtmpl LIKE '%BJ MATRASS%'")
           unless item_master.nil?
             status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
             description = item_master.first.imdsc1.nil? ? ' ' : (item_master.first.imdsc1.strip+' '+item_master.first.imdsc2.strip)
@@ -72,9 +72,9 @@ class JdeItemAvailability < ActiveRecord::Base
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{sc.short_item}' AND 
-      limcu LIKE '%#{sc.branch}' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{sc.branch}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
-        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+        cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
@@ -90,9 +90,9 @@ class JdeItemAvailability < ActiveRecord::Base
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{sc.short_item}' AND 
-      limcu LIKE '%#{sc.branch}' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{sc.branch}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
-        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+        cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
@@ -102,14 +102,14 @@ class JdeItemAvailability < ActiveRecord::Base
   end
   
   def self.trial_stock_cam
-    stock_cek = Stock.find_by_sql("SELECT * FROM stocks WHERE updated_at <= '2018-02-02'")
+    stock_cek = Stock.find_by_sql("SELECT * FROM stocks WHERE updated_at <= '2018-02-04' AND branch = 18011")
     stock_cek.each do |sc|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{sc.short_item}' AND 
-      limcu LIKE '%#{sc.branch}' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{sc.branch}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
-        cek_stock = Stock.where(short_item: st.liitm, branch: st.limcu.strip)
+        cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
         if cek_stock.present?
           cek_stock.first.update_attributes!(onhand: st.lipqoh/10000, available: (st.lipqoh - st.lihcom)/10000)
