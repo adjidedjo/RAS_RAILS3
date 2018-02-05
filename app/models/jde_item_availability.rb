@@ -32,7 +32,7 @@ class JdeItemAvailability < ActiveRecord::Base
     us = self.find_by_sql("SELECT IA.liitm AS liitm, 
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
     FROM PRODDTA.F41021 IA WHERE  
-    NOT REGEXP_LIKE(liglpt, 'WIP|MAT') AND REGEXP_LIKE(limcu, '18021')
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
      AND lipbin = 'P' AND liupmj = '#{date_to_julian(Date.today)}' AND litday BETWEEN
     '#{2.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
