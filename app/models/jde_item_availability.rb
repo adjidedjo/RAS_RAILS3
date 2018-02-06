@@ -34,13 +34,13 @@ class JdeItemAvailability < ActiveRecord::Base
     FROM PRODDTA.F41021 IA WHERE  
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
      AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
-    '#{30.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND liitm = '10395' AND limcu like '%18011'
+    '#{2.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND 
-      limcu LIKE '%#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
         cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
