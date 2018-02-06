@@ -34,13 +34,13 @@ class JdeItemAvailability < ActiveRecord::Base
     FROM PRODDTA.F41021 IA WHERE  
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
      AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
-    '#{3.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
+    '#{30.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND liitm = '10395' AND limcu like '%18011'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND 
-      limcu LIKE '#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
         cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
@@ -51,7 +51,7 @@ class JdeItemAvailability < ActiveRecord::Base
           MAX(imdsc1) AS imdsc1,
           MAX(imdsc2) AS imdsc2, MAX(imlitm) AS imlitm, MAX(imsrp1) AS imsrp1,
           MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im 
-          WHERE imitm LIKE '%#{st.liitm.to_i}%' AND imtmpl LIKE '%BJ MATRASS%'")
+          WHERE imitm LIKE '#{st.liitm.to_i}' AND imtmpl LIKE '%BJ MATRASS%'")
           unless item_master.nil?
             status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
             description = item_master.first.imdsc1.nil? ? ' ' : (item_master.first.imdsc1.strip+' '+item_master.first.imdsc2.strip)
