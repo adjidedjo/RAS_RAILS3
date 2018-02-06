@@ -33,8 +33,8 @@ class JdeItemAvailability < ActiveRecord::Base
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
     FROM PRODDTA.F41021 IA WHERE  
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
-     AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday BETWEEN
-    '#{5.minutes.ago.change(sec: 0).strftime('%k%M%S')}' AND '#{Time.now.change(sec: 0).strftime('%k%M%S')}'
+     AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
+    '#{3.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
