@@ -34,7 +34,7 @@ class JdeItemAvailability < ActiveRecord::Base
     FROM PRODDTA.F41021 IA WHERE  
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
      AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
-    '#{2.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
+    '#{15.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
