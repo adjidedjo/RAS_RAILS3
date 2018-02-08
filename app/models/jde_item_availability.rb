@@ -33,7 +33,7 @@ class JdeItemAvailability < ActiveRecord::Base
     IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
     FROM PRODDTA.F41021 IA WHERE  
     NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
-     AND lipbin = 'S' AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
+     AND liupmj = '#{date_to_julian(Date.today)}' AND litday >=
     '#{15.minutes.ago.change(sec: 0).strftime('%k%M%S')}'
     GROUP BY IA.liitm, IA.limcu")
     us.each do |fus|
@@ -72,7 +72,7 @@ class JdeItemAvailability < ActiveRecord::Base
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{sc.short_item}' AND 
-      limcu LIKE '%#{sc.branch}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{sc.branch}' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
         cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
@@ -90,7 +90,7 @@ class JdeItemAvailability < ActiveRecord::Base
       stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
       IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
       FROM PRODDTA.F41021 IA WHERE liitm = '#{sc.short_item}' AND 
-      limcu LIKE '%#{sc.branch}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
+      limcu LIKE '%#{sc.branch}' GROUP BY IA.liitm, IA.limcu")
       stock.each do |st|
         cek_stock = Stock.where(short_item: st.liitm.to_i, branch: st.limcu.strip)
         st.update_attributes!(onhand: 0, available: 0) if stock.empty?
