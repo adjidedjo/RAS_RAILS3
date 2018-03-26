@@ -6,7 +6,8 @@ class Production < JdeSoDetail
     SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
     MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
     MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1,
-    MAX(cus.abalph) AS abalph, MAX(so.sdshan) AS sdshan, MAX(cus.abat1) AS abat1
+    MAX(cus.abalph) AS abalph, MAX(so.sdshan) AS sdshan, MAX(cus.abat1) AS abat1,
+    MAX(so.sdtorg) AS sdtorg
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
@@ -28,7 +29,7 @@ class Production < JdeSoDetail
       brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
       order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
       segment1: ou.imseg1.strip, customer: ou.abalph.strip, ship_to: ou.sdshan.to_i, typ: ou.abat1.strip,
-      last_status: ou.sdnxtr.to_i, branch_desc: set_branch(ou.sdmcu.strip))
+      last_status: ou.sdnxtr.to_i, branch_desc: set_branch(ou.sdmcu.strip), originator: ou.sdtorg)
     end
   end
 
