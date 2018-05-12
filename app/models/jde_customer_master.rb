@@ -32,7 +32,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT aladd1, alcty1, alan8 FROM PRODDTA.F0116
       ) AL ON AI.aian8 = AL.alan8
-      WHERE AI.aico LIKE '%0000%' AND AI.aidaoj BETWEEN '#{date_to_julian('2017-09-01'.to_date)}' AND '#{date_to_julian('2017-11-06'.to_date)}'
+      WHERE AI.aico LIKE '%0000%' AND AI.aidaoj BETWEEN '#{date_to_julian('2012-01-01'.to_date)}' AND '#{date_to_julian('2018-5-12'.to_date)}'
     ")
     customer.each do |nc|
       find_cus = Customer.where(address_number: nc.aian8)
@@ -49,7 +49,7 @@ class JdeCustomerMaster < ActiveRecord::Base
   def self.checking_customer_limit
     customer = find_by_sql("
       SELECT AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one FROM PRODDTA.F03012 AI
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn FROM PRODDTA.F03012 AI
       LEFT JOIN (
         SELECT aban8, abalph, absic, abmcu FROM PRODDTA.F0101
         GROUP BY aban8, abalph, absic, abmcu
@@ -75,7 +75,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
       WHERE AI.aico > 0 AND AB.absic LIKE '%RET%'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
     ")
     customer.each do |nc|
       find_cus = CustomerLimit.where(address_number: nc.aian8, co: nc.aico)
@@ -83,12 +83,12 @@ class JdeCustomerMaster < ActiveRecord::Base
         CustomerLimit.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
           city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
-          area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), state: customer.first.aicusts, 
+          area_id: assign_area(nc.aiasn), state: customer.first.aicusts, 
           credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc,
           three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
-         area_id: nc.rpmcu.nil? ? jde_cabang(customer.first.abmcu.strip) : find_area(jde_cabang(nc.rpmcu.strip)), amount_due: nc.rpag,
+         area_id: assign_area(nc.aiasn), amount_due: nc.rpag,
          open_amount: nc.aiaprc, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
       end
     end
@@ -194,5 +194,37 @@ class JdeCustomerMaster < ActiveRecord::Base
     elsif bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     end
+  end
+    
+  def self.assign_area(sc)
+    if sc == 'BAELITE' || sc == 'BALADY' || sc == 'BALISPEC'
+      "4"
+    elsif sc == 'CRLADY' || sc == 'CRBELITE'
+      "9"
+    elsif sc == 'JBELITE' || sc == 'JBLADY' || sc == 'DISCGA'
+      "2"
+    elsif sc == 'JBRELITE' || sc == 'SBYELITE' || sc == 'SBYLADY'
+      "7"
+    elsif sc == 'JKTELITE' || sc  == 'JKTLA'
+      "23"
+    elsif sc == 'JOGELITE' || sc == 'JOGLADY'
+      "10"
+    elsif sc == 'LPGELITE' || sc == 'LPGLADY'
+      "13"
+    elsif sc == 'MDNELITE' || sc  == 'MDNLADY'
+      "5"
+    elsif sc  == 'MKSELITE' || sc == 'MKSLADY'
+      "19"
+    elsif sc == 'MNDELITE'
+      "26"
+    elsif sc == 'PKBELITE' || sc == 'PKBLADY'  
+      "20"
+    elsif sc == 'PLBELITE' || sc == 'PLBLADY'
+      "11"
+    elsif sc == 'SMGELITE' || sc == 'SMGLADY'
+      "8"
+    else
+      "100"
+    end 
   end
 end
