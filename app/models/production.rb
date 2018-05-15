@@ -12,8 +12,8 @@ class Production < JdeSoDetail
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
-    AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
-    so.sdnxtr < '580' AND REGEXP_LIKE(so.sdmcu,'11001$|11002|$12001$|12002$')
+    AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
+    so.sdnxtr < '580' AND REGEXP_LIKE(so.sdmcu,'11001|11002|12001|12002|18081|18082|18091|18092|18051|18052|13151')
     GROUP BY so.sddoco, so.sditm, so.sdnxtr")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
@@ -43,7 +43,7 @@ class Production < JdeSoDetail
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     WHERE so.sdcomm NOT LIKE '%#{'K'}%' AND so.sdtrdj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' 
     AND '#{date_to_julian(Date.today.to_date)}' AND itm.imtmpl LIKE '%BJ MATRASS%'
-    AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST') AND 
+    AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND 
     so.sdlttr NOT LIKE '%#{980}%' AND REGEXP_LIKE(so.sdmcu,'11001$|11002$')
     GROUP BY so.sdmcu, so.sditm")
     Pdc::SalesOrder.delete_all
@@ -135,8 +135,16 @@ class Production < JdeSoDetail
   def self.set_branch(mcu)
     if mcu =~ /^11001/ || mcu =~ /^11002/
       "bandung"
-    else
+    elsif mcu =~ /^18081/ || mcu =~ /^18082/
       "surabaya"
+    elsif mcu =~ /^18091/ || mcu =~ /^18092/
+      "palembang"
+    elsif mcu =~ /^18051/ || mcu =~ /^18052/
+      "semarang"
+    elsif mcu =~ /^12001/ || mcu =~ /^12002/
+      "surabaya"
+    elsif mcu =~ /^13151/
+      "tangerang"
     end 
   end
 end
