@@ -6,7 +6,7 @@ class Production < JdeSoDetail
     SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
     MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
     MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1,
-    MAX(cus.abalph) AS abalph, MAX(so.sdshan) AS sdshan, MAX(cus.abat1) AS abat1,
+    MAX(cus.abalph) AS abalph, so.sdshan, MAX(cus.abat1) AS abat1,
     MAX(so.sdtorg) AS sdtorg
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
@@ -14,7 +14,7 @@ class Production < JdeSoDetail
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
     so.sdnxtr < '580' AND REGEXP_LIKE(so.sdmcu,'11001|11002|12001|12002|18081|18082|18091|18092|18051|18052|13151')
-    GROUP BY so.sddoco, so.sditm, so.sdnxtr")
+    GROUP BY so.sddoco, so.sditm, so.sdnxtr, so.sdshan")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
       op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
