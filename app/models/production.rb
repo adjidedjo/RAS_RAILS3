@@ -141,7 +141,7 @@ class Production < JdeSoDetail
       "medan"
     elsif mcu =~ /^18091/ || mcu =~ /^18092/ || mcu =~ /^11091/ || mcu =~ /^11092/
       "palembang"
-    elsif mcu =~ /^18051/ || mcu =~ /^18052/ || mcu =~ /^11091/ || mcu =~ /^11092/
+    elsif mcu =~ /^18051/ || mcu =~ /^18052/ || mcu =~ /^11051/ || mcu =~ /^11052/
       "semarang"
     elsif mcu =~ /^12001/ || mcu =~ /^12002/
       "surabaya"
