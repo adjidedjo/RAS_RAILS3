@@ -13,7 +13,9 @@ class Production < JdeSoDetail
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
-    so.sdnxtr < '580' AND REGEXP_LIKE(so.sdmcu,'11001|11002|12001|12002|18081|18082|18091|18092|18051|18052|13151')
+    so.sdnxtr < '580' AND 
+    REGEXP_LIKE(so.sdmcu,'11001|11002|12001|12002|18081|18082|11081|11082|11091|11092|11051|11052|
+    18091|18092|18051|18052|11151|11152')
     GROUP BY so.sddoco, so.sditm, so.sdnxtr, so.sdshan")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
