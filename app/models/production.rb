@@ -137,15 +137,15 @@ class Production < JdeSoDetail
   def self.set_branch(mcu)
     if mcu =~ /^11001/ || mcu =~ /^11002/
       "bandung"
-    elsif mcu =~ /^18081/ || mcu =~ /^18082/
-      "surabaya"
-    elsif mcu =~ /^18091/ || mcu =~ /^18092/
+    elsif mcu =~ /^18081/ || mcu =~ /^18082/ || mcu =~ /^11081/ || mcu =~ /^11082/
+      "medan"
+    elsif mcu =~ /^18091/ || mcu =~ /^18092/ || mcu =~ /^11091/ || mcu =~ /^11092/
       "palembang"
-    elsif mcu =~ /^18051/ || mcu =~ /^18052/
+    elsif mcu =~ /^18051/ || mcu =~ /^18052/ || mcu =~ /^11091/ || mcu =~ /^11092/
       "semarang"
     elsif mcu =~ /^12001/ || mcu =~ /^12002/
       "surabaya"
-    elsif mcu =~ /^13151/
+    elsif mcu =~ /^13151/ || mcu =~ /^11151/ || mcu =~ /^11152/
       "tangerang"
     end 
   end
