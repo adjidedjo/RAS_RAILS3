@@ -73,7 +73,7 @@ class JdeCustomerMaster < ActiveRecord::Base
         AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%'
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aian8 = '100373'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
     ")
@@ -88,7 +88,7 @@ class JdeCustomerMaster < ActiveRecord::Base
           three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
-         area_id: assign_area(nc.aiasn), amount_due: nc.rpag,
+         area_id: assign_area(nc.aiasn).to_i, amount_due: nc.rpag,
          open_amount: nc.aiaprc, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
       end
     end
@@ -197,34 +197,32 @@ class JdeCustomerMaster < ActiveRecord::Base
   end
     
   def self.assign_area(sc)
-    if sc == 'BAELITE' || sc == 'BALADY' || sc == 'BALISPEC'
+    if sc.include?('BAELITE') || sc.include?('BALADY') || sc.include?('BALISPEC')
       "4"
-    elsif sc == 'CRLADY' || sc == 'CRBELITE'
+    elsif sc.include?('CRLADY') || sc.include?('CRBELITE')
       "9"
-    elsif sc == 'JBELITE' || sc == 'JBLADY' || sc == 'DISCGA'
+    elsif sc.include?('JBELITE') || sc.include?('JBLADY') || sc.include?('DISCGA')
       "2"
-    elsif sc == 'JBRELITE' || sc == 'SBYELITE' || sc == 'SBYLADY'
+    elsif sc.include?('JBRELITE') || sc.include?('SBYELITE') || sc.include?('SBYLADY')
       "7"
-    elsif sc == 'JKTELITE' || sc  == 'JKTLA'
+    elsif sc.include?('JKTELITE') || sc.include?('JKTLA')
       "23"
-    elsif sc == 'JOGELITE' || sc == 'JOGLADY'
+    elsif sc.include?('JOGELITE') || sc.include?('JOGLADY')
       "10"
-    elsif sc == 'LPGELITE' || sc == 'LPGLADY'
+    elsif sc.include?('LPGELITE') || sc.include?('LPGLADY')
       "13"
-    elsif sc == 'MDNELITE' || sc  == 'MDNLADY'
+    elsif sc.include?('MDNELITE') || sc.include?('MDNLADY')
       "5"
-    elsif sc  == 'MKSELITE' || sc == 'MKSLADY'
+    elsif sc.include?('MKSELITE') || sc.include?('MKSLADY')
       "19"
-    elsif sc == 'MNDELITE'
+    elsif sc.include?('MNDELITE')
       "26"
-    elsif sc == 'PKBELITE' || sc == 'PKBLADY'  
+    elsif sc.include?('PKBELITE') || sc.include?('PKBLADY')  
       "20"
-    elsif sc == 'PLBELITE' || sc == 'PLBLADY'
+    elsif sc.include?('PLBELITE') || sc.include?('PLBLADY')
       "11"
-    elsif sc == 'SMGELITE' || sc == 'SMGLADY'
+    elsif sc.include?('SMGELITE') || sc.include?('SMGLADY')
       "8"
-    else
-      "100"
     end 
   end
 end
