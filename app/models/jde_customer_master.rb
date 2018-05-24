@@ -73,7 +73,7 @@ class JdeCustomerMaster < ActiveRecord::Base
         AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000'
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aiasn != ' ' and AI.aian8 = '100697'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
     ")
@@ -206,7 +206,7 @@ class JdeCustomerMaster < ActiveRecord::Base
     elsif sc.include?('JBRELITE') || sc.include?('SBYELITE') || sc.include?('SBYLADY')
       "7"
     elsif sc.include?('JKTELITE') || sc.include?('JKTLA')
-      "23"
+      "3"
     elsif sc.include?('JOGELITE') || sc.include?('JOGLADY')
       "10"
     elsif sc.include?('LPGELITE') || sc.include?('LPGLADY')
