@@ -231,6 +231,45 @@ class JdeItemAvailability < ActiveRecord::Base
     end
   end
   
+  def self.historical_stock
+    us = self.find_by_sql("SELECT IA.liitm AS liitm, 
+    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+    FROM PRODDTA.F41021 IA WHERE  
+    NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
+     AND liupmj = '#{date_to_julian(Date.today)}'
+    GROUP BY IA.liitm, IA.limcu")
+    us.each do |fus|
+      stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
+      IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
+      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND 
+      limcu LIKE '#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
+      stock.each do |st|
+        item_master = self.find_by_sql("SELECT MAX(imitm) AS imitm, MAX(imseg2) AS imseg2, 
+          MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2, MAX(imlitm) AS imlitm, MAX(imsrp1) AS imsrp1,
+          MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im 
+          WHERE imitm LIKE '#{st.liitm.to_i}' AND imtmpl LIKE '%BJ MATRASS%'")
+        ledger = self.find_by_sql("
+          SELECT 
+          SUM(CASE WHEN iltrqt < 0 THEN iltrqt END) out_stock,
+          SUM(CASE WHEN iltrqt > 0 THEN iltrqt END) in_stock 
+          FROM PRODDTA.F4111 il 
+          WHERE ilitm LIKE '#{st.liitm.to_i}' AND ilmcu LIKE '#{fus.limcu}'
+          AND ilcrdj >= '118182' AND iltrqt != 0")
+        unless item_master.nil? || jde_cabang(st.limcu.strip).nil?
+          ledger.each do |l|
+            status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
+            description = item_master.first.imdsc1.nil? ? ' ' : (item_master.first.imdsc1.strip+' '+item_master.first.imdsc2.strip)
+            HistoricalStock.create(branch_plan: st.limcu.strip, description: description,
+              item_number: item_master.first.imlitm, stock: (st.lipqoh.nil? ? 0 : st.lipqoh/10000), 
+              out_stock: (l.out_stock.nil? ? 0 : l.out_stock/10000), in_stock: (l.in_stock.nil? ? 0 : l.in_stock/10000), 
+              short_item: item_master.first.imitm.to_i, branch_id: jde_cabang(st.limcu.strip),
+              transaction_date: Date.yesterday, status: status)
+           end
+        end
+      end
+    end
+  end
+  
   private
   
   def self.date_to_julian(date)
@@ -278,6 +317,10 @@ class JdeItemAvailability < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
+    elsif bu == "1801201" || bu == "1801202" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "18081" || bu == "18081C" || bu == "18081D" || bu == "18082" || bu == "18081S" || bu == "18081K" || bu == "18082C" || bu == "18082D" || bu == "18082K" #tasikmalaya
+      "25"
+    elsif bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
+      "26"
     end
   end
 end
