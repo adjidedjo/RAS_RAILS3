@@ -232,41 +232,35 @@ class JdeItemAvailability < ActiveRecord::Base
   end
   
   def self.historical_stock
-    us = self.find_by_sql("SELECT IA.liitm AS liitm, 
-    IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-    FROM PRODDTA.F41021 IA WHERE  
-    NOT REGEXP_LIKE(liglpt, 'WIP|MAT')
-     AND liupmj = '#{date_to_julian(Date.today)}'
-    GROUP BY IA.liitm, IA.limcu")
+    us = self.find_by_sql("SELECT NVL(ST.LIMCU,0) AS STOCK_BRANCH, NVL(IL.ILMCU,0) AS TRANSACTION_BRANCH, 
+      MAX(IM.IMLITM) AS KODE, CONCAT(CONCAT(TRIM(MAX(IM.IMDSC1)), ' '), TRIM(MAX(IM.IMDSC2))) AS DESCRIPTION,
+      NVL(SUM(IL.QTYOUT),0) AS QTY_OUT, 
+      NVL(SUM(IL.QTYIN),0) AS QTY_IN, 
+      NVL(SUM(IL.ADJIN),0) AS QTY_ADJIN,
+      NVL(SUM(IL.ADJOUT),0) AS QTY_ADJOUT,
+      NVL(SUM(ST.LIPQOH),0) AS STOCK FROM PRODDTA.F4101 IM
+      LEFT JOIN 
+      (
+          SELECT MAX(ILDCT) AS ILDCT, MAX(ILITM) AS ILITM, MAX(ILMCU) AS ILMCU,
+          SUM(CASE WHEN ILDCT != 'IA' AND ILTRQT >= 1 THEN ILTRQT/10000 END) AS QTYIN,
+          SUM(CASE WHEN ILDCT != 'IA' AND ILTRQT < 1 THEN ILTRQT/10000 END) AS QTYOUT,
+          SUM(CASE WHEN ILDCT = 'IA' AND ILTRQT >= 1 THEN ILTRQT/10000 END) AS ADJIN,
+          SUM(CASE WHEN ILDCT = 'IA' AND ILTRQT < 1 THEN ILTRQT/10000 END) AS ADJOUT
+          FROM PRODDTA.F4111 WHERE ILTRDJ = '#{date_to_julian(Date.yesterday)}' 
+          AND ILDCT IN ('SO', 'ST', 'IA', 'IR', 'SK', 'RO', 'CO', 'OV') GROUP BY ILMCU, ILITM, ILDCT
+      ) IL ON IM.IMITM = IL.ILITM
+      LEFT JOIN 
+      (
+          SELECT LIMCU, SUM(LIPQOH/10000) AS LIPQOH, LIITM AS LIITM FROM PRODDTA.F41021 GROUP BY LIMCU, LIITM
+      ) ST ON IM.IMITM = ST.LIITM AND ST.LIMCU = IL.ILMCU
+      WHERE IMTMPL LIKE '%BJ MATRASS%' AND IMSTKT != 'O' GROUP BY IM.IMITM, ST.LIMCU, IL.ILMCU")
     us.each do |fus|
-      stock = self.find_by_sql("SELECT IA.liitm AS liitm, 
-      IA.limcu AS limcu, SUM(IA.lipqoh) AS lipqoh, SUM(IA.lihcom) AS lihcom 
-      FROM PRODDTA.F41021 IA WHERE liitm = '#{fus.liitm}' AND 
-      limcu LIKE '#{fus.limcu}' AND lipbin = 'S' GROUP BY IA.liitm, IA.limcu")
-      stock.each do |st|
-        item_master = self.find_by_sql("SELECT MAX(imitm) AS imitm, MAX(imseg2) AS imseg2, 
-          MAX(imdsc1) AS imdsc1, MAX(imdsc2) AS imdsc2, MAX(imlitm) AS imlitm, MAX(imsrp1) AS imsrp1,
-          MAX(imseg1) AS imseg1, MAX(imseg2) AS imseg2, MAX(imseg6) AS imseg6 FROM PRODDTA.F4101 im 
-          WHERE imitm LIKE '#{st.liitm.to_i}' AND imtmpl LIKE '%BJ MATRASS%'")
-        ledger = self.find_by_sql("
-          SELECT 
-          SUM(CASE WHEN iltrqt < 0 THEN iltrqt END) out_stock,
-          SUM(CASE WHEN iltrqt > 0 THEN iltrqt END) in_stock 
-          FROM PRODDTA.F4111 il 
-          WHERE ilitm LIKE '#{st.liitm.to_i}' AND ilmcu LIKE '#{fus.limcu}'
-          AND ilcrdj >= '118182' AND iltrqt != 0")
-        unless item_master.nil? || jde_cabang(st.limcu.strip).nil?
-          ledger.each do |l|
-            status = /\A\d+\z/ === st.limcu.strip.last ? 'N' : st.limcu.strip.last
-            description = item_master.first.imdsc1.nil? ? ' ' : (item_master.first.imdsc1.strip+' '+item_master.first.imdsc2.strip)
-            HistoricalStock.create(branch_plan: st.limcu.strip, description: description,
-              item_number: item_master.first.imlitm, stock: (st.lipqoh.nil? ? 0 : st.lipqoh/10000), 
-              out_stock: (l.out_stock.nil? ? 0 : l.out_stock/10000), in_stock: (l.in_stock.nil? ? 0 : l.in_stock/10000), 
-              short_item: item_master.first.imitm.to_i, branch_id: jde_cabang(st.limcu.strip),
-              transaction_date: Date.yesterday, status: status)
-           end
-        end
-      end
+      HistoricalStock.create(branch_plan: fus.stock_branch.strip, description: fus.description,
+        item_number: fus.kode, stock: fus.stock, 
+        out_stock: fus.qty_out, in_stock: fus.qty_in, adj_in: fus.qty_adjin, adj_out: fus.qty_adjout,
+        branch_id: fus.stock_branch == '0' ? 0 : jde_cabang(fus.stock_branch.strip),
+        branch_desc: fus.stock_branch == '0' ? 0 : Cabang.branch_description(jde_cabang(fus.stock_branch.strip)),
+        transaction_date: Date.yesterday)
     end
   end
   
@@ -319,7 +313,7 @@ class JdeItemAvailability < ActiveRecord::Base
       "20"
     elsif bu == "1801201" || bu == "1801202" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "18081" || bu == "18081C" || bu == "18081D" || bu == "18082" || bu == "18081S" || bu == "18081K" || bu == "18082C" || bu == "18082D" || bu == "18082K" #tasikmalaya
       "25"
-    elsif bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
+    elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     end
   end
