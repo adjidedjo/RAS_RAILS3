@@ -9,11 +9,11 @@ class JdeInvoice < ActiveRecord::Base
     invoices.each do |iv|
         customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
-        if customer.abat1.strip == "C"
+        item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
+        if customer.abat1.strip == "C" && item_master.present?
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
           fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
