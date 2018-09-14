@@ -13,7 +13,7 @@ class JdeInvoice < ActiveRecord::Base
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          item_master = JdeItemMaster.find_by_imitm(iv.rpitm)
+          item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk)
         fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
@@ -24,7 +24,7 @@ class JdeInvoice < ActiveRecord::Base
           group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
           # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
           sales = JdeSalesman.find_salesman(iv.rpan8.to_i, item_master.imsrp1.strip)
-          sales_id = JdeSalesman.find_salesman_id(order.ivan8.to_i, item_master.imsrp1.strip)
+          sales_id = JdeSalesman.find_salesman_id(iv.rpan8.to_i, item_master.imsrp1.strip)
           customer_master = Customer.where(address_number: iv.rpan8.to_i)
           customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
           if customer_brand.empty? || customer_brand.nil?

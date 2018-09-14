@@ -7,6 +7,10 @@ class JdeItemMaster < ActiveRecord::Base
   def self.get_item_number(short_item)
     where(imitm: short_item)
   end
+  
+  def self.get_item_number_from_second(second_item)
+    where(imlitm: second_item)
+  end
 
   def self.update_second
     PosItemMaster.all.each do |pim|
