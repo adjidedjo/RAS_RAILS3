@@ -4,8 +4,8 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdicj BETWEEN '#{date_to_julian('01/08/2018'.to_date)}' AND '#{date_to_julian('31/08/2018'.to_date)}'  
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
+    rpdicj BETWEEN '#{date_to_julian('14/08/2018'.to_date)}' AND '#{date_to_julian('14/08/2018'.to_date)}'  
+    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1 AND rpmcu LIKE '%1801201'")
     invoices.each do |iv|
         customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
@@ -13,8 +13,8 @@ class JdeInvoice < ActiveRecord::Base
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk)
-        fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
+          item_master = JdeItemMaster.get_item_number_from_secondget_item_number_from_second(iv.rprmk.strip)
+          fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
           kain = JdeUdc.kain_udc(item_master.imseg3.strip)
@@ -43,12 +43,10 @@ class JdeInvoice < ActiveRecord::Base
             harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
             salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type)
+            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj))
          end
-        end
+      end
   end
-  
-  
 
   private
   def self.date_to_julian(date)
@@ -92,6 +90,10 @@ class JdeInvoice < ActiveRecord::Base
       20
     elsif cabang == "50"
       50
+    elsif cabang == "25"
+      25
+    elsif cabang == "26"
+      26
     end
   end
   
