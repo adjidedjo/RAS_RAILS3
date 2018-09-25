@@ -2,10 +2,10 @@ class JdeInvoice < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "proddta.f03b11" #sd
   
-  def self.test_import_sales
-    invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdivj BETWEEN '#{date_to_julian('14/08/2018'.to_date)}' AND '#{date_to_julian('14/08/2018'.to_date)}'  
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
+    def self.test_import_sales
+    invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
+    rpdivj BETWEEN '#{date_to_julian('01/09/2018'.to_date)}' AND '#{date_to_julian('24/09/2018'.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RM') AND rpsdoc > 1")
     invoices.each do |iv|
         customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
@@ -48,11 +48,11 @@ class JdeInvoice < ActiveRecord::Base
          end
       end
   end
-  
+
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
     rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RX|RO') AND rpsdoc > 1")
+    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
@@ -95,6 +95,7 @@ class JdeInvoice < ActiveRecord::Base
          end
       end
   end
+
 
   private
   def self.date_to_julian(date)
@@ -160,7 +161,7 @@ class JdeInvoice < ActiveRecord::Base
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
-    elsif bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
+    elsif bu == "11030" ||  bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "12111C" || bu == "12111D" || bu == "12111S" || bu == "18111" || bu == "18111C" || bu == "18111D" || bu == "18112" || bu == "18111S" || bu == "18111K" || bu == "18112C" || bu == "18112D" || bu == "18112K" #makasar
       "19"
@@ -178,8 +179,10 @@ class JdeInvoice < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
-    elsif bu == "1801201" || bu == "1801202" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201" || bu == "1801201S" || bu == "1801201K" || bu == "1801201C" || bu == "1801201D" || bu == "1801201K" #tasikmalaya
-      "25"
+    elsif bu.include?('180120') || bu.include?("180110") #tasikmalaya
+      "2"
+    elsif bu.include?('1515') #new cikupa
+      "23"
     elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     end

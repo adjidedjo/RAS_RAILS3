@@ -1,6 +1,6 @@
 class JdeSoDetail < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f4211" #sd
+  self.table_name = "proddta.F03B11" #sd
   
   def self.get_list_of_item(so_num, type_so)
     find_by_sql("SELECT MAX(sddsc1) AS sddsc1, 
@@ -319,68 +319,49 @@ class JdeSoDetail < ActiveRecord::Base
   #test_import sales order, tax and return from standard invoices
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE 
-    rpdicj BETWEEN '#{date_to_julian('01/01/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'  
+    rpdicj BETWEEN '#{date_to_julian('01/08/2018'.to_date)}' AND '#{date_to_julian('31/08/2018'.to_date)}'  
     AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-      order = 
-      if iv.rpdct.strip == 'RM'
-        where("sddoco = ? and sdlitm = ? and sdnxtr = ? and sdlttr = ?
-      and sddcto IN ('SO','ZO','CO')", iv.rpsdoc, iv.rprmk, "999", "580").first
-      else
-        where("sddoco = ? and sddcto IN ('SO','ZO','CO') and sdlnid = '#{iv.rplnid}'", iv.rpsdoc).first
-      end
-      if order.present?
-        checking =
-        if iv.rpdct.strip == 'RM'
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE noso LIKE '#{order.sddoco}'
-        AND kodebrg LIKE '#{order.sdlitm.strip}' AND harganetto2 = '#{iv.rpag.to_i}' AND orty = '#{iv.rpdct.strip}'")
-        else
-          LaporanCabang.find_by_sql("SELECT id FROM tblaporancabang WHERE nosj LIKE '#{order.sddeln.to_i}'
-        AND kodebrg LIKE '#{order.sdlitm.strip}' AND lnid = '#{order.sdlnid.to_i}'")
-        end
-        if checking.empty?
-        fullnamabarang = "#{order.sddsc1.strip} " "#{order.sddsc2.strip}"
-        customer = JdeCustomerMaster.find_by_aban8(order.sdan8)
+        customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
         bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
         if customer.abat1.strip == "C" && order.sdaddj != 0
           namacustomer = customer.abalph.strip
           cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
           area = find_area(cabang)
-          item_master = JdeItemMaster.find_by_imitm(order.sditm)
+          item_master = JdeItemMaster.find_by_imitm(iv.rpitm)
+        fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
           jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
           artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
           kain = JdeUdc.kain_udc(item_master.imseg3.strip)
           groupitem = JdeUdc.group_item_udc(order.sdsrp3.strip)
-          harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
-          kota = JdeAddressByDate.get_city(order.sdan8.to_i)
-          group = JdeCustomerMaster.get_group_customer(order.sdan8.to_i)
-          variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
-          sales = JdeSalesman.find_salesman(order.sdan8.to_i, order.sdsrp1.strip)
+          # harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
+          kota = JdeAddressByDate.get_city(iv.rpan8.to_i)
+          group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
+          # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+          sales = JdeSalesman.find_salesman(iv.rpan8.to_i, order.sdsrp1.strip)
           sales_id = JdeSalesman.find_salesman_id(order.sdan8.to_i, order.sdsrp1.strip)
           # customer_master = Customer.where(address_number: order.sdan8.to_i)
-          customer_brand = CustomerBrand.where(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip)
+          customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
           if customer_brand.empty? || customer_brand.nil?
-            CustomerBrand.create!(address_number: order.sdan8.to_i, brand: item_master.imprgr.strip, 
-            last_order: julian_to_date(order.sdaddj), branch: area, customer: namacustomer, channel_group: group)
-          elsif customer_brand.first.last_order != julian_to_date(order.sdaddj)
-            customer_brand.first.update_attributes!(last_order: julian_to_date(order.sdaddj), branch: area)
+            CustomerBrand.create!(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip, 
+            last_order: julian_to_date(iv.rpdivj), branch: area, customer: namacustomer, channel_group: group)
+          elsif customer_brand.first.last_order != julian_to_date(iv.rpdivj)
+            customer_brand.first.update_attributes!(last_order: julian_to_date(iv.rpdivj), branch: area)
             # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
           end
           vorty = iv.rpdct.strip == 'RM' ? 'RM' : order.sddcto.strip
           sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
-          LaporanCabang.create(cabang_id: cabang, noso: order.sddoco.to_i, tanggal: julian_to_date(order.sdtrdj), nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-            kodebrg: order.sdlitm.strip,
-            namabrg: fullnamabarang, kode_customer: order.sdan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+          LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, nosj: order.sddeln.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+            kodebrg: item_master.imlitm.strip,
+            namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
             kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, lnid: order.sdlnid.to_i, ketppb: "",
+            hargasatuan: harga/10000, harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
             salesman: sales, diskon5: variance, orty: vorty, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
             fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
             area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type)
          end
         end
-      end
-    end
   end
 
   private
@@ -443,7 +424,7 @@ class JdeSoDetail < ActiveRecord::Base
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
-    elsif bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
+    elsif bu == "11030" ||  bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "12111C" || bu == "12111D" || bu == "12111S" || bu == "18111" || bu == "18111C" || bu == "18111D" || bu == "18112" || bu == "18111S" || bu == "18111K" || bu == "18112C" || bu == "18112D" || bu == "18112K" #makasar
       "19"
@@ -461,9 +442,11 @@ class JdeSoDetail < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
-    elsif bu == "1801201" || bu == "1801202" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201" || bu == "1801201S" || bu == "1801201K" || bu == "1801201C" || bu == "1801201D" || bu == "1801201K" #tasikmalaya
-      "25"
-    elsif bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
+    elsif bu.include?('180120') || bu.include?("180110") #tasikmalaya
+      "2"
+    elsif bu.include?('1515') #new cikupa
+      "23"
+    elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     end
   end
