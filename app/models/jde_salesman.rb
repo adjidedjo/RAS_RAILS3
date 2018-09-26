@@ -1,6 +1,6 @@
 class JdeSalesman < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f40344" #sa
+  self.table_name = "PRODDTA.F40344" #sa
   
   def self.find_salesman(customer_id, brand)
     commision_table = find_by_sql("SELECT saslsm FROM proddta.f40344 WHERE saan8 like '%#{customer_id}%' 

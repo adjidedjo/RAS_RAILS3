@@ -1,52 +1,56 @@
 class JdeInvoice < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f03b11" #sd
+  self.table_name = "PRODDTA.F03B11" #rp
   
-    def self.test_import_sales
+  def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/09/2018'.to_date)}' AND '#{date_to_julian('24/09/2018'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RM') AND rpsdoc > 1")
+    rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-        customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
-        bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
-        item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
-        if item_master.present?
-          namacustomer = customer.abalph.strip
-          cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
-          area = find_area(cabang)
-          fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
-          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
-          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
-          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
-          groupitem = JdeUdc.group_item_udc(item_master.imsrp3.strip)
-          # harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
-          kota = JdeAddressByDate.get_city(iv.rpan8.to_i)
-          group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
-          # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
-          sales = JdeSalesman.find_salesman(iv.rpan8.to_i, item_master.imsrp1.strip)
-          sales_id = JdeSalesman.find_salesman_id(iv.rpan8.to_i, item_master.imsrp1.strip)
-          customer_master = Customer.where(address_number: iv.rpan8.to_i)
-          customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
-          if customer_brand.empty? || customer_brand.nil?
-            CustomerBrand.create!(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip,
-            last_order: julian_to_date(iv.rpdivj), branch: area, customer: namacustomer, channel_group: group)
-          elsif customer_brand.first.last_order != julian_to_date(iv.rpdivj)
-            customer_brand.first.update_attributes!(last_order: julian_to_date(iv.rpdivj), branch: area)
-            # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
-          end
-          sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
-          LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-            kodebrg: item_master.imlitm.strip,
-            namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
-            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-            harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
-            salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-            nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i)
+        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+        orty = '#{iv.rpsfx.to_i}' AND nosj = '#{iv.rplnid.to_i}'")
+        if check.present?
+          customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
+          bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
+          item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
+          if item_master.present?
+            namacustomer = customer.abalph.strip
+            cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
+            area = find_area(cabang)
+            fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
+            jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
+            artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
+            kain = JdeUdc.kain_udc(item_master.imseg3.strip)
+            groupitem = JdeUdc.group_item_udc(item_master.imsrp3.strip)
+            # harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
+            kota = JdeAddressByDate.get_city(iv.rpan8.to_i)
+            group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
+            # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+            sales = JdeSalesman.find_salesman(iv.rpan8.to_i, item_master.imsrp1.strip)
+            sales_id = JdeSalesman.find_salesman_id(iv.rpan8.to_i, item_master.imsrp1.strip)
+            customer_master = Customer.where(address_number: iv.rpan8.to_i)
+            customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
+            if customer_brand.empty? || customer_brand.nil?
+              CustomerBrand.create!(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip,
+              last_order: julian_to_date(iv.rpdivj), branch: area, customer: namacustomer, channel_group: group)
+            elsif customer_brand.first.last_order != julian_to_date(iv.rpdivj)
+              customer_brand.first.update_attributes!(last_order: julian_to_date(iv.rpdivj), branch: area)
+              # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+            end
+            sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
+            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              kodebrg: item_master.imlitm.strip,
+              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
          end
       end
+    end
   end
 
   def self.import_sales
@@ -54,46 +58,50 @@ class JdeInvoice < ActiveRecord::Base
     rpdivj = '#{date_to_julian(Date.yesterday.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-        customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
-        bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
-        item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
-        if item_master.present?
-          namacustomer = customer.abalph.strip
-          cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
-          area = find_area(cabang)
-          fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
-          jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
-          artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
-          kain = JdeUdc.kain_udc(item_master.imseg3.strip)
-          groupitem = JdeUdc.group_item_udc(item_master.imsrp3.strip)
-          # harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
-          kota = JdeAddressByDate.get_city(iv.rpan8.to_i)
-          group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
-          # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
-          sales = JdeSalesman.find_salesman(iv.rpan8.to_i, item_master.imsrp1.strip)
-          sales_id = JdeSalesman.find_salesman_id(iv.rpan8.to_i, item_master.imsrp1.strip)
-          customer_master = Customer.where(address_number: iv.rpan8.to_i)
-          customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
-          if customer_brand.empty? || customer_brand.nil?
-            CustomerBrand.create!(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip,
-            last_order: julian_to_date(iv.rpdivj), branch: area, customer: namacustomer, channel_group: group)
-          elsif customer_brand.first.last_order != julian_to_date(iv.rpdivj)
-            customer_brand.first.update_attributes!(last_order: julian_to_date(iv.rpdivj), branch: area)
-            # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
-          end
-          sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
-          LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-            kodebrg: item_master.imlitm.strip,
-            namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
-            kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-            harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
-            salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-            fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-            area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-            nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i)
+        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+        orty = '#{iv.rpsfx.to_i}' AND nosj = '#{iv.rplnid.to_i}'")
+        if check.present?
+          customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
+          bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
+          item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
+          if item_master.present?
+            namacustomer = customer.abalph.strip
+            cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
+            area = find_area(cabang)
+            fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
+            jenis = JdeUdc.jenis_udc(item_master.imseg1.strip)
+            artikel = JdeUdc.artikel_udc(item_master.imseg2.strip)
+            kain = JdeUdc.kain_udc(item_master.imseg3.strip)
+            groupitem = JdeUdc.group_item_udc(item_master.imsrp3.strip)
+            # harga = JdeBasePrice.harga_satuan(order.sditm, order.sdmcu.strip, order.sdtrdj)
+            kota = JdeAddressByDate.get_city(iv.rpan8.to_i)
+            group = JdeCustomerMaster.get_group_customer(iv.rpan8.to_i)
+            # variance = order.sdaddj == 0 ? 0 : (julian_to_date(order.sdaddj)-julian_to_date(order.sdppdj)).to_i
+            sales = JdeSalesman.find_salesman(iv.rpan8.to_i, item_master.imsrp1.strip)
+            sales_id = JdeSalesman.find_salesman_id(iv.rpan8.to_i, item_master.imsrp1.strip)
+            customer_master = Customer.where(address_number: iv.rpan8.to_i)
+            customer_brand = CustomerBrand.where(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip)
+            if customer_brand.empty? || customer_brand.nil?
+              CustomerBrand.create!(address_number: iv.rpan8.to_i, brand: item_master.imprgr.strip,
+              last_order: julian_to_date(iv.rpdivj), branch: area, customer: namacustomer, channel_group: group)
+            elsif customer_brand.first.last_order != julian_to_date(iv.rpdivj)
+              customer_brand.first.update_attributes!(last_order: julian_to_date(iv.rpdivj), branch: area)
+              # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
+            end
+            sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
+            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              kodebrg: item_master.imlitm.strip,
+              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
          end
       end
+    end
   end
 
 

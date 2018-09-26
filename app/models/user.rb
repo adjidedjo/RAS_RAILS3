@@ -14,8 +14,8 @@ class User < ActiveRecord::Base
   after_create :send_welcome_mail
 
   def send_welcome_mail
-    admin = User.find_by_roles('SuperHero')
-    UserMailer.sign_up(admin, email).deliver
+    #admin = User.find_by_roles('SuperHero')
+    #UserMailer.sign_up(admin, email).deliver
   end
 
   def self.find_first_by_auth_conditions(warden_conditions)

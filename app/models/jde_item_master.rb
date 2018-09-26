@@ -1,6 +1,6 @@
 class JdeItemMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f4101" #im
+  self.table_name = "PRODDTA.F4101" #im
 
   scope :include_items, -> { where("imprgr in (?) and imdsc1 not like ?", ['ELITE', 'LADY', 'PURECARE', 'TECHGEL'], '%HOTEL%')}
 

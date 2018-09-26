@@ -1,6 +1,6 @@
 class JdeSoHeader < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f4201"
+  self.table_name = "PRODDTA.F4201"
   def self.get_order_today
     find_by_sql("
       SELECT MAX(cs.shdrqj) AS shdrqj, MAX(cs.shdcto) AS shdcto, MAX(cs.shdoco) AS shdoco, cs.shan8, MAX(dy.oamlnm) AS oamlnm, MAX(dy.oaadd1) AS oaadd1,

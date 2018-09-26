@@ -1,6 +1,6 @@
 class JdeItemAvailability < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f41021" #sd
+  self.table_name = "PRODDTA.F41021" #sd
   # attr_accessible :lilotn, :lilrcj
   # self.primary_key = 'lilotn'
   

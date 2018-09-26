@@ -57,6 +57,17 @@ class LaporanCabang < ActiveRecord::Base
   scope :accessoris_bonus, where("kodejenis not like ? and bonus like ?", 'AC', 'BONUS')
   scope :nosj_to_check, where("nosj not like ? and nosj not like ? and nosj not like ? and ketppb not like ?",%(#{'SJY'}%), %(#{'SJB'}%), %(#{'SJP'}%), %(#{'RD'}%))
 
+  
+  def self.update_salesman
+    a = find_by_sql("SELECT kode_customer, jenisbrgdisc, cabang_id, tanggalsj 
+    FROM tblaporancabang WHERE MONTH(tanggalsj) = 2 AND YEAR(tanggalsj) = 2017 
+    AND cabang_id = 2 AND jenisbrgdisc = 'ELITE'")
+    a.each do |b|
+      sales = JdeSalesman.find_salesman(b.kode_customer, 'E')
+      b.update_attributes!(:salesman => sales.to_s)
+    end
+  end
+
   def self.combine_group(merk)
     if merk == 'Non Serenity' || merk == 'Accessoris Elite'
       merk = 'ELITE'

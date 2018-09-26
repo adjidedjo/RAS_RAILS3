@@ -1,7 +1,7 @@
 class SalesOrderHistoryJde < ActiveRecord::Base
   #KHUSUS UNTUK PENERIMAAN BARANG POS
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f4211" #sd
+  self.table_name = "PRODDTA.F4211" #sd
 
   scope :delivered, -> { where("sdnxtr >= ? and sdlttr >= ? and sddcto like ?", "580", "565", "ST") }
 

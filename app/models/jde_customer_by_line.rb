@@ -1,6 +1,6 @@
 class JdeCustomerByLine < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "proddta.f0116"
+  self.table_name = "PRODDTA.f0116"
   #ai
 
   def self.get_group_customer(address_number, co)
