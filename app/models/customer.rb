@@ -6,6 +6,15 @@ class Customer < ActiveRecord::Base
   scope :customer_channel, lambda {|channel| where("tipe_customer in (?)", channel) if channel.present?}
   scope :customer_group, lambda {|group| where("group_customer in (?)", group) if group.present?}
   
+  def self.batch_customer_active
+    ActiveRecord::Base.connection.execute("REPLACE INTO customer_active 
+    (branch, kode_customer, customer, tipecust, tanggalsj, fiscal_month, fiscal_year, nofaktur, 
+    brand, total, created_at, updated_at)
+    SELECT area_id, kode_customer, customer, tipecust, COALESCE(MAX(tanggalsj), '0000-00-00'), 
+    MONTH(tanggalsj), YEAR(tanggalsj), COALESCE(MAX(nofaktur)), jenisbrgdisc, SUM(harganetto2), 
+    NOW(), NOW() FROM tblaporancabang WHERE tanggalsj = '#{Date.yesterday.to_date}' AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc;")
+  end
+  
   def self.notification_order
     order_jde = JdeSoHeader.get_order_today
     order_jde.each do |oje|

@@ -1,6 +1,6 @@
 class JdeCustomerMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "PRODDTA.f0101"
+  self.table_name = "PRODDTA.F0101"
   def self.get_group_customer(address_number)
     grup = where(aban8: address_number)
     if grup.first.absic.strip == 'DEA' || grup.first.absic.strip == 'RET'

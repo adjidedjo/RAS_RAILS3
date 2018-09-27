@@ -1,6 +1,6 @@
 class JdeSoDetail < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "PRODDTA.F03B11" #sd
+  self.table_name = "PRODDTA.F4211" #sd
   
   def self.get_list_of_item(so_num, type_so)
     find_by_sql("SELECT MAX(sddsc1) AS sddsc1, 
