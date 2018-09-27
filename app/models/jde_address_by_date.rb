@@ -1,6 +1,6 @@
 class JdeAddressByDate < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "PRODDTA.f0116"
+  self.table_name = "PRODDTA.F0116"
   #al
 
   def self.get_city(address_number)

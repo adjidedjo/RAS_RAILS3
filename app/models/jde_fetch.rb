@@ -1,6 +1,6 @@
 class JdeFetch < ActiveRecord::Base
   establish_connection "jdeoracle"
-  self.table_name = "PRODDTA.f4211" #sd
+  self.table_name = "PRODDTA.F4211" #sd
   
   def self.checking_buffer
     Stock.all.each do |stock|
