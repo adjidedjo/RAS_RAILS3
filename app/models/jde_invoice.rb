@@ -56,7 +56,7 @@ class JdeInvoice < ActiveRecord::Base
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
     rpdicj = '#{date_to_julian(Date.yesterday.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
+    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc = '315102'")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
         orty = '#{iv.rpsfx.to_i}' AND nosj = '#{iv.rplnid.to_i}'")
