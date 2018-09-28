@@ -17,7 +17,7 @@ jde_masters:
   rails_envs: development, production, staging
   
 jde_import_sales_items:
-  cron: "0 4 * * *"
+  cron: "0 5 * * *"
   queue: cron
   class: ControlUpload
   args: "import_sales_jde"
@@ -32,21 +32,21 @@ load_customer_active:
   description: load customer active from tblaporancabang
   rails_envs: development, production, staging
   
-jde_import_credit_note:
-  cron: "0 6 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_credit_note"
-  description: fetching credit note
-  rails_envs: development, production, staging
+#jde_import_credit_note:
+#  cron: "0 6 * * *"
+#  queue: cron
+#  class: ControlUpload
+#  args: "import_credit_note"
+#  description: fetching credit note
+#  rails_envs: development, production, staging
   
-jde_import_stock_hourly:
-  cron: "*/5 * * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_stock_hourly"
-  description: intransit jde to point of sales
-  rails_envs: development, production, staging
+#jde_import_stock_hourly:
+#  cron: "*/5 * * * *"
+#  queue: cron
+#  class: ControlUpload
+#  args: "import_stock_hourly"
+#  description: intransit jde to point of sales
+#  rails_envs: development, production, staging
   
 jde_import_stock_daily:
   cron: "0 2 * * *"

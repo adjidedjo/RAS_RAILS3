@@ -44,7 +44,7 @@ class ControlUpload
   ########################### END PPC
 
   def import_sales_jde
-    JdeSoDetail.import_sales
+    JdeInvoice.import_sales
     JdeSoDetail.import_outstanding_orders
     JdeSoDetail.import_outstanding_shipments
     JdeSoDetail.import_hold_orders
@@ -56,9 +56,9 @@ class ControlUpload
     Customer.batch_customer_active
   end
   
-  def import_credit_note
-    JdeSoDetail.import_credit_note
-  end
+  #def import_credit_note
+  #  JdeSoDetail.import_credit_note
+  #end
   
   def import_masters
     JdeItemAvailability.historical_stock
@@ -83,7 +83,7 @@ class ControlUpload
   end
   
   def import_stock_hourly_display
-    JdeItemAvailability.import_stock_hourly_display
+    #JdeItemAvailability.import_stock_hourly_display
     SalesProductivity.generate_productivity
   end
   
@@ -112,15 +112,15 @@ class ControlUpload
     Customer.notification_order
   end
   
-  def test_import
-    JdeSoDetail.import_sales_for_asong
-  end
+  #def test_import
+  #  JdeSoDetail.import_sales_for_asong
+  #end
   
   def auto_create_marketshare
     Marketshare.auto_create_next_month
   end
   
-  def mrp_preparation
-    JdeSoHeader.delete_outstanding_ppb_wr
-  end
+  #def mrp_preparation
+  #  JdeSoHeader.delete_outstanding_ppb_wr
+  #end
 end
