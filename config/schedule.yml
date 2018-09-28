@@ -24,6 +24,14 @@ jde_import_sales_items:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
+load_customer_active:
+  cron: "0 6 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "load_customer_active"
+  description: load customer active from tblaporancabang
+  rails_envs: development, production, staging
+  
 jde_import_credit_note:
   cron: "0 6 * * *"
   queue: cron

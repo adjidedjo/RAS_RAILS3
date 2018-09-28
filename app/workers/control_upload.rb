@@ -52,11 +52,16 @@ class ControlUpload
     #JdeSoDetail.import_sales_consigment
   end
   
+  def load_customer_active
+    Customer.batch_customer_active
+  end
+  
   def import_credit_note
     JdeSoDetail.import_credit_note
   end
   
   def import_masters
+    JdeItemAvailability.historical_stock
     JdeCustomerMaster.customer_import
     JdeCustomerMaster.checking_customer_limit
     JdeItemMaster.item_masters_fetch
@@ -108,10 +113,14 @@ class ControlUpload
   end
   
   def test_import
-    JdeSoDetai.import_sales_for_asong
+    JdeSoDetail.import_sales_for_asong
   end
   
   def auto_create_marketshare
     Marketshare.auto_create_next_month
+  end
+  
+  def mrp_preparation
+    JdeSoHeader.delete_outstanding_ppb_wr
   end
 end
