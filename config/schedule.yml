@@ -17,7 +17,7 @@ jde_masters:
   rails_envs: development, production, staging
   
 jde_import_sales_items:
-  cron: "0 5 * * *"
+  cron: "0 6 * * *"
   queue: cron
   class: ControlUpload
   args: "import_sales_jde"
@@ -25,7 +25,7 @@ jde_import_sales_items:
   rails_envs: development, production, staging
   
 load_customer_active:
-  cron: "0 6 * * *"
+  cron: "30 8 * * *"
   queue: cron
   class: ControlUpload
   args: "load_customer_active"
