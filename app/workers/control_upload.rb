@@ -112,9 +112,9 @@ class ControlUpload
     Customer.notification_order
   end
   
-  #def test_import
-  #  JdeSoDetail.import_sales_for_asong
-  #end
+  def test_import
+    JdeInvoice.test_import_sales
+  end
   
   def auto_create_marketshare
     Marketshare.auto_create_next_month
