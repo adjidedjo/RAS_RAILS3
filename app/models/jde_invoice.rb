@@ -4,12 +4,12 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdicj = '#{date_to_julian(Date.today.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('01/08/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
-        orty = '#{iv.rpsfx.to_i}' AND lnid = '#{iv.rpsfx.to_i}'")
-        if check.nil?
+        orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}'")
+        if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
@@ -59,7 +59,7 @@ class JdeInvoice < ActiveRecord::Base
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
-        orty = '#{iv.rpsfx.to_i}' AND lnid = '#{iv.rpsfx.to_i}'")
+        orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}'")
         if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
