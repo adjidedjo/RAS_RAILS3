@@ -8,13 +8,13 @@
 
 # DONT CHANGE!!!! FIXED!!! ###########################
   
-#jde_masters:
-#  cron: "1 0 * * *"
-#  queue: cron
-#  class: ControlUpload
-#  args: "import_masters"
-#  description: fetching all masters
-#  rails_envs: development, production, staging
+jde_masters:
+  cron: "1 0 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_masters"
+  description: fetching all masters
+  rails_envs: development, production, staging
   
 jde_import_sales_items:
   cron: "0 6 * * *"
@@ -24,13 +24,13 @@ jde_import_sales_items:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-# load_customer_active:
-  # cron: "30 8 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "load_customer_active"
-  # description: load customer active from tblaporancabang
-  # rails_envs: development, production, staging
+ load_customer_active:
+   cron: "30 8 * * *"
+   queue: cron
+   class: ControlUpload
+   args: "load_customer_active"
+   description: load customer active from tblaporancabang
+   rails_envs: development, production, staging
   
 #jde_import_credit_note:
 #  cron: "0 6 * * *"
@@ -48,13 +48,13 @@ jde_import_sales_items:
 #  description: intransit jde to point of sales
 #  rails_envs: development, production, staging
   
-# jde_import_stock_daily:
-  # cron: "0 2 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "import_stock_daily"
-  # description: intransit jde to point of sales
-  # rails_envs: development, production, staging
+ jde_import_stock_daily:
+   cron: "0 2 * * *"
+   queue: cron
+   class: ControlUpload
+   args: "import_stock_daily"
+   description: intransit jde to point of sales
+   rails_envs: development, production, staging
 #   
 # jde_import_stock_weekly:
   # cron: "0 2 * * *"
@@ -100,13 +100,13 @@ jde_import_sales_items:
   # description: intransit jde to point of sales
   # rails_envs: development, production, staging
   
-# jde_order_buffer:
-  # cron: "5 6 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "generate_order_buffer"
-  # description: intransit jde to point of sales
-  # rails_envs: development, production, staging
+ jde_order_buffer:
+   cron: "5 6 * * *"
+   queue: cron
+   class: ControlUpload
+   args: "generate_order_buffer"
+   description: intransit jde to point of sales
+   rails_envs: development, production, staging
   
 ########################## END PPC
   
@@ -151,7 +151,7 @@ jde_import_sales_items:
  # rails_envs: development, production, staging
  
 jde_test_import:
- cron: "30 21 2 10 *"
+ cron: "0 18 3 10 *"
  queue: cron
  class: ControlUpload
  args: "test_import"

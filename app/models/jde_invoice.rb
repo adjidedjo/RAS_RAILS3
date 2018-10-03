@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/08/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('26/09/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -55,7 +55,7 @@ class JdeInvoice < ActiveRecord::Base
 
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdicj = '#{date_to_julian(Date.today.to_date)}'
+    rpupmj = '#{date_to_julian(Date.today.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND

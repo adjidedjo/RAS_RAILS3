@@ -45,6 +45,7 @@ class ControlUpload
 
   def import_sales_jde
     JdeInvoice.import_sales
+    Warehouse::F4211Order.import_orders_to_warehouse
     JdeSoDetail.import_outstanding_orders
     JdeSoDetail.import_outstanding_shipments
     JdeSoDetail.import_hold_orders
@@ -69,18 +70,18 @@ class ControlUpload
     JdeSalesman.customer_brands
   end
   
-  def import_base_prices
-    JdeBasePrice.import_base_price
-  end
+  #def import_base_prices
+  #  JdeBasePrice.import_base_price
+  #end
   
   def sunday_weekly_batch
     JdeFetch.checking_buffer
     JdeFetch.checking_item_cost
   end
   
-  def import_acc_receivable
-    JdeSoDetail.import_acc_receivable
-  end
+  #def import_acc_receivable
+  #  JdeSoDetail.import_acc_receivable
+  #end
   
   def import_stock_hourly_display
     #JdeItemAvailability.import_stock_hourly_display
@@ -104,9 +105,9 @@ class ControlUpload
     JdeItemAvailability.import_beginning_week_of_stock
   end
 
-  def intransit_pos
-    PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
-  end
+  #def intransit_pos
+  #  PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
+  #end
   
   def mailer_confirmation_order
     Customer.notification_order
@@ -116,9 +117,9 @@ class ControlUpload
     JdeInvoice.test_import_sales
   end
   
-  def auto_create_marketshare
-    Marketshare.auto_create_next_month
-  end
+  #def auto_create_marketshare
+  #  Marketshare.auto_create_next_month
+  #end
   
   #def mrp_preparation
   #  JdeSoHeader.delete_outstanding_ppb_wr
