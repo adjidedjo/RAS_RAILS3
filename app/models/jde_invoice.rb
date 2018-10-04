@@ -48,6 +48,16 @@ class JdeInvoice < ActiveRecord::Base
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
               nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+            Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              kodebrg: item_master.imlitm.strip,
+              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
          end
       end
     end
@@ -55,7 +65,7 @@ class JdeInvoice < ActiveRecord::Base
 
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpupmj = '#{date_to_julian(Date.today.to_date)}'
+    rpupmj BETWEEN '#{date_to_julian(Date.yesterday)}' AND '#{date_to_julian(Date.today)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -99,9 +109,92 @@ class JdeInvoice < ActiveRecord::Base
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
               nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+            Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              kodebrg: item_master.imlitm.strip,
+              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
          end
       end
     end
+    Customer.batch_customer_active
+    batch_transform
+  end
+  
+  def self.batch_transform
+    date = Date.yesterday
+    ActiveRecord::Base.connection.execute("
+      INSERT INTO sales_mart.RET1BRAND (fiscal_day, fiscal_month, fiscal_year, branch, brand, sales_quantity, sales_amount, updated_at)
+      SELECT DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, SUM(jumlah), SUM(harganetto2), NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc;")
+    ActiveRecord::Base.connection.execute("
+      INSERT INTO sales_mart.RET1PRODUCT (branch, brand, product, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kodejenis;")
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET1ARTICLE (branch, brand, product, article, article_desc, size, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kodejenis, kodeartikel, lebar;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET2CUSPRODUCT (branch, brand, customer, customer_desc, product, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kode_customer, customer, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET2CUSARTICLE (branch, brand, customer, customer_desc, product, article, article_desc, size, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kode_customer, customer, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis, kodeartikel, lebar;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET3SALBRAND (branch, brand, salesmen, salesmen_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, nopo, salesman, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-' AND nopo IS NOT NULL
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET3SALPRODUCT (branch, brand, salesmen, salesmen_desc, product, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, nopo, salesman, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo, kodejenis;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET3SALARTICLE (branch, brand, salesmen, salesmen_desc, product, article, article_desc, size, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, nopo, salesman, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET4CITYBRAND (branch, brand, city, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kota, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-' AND nopo IS NOT NULL
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET4CITYPRODUCT (branch, brand, city, product, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kota, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo, kodejenis;")
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.RET4CITYARTICLE (branch, brand, city, product, article, article_desc, size, sales_quantity, sales_amount,
+        fiscal_day, fiscal_month, fiscal_year, updated_at)
+      SELECT area_id, jenisbrgdisc, kota, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
+            FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
+            AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
   end
 
 
