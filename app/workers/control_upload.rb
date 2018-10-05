@@ -45,7 +45,6 @@ class ControlUpload
 
   def import_sales_jde
     JdeInvoice.import_sales
-    Warehouse::F4211Order.import_orders_to_warehouse
     JdeSoDetail.import_outstanding_orders
     JdeSoDetail.import_outstanding_shipments
     JdeSoDetail.import_hold_orders
@@ -62,6 +61,7 @@ class ControlUpload
   #end
   
   def import_masters
+    Warehouse::F4211Order.import_orders_to_warehouse
     JdeItemAvailability.historical_stock
     JdeCustomerMaster.customer_import
     JdeCustomerMaster.checking_customer_limit

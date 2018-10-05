@@ -32,13 +32,13 @@ jde_import_stock_daily:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-#customer_active:
-#  cron: "0 8 * * *"
-#  queue: cron
-#  class: ControlUpload
-#  args: "load_customer_active"
-#  description: load customer active from tblaporancabang
-#  rails_envs: development, production, staging
+customer_active:
+  cron: "0 8 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "load_customer_active"
+  description: load customer active from tblaporancabang
+  rails_envs: development, production, staging
   
 jde_order_buffer:
   cron: "5 6 * * *"
