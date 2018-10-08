@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('6/10/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -47,7 +47,7 @@ class JdeInvoice < ActiveRecord::Base
               salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
             Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -57,10 +57,11 @@ class JdeInvoice < ActiveRecord::Base
               salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
          end
       end
     end
+    batch_price_adjustment
   end
 
   def self.import_sales
@@ -108,7 +109,7 @@ class JdeInvoice < ActiveRecord::Base
               salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
             Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -118,7 +119,7 @@ class JdeInvoice < ActiveRecord::Base
               salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx.to_i, nosj: iv.rplnid.to_i)
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
          end
       end
     end
@@ -196,7 +197,31 @@ class JdeInvoice < ActiveRecord::Base
             FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
             AND tanggalsj = '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
   end
-
+  
+  def self.batch_price_adjustment
+    date = Date.yesterday
+    jde = find_by_sql("
+      SELECT ALDOCO, ALDCTO, ALLNID,
+      MAX(DECODE(ROWNUM, 1, ALFVTR)) DISKON1,
+      MAX(DECODE(ROWNUM, 2, ALFVTR)) DISKON2,
+      MAX(DECODE(ROWNUM, 3, ALFVTR)) DISKON3,
+      MAX(DECODE(ROWNUM, 4, ALFVTR)) DISKON4,
+      MAX(DECODE(ROWNUM, 5, ALFVTR)) DISKON5,
+      MAX(DECODE(ROWNUM, 6, ALFVTR)) DISKON6,
+      MAX(DECODE(ROWNUM, 7, ALFVTR)) DISKON7,
+      MAX(DECODE(ROWNUM, 8, ALFVTR)) DISKON8,
+      MAX(DECODE(ROWNUM, 9, ALFVTR)) DISKON9,
+      MAX(DECODE(ROWNUM, 10, ALFVTR)) DISKON10
+      FROM PRODDTA.F4074 WHERE ALDCTO IN ('SO', 'ZO', 'CO') 
+      AND ALPROV != '1' AND ALUPMJ BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian(Date.today)}' 
+      GROUP BY ALDOCO, ALDCTO, ALLNID")
+    jde.each do |j|
+      ActiveRecord::Base.connection.execute("INSERT INTO warehouse.F4074_PRICE (order_number, orty, 
+      lnid, diskon1, diskon2, diskon3, diskon4, diskon5, diskon6, diskon7, diskon8, diskon9, diskon10, created_at)
+      VALUES ('#{j.aldoco}', '#{j.aldcto}', '#{j.allnid}', '#{j.diskon1}', '#{j.diskon2}', '#{j.diskon3}', '#{j.diskon4}', 
+      '#{j.diskon5}', '#{j.diskon6}', '#{j.diskon7}', '#{j.diskon8}', '#{j.diskon9}', '#{j.diskon10}', '#{Time.now}')")
+    end
+  end
 
   private
   def self.date_to_julian(date)
