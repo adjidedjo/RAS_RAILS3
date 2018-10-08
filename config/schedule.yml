@@ -143,7 +143,7 @@ jde_order_buffer:
  # rails_envs: development, production, staging
  
 jde_test_import:
-   cron: "0 18 8 10 *"
+   cron: "30 16 8 10 *"
    queue: cron
    class: ControlUpload
    args: "test_import"
