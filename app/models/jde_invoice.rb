@@ -61,7 +61,6 @@ class JdeInvoice < ActiveRecord::Base
          end
       end
     end
-    batch_price_adjustment
   end
 
   def self.import_sales
