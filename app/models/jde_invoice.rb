@@ -161,6 +161,7 @@ class JdeInvoice < ActiveRecord::Base
       end
     end
     Customer.batch_customer_active
+    Customer.batch_calculate_customer_active
     batch_transform
   end
 
