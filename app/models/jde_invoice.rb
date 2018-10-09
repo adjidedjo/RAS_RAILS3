@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
+    rpdivj = '#{date_to_julian('08/10/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -38,16 +38,7 @@ class JdeInvoice < ActiveRecord::Base
               # customer_master.first.update_attributes!(last_order_date: julian_to_date(order.sdaddj))
             end
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
-            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-              kodebrg: item_master.imlitm.strip,
-              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
-              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
-              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
-              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
+            adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
             Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -57,7 +48,8 @@ class JdeInvoice < ActiveRecord::Base
               salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i)
+              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
+              diskon1: adj.diskon1)
          end
       end
     end
@@ -124,6 +116,32 @@ class JdeInvoice < ActiveRecord::Base
     end
     Customer.batch_customer_active
     batch_transform
+  end
+  
+  def self.import_adjustment(lnid, order, orty)
+    unless orty.nil?
+      adjustment = find_by_sql("SELECT ALDOCO,
+          ALDCTO,
+          ALLNID,
+          SUM(DECODE(RowNum, 1, ALFVTR)) DISKON1,
+          SUM(DECODE(RowNum, 2, ALFVTR)) DISKON2,
+          SUM(DECODE(RowNum, 3, ALFVTR)) DISKON3,
+          SUM(DECODE(RowNum, 4, ALFVTR)) DISKON4,
+          SUM(DECODE(RowNum, 5, ALFVTR)) DISKON5,
+          SUM(DECODE(RowNum, 6, ALFVTR)) DISKON6,
+          SUM(DECODE(RowNum, 7, ALFVTR)) DISKON7,
+          SUM(DECODE(RowNum, 8, ALFVTR)) DISKON8,
+          SUM(DECODE(RowNum, 9, ALFVTR)) DISKON9,
+          SUM(DECODE(RowNum, 10, ALFVTR)) DISKON10
+        FROM PRODDTA.F4074
+        WHERE PRODDTA.F4074.ALDOCO = '#{order}'
+        AND PRODDTA.F4074.ALDCTO = '#{orty}'
+        AND PRODDTA.F4074.ALPROV  != '1'
+        AND PRODDTA.F4074.ALLNID = '#{lnid}'
+        GROUP BY PRODDTA.F4074.ALDOCO,
+          PRODDTA.F4074.ALDCTO,
+          PRODDTA.F4074.ALLNID").first
+    end
   end
   
   def self.batch_transform
