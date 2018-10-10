@@ -15,6 +15,20 @@ class Customer < ActiveRecord::Base
     NOW(), NOW() FROM warehouse.F03B11_INVOICES WHERE tanggalsj = '#{Date.yesterday.to_date}' AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc;")
   end
   
+  def self.batch_calculate_customer_active
+    date_now = Date.today
+    date = date_now.to_date.months_ago(3)
+    ActiveRecord::Base.connection.execute("INSERT INTO 
+    sales_mart.CUSTOMER_PROGRESSES (branch, brand, date_check, date_process, fday, fmonth, fyear, inactive, active, created_at)
+    SELECT a.branch, a.brand, '#{date}', '#{date_now}', '#{date_now.day}', '#{date_now.month}', '#{date_now.year}',
+        COUNT(CASE WHEN a.tanggal >= '#{date}' THEN id END) active,
+        COUNT(CASE WHEN a.tanggal < '#{date}' THEN id END) inactive, NOW() FROM
+      (
+        SELECT id, kode_customer, MAX(tanggalsj) AS tanggal, brand, branch FROM dbmarketing.customer_active cus2 WHERE
+        cus2.tipecust = 'RETAIL' GROUP BY kode_customer, brand ORDER BY cus2.tanggalsj DESC
+      ) a WHERE brand != ' ' AND branch IS NOT NULL GROUP BY brand, branch;")
+  end
+  
   def self.notification_order
     order_jde = JdeSoHeader.get_order_today
     order_jde.each do |oje|
