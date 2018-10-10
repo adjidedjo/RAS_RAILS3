@@ -108,7 +108,7 @@ class JdeSoDetail < ActiveRecord::Base
       promised_delivery: julian_to_date(ou.sdopdj), branch: ou.sdmcu.strip, 
       brand: ou.sdsrp1.strip, exceeds: (Date.today - julian_to_date(ou.sdopdj)).to_i, 
       salesman: ou.salesman.strip, item_number: ou.sdlitm.strip, 
-      description: (ou.sddsc1.strip+' '+ou.sddsc2.strip))
+      description: (ou.sddsc1.strip+' '+ou.sddsc2.strip), jumlah: ou.jumlah.to_i/10000)
     end
   end
 
