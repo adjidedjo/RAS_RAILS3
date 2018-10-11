@@ -29,9 +29,49 @@ class Warehouse::F4211Order < ActiveRecord::Base
         pick_number: r["SDPSN"].to_i, next_status: r["SDNXTR"].to_i, orty: r["SDDCTO"].strip, 
         serial: r["SDLOTN"].strip, customer_po: r["SDVR01"].strip)
     end
+    Production.production_import_outstanding_orders #import data outstanding for production
+    sales_mart_import_outstanding_orders
+  end
+  
+  def self.sales_mart_import_outstanding_orders
+    outstanding = Warehouse::F4211Order.find_by_sql("
+    SELECT * FROM warehouse.F4211_ORDERS
+    WHERE branch REGEXP '11001$|11002$|12001$|12002$|18081$|18082$|11081$|
+    11082$|11091$|11092$|11051$|11052$|18091$|18092$|18051$|18052$|11151$|11152$|1515$'
+    AND DATE(created_at) = '#{Date.today}'")
+    outstanding.each do |ou|
+      ActiveRecord::Base.connection.execute("INSERT INTO sales_mart.PRODUCTION_ORDERS (order_no, promised_delivery, branch, brand, item_number,
+      description, order_date, quantity, short_item, segment1, customer, ship_to, typ, last_status,
+      branch_desc, originator, exceeds, next_status, day_category, created_at) VALUES ('#{ou.order_no}', 
+      '#{ou.promised_delivery}', '#{ou.branch}', '#{ou.brand}', '#{ou.item_number}', '#{ou.description}',
+      '#{ou.order_date}', '#{ou.quantity}', '#{ou.short_item}', 
+      '#{ou.segment1}', '#{ou.customer}', '#{ou.ship_to}', '#{ou.typ}',
+      '#{ou.last_status}', '#{ou.branch_desc}', '#{ou.originator}',
+      '#{(Date.today - ou.promised_delivery)}', '#{ou.next_status}', 
+      '#{category_days((Date.today - ou.promised_delivery))}', '#{Time.now})")
+    end
   end
 
   private
+  
+  def self.category_days(day)
+    if day < 3
+      3
+    elsif day >= 3 && day < 5
+      5
+    elsif day >= 5 && day < 8
+      8
+    elsif day >= 8 && day < 15
+      15
+    elsif day >= 15 && day < 30
+      30
+    elsif day >= 30 && day < 60
+      60
+    elsif day >= 60
+      61
+    end
+  end
+  
   def self.date_to_julian(date)
     1000*(date.year-1900)+date.yday
   end

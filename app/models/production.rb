@@ -2,36 +2,27 @@ class Production < JdeSoDetail
 
   #import oustanding order for planning production
   def self.production_import_outstanding_orders
-    outstanding = find_by_sql("SELECT so.sddoco, MAX(so.sddrqj) AS sddrqj, so.sdnxtr, 
-    SUM(so.sduorg) AS jumlah, MAX(so.sdtrdj) AS sdtrdj,
-    MAX(so.sdsrp1) AS sdsrp1, MAX(so.sdmcu) AS sdmcu, so.sditm, MAX(so.sdlitm) AS sdlitm, 
-    MAX(so.sddsc1) AS sddsc1, MAX(so.sddsc2) AS sddsc2, MAX(itm.imseg1) AS imseg1,
-    MAX(cus.abalph) AS abalph, so.sdshan, MAX(cus.abat1) AS abat1,
-    MAX(so.sdtorg) AS sdtorg
-    FROM PRODDTA.F4211 so
-    JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
-    JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
-    WHERE so.sdcomm NOT LIKE '%#{'K'}%'
-    AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
-    so.sdnxtr < '580' AND 
-    REGEXP_LIKE(so.sdmcu,'11001$|11002$|12001$|12002$|18081$|18082$|11081$|11082$|11091$|11092$|11051$|
-    11052$|18091$|18092$|18051$|18052$|11151$|11152$')
-    GROUP BY so.sddoco, so.sditm, so.sdnxtr, so.sdshan")
+    outstanding = Warehouse::F4211Order.find_by_sql("
+    SELECT * FROM warehouse.F4211_ORDERS
+    WHERE branch REGEXP '11001$|11002$|12001$|12002$|18081$|18082$|11081$|
+    11082$|11091$|11092$|11051$|11052$|18091$|18092$|18051$|18052$|11151$|11152$|1515$'
+    AND DATE(created_at) = '#{Date.today}'")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
-      op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.sditm.to_i, ou.sdmcu.strip)
-      item_master = JdeItemMaster.get_item_number(ou.sditm.to_i)
+      op = Pdc::OutstandingProduction.find_by_short_item_and_branch(ou.short_item, ou.branch)
       unless op
-        Pdc::OutstandingProduction.create!(short_item: ou.sditm.to_i, 
-        description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip, brand: ou.sdsrp1.strip, branch: ou.sdmcu.strip, 
-        item_number: ou.sdlitm.strip, segment1: ou.imseg1.strip)
+        Pdc::OutstandingProduction.create!(short_item: ou.short_item, 
+        description: ou.description, brand: ou.brand, branch: ou.branch, 
+        item_number: ou.item_number, segment1: ou.segment1)
       end
-      Pdc::OutstandingOrder.create(order_no: ou. sddoco.to_i, 
-      promised_delivery: julian_to_date(ou.sddrqj), branch: ou.sdmcu.strip, 
-      brand: ou.sdsrp1.strip, item_number: ou.sdlitm.strip, description: ou.sddsc1.strip + ' ' + ou.sddsc2.strip,
-      order_date: julian_to_date(ou.sdtrdj), quantity: ou.jumlah/10000, short_item: ou.sditm.to_i, 
-      segment1: ou.imseg1.strip, customer: ou.abalph.strip, ship_to: ou.sdshan.to_i, typ: ou.abat1.strip,
-      last_status: ou.sdnxtr.to_i, branch_desc: set_branch(ou.sdmcu.strip), originator: ou.sdtorg)
+      Pdc::OutstandingOrder.create(order_no: ou.order_no, 
+      promised_delivery: ou.promised_delivery, branch: ou.branch, 
+      brand: ou.brand, item_number: ou.item_number, description: ou.description,
+      order_date: ou.order_date, quantity: ou.quantity, short_item: ou.short_item, 
+      segment1: ou.segment1, customer: ou.customer, ship_to: ou.ship_to, typ: ou.typ,
+      last_status: ou.last_status, branch_desc: ou.branch_desc, originator: ou.originator,
+      exceeds: (Date.today - ou.promised_delivery), next_status: ou.next_status, 
+      day_category: category_days((Date.today - ou.promised_delivery)))
     end
   end
 
@@ -145,8 +136,28 @@ class Production < JdeSoDetail
       "semarang"
     elsif mcu =~ /^12001/ || mcu =~ /^12002/
       "surabaya"
-    elsif mcu =~ /^13151/ || mcu =~ /^11151/ || mcu =~ /^11152/
+    elsif mcu =~ /^13151/ || mcu =~ /^11151/ || mcu =~ /^11152/ || mcu =~ /^1515^/
       "tangerang"
     end 
+  end
+  
+  private
+  
+  def self.category_days(day)
+    if day < 3
+      3
+    elsif day >= 3 && day < 5
+      5
+    elsif day >= 5 && day < 8
+      8
+    elsif day >= 8 && day < 15
+      15
+    elsif day >= 15 && day < 30
+      30
+    elsif day >= 30 && day < 60
+      60
+    elsif day >= 60
+      61
+    end
   end
 end
