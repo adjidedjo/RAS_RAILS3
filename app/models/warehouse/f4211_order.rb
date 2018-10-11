@@ -9,13 +9,16 @@ class Warehouse::F4211Order < ActiveRecord::Base
     so.sdsrp1 AS sdsrp1, so.sdmcu AS sdmcu, so.sditm, so.sdlitm AS sdlitm, 
     so.sddsc1 AS sddsc1, so.sddsc2 AS sddsc2, itm.imseg1 AS imseg1,
     cus.abalph AS abalph, so.sdshan, cus.abat1 AS abat1,
-    so.sdtorg AS sdtorg, so.sdpsn, so.sdlttr, so.sddcto, so.sdlotn
+    so.sdtorg AS sdtorg, so.sdpsn, so.sdlttr, so.sddcto, so.sdlotn, so.sdvr01
     FROM PRODDTA.F4211 so
     JOIN PRODDTA.F4101 itm ON so.sditm = itm.imitm
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
     so.sdnxtr < '580'")
+    ActiveRecord::Base.connection.execute("
+      DELETE FROM warehouse.F4211_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
+    ")
     while r = outstanding.fetch_hash
        self.create(order_no: r["SDDOCO"].to_i, 
         promised_delivery: julian_to_date(r["SDDRQJ"]), branch: r["SDMCU"].strip, 
@@ -23,7 +26,8 @@ class Warehouse::F4211Order < ActiveRecord::Base
         order_date: julian_to_date(r["SDTRDJ"]), quantity: r["JUMLAH"]/10000, short_item: r["SDITM"].to_i, 
         segment1: r["IMSEG1"].strip, customer: r["ABALPH"].strip, ship_to: r["SDSHAN"].to_i, typ: r["ABAT1"].strip,
         last_status: r["SDLTTR"].to_i, branch_desc: jde_cabang(r["SDMCU"].strip), originator: r["SDTORG"],
-        pick_number: r["SDPSN"].to_i, next_status: r["SDNXTR"].to_i, orty: r["SDDCTO"].strip, serial: r["SDLOTN"].strip)
+        pick_number: r["SDPSN"].to_i, next_status: r["SDNXTR"].to_i, orty: r["SDDCTO"].strip, 
+        serial: r["SDLOTN"].strip, customer_po: r["SDVR01"].strip)
     end
   end
 
