@@ -35,7 +35,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
   
   def self.sales_mart_import_outstanding_orders
     ActiveRecord::Base.connection.execute("
-      DELETE FROM warehouse.F4211_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
+      DELETE FROM sales_mart.PRODUCTION_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
     ")
     outstanding = Warehouse::F4211Order.find_by_sql("
     SELECT * FROM warehouse.F4211_ORDERS
@@ -51,7 +51,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
       '#{ou.segment1}', '#{ou.customer}', '#{ou.ship_to}', '#{ou.typ}',
       '#{ou.last_status}', '#{ou.branch_desc}', '#{ou.originator}',
       '#{(Date.today - ou.promised_delivery)}', '#{ou.next_status}', 
-      '#{category_days((Date.today - ou.promised_delivery))}', '#{Time.now})")
+      '#{category_days((Date.today - ou.promised_delivery))}', '#{Date.today}')")
     end
   end
 
