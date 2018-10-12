@@ -34,6 +34,9 @@ class Warehouse::F4211Order < ActiveRecord::Base
   end
   
   def self.sales_mart_import_outstanding_orders
+    ActiveRecord::Base.connection.execute("
+      DELETE FROM warehouse.F4211_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
+    ")
     outstanding = Warehouse::F4211Order.find_by_sql("
     SELECT * FROM warehouse.F4211_ORDERS
     WHERE branch REGEXP '11001$|11002$|12001$|12002$|18081$|18082$|11081$|

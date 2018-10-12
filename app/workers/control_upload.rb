@@ -28,7 +28,6 @@ class ControlUpload
   ############################ PPC 
   
   def planning_order
-    Production.production_import_outstanding_orders
     Production.production_import_sales_orders
     Production.production_import_stock_hourly
   end
@@ -42,33 +41,37 @@ class ControlUpload
   end
   
   ########################### END PPC
-
-  def import_sales_jde
-    JdeInvoice.import_sales
-    JdeSoDetail.import_outstanding_orders
-    JdeSoDetail.import_outstanding_shipments
-    JdeSoDetail.import_hold_orders
-    #JdeSoDetail.import_transfers_consigment
-    #JdeSoDetail.import_sales_consigment
+  
+  def import_stock
+    Warehouse::F41021Stock.import_stock_warehouse
   end
   
-  def load_customer_active
-    Customer.batch_customer_active
+  def import_orders
+    Warehouse::F4211Order.import_orders_to_warehouse
   end
-  
-  #def import_credit_note
-  #  JdeSoDetail.import_credit_note
-  #end
   
   def import_masters
-    Warehouse::F4211Order.import_orders_to_warehouse
-    JdeItemAvailability.historical_stock
     JdeCustomerMaster.customer_import
     JdeCustomerMaster.checking_customer_limit
     JdeItemMaster.item_masters_fetch
     JdeItemMaster.get_new_items_from_jde
     JdeSalesman.customer_brands
   end
+
+  def import_sales_jde
+    JdeInvoice.import_sales
+    JdeSoDetail.import_hold_orders
+    #JdeSoDetail.import_transfers_consigment
+    #JdeSoDetail.import_sales_consigment
+  end
+  
+  #def load_customer_active
+  #  Customer.batch_customer_active
+  #end
+  
+  #def import_credit_note
+  #  JdeSoDetail.import_credit_note
+  #end
   
   #def import_base_prices
   #  JdeBasePrice.import_base_price
@@ -88,17 +91,17 @@ class ControlUpload
     SalesProductivity.generate_productivity
   end
   
-  def import_stock_weekly
-    JdeItemAvailability.checking_stock_weekly
-  end
+  #def import_stock_weekly
+  #  JdeItemAvailability.checking_stock_weekly
+  #end
   
-  def import_stock_daily
-    JdeItemAvailability.checking_stock_daily
-  end
+  #def import_stock_daily
+  #  JdeItemAvailability.checking_stock_daily
+  #end
   
-  def import_stock_hourly
-    JdeItemAvailability.import_stock_hourly
-  end
+  #def import_stock_hourly
+  #  JdeItemAvailability.import_stock_hourly
+  #end
   
   def import_beginning_of_week
     JdeItemAvailability.import_buffer_daily

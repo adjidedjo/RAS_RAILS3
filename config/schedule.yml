@@ -8,8 +8,24 @@
 
 # DONT CHANGE!!!! FIXED!!! ###########################
   
-jde_masters:
+warehouse_stock:
   cron: "1 0 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_stock"
+  description: fetching all masters
+  rails_envs: development, production, staging
+  
+warehouse_order:
+  cron: "2 0 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_orders"
+  description: fetching all masters
+  rails_envs: development, production, staging
+  
+jde_masters:
+  cron: "3 0 * * *"
   queue: cron
   class: ControlUpload
   args: "import_masters"
