@@ -3,6 +3,9 @@ class Warehouse::F4211Order < ActiveRecord::Base
   self.table_name = "F4211_ORDERS" #rp
   
   def self.import_orders_to_warehouse
+    ActiveRecord::Base.establish_connection("warehouse").connection.execute("
+      DELETE FROM warehouse.F4211_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
+    ")
     outstanding = ActiveRecord::Base.establish_connection("jdeoracle").connection.execute("
     SELECT so.sddoco, so.sddrqj, so.sdnxtr, 
     so.sduorg AS jumlah, so.sdtrdj AS sdtrdj,
@@ -16,9 +19,6 @@ class Warehouse::F4211Order < ActiveRecord::Base
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
     so.sdnxtr < '580'")
-    ActiveRecord::Base.connection.execute("
-      DELETE FROM warehouse.F4211_ORDERS WHERE DATE(created_at) = '#{2.days.ago.to_date}'
-    ")
     while r = outstanding.fetch_hash
        self.create(order_no: r["SDDOCO"].to_i, 
         promised_delivery: julian_to_date(r["SDDRQJ"]), branch: r["SDMCU"].strip, 
