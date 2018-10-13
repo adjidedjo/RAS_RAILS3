@@ -8,7 +8,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
     ")
     stocks = ActiveRecord::Base.establish_connection("jdeoracle").connection.execute("
       SELECT LIITM, LIMCU, LIPQOH, LILOTN, LIGLPT, LILRCJ, LIHCOM FROM PRODDTA.F41021 WHERE
-      LIPQOH >= 10000 AND LIPBIN = 'S' AND LIMCU LIKE '%18011%'")
+      LIPQOH >= 10000 AND LIPBIN = 'S'")
     while r = stocks.fetch_hash
       item_master = JdeItemMaster.get_item_number(r["LIITM"]).first
       fullnamabarang = item_master.imdsc1.strip + " " + item_master.imdsc2.strip
