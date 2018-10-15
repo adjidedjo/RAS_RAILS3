@@ -30,7 +30,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
         serial: r["SDLOTN"].strip, customer_po: r["SDVR01"].strip)
     end
     Production.production_import_outstanding_orders #import data outstanding for production
-    sales_mart_import_outstanding_orders
+    Warehouse::F4211Order.sales_mart_import_outstanding_orders
   end
   
   def self.sales_mart_import_outstanding_orders
