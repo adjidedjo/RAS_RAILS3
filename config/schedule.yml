@@ -40,13 +40,13 @@ jde_import_sales_items:
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-jde_import_stock_daily:
-  cron: "0 2 * * *"
-  queue: cron
-  class: ControlUpload
-  args: "import_stock_daily"
-  description: intransit jde to point of sales
-  rails_envs: development, production, staging
+#jde_import_stock_daily:
+#  cron: "0 2 * * *"
+#  queue: cron
+#  class: ControlUpload
+#  args: "import_stock_daily"
+#  description: intransit jde to point of sales
+#  rails_envs: development, production, staging
   
 jde_order_buffer:
   cron: "5 6 * * *"
@@ -158,13 +158,13 @@ jde_order_buffer:
  # description: Mail Confirmation Order
  # rails_envs: development, production, staging
  
-jde_test_import:
-   cron: "0 17 8 10 *"
-   queue: cron
-   class: ControlUpload
-   args: "test_import"
-   description: testing
-   rails_envs: development, production, staging
+#jde_test_import:
+#   cron: "0 17 8 10 *"
+#   queue: cron
+#   class: ControlUpload
+#   args: "test_import"
+#   description: testing
+#   rails_envs: development, production, staging
   
 
 # jde_net_sales:
