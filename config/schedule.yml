@@ -31,6 +31,14 @@ jde_masters:
   args: "import_masters"
   description: fetching all masters
   rails_envs: development, production, staging
+
+jde_intransit_to_pos:
+  cron: "4 0 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "intransit_pos"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
   
 jde_import_sales_items:
   cron: "0 6 * * *"
@@ -87,14 +95,6 @@ jde_order_buffer:
 #  args: "import_stock_hourly_display"
 #  description: import hourly display
 #  rails_envs: development, production, staging
-
-# jde_intransit_to_pos:
-  # cron: "0 8-24 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "intransit_pos"
-  # description: intransit jde to point of sales
-  # rails_envs: development, production, staging
 #   
 #####################################################
 

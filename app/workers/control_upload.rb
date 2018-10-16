@@ -108,9 +108,9 @@ class ControlUpload
     JdeItemAvailability.import_beginning_week_of_stock
   end
 
-  #def intransit_pos
-  #  PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
-  #end
+  def intransit_pos
+    PosAutoIntransit.insert_delivered_stock_from_jde(Date.yesterday)
+  end
   
   def mailer_confirmation_order
     Customer.notification_order
