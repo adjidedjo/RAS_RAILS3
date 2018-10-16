@@ -18,7 +18,20 @@ class Warehouse::F41021Stock < ActiveRecord::Base
         hardcommit: r["LIHCOM"]/10000, glcat: item_master.imsrp2, serial: r["LILOTN"].strip, 
         receipt_date: JdeInvoice.julian_to_date(r["LILRCJ"]), branch_code: jde_cabang(r["LIMCU"].strip))
     end
+    generate_stock_for_capacities
     JdeItemAvailability.historical_stock
+  end
+  
+  def self.generate_stock_for_capacities
+    stock = find_by_sql("SELECT glcat, branch, brand, branch_code, SUM(onhand) AS onhand FROM warehouse.F41021_STOCK 
+    WHERE DATE(created_at) = '#{Date.today}' AND branch NOT LIKE '%D' 
+    AND branch_code IS NOT NULL AND brand != '' GROUP BY brand, branch_code, glcat;")
+    stock.each do |st|
+      ActiveRecord::Base.connection.execute("
+        INSERT INTO sales_mart.BRANCH_CAPACITIES (product, brand, branch, branch_jde, quantity, created_at) VALUES
+        ('#{st.glcat}', '#{st.brand}', '#{st.branch_code}', '#{st.branch}', '#{st.onhand}', '#{Time.now}')
+      ")
+    end
   end
   
   def self.jde_cabang(bu)
