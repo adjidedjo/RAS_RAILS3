@@ -264,7 +264,7 @@ class JdeItemAvailability < ActiveRecord::Base
       ) IL ON IM.IMITM = IL.ILITM AND MC.MCMCU = IL.ILMCU
       WHERE MC.MCRP05 LIKE '510' AND ST.LIPQOH > 0 GROUP BY IM.IMITM, ST.LIMCU, IL.ILMCU")
     us.each do |fus|
-      ActiveRecord::Base.connection.execute("REPLACE INTO historical_stocks (branch_plan, description,
+      ActiveRecord::Base.establish_connection("dbmarketing").connection.execute("REPLACE INTO dbmarketing.historical_stocks (branch_plan, description,
       item_number, stock, out_stock, in_stock, adj_in, adj_out, branch_id, branch_desc, transaction_date,
       short_item, created_at, updated_at) VALUES 
         ('#{fus.stock_branch.strip}', '#{fus.description}',
