@@ -262,20 +262,20 @@ class JdeItemAvailability < ActiveRecord::Base
           FROM PRODDTA.F4111 WHERE ILTRDJ = '#{date_to_julian(Date.yesterday)}' 
           AND ILDCT IN ('SO', 'ST', 'IA', 'IR', 'SK', 'RO', 'CO', 'OV') GROUP BY ILMCU, ILITM, ILDCT
       ) IL ON IM.IMITM = IL.ILITM AND MC.MCMCU = IL.ILMCU
-      WHERE MC.MCRP05 LIKE '510' AND ST.LIPQOH > 0 GROUP BY IM.IMITM, ST.LIMCU, IL.ILMCU")
+      WHERE MC.MCRP05 LIKE '510' AND ST.LIPQOH >= 0 GROUP BY IM.IMITM, ST.LIMCU, IL.ILMCU")
     us.each do |fus|
-      ActiveRecord::Base.establish_connection("dbmarketing").connection.execute("REPLACE INTO dbmarketing.historical_stocks (branch_plan, description,
+      ActiveRecord::Base.establish_connection("production").connection.execute("REPLACE INTO dbmarketing.historical_stocks (branch_plan, description,
       item_number, stock, out_stock, in_stock, adj_in, adj_out, branch_id, branch_desc, transaction_date,
-      short_item, created_at, updated_at) VALUES 
+      short_item, created_at, updated_at, fday, fmonth, fyear) VALUES 
         ('#{fus.stock_branch.strip}', '#{fus.description}',
         '#{fus.kode}', '#{fus.stock}', 
         '#{fus.qty_out}', '#{fus.qty_in}', '#{fus.qty_adjin}', '#{fus.qty_adjout}',
         '#{fus.stock_branch == '0' ? 0 : jde_cabang(fus.stock_branch.strip)}',
         '#{Cabang.branch_description(jde_cabang(fus.stock_branch.strip)).nil? ? '-' : Cabang.branch_description(jde_cabang(fus.stock_branch.strip)).Cabang}',
-        '#{Date.yesterday}', '#{fus.short.to_i}', '#{Time.now}', '#{Time.now}')")
+        '#{Date.yesterday}', '#{fus.short.to_i}', '#{Time.now}', '#{Time.now}', DAY(NOW()), MONTH(NOW()), YEAR(NOW()))")
     end
   end
-  
+
   private
   
   def self.date_to_julian(date)
