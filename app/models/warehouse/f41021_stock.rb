@@ -27,7 +27,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
     WHERE DATE(created_at) = '#{Date.today}' AND branch NOT LIKE '%D' 
     AND branch_code IS NOT NULL AND brand != '' GROUP BY brand, branch_code, glcat;")
     stock.each do |st|
-      ActiveRecord::Base.connection.execute("
+      ActiveRecord::Base.establish_connection("warehouse").connection.execute("
         INSERT INTO sales_mart.BRANCH_CAPACITIES (product, brand, branch, branch_jde, quantity, created_at) VALUES
         ('#{st.glcat}', '#{st.brand}', '#{st.branch_code}', '#{st.branch}', '#{st.onhand}', '#{Time.now}')
       ")
