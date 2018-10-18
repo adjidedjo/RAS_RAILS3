@@ -27,7 +27,7 @@ class Cabang < ActiveRecord::Base
   end
   
   def self.branch_description(cabang)
-    find_by_sql("SELECT Cabang FROM tbidcabang WHERE IdCabang like '#{cabang}'").first
+    find_by_sql("SELECT Cabang FROM tbidcabang WHERE id like '#{cabang}'").first
   end
 
 end
