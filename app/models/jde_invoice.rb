@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj = '#{date_to_julian('08/10/2018'.to_date)}'
+    rpupmj BETWEEN  '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian('10/10/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -39,25 +39,30 @@ class JdeInvoice < ActiveRecord::Base
             end
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
-            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-              kodebrg: item_master.imlitm.strip,
-              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
-              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
-              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
-              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+            order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
+            nosj_so = iv.rpdct == 'RI' ? order.sddeln.to_i : '-'
+            alamat_so = iv.rpdct == 'RI' ? get_address_from_order(iv.rpsdoc, iv.rpsdct).address : '-'
+            customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
+            ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
+            # LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              # kodebrg: item_master.imlitm.strip,
+              # namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              # jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              # kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              # harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              # salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              # fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              # area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              # nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
+              # diskon1: adj.nil? ? 0 : adj.diskon1,
+              # diskon2: adj.nil? ? 0 : adj.diskon2,
+              # diskon3: adj.nil? ? 0 : adj.diskon3,
+              # diskon4: adj.nil? ? 0 : adj.diskon4,
+              # diskon5: adj.nil? ? 0 : adj.diskon5,
+              # diskonsum: adj.nil? ? 0 : adj.diskon6,
+              # diskonrp: adj.nil? ? 0 : adj.diskon7,
+              # cashback: adj.nil? ? 0 : adj.diskon8,
+              # nupgrade: adj.nil? ? 0 : adj.diskon9)
             Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -68,6 +73,7 @@ class JdeInvoice < ActiveRecord::Base
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
               nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
+              nosj_so: nosj_so, alamat_so: alamat_so, reference: ref, customerpo_so: customer_po, reference: ref,
               diskon1: adj.nil? ? 0 : adj.diskon1,
               diskon2: adj.nil? ? 0 : adj.diskon2,
               diskon3: adj.nil? ? 0 : adj.diskon3,
@@ -76,7 +82,8 @@ class JdeInvoice < ActiveRecord::Base
               diskonsum: adj.nil? ? 0 : adj.diskon6,
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+              nupgrade: adj.nil? ? 0 : adj.diskon9,
+              tanggal_fetched: Time.now)
          end
       end
     end
@@ -84,7 +91,7 @@ class JdeInvoice < ActiveRecord::Base
 
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpupmj BETWEEN '#{date_to_julian(Date.yesterday)}' AND '#{date_to_julian(Date.today)}'
+    rpupmj = '#{date_to_julian(Date.today)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -119,25 +126,30 @@ class JdeInvoice < ActiveRecord::Base
             end
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
-            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
-              kodebrg: item_master.imlitm.strip,
-              namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
-              jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
-              kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
-              harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
-              salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
-              fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
-              area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
-              nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+            order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
+            nosj_so = iv.rpdct == 'RI' ? order.sddeln.to_i : '-'
+            alamat_so = iv.rpdct == 'RI' ? get_address_from_order(iv.rpsdoc, iv.rpsdct).address : '-'
+            customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
+            ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
+            # LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+              # kodebrg: item_master.imlitm.strip,
+              # namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
+              # jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
+              # kodekain: item_master.imseg3.strip, namakain: kain, panjang: item_master.imseg5.to_i, lebar: item_master.imseg6.to_i, namabrand: groupitem,
+              # harganetto1: iv.rpag, harganetto2: iv.rpag, kota: kota, tipecust: group, bonus: bonus, ketppb: "",
+              # salesman: sales, orty: iv.rpdct.strip, nopo: sales_id, fiscal_year: julian_to_date(iv.rpdivj).to_date.year,
+              # fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
+              # area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
+              # nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
+              # diskon1: adj.nil? ? 0 : adj.diskon1,
+              # diskon2: adj.nil? ? 0 : adj.diskon2,
+              # diskon3: adj.nil? ? 0 : adj.diskon3,
+              # diskon4: adj.nil? ? 0 : adj.diskon4,
+              # diskon5: adj.nil? ? 0 : adj.diskon5,
+              # diskonsum: adj.nil? ? 0 : adj.diskon6,
+              # diskonrp: adj.nil? ? 0 : adj.diskon7,
+              # cashback: adj.nil? ? 0 : adj.diskon8,
+              # nupgrade: adj.nil? ? 0 : adj.diskon9)
             Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
@@ -148,6 +160,7 @@ class JdeInvoice < ActiveRecord::Base
               fiscal_month: julian_to_date(iv.rpdivj).to_date.month, week: julian_to_date(iv.rpdivj).to_date.cweek,
               area_id: area, ketppb: iv.rpmcu.strip, totalnetto1: sales_type, tanggal: julian_to_date(iv.rpdivj),
               nofaktur: iv.rpdoc.to_i, lnid: iv.rpsfx, nosj: iv.rplnid.to_i, alamatkirim: iv.rpsdct,
+              nosj_so: nosj_so, alamat_so: alamat_so, reference: ref, customerpo_so: customer_po, reference: ref,
               diskon1: adj.nil? ? 0 : adj.diskon1,
               diskon2: adj.nil? ? 0 : adj.diskon2,
               diskon3: adj.nil? ? 0 : adj.diskon3,
@@ -156,13 +169,24 @@ class JdeInvoice < ActiveRecord::Base
               diskonsum: adj.nil? ? 0 : adj.diskon6,
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+              nupgrade: adj.nil? ? 0 : adj.diskon9,
+              tanggal_fetched: Time.now)
          end
       end
     end
-    Customer.batch_customer_active
-    Customer.batch_calculate_customer_active
-    batch_transform
+    # Customer.batch_customer_active
+    # Customer.batch_calculate_customer_active
+    # batch_transform
+  end
+  
+  def self.get_address_from_order(order, orty)
+    order = find_by_sql("SELECT TRIM(oamlnm)||' '||TRIM(oaadd1)||' '||TRIM(oaadd2)||' ' ||TRIM(oaadd3) address 
+    WHERE oadoco = '#{order}' AND oadcto = '#{orty}'").first
+  end
+  
+  def self.get_info_from_order(line, order, orty)
+    invoices = find_by_sql("SELECT * FROM PRODDTA.F4211 WHERE
+    sddoco = '#{order}' AND sdlnid = '#{line}' AND sddcto = '#{orty}'").first
   end
 
   def self.import_adjustment(lnid, order, orty)
