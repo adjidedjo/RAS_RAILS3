@@ -181,7 +181,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.get_address_from_order(order, orty)
     order = find_by_sql("SELECT TRIM(oamlnm)||' '||TRIM(oaadd1)||' '||TRIM(oaadd2)||' ' ||TRIM(oaadd3) address 
-    WHERE oadoco = '#{order}' AND oadcto = '#{orty}'").first
+    FROM PRODDTA.F4006 WHERE oadoco = '#{order}' AND oadcto = '#{orty}'").first
   end
   
   def self.get_info_from_order(line, order, orty)
