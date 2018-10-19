@@ -128,7 +128,7 @@ class JdeInvoice < ActiveRecord::Base
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
             order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
             nosj_so = iv.rpdct == 'RI' ? order.sddeln.to_i : '-'
-            alamat_so = iv.rpdct == 'RI' ? get_address_from_order(iv.rpsdoc, iv.rpsdct).address : '-'
+            alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
             ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
             # LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
