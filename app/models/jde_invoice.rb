@@ -7,7 +7,7 @@ class JdeInvoice < ActiveRecord::Base
     rpupmj BETWEEN  '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian('10/10/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
         orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}'")
         if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
@@ -94,7 +94,7 @@ class JdeInvoice < ActiveRecord::Base
     rpupmj = '#{date_to_julian(Date.today)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
         orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}'")
         if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
