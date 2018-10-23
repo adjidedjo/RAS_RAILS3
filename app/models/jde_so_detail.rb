@@ -371,6 +371,7 @@ class JdeSoDetail < ActiveRecord::Base
   end
 
   private
+  
   def self.date_to_julian(date)
     1000*(date.year-1900)+date.yday
   end
