@@ -98,7 +98,7 @@ class JdeInvoice < ActiveRecord::Base
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
         orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}'  AND kode_customer = '#{iv.rpan8.to_i}'")
         if check.empty?
-          customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
+          customer = JdeCustomerMaster.get_customer(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
           if item_master.present?
