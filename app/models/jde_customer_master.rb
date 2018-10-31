@@ -1,6 +1,11 @@
 class JdeCustomerMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F0101"
+  
+  def self.get_customer(an8)
+    self.where("aban8 LIKE '%#{an8}%'").first
+  end
+  
   def self.get_group_customer(address_number)
     grup = where(aban8: address_number)
     if grup.first.absic.strip == 'DEA' || grup.first.absic.strip == 'RET'
@@ -19,7 +24,8 @@ class JdeCustomerMaster < ActiveRecord::Base
   end
 
   def self.find_salesman_name(salesman_id)
-    find_by_sql("SELECT abalph FROM proddta.F0101 WHERE aban8 like '%#{salesman_id}%'").first.abalph.strip
+    sales = find_by_sql("SELECT abalph FROM proddta.F0101 WHERE aban8 like '%#{salesman_id}%'")
+    sales.nil? ? '-' : sales.first.abalph.strip
   end
   
   def self.customer_import
