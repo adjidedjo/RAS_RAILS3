@@ -25,9 +25,9 @@ class JdeCustomerMaster < ActiveRecord::Base
 
   def self.find_salesman_name(salesman_id)
     sales = find_by_sql("SELECT abalph FROM proddta.F0101 WHERE aban8 like '%#{salesman_id}%'")
-    sales.nil? ? '-' : sales.first.abalph.strip
+    (sales.nil? || sale.empty?) ? '-' : sales.first.abalph.strip
   end
-  
+
   def self.customer_import
     customer = find_by_sql("
       SELECT AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu FROM PRODDTA.F03012 AI
