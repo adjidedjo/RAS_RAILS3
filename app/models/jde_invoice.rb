@@ -4,10 +4,10 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/09/2018'.to_date)}' AND '#{date_to_julian('30/09/2018'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
+    rpdivj BETWEEN '#{date_to_julian('29/09/2018'.to_date)}' AND '#{date_to_julian('29/09/2018'.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RM') AND rpan8 LIKE '%100325%' AND rpsdoc > 1")
     invoices.each do |iv|
-        check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+        check = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
         orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}' AND kode_customer = '#{iv.rpan8.to_i}'")
         if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
@@ -85,6 +85,12 @@ class JdeInvoice < ActiveRecord::Base
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9,
               tanggal_fetched: Time.now)
+          elsif check.present? && (check.first.harganetto2 != iv.rpag.to_i)
+            lc = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 
+              FROM dbmarketing.tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+              orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}' AND kode_customer = '#{iv.rpan8.to_i}'")
+             lc.update_attributes(harganetto: iv.rpag)
+            Warehouse::Invoice.find_by_id(check.first.id).update_attributes!(harganetto2: iv.rpag)
          end
       end
     end
@@ -92,7 +98,7 @@ class JdeInvoice < ActiveRecord::Base
 
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpupmj BETWEEN '#{date_to_julian(Date.yesterday)}' AND '#{date_to_julian(Date.today)}'
+    rpupmj BETWEEN '#{date_to_julian('01/09/2018'.to_date)}' AND '#{date_to_julian('30/09/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
@@ -172,6 +178,12 @@ class JdeInvoice < ActiveRecord::Base
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9,
               tanggal_fetched: Time.now)
+          elsif check.present? && (check.first.harganetto2 != iv.rpag.to_i)
+            lc = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 
+              FROM dbmarketing.tblaporancabang WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
+              orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}' AND kode_customer = '#{iv.rpan8.to_i}'")
+             lc.update_attributes(harganetto: iv.rpag)
+            Warehouse::Invoice.find_by_id(check.first.id).update_attributes!(harganetto2: iv.rpag)
          end
       end
     end
@@ -179,7 +191,7 @@ class JdeInvoice < ActiveRecord::Base
     Customer.batch_calculate_customer_active
     batch_transform
   end
-  
+
   def self.get_address_from_order(order, orty)
     order = find_by_sql("SELECT TRIM(oamlnm)||' '||TRIM(oaadd1)||' '||TRIM(oaadd2)||' ' ||TRIM(oaadd3) address 
     FROM PRODDTA.F4006 WHERE oadoco = '#{order}' AND oadcto = '#{orty}'").first
