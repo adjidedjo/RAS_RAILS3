@@ -4,11 +4,12 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/09/2018'.to_date)}' AND '#{date_to_julian('30/09/2018'.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian('30/10/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
-        check = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES WHERE nofaktur = '#{iv.rpdoc.to_i}' AND
-        orty = '#{iv.rpdct.strip}' AND lnid = '#{iv.rpsfx.to_i}' AND kode_customer = '#{iv.rpan8.to_i}'")
+        check = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES 
+        WHERE nofaktur = '#{iv.rpdoc.to_i}' AND kode_customer = '#{iv.rpan8.to_i}' AND orty = '#{iv.rpdct.strip}' 
+        AND lnid = '#{iv.rpsfx.to_i}'")
         if check.empty?
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
@@ -44,7 +45,7 @@ class JdeInvoice < ActiveRecord::Base
             alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
             ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
-            LaporanCabang.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+            LaporanCabang.create!(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
               jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
@@ -64,7 +65,7 @@ class JdeInvoice < ActiveRecord::Base
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9)
-            Warehouse::Invoice.create(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
+            Warehouse::Invoice.create!(cabang_id: cabang, noso: iv.rpsdoc.to_i, tanggalsj: julian_to_date(iv.rpdivj),
               kodebrg: item_master.imlitm.strip,
               namabrg: fullnamabarang, kode_customer: iv.rpan8.to_i, customer: namacustomer, jumlah: iv.rpu.to_s.gsub(/0/,"").to_i, satuan: "PC",
               jenisbrgdisc: item_master.imprgr.strip, kodejenis: item_master.imseg1.strip, jenisbrg: jenis, kodeartikel: item_master.imaitm[2..7], namaartikel: artikel,
