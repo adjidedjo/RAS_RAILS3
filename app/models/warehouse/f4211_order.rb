@@ -62,17 +62,17 @@ class Warehouse::F4211Order < ActiveRecord::Base
     ")
     outstanding = Warehouse::F4211Order.find_by_sql("
     SELECT * FROM warehouse.F4211_ORDERS
-    WHERE typ = 'C' AND DATE(created_at) = '#{Date.today}'")
+    WHERE typ = 'C' AND DATE(created_at) = '#{Date.yesterday}' AND order_no = '335404'")
     outstanding.each do |ou|
-      ActiveRecord::Base.establish_connection("warehouse").connection.execute("INSERT INTO sales_mart.BRANCH_ORDERS (order_no, promised_delivery, branch, brand, item_number,
+      ActiveRecord::Base.establish_connection("warehouse").connection.execute('INSERT INTO sales_mart.BRANCH_ORDERS (order_no, promised_delivery, branch, brand, item_number,
       description, order_date, quantity, short_item, segment1, customer, ship_to, typ, last_status,
-      branch_desc, originator, exceeds, next_status, day_category, created_at) VALUES ('#{ou.order_no}', 
-      '#{ou.promised_delivery}', '#{ou.branch}', '#{ou.brand}', '#{ou.item_number}', '#{ou.description}',
-      '#{ou.order_date}', '#{ou.quantity}', '#{ou.short_item}', 
-      '#{ou.segment1}', '#{ou.customer}', '#{ou.ship_to}', '#{ou.typ}',
-      '#{ou.last_status}', '#{ou.branch_desc}', '#{ou.originator}',
-      '#{(Date.today - ou.promised_delivery)}', '#{ou.next_status}', 
-      '#{category_days((Date.today - ou.promised_delivery))}', '#{Date.today}')")
+      branch_desc, originator, exceeds, next_status, day_category, created_at) VALUES ("#{ou.order_no}", 
+      "#{ou.promised_delivery}", "#{ou.branch}", "#{ou.brand}", "#{ou.item_number}", "#{ou.description}",
+      "#{ou.order_date}", "#{ou.quantity}", "#{ou.short_item}", 
+      "#{ou.segment1}", "#{ou.customer}", "#{ou.ship_to}", "#{ou.typ}",
+      "#{ou.last_status}", "#{ou.branch_desc}", "#{ou.originator}",
+      "#{(Date.today - ou.promised_delivery)}", "#{ou.next_status}", 
+      "#{category_days((Date.today - ou.promised_delivery))}", "#{Date.today}")')
     end
   end
 
