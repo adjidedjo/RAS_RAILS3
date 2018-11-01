@@ -109,7 +109,7 @@ class JdeInvoice < ActiveRecord::Base
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
           if item_master.present?
-            namacustomer = customer.abalph.strip
+            namacustomer = customer.abalph.nil? ? '-' : customer.abalph.strip
             cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
             area = find_area(cabang)
             fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
