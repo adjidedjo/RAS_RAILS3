@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian('30/10/2018'.to_date)}'
+    rpdivj BETWEEN '#{date_to_julian('03/10/2018'.to_date)}' AND '#{date_to_julian('31/10/2018'.to_date)}'
     AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpsdoc > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES 
@@ -15,7 +15,7 @@ class JdeInvoice < ActiveRecord::Base
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
           if item_master.present?
-            namacustomer = customer.abalph.strip
+            namacustomer = customer.nil? ? '-' : customer.abalph.strip
             cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
             area = find_area(cabang)
             fullnamabarang = "#{item_master.imdsc1.strip} " "#{item_master.imdsc2.strip}"
