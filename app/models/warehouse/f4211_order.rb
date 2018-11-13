@@ -27,7 +27,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
         segment1: r["IMSEG1"].strip, customer: r["ABALPH"].strip, ship_to: r["SDSHAN"].to_i, typ: r["ABAT1"].strip,
         last_status: r["SDLTTR"].to_i, branch_desc: jde_cabang(r["SDMCU"].strip), originator: r["SDTORG"],
         pick_number: r["SDPSN"].to_i, next_status: r["SDNXTR"].to_i, orty: r["SDDCTO"].strip, 
-        serial: r["SDLOTN"].strip, customer_po: r["SDVR01"].strip)
+        serial: r["SDLOTN"].nil? ? '-' : r["SDLOTN"].strip, customer_po: r["SDVR01"].nil? ? '-' : r["SDVR01"].strip)
     end
     Production.production_import_outstanding_orders #import data outstanding for production
     sales_mart_import_outstanding_orders_only_production
