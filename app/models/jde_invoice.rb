@@ -228,7 +228,7 @@ class JdeInvoice < ActiveRecord::Base
   end
   
   def self.batch_transform
-    date = "01/11/2018".to_date
+    date = Date.today.to_date
     ActiveRecord::Base.connection.execute("
       INSERT INTO sales_mart.RET1BRAND (fiscal_day, fiscal_month, fiscal_year, branch, brand, sales_quantity, sales_amount, updated_at)
       SELECT DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, SUM(jumlah), SUM(harganetto2), NOW()
