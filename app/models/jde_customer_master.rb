@@ -3,7 +3,7 @@ class JdeCustomerMaster < ActiveRecord::Base
   self.table_name = "PRODDTA.F0101"
   
   def self.get_customer(an8)
-    self.where("aban8 LIKE '%#{an8}%'")
+    self.find_by_sql("SELECT * FROM PRODDTA.F0101 WHERE ABAN8 LIKE '%#{an8}%'")
   end
   
   def self.get_group_customer(address_number)
