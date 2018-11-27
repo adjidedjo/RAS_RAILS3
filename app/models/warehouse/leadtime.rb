@@ -26,7 +26,9 @@ class Warehouse::Leadtime < ActiveRecord::Base
     ) BP ON LEDGER.TO_BP = BP.MCMCU
     GROUP BY LEDGER.FROM_BP, LEDGER.TO_BP, LEDGER.SHORT_I, LEDGER.ILCRDJ")
     while r = lead.fetch_hash
-       self.create(short_item: r["SHORT_I"].to_i, item_number: r["ITEM_NUMBER"].strip, description: r["DESC1"].strip,
+       self.create(short_item: r["SHORT_I"].to_i, 
+       item_number: r["ITEM_NUMBER"].nil? ? '-' : r["ITEM_NUMBER"].strip, 
+       description: r["DESC1"].nil? ? '-' : r["DESC1"].strip,
        from_branch: r["FROM_BP"].to_i, to_branch: r["TO_BP"].to_i, 
        fulfillment_day: (r["RECEIPT"].to_i - r["REQ"].to_i), 
        actual_ship: (r["RECEIPT"].to_i - r["ACTUAL_SHIP"].to_i),
