@@ -42,6 +42,10 @@ class ControlUpload
   
   ########################### END PPC
   
+  def leadtime_batch
+    Warehouse::Leadtime.calculate_leadtime
+  end
+  
   def import_stock
     Warehouse::F41021Stock.import_stock_warehouse
   end
