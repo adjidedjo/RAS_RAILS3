@@ -3,6 +3,7 @@ class Warehouse::Leadtime < ActiveRecord::Base
   self.table_name = "LEADTIMES"
   
   def self.calculate_leadtime
+    ActiveRecord::Base.connection.execute("TRUNCATE warehouse.LEADTIMES")
     lead = ActiveRecord::Base.establish_connection("jdeoracle").connection.execute("
     SELECT LEDGER.FROM_BP, LEDGER.TO_BP, LEDGER.SHORT_I, MAX(SO.SDLITM) AS ITEM_NUMBER, MAX(SO.SDDSC1) AS DESC1, 
     MAX(SO.SDITM), LEDGER.ILCRDJ AS RECEIPT, MAX(SO.SDDRQJ) AS REQ, MAX(SO.SDADDJ) AS ACTUAL_SHIP,
@@ -10,7 +11,8 @@ class Warehouse::Leadtime < ActiveRecord::Base
     (
      SELECT LEDGER.ILMCU AS TO_BP, LEDGER.ILAN8 AS FROM_BP, LEDGER.ILITM AS SHORT_I, LEDGER.ILDOCO, LEDGER.ILDCTO, 
      LEDGER.ILCRDJ
-     FROM PRODDTA.F4111 LEDGER WHERE LEDGER.ILCRDJ BETWEEN '118244' AND '118274' AND LEDGER.ILDCTO IN ('OK', 'OT') AND LEDGER.ILAN8 > 0 
+     FROM PRODDTA.F4111 LEDGER WHERE LEDGER.ILCRDJ BETWEEN '#{date_to_julian(3.months.ago.to_date)}' AND 
+     '#{date_to_julian(Date.today.to_date)}' AND LEDGER.ILDCTO IN ('OK', 'OT') AND LEDGER.ILAN8 > 0 
      AND LEDGER.ILDCT IN ('OV', 'VT') AND 
      REGEXP_LIKE(LEDGER.ILAN8, '11001$|11002$|12002$|12001$|15001$|15002$|15151$
      |15152$|11051$|11052$|11081$|11082$|11091$|11092$')
