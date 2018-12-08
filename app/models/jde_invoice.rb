@@ -341,7 +341,9 @@ class JdeInvoice < ActiveRecord::Base
       2
     elsif cabang == "01"
       1
-    elsif cabang == "03" || cabang == "23"
+    elsif cabang == "03"
+      23
+    elsif cabang == "23"
       3
     elsif cabang == "07" || cabang == "22"
       7
