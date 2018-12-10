@@ -9,7 +9,7 @@ class JdeItemMaster < ActiveRecord::Base
   end
   
   def self.get_item_number_from_second(second_item)
-    litm = where('imlitm like "%#{second_item}%"').first
+    litm = where("imlitm like '%#{second_item}%'").first
     itm = litm.nil? ? where("imaitm like '%#{second_item}%'").first : litm
     return itm
   end
