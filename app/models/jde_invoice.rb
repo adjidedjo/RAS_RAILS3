@@ -4,17 +4,18 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
-    rpdivj BETWEEN '#{date_to_julian('01/02/2018'.to_date)}' AND '#{date_to_julian('28/02/2018'.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RO|RM')")
+    rpdivj BETWEEN '#{date_to_julian('01/10/2018'.to_date)}' AND '#{date_to_julian('31/10/2018'.to_date)}'
+    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND rpdoc")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT id, nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES 
         WHERE nofaktur = '#{iv.rpdoc.to_i}' AND kode_customer = '#{iv.rpan8.to_i}' AND orty = '#{iv.rpdct.strip}' 
         AND lnid = '#{iv.rpsfx.to_i}'")
         if check.empty?
-          customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
-          bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
+          order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip.gsub!(/[^0-9A-Za-z]/, ''))
-          if item_master.present?
+          if order.sddcto.present? && item_master.present? 
+            customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
+            bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
             namacustomer = customer.present? ? customer.abalph.strip : '-'
             cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
             area = find_area(cabang)
@@ -40,7 +41,6 @@ class JdeInvoice < ActiveRecord::Base
             end
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
-            order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
             nosj_so = iv.rpdct == 'RI' ? (order.sddeln.nil? ? '-' : order.sddeln.to_i) : '-'
             alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
