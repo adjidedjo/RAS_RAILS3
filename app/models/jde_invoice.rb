@@ -41,7 +41,7 @@ class JdeInvoice < ActiveRecord::Base
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
             order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
-            nosj_so = iv.rpdct == 'RI' ? order.sddeln.to_i : '-'
+            nosj_so = iv.rpdct == 'RI' ? (order.sddeln.nil? ? '-' : order.sddeln.to_i) : '-'
             alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
             ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
@@ -135,7 +135,7 @@ class JdeInvoice < ActiveRecord::Base
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
             order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
-            nosj_so = iv.rpdct == 'RI' ? order.sddeln.to_i : '-'
+            nosj_so = iv.rpdct == 'RI' ? (order.sddeln.nil? ? '-' : order.sddeln.to_i) : '-'
             alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
             ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
