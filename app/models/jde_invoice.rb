@@ -13,7 +13,7 @@ class JdeInvoice < ActiveRecord::Base
         if check.empty?
           order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip.gsub!(/[^0-9A-Za-z]/, ''))
-          if order.sddcto.present? && item_master.present? 
+          if order.present? && item_master.present? 
             customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
             bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
             namacustomer = customer.present? ? customer.abalph.strip : '-'
@@ -108,7 +108,7 @@ class JdeInvoice < ActiveRecord::Base
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip.gsub!(/[^0-9A-Za-z]/, ''))
-          if item_master.present?
+          if order.present? && item_master.present?
             namacustomer = customer.present? ? customer.abalph.strip : '-'
             cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
             area = find_area(cabang)
