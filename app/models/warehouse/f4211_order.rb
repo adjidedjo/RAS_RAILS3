@@ -18,7 +18,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
     JOIN PRODDTA.F0101 cus ON so.sdshan = cus.aban8
     WHERE so.sdcomm NOT LIKE '%#{'K'}%'
     AND REGEXP_LIKE(so.sddcto,'SO|ZO|ST|SK') AND itm.imtmpl LIKE '%BJ MATRASS%' AND
-    so.sdlttr <= '580'")
+    so.sdlttr <= '560'")
     while r = outstanding.fetch_hash
        self.create(order_no: r["SDDOCO"].to_i, 
         promised_delivery: julian_to_date(r["SDDRQJ"]), branch: r["SDMCU"].strip, 
