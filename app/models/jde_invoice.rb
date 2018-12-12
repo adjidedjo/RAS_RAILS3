@@ -12,9 +12,9 @@ class JdeInvoice < ActiveRecord::Base
         AND orty = '#{iv.rpdct.strip}' AND kode_customer = '#{iv.rpan8.to_i}'  
         AND lnid = '#{iv.rpsfx.to_i}' AND fiscal_month = '#{iv.rppn.to_i}'")
         if check.empty?
-          order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
-          if (iv.rpdct.strip == 'RM' && item_master.present?) || (order.present? && item_master.present?) 
+          if item_master.present? 
+            order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
             customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
             bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
             namacustomer = customer.present? ? customer.abalph.strip : '-'
@@ -101,7 +101,7 @@ class JdeInvoice < ActiveRecord::Base
   def self.import_sales
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B11 WHERE
     rpupmj BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND '#{date_to_julian(Date.today.to_date)}'
-    AND REGEXP_LIKE(rpdct,'RI|RO|RM|RX') AND RPSDOC > 1")
+    AND REGEXP_LIKE(rpdct,'RI|RO|RM') AND RPSDOC > 1")
     invoices.each do |iv|
         check = LaporanCabang.find_by_sql("SELECT nofaktur, orty, nosj, harganetto2 FROM warehouse.F03B11_INVOICES 
         WHERE nofaktur = '#{iv.rpdoc.to_i}' 
@@ -111,7 +111,7 @@ class JdeInvoice < ActiveRecord::Base
           customer = JdeCustomerMaster.find_by_aban8(iv.rpan8)
           bonus = iv.rpag.to_i == 0 ?  'BONUS' : '-'
           item_master = JdeItemMaster.get_item_number_from_second(iv.rprmk.strip)
-          if (iv.rpdct.strip == 'RM' && item_master.present?) || (order.present? && item_master.present?) 
+          if item_master.present? 
             namacustomer = customer.present? ? customer.abalph.strip : '-'
             cabang = jde_cabang(iv.rpmcu.to_i.to_s.strip)
             area = find_area(cabang)
@@ -138,7 +138,7 @@ class JdeInvoice < ActiveRecord::Base
             sales_type = iv.rpmcu.to_i.to_s.strip.include?("K") ? 1 : 0 #checking if konsinyasi
             adj = import_adjustment(iv.rplnid.to_i, iv.rpsdoc.to_i, iv.rpsdct) #find price_adjustment
             order = get_info_from_order(iv.rplnid, iv.rpsdoc, iv.rpsdct)
-            nosj_so = iv.rpdct == 'RI' ? (order.sddeln.nil? ? '-' : order.sddeln.to_i) : '-'
+            nosj_so = iv.rpdct == 'RI' ? (order.nil? ? '-' : order.sddeln.to_i) : '-'
             alamat_so = iv.rpdct == 'RI' ? (get_address_from_order(iv.rpsdoc, iv.rpsdct).nil? ? '-' : get_address_from_order(iv.rpsdoc, iv.rpsdct).address) : '-'
             customer_po = iv.rpdct == 'RI' ? order.sdvr01 : '-'
             ref = iv.rpdct == 'RM' ? iv.rprmr1.strip[0..7] : iv.rpdoc.to_i
