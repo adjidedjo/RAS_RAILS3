@@ -54,7 +54,7 @@ class JdeInvoice < ActiveRecord::Base
        
        WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
     invoices.each do |iv|
-        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.sales_reports 
+        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
         AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{iv.month.to_i}'")
