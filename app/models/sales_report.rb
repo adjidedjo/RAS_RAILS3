@@ -1,5 +1,5 @@
 class SalesReport < ActiveRecord::Base
-  set_table_name "tblaporancabang"
+  set_table_name "sales_reports"
   attr_accessible *column_names
   
   scope :search_by_month_and_year, lambda { |month, year| where("MONTH(tanggalsj) = ? and YEAR(tanggalsj) = ?", month, year)}
