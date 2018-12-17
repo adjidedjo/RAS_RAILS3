@@ -13,7 +13,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '118335' AND '118347' AND REGEXP_LIKE(rpdct,'RI|RM|RO')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '118305' AND '118334' AND REGEXP_LIKE(rpdct,'RI|RM|RO')
        ) SA
        LEFT JOIN
        (
@@ -41,7 +41,7 @@ class JdeInvoice < ActiveRecord::Base
        ) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
-       SELECT * FROM PRODDTA.F0116 WHERE ROWNUM = 1
+       SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
        ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
@@ -54,17 +54,12 @@ class JdeInvoice < ActiveRecord::Base
        
        WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
     invoices.each do |iv|
-        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
-        WHERE nofaktur = '#{iv.nofaktur.to_i}' 
-        AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{iv.month.to_i}'")
-        if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
           fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
           alamat_so = iv.orty == 'RI' ? (get_address_from_order(iv.noso, iv.doc).nil? ? '-' : get_address_from_order(iv.noso, iv.doc).address) : '-'
           adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
-          LaporanCabang.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
+          SalesReport.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
             jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
@@ -86,29 +81,6 @@ class JdeInvoice < ActiveRecord::Base
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9)
-          Warehouse::Invoice.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
-            kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
-            harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-            ketppb: "",
-            salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: iv.year,
-              fiscal_month: iv.month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
-              area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
-              nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
-              alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
-      end
     end
   end
 
@@ -152,7 +124,7 @@ class JdeInvoice < ActiveRecord::Base
        ) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
-       SELECT * FROM PRODDTA.F0116 WHERE ROWNUM = 1
+       SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
        ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
@@ -289,7 +261,8 @@ class JdeInvoice < ActiveRecord::Base
       SELECT area_id, jenisbrgdisc, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
             FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
             AND tanggal_fetched >= '#{date}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kodejenis;")
-    ActiveRecord::Base.connection.execute("REPLACE INTO sales_mart.RET1ARTICLE (branch, brand, product, article, article_desc, size, sales_quantity, sales_amount,
+    ActiveRecord::Base.connection.execute("
+    REPLACE INTO sales_mart.RET1ARTICLE (branch, brand, product, article, article_desc, size, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, jenisbrgdisc, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
             FROM warehouse.F03B11_INVOICES WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND bonus = '-'
