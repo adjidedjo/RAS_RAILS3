@@ -156,10 +156,12 @@ class JdeInvoice < ActiveRecord::Base
        
        WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
     invoices.each do |iv|
+      year = julian_to_date(iv.tanggalinvoice).to_date.year
+      month = julian_to_date(iv.tanggalinvoice).to_date.month
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{iv.month.to_i}'")
+        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
         if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
@@ -174,8 +176,8 @@ class JdeInvoice < ActiveRecord::Base
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: julian_to_date(iv.tanggalinvoice).to_date.year,
-            fiscal_month: julian_to_date(iv.tanggalinvoice).to_date.month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
+            fiscal_year: year,
+            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
               area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
               nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
               alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
@@ -196,8 +198,8 @@ class JdeInvoice < ActiveRecord::Base
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: julian_to_date(iv.tanggalinvoice).to_date.year,
-            fiscal_month: julian_to_date(iv.tanggalinvoice).to_date.month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
+            fiscal_year: year,
+            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
               area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
               nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
               alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
