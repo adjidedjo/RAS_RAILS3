@@ -214,8 +214,8 @@ class JdeInvoice < ActiveRecord::Base
               nupgrade: adj.nil? ? 0 : adj.diskon9)
       end
     end
-    Customer.batch_customer_active
-    Customer.batch_calculate_customer_active
+    #Customer.batch_customer_active
+    #Customer.batch_calculate_customer_active
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     batch_transform(date.month, date.year)
   end
