@@ -3,9 +3,6 @@ class Warehouse::F41021Stock < ActiveRecord::Base
   self.table_name = "F41021_STOCK" #rp
   
   def self.import_stock_warehouse
-    ActiveRecord::Base.establish_connection("warehouse").connection.execute("
-      DELETE FROM warehouse.F41021_STOCK WHERE DATE(created_at) = '#{2.days.ago.to_date}'
-    ")
     stocks = ActiveRecord::Base.establish_connection("jdeoracle").connection.execute("
       SELECT LI.LIITM, LI.LIMCU, LI.LIPQOH, LI.LILOTN, LI.LIGLPT, LI.LILRCJ, LI.LIHCOM FROM PRODDTA.F41021 LI
       LEFT JOIN PRODDTA.F0006 BP ON BP.MCMCU = LI.LIMCU
