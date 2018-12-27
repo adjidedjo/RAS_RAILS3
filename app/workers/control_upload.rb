@@ -28,8 +28,9 @@ class ControlUpload
   ############################ PPC 
   
   def planning_order
-    Production.production_import_sales_orders
-    Production.production_import_stock_hourly
+    Production.production_import_outstanding_orders
+    #Production.production_import_sales_orders
+    #Production.production_import_stock_hourly
   end
   
   def generate_order_buffer
