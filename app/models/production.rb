@@ -5,7 +5,7 @@ class Production < JdeSoDetail
     outstanding = Warehouse::F4211Order.find_by_sql("
     SELECT * FROM warehouse.F4211_ORDERS
     WHERE branch REGEXP '11001$|11002$|12001$|12002$|18081$|18082$|11081$|
-    11082$|11091$|11092$|11051$|11052$|18091$|18092$|18051$|18052$|11151$|11152$|1515$'
+    11082$|11091$|11092$|11051$|11052$|18091$|18092$|18051$|18052$|15151$|15152$'
     AND DATE(created_at) = '#{Date.today}'")
     Pdc::OutstandingOrder.delete_all
     outstanding.each do |ou|
@@ -20,7 +20,7 @@ class Production < JdeSoDetail
       brand: ou.brand, item_number: ou.item_number, description: ou.description,
       order_date: ou.order_date, quantity: ou.quantity, short_item: ou.short_item, 
       segment1: ou.segment1, customer: ou.customer, ship_to: ou.ship_to, typ: ou.typ,
-      last_status: ou.last_status, branch_desc: ou.branch_desc, originator: ou.originator,
+      last_status: ou.last_status, branch_desc: set_branch(ou.branch), originator: ou.originator,
       exceeds: (Date.today - ou.promised_delivery), next_status: ou.next_status, 
       day_category: category_days((Date.today - ou.promised_delivery)))
     end
