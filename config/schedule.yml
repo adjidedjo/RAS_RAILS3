@@ -65,7 +65,7 @@ jde_order_buffer:
   rails_envs: development, production, staging
   
 leadtime_delivery:
-  cron: "0 12 * * 0"
+  cron: "0 0 1 * *"
   queue: cron
   class: ControlUpload
   args: "leadtime_batch"
