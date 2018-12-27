@@ -41,7 +41,7 @@ jde_intransit_to_pos:
   rails_envs: development, production, staging
   
 jde_import_sales_items:
-  cron: "0 6 * * *"
+  cron: "0 6,9 * * *"
   queue: cron
   class: ControlUpload
   args: "import_sales_jde"
@@ -109,20 +109,20 @@ leadtime_delivery:
 
 ########################### PPC
 
-# jde_planning_order:
-  # cron: "0 4 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "planning_order"
-  # description: intransit jde to point of sales
-  # rails_envs: development, production, staging
+jde_planning_order:
+  cron: "0 2 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "planning_order"
+  description: import program for ppc
+  rails_envs: development, production, staging
   
 # jde_generate_planning_order:
   # cron: "5 6 * * *"
   # queue: cron
   # class: ControlUpload
   # args: "generate_planning_production"
-  # description: intransit jde to point of sales
+  # description: import program for ppc
   # rails_envs: development, production, staging
   
 ########################## END PPC
