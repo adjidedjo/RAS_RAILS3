@@ -32,7 +32,7 @@ class Warehouse::Leadtime < ActiveRecord::Base
        item_number: r["ITEM_NUMBER"].nil? ? '-' : r["ITEM_NUMBER"].strip, 
        description: r["DESC1"].nil? ? '-' : r["DESC1"].strip,
        from_branch: r["FROM_BP"].to_i, to_branch: r["TO_BP"].to_i, 
-       fulfillment_day: (r["RECEIPT"].to_i - r["REQ"].to_i), 
+       fulfillment_day: (r["RECEIPT"].to_i - r["ORDER_DATE"].to_i), 
        actual_ship: (r["RECEIPT"].to_i - r["ACTUAL_SHIP"].to_i),
        promise_date: (r["RECEIPT"].to_i - r["PROMISE_DATE"].to_i))
     end
