@@ -383,7 +383,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian('2018-12-24'.to_date)}' AND '#{date_to_julian('2018-12-26'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian('2018-12-24'.to_date)}' AND '#{date_to_julian('2018-12-26'.to_date)}' AND REGEXP_LIKE(rpdct,'RM')
        ) SA
        LEFT JOIN
        (
