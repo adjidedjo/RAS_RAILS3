@@ -431,7 +431,7 @@ class JdeInvoice < ActiveRecord::Base
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
         AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
         if check.present? && (check.first.harganetto2 != iv.total)
-          check.update_attributes!(harganetto2: iv.total)
+          check.first.update_attributes!(harganetto2: iv.total)
         elsif check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
