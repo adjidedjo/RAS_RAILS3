@@ -431,7 +431,15 @@ class JdeInvoice < ActiveRecord::Base
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
         AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
         if check.present? && (check.first.harganetto2 != iv.total)
-          check.first.update_attributes!(harganetto2: iv.total)
+          ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang SET harganetto2 = '#{iv.total}' WHERE
+            nofaktur = '#{iv.nofaktur.to_i}' 
+            AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
+            AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
+            
+          ActiveRecord::Base.connection.execute("UPDATE warehouse.F03B11_INVOICES SET harganetto2 = '#{iv.total}' WHERE
+            nofaktur = '#{iv.nofaktur.to_i}' 
+            AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
+            AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
         elsif check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
