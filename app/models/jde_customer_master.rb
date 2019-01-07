@@ -55,7 +55,8 @@ class JdeCustomerMaster < ActiveRecord::Base
   def self.checking_customer_limit
     customer = find_by_sql("
       SELECT AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn FROM PRODDTA.F03012 AI
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn, SUM(SD.open_order) AS open_order 
+      FROM PRODDTA.F03012 AI
       LEFT JOIN (
         SELECT aban8, abalph, absic, abmcu FROM PRODDTA.F0101
         GROUP BY aban8, abalph, absic, abmcu
@@ -76,10 +77,12 @@ class JdeCustomerMaster < ActiveRecord::Base
         SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(2.months.ago.beginning_of_month)}'
         AND '#{date_to_julian(2.months.ago.end_of_month)}' THEN rpag END) two,
         SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(1.months.ago.beginning_of_month)}'
-        AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one FROM PRODDTA.F03B11 WHERE
+        AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one,
+        SUM(CASE WHEN rpddj < '#{date_to_julian(Date.today.at_beginning_of_month)}' THEN rpaap END) open_order 
+        FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
       ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aiasn != ' ' and AI.aian8 = '100697'
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aiasn != ' ' AND AI.aian8 = '109031'
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
     ")
@@ -90,12 +93,12 @@ class JdeCustomerMaster < ActiveRecord::Base
           city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
           area_id: assign_area(nc.aiasn), state: customer.first.aicusts, 
-          credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.aiaprc,
+          credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.open_order,
           three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
          find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
          area_id: assign_area(nc.aiasn).to_i, amount_due: nc.rpag,
-         open_amount: nc.aiaprc, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
+         open_amount: nc.open_order, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
       end
     end
   end
