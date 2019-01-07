@@ -12,7 +12,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '118358' AND '118360' AND REGEXP_LIKE(rpdct,'RM')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '118335' AND '119007' AND REGEXP_LIKE(rpdct,'RX')
        ) SA
        LEFT JOIN
        (
@@ -62,7 +62,7 @@ class JdeInvoice < ActiveRecord::Base
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
             jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
@@ -84,7 +84,7 @@ class JdeInvoice < ActiveRecord::Base
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
             jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "",
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
@@ -172,7 +172,7 @@ class JdeInvoice < ActiveRecord::Base
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
             jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
@@ -194,7 +194,7 @@ class JdeInvoice < ActiveRecord::Base
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
             jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
