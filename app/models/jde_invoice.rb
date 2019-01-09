@@ -216,6 +216,7 @@ class JdeInvoice < ActiveRecord::Base
     end
     #Customer.batch_customer_active
     #Customer.batch_calculate_customer_active
+    revise_credit_note
     import_credit_note
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     batch_transform(date.month, date.year)
@@ -494,128 +495,32 @@ class JdeInvoice < ActiveRecord::Base
     end
   end
   
-  private
   def self.revise_credit_note
-    invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
-       SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
-       SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABSIC AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
-       CM1.ABALPH AS NAMASALES,
-       IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, IM.IMPRGR AS BRAND, IM.IMSEG1 AS TIPE, 
-       JN.DRDL01 AS NAMATIPE, IM.IMSRP3, NVL(GI.DRDL01,'-') AS GROUPITEM, IM.IMSEG2 AS KODEARTIKEL, 
-       ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
-       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
-       (
-         SELECT * FROM PRODDTA.F0911 WHERE GLUPMJ BETWEEN '#{date_to_julian(1.week.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(gldct,'RM')
-       ) SA
-       LEFT JOIN
-       (
-       SELECT * FROM PRODDTA.F4101 WHERE IMTMPL LIKE '%BJ MATRASS%'
-       ) IM ON TRIM(IM.IMLITM) = TRIM(SA.GLEXR)
-       LEFT JOIN
-       (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'JN'
-       ) JN ON JN.DRKY LIKE '%'||TRIM(IM.IMSEG1)
-       LEFT JOIN
-       (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'AT'
-       ) ART ON ART.DRKY LIKE '%'||TRIM(IM.IMSEG2)
-       LEFT JOIN
-       (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'KA'
-       ) KA ON KA.DRKY LIKE '%'||TRIM(IM.IMSEG3)
-       LEFT JOIN
-       (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S3'
-       ) GI ON GI.DRKY LIKE '%'||IM.IMSRP3
-       LEFT JOIN
-       (
-       SELECT * FROM PRODDTA.F0101
-       ) CM ON TRIM(SA.GLAN8) = TRIM(CM.ABAN8)
-       LEFT JOIN
-       (
-       SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
-       ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
-       LEFT JOIN
-       (
-       SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
-       ) SM ON SM.SAAN8 = SA.GLAN8 AND SM.SAIT44 = IM.IMSRP1
-       LEFT JOIN
-       (
-       SELECT * FROM PRODDTA.F0101
-       ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       
-       WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
+    invoices = find_by_sql("SELECT * FROM PRODDTA.F03B112 WHERE 
+    RWUPMJ BETWEEN '#{date_to_julian(1.week.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' 
+    AND REGEXP_LIKE(RWODCT,'RM')")
     invoices.each do |iv|
-      year = julian_to_date(iv.tanggalinvoice).to_date.year
-      month = julian_to_date(iv.tanggalinvoice).to_date.month
-        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
-        WHERE nofaktur = '#{iv.nofaktur.to_i}' 
-        AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
-        if check.present? && (check.first.harganetto2 != iv.total)
-          ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang SET harganetto2 = '#{iv.total}' WHERE
-            nofaktur = '#{iv.nofaktur.to_i}' 
-            AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-            AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
+        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, 
+        harganetto2 FROM dbmarketing.tblaporancabang 
+        WHERE nofaktur = '#{iv.rwdoc.to_i}' 
+        AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
+        AND lnid = '#{iv.rwsfx.to_i}'")
+        if check.present?
+          ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang 
+            SET harganetto2 = '#{iv.rwag - iv.rwatad}' WHERE
+            nofaktur = '#{iv.rwdoc.to_i}' 
+            AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
+            AND lnid = '#{iv.rwsfx.to_i}'")
             
-          ActiveRecord::Base.connection.execute("UPDATE warehouse.F03B11_INVOICES SET harganetto2 = '#{iv.total}' WHERE
-            nofaktur = '#{iv.nofaktur.to_i}' 
-            AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-            AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
-        elsif check.empty?
-          cabang = jde_cabang(iv.bp.to_i.to_s.strip)
-          area = find_area(cabang)
-          fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
-          alamat_so = iv.orty == 'RI' ? (get_address_from_order(iv.noso, iv.doc).nil? ? '-' : get_address_from_order(iv.noso, iv.doc).address) : '-'
-          adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
-          LaporanCabang.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
-            kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
-            harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-            ketppb: "", tanggal_fetched: Date.today.to_date,
-            salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: year,
-            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
-              area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
-              nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
-              alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
-          Warehouse::Invoice.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
-            kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
-            jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
-            harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-            ketppb: "", tanggal_fetched: Date.today.to_date,
-            salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: year,
-            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
-              area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
-              nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
-              alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+          ActiveRecord::Base.connection.execute("UPDATE warehouse.F03B11_INVOICES 
+            SET harganetto2 = '#{iv.rwag - iv.rwatad}' WHERE
+            nofaktur = '#{iv.rwdoc.to_i}' 
+            AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
+            AND lnid = '#{iv.rwsfx.to_i}'")
       end
     end
   end
-  
+
   def self.date_to_julian(date)
     1000*(date.year-1900)+date.yday
   end
