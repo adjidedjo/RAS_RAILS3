@@ -497,7 +497,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.revise_credit_note
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B112 WHERE 
-    RWUPMJ BETWEEN '#{date_to_julian(1.week.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' 
+    RWUPMJ BETWEEN '#{date_to_julian(1.month.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' 
     AND REGEXP_LIKE(RWODCT,'RM')")
     invoices.each do |iv|
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, 
@@ -507,13 +507,13 @@ class JdeInvoice < ActiveRecord::Base
         AND lnid = '#{iv.rwsfx.to_i}'")
         if check.present?
           ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang 
-            SET harganetto2 = '#{iv.rwag - iv.rwatad}' WHERE
+            SET harganetto2 = '#{iv.rwoag + iv.rwatad}' WHERE
             nofaktur = '#{iv.rwdoc.to_i}' 
             AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
             AND lnid = '#{iv.rwsfx.to_i}'")
             
           ActiveRecord::Base.connection.execute("UPDATE warehouse.F03B11_INVOICES 
-            SET harganetto2 = '#{iv.rwag - iv.rwatad}' WHERE
+            SET harganetto2 = '#{iv.rwoag + iv.rwatad}' WHERE
             nofaktur = '#{iv.rwdoc.to_i}' 
             AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
             AND lnid = '#{iv.rwsfx.to_i}'")
