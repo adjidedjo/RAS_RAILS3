@@ -168,13 +168,13 @@ jde_mailer_order_confirmation:
   description: Mail Confirmation Order
   rails_envs: development, production, staging
  
-#jde_test_import:
-#   cron: "0 17 8 10 *"
-#   queue: cron
-#   class: ControlUpload
-#   args: "test_import"
-#   description: testing
-#   rails_envs: development, production, staging
+jde_test_import:
+   cron: "35 14 21 * *"
+   queue: cron
+   class: ControlUpload
+   args: "test_import"
+   description: testing
+   rails_envs: development, production, staging
   
 
 # jde_net_sales:
