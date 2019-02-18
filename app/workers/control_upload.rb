@@ -66,7 +66,7 @@ class ControlUpload
   def import_sales_jde
     JdeInvoice.import_sales
     JdeSoDetail.import_hold_orders
-    JdeSoDetail.import_acc_receivable
+    JdeInvoice.import_acc_receivable
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
   end

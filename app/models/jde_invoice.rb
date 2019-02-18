@@ -104,6 +104,45 @@ class JdeInvoice < ActiveRecord::Base
               nupgrade: adj.nil? ? 0 : adj.diskon9)
     end
   end
+  
+  
+  
+  # import account receivable 
+  def self.import_acc_receivable
+    ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, MAX(SM.SASLSM) AS KODESALES, 
+      MAX(CS.ABSIC) AS GR, NVL(MAX(CM1.ABALPH), '-') AS SALESMAN, MAX(IM.IMLITM) AS ITEM_NUMBER, IM.IMPRGR, RP.RPDDJ, SUM(RP.RPAAP) AS OPEN_AMOUNT FROM
+       (
+         SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '118365' AND rpaap > 0 AND RPSDCT = 'SO'
+         AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM')
+         AND rpsdoc > 1
+       ) RP
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F4101
+       ) IM ON IMLITM = RP.RPRMK
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F0101 WHERE ABSIC = 'RET'
+       ) CS ON CS.ABAN8 = RP.RPAN8
+       LEFT JOIN
+       (
+         SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
+       ) SM ON SM.SAAN8 = RP.RPAN8 AND SM.SAIT44 = IM.IMSRP1
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F0101
+       ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
+       WHERE CS.ABSIC = 'RET' GROUP BY RP.RPAN8, RP.RPMCU, RP.RPDDJ, IM.IMPRGR")
+    ar.each do |ars|
+      cabang = jde_cabang(ars.rpmcu.to_i.to_s.strip)
+      dpd = Date.today - julian_to_date(ars.rpddj)
+      AccountReceivable.create(open_amount: ars.rpaap,
+        due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+        remark: ars.item_number.strip, customer_number: ars.kodecus,
+        customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
+        salesman_no: ars.kodesales, brand: ars.imprgr.strip)
+    end
+  end
 
   def self.import_sales
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
@@ -161,7 +200,7 @@ class JdeInvoice < ActiveRecord::Base
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
+        AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'")
         if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
@@ -430,7 +469,7 @@ class JdeInvoice < ActiveRecord::Base
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}'")
+        AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'")
         if check.present? && (check.first.harganetto2 != iv.total)
           ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang SET harganetto2 = '#{iv.total}' WHERE
             nofaktur = '#{iv.nofaktur.to_i}' 
