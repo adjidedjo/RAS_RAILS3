@@ -134,7 +134,7 @@ class JdeInvoice < ActiveRecord::Base
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
        WHERE CS.ABSIC = 'RET' GROUP BY RP.RPAN8, RP.RPMCU, RP.RPDDJ, IM.IMPRGR")
     ar.each do |ars|
-      cabang = jde_cabang(ars.rpmcu.to_i.to_s.strip)
+      cabang = jde_cabang(ars.branch.to_i.to_s.strip)
       dpd = Date.today - julian_to_date(ars.rpddj)
       AccountReceivable.create(open_amount: ars.rpaap,
         due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
