@@ -105,14 +105,13 @@ class JdeInvoice < ActiveRecord::Base
     end
   end
   
-  
-  
   # import account receivable 
   def self.import_acc_receivable
+    AccountReceivable.destroy_all
     ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, MAX(SM.SASLSM) AS KODESALES, 
       MAX(CS.ABSIC) AS GR, NVL(MAX(CM1.ABALPH), '-') AS SALESMAN, MAX(IM.IMLITM) AS ITEM_NUMBER, IM.IMPRGR, RP.RPDDJ, SUM(RP.RPAAP) AS OPEN_AMOUNT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '118365' AND rpaap > 0 AND RPSDCT = 'SO'
+         SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '#{3.months.ago.beginning_of_month.to_date}' AND rpaap > 0 AND RPSDCT = 'SO'
          AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM')
          AND rpsdoc > 1
        ) RP
