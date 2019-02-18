@@ -138,6 +138,7 @@ class JdeInvoice < ActiveRecord::Base
       dpd = Date.today - julian_to_date(ars.rpddj)
       AccountReceivable.create(open_amount: ars.open_amount,
         due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+        fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
         remark: ars.item_number.strip, customer_number: ars.kodecus,
         customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
         salesman_no: ars.kodesales, brand: ars.imprgr.strip)
