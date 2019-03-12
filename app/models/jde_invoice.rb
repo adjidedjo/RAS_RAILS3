@@ -139,7 +139,7 @@ class JdeInvoice < ActiveRecord::Base
       AccountReceivable.create(open_amount: ars.open_amount,
         due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
         fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
-        remark: ars.item_number.strip, customer_number: ars.kodecus,
+        remark: ars.item_number.nil? ? '-' : ars.item_number.strip, customer_number: ars.kodecus,
         customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
         salesman_no: ars.kodesales, brand: ars.imprgr.strip)
     end
@@ -156,7 +156,7 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian('01/02/2019'.to_date)}' 
-         AND '#{date_to_julian('28/02/2019'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(RPMCU, '18051|11051|11052')
+         AND '#{date_to_julian('28/02/2019'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(RPMCU, '11051|11052')
        ) SA
        LEFT JOIN
        (
@@ -426,7 +426,7 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian('01/02/2019'.to_date)}' 
-         AND '#{date_to_julian('01/02/2019'.to_date)}' AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(RPMCU, '18051|11051|11052')
+         AND '#{date_to_julian('28/02/2019'.to_date)}' AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(RPMCU, '11051|11052')
        ) SA
        LEFT JOIN
        (
