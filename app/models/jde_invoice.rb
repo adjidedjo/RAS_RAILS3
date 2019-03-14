@@ -108,7 +108,7 @@ class JdeInvoice < ActiveRecord::Base
   # import account receivable 
   def self.import_acc_receivable
     AccountReceivable.destroy_all
-    ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, MAX(SM.SASLSM) AS KODESALES, 
+    ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, NVL(MAX(SM.SASLSM),'-') AS KODESALES, 
       MAX(CS.ABSIC) AS GR, NVL(MAX(CM1.ABALPH), '-') AS SALESMAN, MAX(IM.IMLITM) AS ITEM_NUMBER, IM.IMPRGR, RP.RPDDJ, SUM(RP.RPAAP) AS OPEN_AMOUNT FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' AND rpaap > 0 AND RPSDCT = 'SO'
@@ -133,16 +133,14 @@ class JdeInvoice < ActiveRecord::Base
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
        WHERE CS.ABSIC = 'RET' GROUP BY RP.RPAN8, RP.RPMCU, RP.RPDDJ, IM.IMPRGR")
     ar.each do |ars|
-      if ars.present?
-        cabang = jde_cabang(ars.branch.to_i.to_s.strip)
-        dpd = Date.today - julian_to_date(ars.rpddj)
-        AccountReceivable.create(open_amount: ars.open_amount,
-          due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
-          fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
-          remark: ars.item_number.nil? ? '-' : ars.item_number.strip, customer_number: ars.kodecus,
-          customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
-          salesman_no: ars.kodesales, brand: ars.imprgr.strip)
-      end
+      cabang = jde_cabang(ars.branch.to_i.to_s.strip)
+      dpd = Date.today - julian_to_date(ars.rpddj)
+      AccountReceivable.create(open_amount: ars.open_amount,
+        due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+        fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
+        remark: ars.item_number.nil? ? '-' : ars.item_number.strip, customer_number: ars.kodecus,
+        customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
+        salesman_no: ars.kodesales, brand: ars.imprgr.nil? ? '-' : ars.imprgr.strip)
     end
   end
 
