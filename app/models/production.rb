@@ -136,7 +136,7 @@ class Production < JdeSoDetail
       "semarang"
     elsif mcu =~ /^12001/ || mcu =~ /^12002/
       "surabaya"
-    elsif mcu =~ /^13151/ || mcu =~ /^11151/ || mcu =~ /^11152/ || mcu =~ /^1515^/
+    elsif mcu =~ /^1515^/
       "tangerang"
     end 
   end
