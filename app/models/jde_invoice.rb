@@ -262,7 +262,9 @@ class JdeInvoice < ActiveRecord::Base
   end
   
   def self.get_group_customer(grup)
-    if grup.strip == 'DEA' || grup.strip == 'RET'
+    if grup.nil?
+      '-'  
+    elsif grup.strip == 'DEA' || grup.strip == 'RET'
       'RETAIL'
     elsif grup.strip == 'SHO'
       'SHOWROOM'
