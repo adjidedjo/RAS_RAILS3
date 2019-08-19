@@ -12,7 +12,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '119007' AND '119007' AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '119216' AND '119217' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
        LEFT JOIN
        (
@@ -53,6 +53,13 @@ class JdeInvoice < ActiveRecord::Base
        
        WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
     invoices.each do |iv|
+      year = julian_to_date(iv.tanggalinvoice).to_date.year
+      month = julian_to_date(iv.tanggalinvoice).to_date.month
+        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
+        WHERE nofaktur = '#{iv.nofaktur.to_i}' 
+        AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
+        AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'")
+        if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
           fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
@@ -66,8 +73,8 @@ class JdeInvoice < ActiveRecord::Base
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: julian_to_date(iv.tanggalinvoice).to_date.year,
-            fiscal_month: julian_to_date(iv.tanggalinvoice).to_date.month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
+            fiscal_year: year,
+            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
               area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
               nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
               alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
@@ -86,10 +93,10 @@ class JdeInvoice < ActiveRecord::Base
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
             kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-            ketppb: "",
+            ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: julian_to_date(iv.tanggalinvoice).to_date.year,
-            fiscal_month: julian_to_date(iv.tanggalinvoice).to_date.month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
+            fiscal_year: year,
+            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
               area_id: area, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
               nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
               alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
@@ -102,7 +109,14 @@ class JdeInvoice < ActiveRecord::Base
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9)
+      end
     end
+    #Customer.batch_customer_active
+    #Customer.batch_calculate_customer_active
+    import_credit_note
+    revise_credit_note
+    date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
+    batch_transform(date.month, date.year)
   end
   
   # import account receivable 
@@ -536,7 +550,7 @@ class JdeInvoice < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.revise_credit_note
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B112 WHERE 
     RWUPMJ BETWEEN '#{date_to_julian(1.month.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' 
