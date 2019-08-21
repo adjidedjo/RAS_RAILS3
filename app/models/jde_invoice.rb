@@ -505,7 +505,7 @@ class JdeInvoice < ActiveRecord::Base
           adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
           LaporanCabang.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
+            jumlah: 0, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
             kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
