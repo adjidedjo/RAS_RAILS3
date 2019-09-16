@@ -206,16 +206,34 @@ class BatchToMart < ActiveRecord::Base
       REPLACE INTO sales_mart.CUSTOMER_GROWTHS(area_id, brand, total, new_customer, active_customer, inactive_customer, fmonth, fyear)
         SELECT area_id, jenisbrgdisc, COUNT(*) AS total_customer,
         COUNT(CASE WHEN min_dateorder BETWEEN '#{1.month.ago.beginning_of_month.to_date}' AND '#{1.month.ago.end_of_month.to_date}' THEN kode_customer END) AS new_customer,
-        COUNT(CASE WHEN max_dateorder BETWEEN '2019-06-01' AND '2019-08-31' THEN kode_customer END) AS active_customer,
-        COUNT(CASE WHEN max_dateorder BETWEEN '2018-01-01' AND '2019-05-31' THEN kode_customer END) AS inactive_customer,
+        COUNT(CASE WHEN max_dateorder BETWEEN '#{3.month.ago.beginning_of_month.to_date}' AND '#{1.month.ago.end_of_month.to_date}' THEN kode_customer END) AS active_customer,
+        COUNT(CASE WHEN max_dateorder BETWEEN '2018-01-01' AND '#{4.month.ago.end_of_month.to_date}' THEN kode_customer END) AS inactive_customer,
         8, 2019
         FROM
         (
           SELECT area_id, jenisbrgdisc, kode_customer, customer, COUNT(*), MIN(tanggalsj) AS min_dateorder, MAX(tanggalsj) AS max_dateorder
-          FROM dbmarketing.tblaporancabang WHERE tanggalsj BETWEEN '2018-01-01' AND '2019-08-31' AND tipecust = 'RETAIL'
+          FROM dbmarketing.tblaporancabang WHERE tanggalsj BETWEEN '2018-01-01' AND '#{1.month.ago.end_of_month.to_date}' AND tipecust = 'RETAIL'
           AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc, area_id
         ) AS sa
         WHERE jenisbrgdisc != '' GROUP BY jenisbrgdisc, area_id;
+    ")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.CUSTOMER_DETGROWTHS(customer_id, customer, city, branch, brand, fmonth, fyear, last_invoice, created_at, salesman, cust_status)
+        SELECT kode_customer, customer, kota, area_id, jenisbrgdisc,
+        '#{1.month.ago.end_of_month.to_date.month}', '#{1.month.ago.end_of_month.to_date.year}', max_dateorder, NOW(), salesman,
+        CASE
+         WHEN min_dateorder BETWEEN '#{1.month.ago.beginning_of_month.to_date}' AND '#{1.month.ago.end_of_month.to_date}' THEN 'NEW'
+         WHEN max_dateorder BETWEEN '#{3.month.ago.beginning_of_month.to_date}' AND '#{1.month.ago.end_of_month.to_date}' THEN 'ACTIVE'
+         WHEN max_dateorder BETWEEN '2018-01-01' AND '#{4.month.ago.end_of_month.to_date}' THEN 'INACTIVE'
+        END
+        FROM
+        (
+          SELECT area_id, jenisbrgdisc, kode_customer, customer, kota, MAX(tanggalsj) AS max_dateorder, MIN(tanggalsj) AS min_dateorder, salesman
+          FROM dbmarketing.tblaporancabang WHERE tanggalsj BETWEEN '2018-01-01' AND '#{1.month.ago.end_of_month.to_date}' AND tipecust = 'RETAIL'
+          AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc, area_id
+        ) AS sa
+        WHERE max_dateorder BETWEEN '2018-01-01' AND '#{1.month.ago.end_of_month.to_date}' AND jenisbrgdisc != '' GROUP BY kode_customer, jenisbrgdisc;
     ")
   end
 end

@@ -167,6 +167,14 @@ weekly_calculation:
   args: "weekly_process"
   description: calculate rkm
   rails_envs: development, production, staging
+  
+monthly_calculation:
+  cron: "0 0 1 * *"
+  queue: cron
+  class: ControlUpload
+  args: "monthly_process"
+  description: monthly process
+  rails_envs: development, production, staging
 
 jde_mailer_order_confirmation:
   cron: "0 5 * * *"
