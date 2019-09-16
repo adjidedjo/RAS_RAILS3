@@ -117,13 +117,13 @@ jde_planning_order:
   description: import program for ppc
   rails_envs: development, production, staging
   
-# jde_generate_planning_order:
-  # cron: "5 6 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "generate_planning_production"
-  # description: import program for ppc
-  # rails_envs: development, production, staging
+jde_generate_planning_order:
+  cron: "5 6 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "generate_planning_production"
+  description: import program for ppc
+  rails_envs: development, production, staging
   
 ########################## END PPC
   

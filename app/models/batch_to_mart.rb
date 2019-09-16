@@ -200,4 +200,22 @@ class BatchToMart < ActiveRecord::Base
         WHERE au.week IS NOT null
     ")
   end
+
+  def self.monthly_customer_active
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.CUSTOMER_GROWTHS(area_id, brand, total, new_customer, active_customer, inactive_customer, fmonth, fyear)
+        SELECT area_id, jenisbrgdisc, COUNT(*) AS total_customer,
+        COUNT(CASE WHEN min_dateorder BETWEEN '#{1.month.ago.beginning_of_month.to_date}' AND '#{1.month.ago.end_of_month.to_date}' THEN kode_customer END) AS new_customer,
+        COUNT(CASE WHEN max_dateorder BETWEEN '2019-06-01' AND '2019-08-31' THEN kode_customer END) AS active_customer,
+        COUNT(CASE WHEN max_dateorder BETWEEN '2018-01-01' AND '2019-05-31' THEN kode_customer END) AS inactive_customer,
+        8, 2019
+        FROM
+        (
+          SELECT area_id, jenisbrgdisc, kode_customer, customer, COUNT(*), MIN(tanggalsj) AS min_dateorder, MAX(tanggalsj) AS max_dateorder
+          FROM dbmarketing.tblaporancabang WHERE tanggalsj BETWEEN '2018-01-01' AND '2019-08-31' AND tipecust = 'RETAIL'
+          AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc, area_id
+        ) AS sa
+        WHERE jenisbrgdisc != '' GROUP BY jenisbrgdisc, area_id;
+    ")
+  end
 end
