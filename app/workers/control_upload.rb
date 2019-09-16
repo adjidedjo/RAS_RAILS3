@@ -43,6 +43,10 @@ class ControlUpload
   
   ########################### END PPC
   
+  def weekly_process
+    BatchToMart.calculate_rkm
+  end
+  
   def leadtime_batch
     Warehouse::Leadtime.calculate_leadtime
   end
