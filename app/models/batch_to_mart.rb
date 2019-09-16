@@ -155,4 +155,49 @@ class BatchToMart < ActiveRecord::Base
        FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('MODERN')
        AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis, kodeartikel, lebar;")
   end
+
+  def self.calculate_rkm
+    ActiveRecord::Base.connection.execute("
+      INSERT INTO rkm_histories(branch, address_number, sales_name, WEEK, YEAR, item_number, size, brand, segment2_name,
+        segment3_name, quantity)
+        SELECT * FROM (
+          SELECT f1.branch, f1.address_number AS address_number, IFNULL(fw.sales_name, tl.salesman) AS sales_name, IFNULL(fw.week, tl.week) AS WEEK,
+              IFNULL(fw.year, tl.fiscal_year) AS YEAR, f1.item_number AS item_number, IFNULL(fw.size, tl.lebar) AS size, IFNULL(fw.brand, tl.jenisbrgdisc) AS brand,
+              IFNULL(fw.segment2_name, tl.namaartikel) AS segment2_name, IFNULL(fw.segment3_name, tl.namakain) AS segment3_name,
+              GREATEST(GREATEST(IFNULL(fw.quantity, 0) - IFNULL(tl.jumlah,0),0) + IFNULL(rh.quantity,0),0) FROM
+              (
+                SELECT item_number, address_number, branch FROM forecast_weeklies WHERE WEEK = '#{1.week.ago.to_date.cweek}' AND YEAR = '#{1.week.ago.to_date.year}'
+                GROUP BY address_number, item_number, branch
+
+                UNION
+
+                SELECT DISTINCT(kodebrg), nopo, area_id FROM dbmarketing.tblaporancabang
+                WHERE tanggalsj BETWEEN '#{1.week.ago.beginning_of_week.to_date}' AND '#{1.week.ago.end_of_week.to_date}' AND nopo IS NOT NULL
+                AND tipecust = 'RETAIL' AND orty IN ('RI', 'RO') GROUP BY area_id, kodebrg, nopo
+              ) f1
+              LEFT JOIN
+              (
+                SELECT * FROM forecast_weeklies WHERE WEEK = '#{1.week.ago.to_date.cweek}' AND YEAR = '#{1.week.ago.to_date.year}' GROUP BY branch, brand, address_number, item_number
+              ) fw ON fw.branch = f1.branch AND fw.address_number = f1.address_number AND fw.item_number = f1.item_number
+              LEFT JOIN
+              (
+                SELECT area_id, kodebrg, SUM(jumlah) AS jumlah, nopo, salesman, lebar, jenisbrgdisc, namaartikel, namakain, SUM(jumlah) AS jml, WEEK, fiscal_year
+                FROM dbmarketing.tblaporancabang
+                WHERE tanggalsj BETWEEN '#{1.week.ago.beginning_of_week.to_date}' AND '#{1.week.ago.end_of_week.to_date}' AND tipecust = 'RETAIL' AND orty IN ('RI', 'RO')
+                AND ketppb NOT LIKE '%D'
+                GROUP BY area_id, kodebrg, nopo
+              ) tl ON tl.area_id = f1.branch AND tl.kodebrg = f1.item_number AND tl.nopo = f1.address_number
+              LEFT JOIN
+              (
+                SELECT item_number, address_number, WEEK, quantity FROM rkm_histories WHERE WEEK = '#{2.week.ago.to_date.cweek}' AND YEAR = '#{2.week.ago.to_date.year}'
+              ) rh ON rh.item_number = f1.item_number AND rh.address_number = f1.address_number
+              LEFT JOIN
+              (
+                SELECT * FROM dbmarketing.tbidcabang
+              ) cab ON cab.id = f1.branch
+              ORDER BY IFNULL(fw.sales_name, tl.salesman) ASC, IFNULL(tl.jumlah,0) DESC
+        ) au
+        WHERE au.week IS NOT null
+    ")
+  end
 end
