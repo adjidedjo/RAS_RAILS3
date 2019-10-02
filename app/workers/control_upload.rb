@@ -79,13 +79,13 @@ class ControlUpload
     #JdeSoDetail.import_sales_consigment
   end
   
-  #def load_customer_active
-  #  Customer.batch_customer_active
-  #end
+  def load_customer_active
+    Customer.batch_customer_active
+  end
   
-  #def import_credit_note
-  #  JdeSoDetail.import_credit_note
-  #end
+  def import_credit_note
+    JdeSoDetail.import_credit_note
+  end
   
   #def import_base_prices
   #  JdeBasePrice.import_base_price
@@ -109,9 +109,9 @@ class ControlUpload
   #  JdeItemAvailability.checking_stock_weekly
   #end
   
-  #def import_stock_daily
-  #  JdeItemAvailability.checking_stock_daily
-  #end
+  def import_stock_daily
+   JdeItemAvailability.checking_stock_daily
+  end
   
   #def import_stock_hourly
   #  JdeItemAvailability.import_stock_hourly
