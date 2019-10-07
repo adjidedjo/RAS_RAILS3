@@ -9,4 +9,5 @@ class Brand < ActiveRecord::Base
   def self.get_brand_name(brand_id)
     brand_name(brand_id).map{|namabrand| namabrand.NamaBrand}.join(",")
   end
+  
 end
