@@ -12,7 +12,8 @@ class Customer < ActiveRecord::Base
     brand, total, created_at, updated_at)
     SELECT area_id, kode_customer, customer, tipecust, COALESCE(MAX(tanggalsj), '0000-00-00'), 
     MONTH(tanggalsj), YEAR(tanggalsj), COALESCE(MAX(nofaktur)), jenisbrgdisc, SUM(harganetto2), 
-    NOW(), NOW() FROM warehouse.F03B11_INVOICES WHERE tanggalsj = '#{Date.yesterday.to_date}' AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc;")
+    NOW(), NOW() FROM warehouse.F03B11_INVOICES WHERE tanggalsj BETWEEN  '#{'2019-10-04'.to_date}' AND '#{Date.yesterday.to_date}' 
+    AND orty = 'RI' GROUP BY kode_customer, jenisbrgdisc;")
   end
   
   def self.batch_calculate_customer_active
