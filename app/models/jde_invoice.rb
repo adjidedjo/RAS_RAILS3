@@ -169,7 +169,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
        (
@@ -597,6 +597,8 @@ class JdeInvoice < ActiveRecord::Base
       "26"
     elsif bu == "1206104" || bu == "1206204" || bu == "1206104C" || bu == "1206104D" || bu == "1206104S" || bu == "1806104" || bu == "1806104" || bu == "1806104C" || bu == "1806104D" || bu == "1806104S" || bu == "1806204D" || bu == "1806204" || bu == "1806204K" #kediri
       "54"
+    elsif bu == "18181" || bu == "18182" || bu == "18181C" || bu == "18181D" || bu == "18181S" || bu == "18182C" || bu == "18182D" || bu == "18182S" #samarinda
+      "55"
     end
   end
 end
