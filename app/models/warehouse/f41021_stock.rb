@@ -4,16 +4,17 @@ class Warehouse::F41021Stock < ActiveRecord::Base
   
   def self.import_stock_warehouse
     stocks = ActiveRecord::Base.establish_connection("jdeoracle").connection.execute("
-      SELECT LI.LIITM, LI.LIMCU, LI.LIPQOH, LI.LILOTN, LI.LIGLPT, LI.LILRCJ, LI.LIHCOM FROM PRODDTA.F41021 LI
+      SELECT LI.LIITM, LI.LIMCU, SUM(LI.LIPQOH) AS LIPQOH, MAX(LI.LIGLPT) AS LIGLPT FROM PRODDTA.F41021 LI 
       LEFT JOIN PRODDTA.F0006 BP ON BP.MCMCU = LI.LIMCU
-      WHERE LI.LIPQOH >= 10000 AND LI.LIPBIN = 'S' AND BP.MCRP05 = '510'")
+      WHERE LI.LIPQOH >= 10000 AND LI.LIPBIN = 'S' AND BP.MCRP08 = 'GDG' AND LI.LIGLPT NOT IN ('WIP') 
+      AND LI.LIMCU NOT LIKE '11001X%'
+      GROUP BY LI.LIITM, LI.LIMCU")
     while r = stocks.fetch_hash
       item_master = JdeItemMaster.get_item_number(r["LIITM"]).first
       fullnamabarang = item_master.imdsc1.strip + " " + item_master.imdsc2.strip
       self.create(short_item: r["LIITM"].to_i, item_number: item_master.imlitm.strip, brand: item_master.imprgr.strip,
         description: fullnamabarang, branch: r["LIMCU"].strip, onhand: r["LIPQOH"]/10000, 
-        hardcommit: r["LIHCOM"]/10000, glcat: item_master.imsrp2, serial: r["LILOTN"].strip, 
-        receipt_date: JdeInvoice.julian_to_date(r["LILRCJ"]), branch_code: jde_cabang(r["LIMCU"].strip))
+        glcat: item_master.imsrp2, receipt_date: JdeInvoice.julian_to_date(r["LILRCJ"]), branch_code: jde_cabang(r["LIMCU"].strip))
     end
     generate_stock_for_capacities
     JdeItemAvailability.historical_stock
