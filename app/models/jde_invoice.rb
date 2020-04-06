@@ -169,7 +169,8 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(Date.yesterday.to_date)}' 
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
        (
@@ -553,6 +554,8 @@ class JdeInvoice < ActiveRecord::Base
       25
     elsif cabang == "26"
       26
+    elsif cabang == "55"
+      55
     end
   end
   
@@ -589,8 +592,12 @@ class JdeInvoice < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
-    elsif bu.include?('180120') || bu.include?("180110") #tasikmalaya
-      "02"
+    elsif bu == "1801101" || bu == "1801101C" || bu == "1801101D" || bu == "1801101S" || bu == "1801101K" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201K" #tasikmalaya
+      "25"
+    elsif bu == "1801102" || bu == "1801102C" || bu == "1801102D" || bu == "1801102S" || bu == "1801102K" || bu == "1801202" || bu == "1801202C" || bu == "1801202D" || bu == "1801202S" || bu == "1801202K" #sukabumi
+      "28"
+    elsif bu == "1801103" || bu == "1801103C" || bu == "1801103D" || bu == "1801103S" || bu == "1801103K" || bu == "1801203" || bu == "1801203C" || bu == "1801203D" || bu == "1801203S" || bu == "1801203K" #sukabumi
+      "53"
     elsif bu.include?('1515') #new cikupa
       "23"
     elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
