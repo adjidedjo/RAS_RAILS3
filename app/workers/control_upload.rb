@@ -109,6 +109,10 @@ class ControlUpload
   #  JdeItemAvailability.checking_stock_weekly
   #end
   
+  def test_import_rm
+   JdeInvoice.import_credit_note
+  end
+  
   def import_stock_daily
    JdeItemAvailability.checking_stock_daily
   end
@@ -130,9 +134,9 @@ class ControlUpload
     Customer.notification_order
   end
   
-  def test_import
-    JdeInvoice.test_import_sales
-  end
+  #def test_import
+  #  JdeInvoice.test_import_sales
+  #end
   
   #def auto_create_marketshare
   #  Marketshare.auto_create_next_month
