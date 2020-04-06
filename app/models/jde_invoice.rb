@@ -138,7 +138,7 @@ class JdeInvoice < ActiveRecord::Base
     end
   end
 
-  def self.import_sales
+  def self.import_sales(date)
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABSIC AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
@@ -148,7 +148,7 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(Date.yesterday.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
@@ -228,8 +228,8 @@ class JdeInvoice < ActiveRecord::Base
     end
     #Customer.batch_customer_active
     #Customer.batch_calculate_customer_active
-    import_credit_note
-    revise_credit_note
+    import_credit_note(date)
+    revise_credit_note(date)
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     BatchToMart.batch_transform_retail(date.month, date.year)
     BatchToMart.batch_transform_direct(date.month, date.year)
@@ -317,7 +317,7 @@ class JdeInvoice < ActiveRecord::Base
   end
 
   private
-  def self.import_credit_note
+  def self.import_credit_note(date)
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABSIC AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
@@ -327,8 +327,8 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '120061' 
-         AND '120091' AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
+         AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
        (
@@ -412,9 +412,9 @@ class JdeInvoice < ActiveRecord::Base
     end
   end
 
-  def self.revise_credit_note
+  def self.revise_credit_note(date)
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B112 WHERE 
-    RWUPMJ BETWEEN '#{date_to_julian(1.month.ago.to_date)}' AND '#{date_to_julian(Date.today.to_date)}' 
+    RWUPMJ = '#{date_to_julian(date.to_date)}' 
     AND REGEXP_LIKE(RWODCT,'RM')")
     invoices.each do |iv|
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, 
