@@ -12,7 +12,8 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '119216' AND '119218' AND REGEXP_LIKE(rpdct,'RX') AND RPDOC = '19023347'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ = '120067' 
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
        (
@@ -113,11 +114,11 @@ class JdeInvoice < ActiveRecord::Base
     end
     #Customer.batch_customer_active
     #Customer.batch_calculate_customer_active
-    import_credit_note
-    revise_credit_note
-    date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
-    BatchToMart.batch_transform_retail(date.month, date.year)
-    BatchToMart.batch_transform_direct(date.month, date.year)
+    #import_credit_note
+    #revise_credit_note
+    #date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
+    #BatchToMart.batch_transform_retail(date.month, date.year)
+    #BatchToMart.batch_transform_direct(date.month, date.year)
   end
   
   # import account receivable 
