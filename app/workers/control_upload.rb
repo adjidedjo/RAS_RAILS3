@@ -71,8 +71,14 @@ class ControlUpload
     JdeSalesman.customer_brands
   end
 
-  def import_sales_jde
-    JdeInvoice.import_sales
+  def import_sales_jde_today
+    JdeInvoice.import_sales(Date.today)
+    #JdeSoDetail.import_transfers_consigment
+    #JdeSoDetail.import_sales_consigment
+  end
+  
+  def import_sales_jde_yesterday
+    JdeInvoice.import_sales(Date.yesterday)
     JdeSoDetail.import_hold_orders
     JdeInvoice.import_acc_receivable
     #JdeSoDetail.import_transfers_consigment
@@ -108,10 +114,6 @@ class ControlUpload
   #def import_stock_weekly
   #  JdeItemAvailability.checking_stock_weekly
   #end
-  
-  def test_import_rm
-   JdeInvoice.import_credit_note
-  end
   
   def import_stock_daily
    JdeItemAvailability.checking_stock_daily
