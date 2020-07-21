@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "noreply-Royal Corporation <noreply@ras.co.id>"
+  default from: "Royal Corporation <support@ras.co.id>"
   
   def order(email, user, name, add1, add2, city, req_date, detail, order_number, cus_city, cus_add)
     @user = user.upcase
@@ -13,12 +13,12 @@ class UserMailer < ActionMailer::Base
     @req_date = req_date
     @cuscity = cus_city
     @cusadd = cus_add
-    mail(:to => email, :subject => "Konfirmasi Order", :bcc => "aji.y@ras.co.id")
+    mail(:to => "aji.y@ras.co.id", :subject => "Konfirmasi Order", :bcc => ["aji.y@ras.co.id", "daniel@ras.co.id"])
   end
   
   def kontra_bon
     recipients = ["wiliam.w@ras.co.id", "endang.l@ras.co.id", "irne@ras.co.id", "daniel@ras.co.id", 
-      "rudy.s@ras.co.id", "haryanto@ras.co.id"]
+      "rudy.s@ras.co.id"]
     mail(:to => recipients, :cc => ["aji.y@ras.co.id", "fenny@ras.co.id"], 
     :subject => "Laporan Hasil Kontra Bon JDE")
   end
