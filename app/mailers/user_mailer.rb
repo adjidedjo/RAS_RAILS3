@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
     @req_date = req_date
     @cuscity = cus_city
     @cusadd = cus_add
-    mail(:to => "aji.y@ras.co.id", :subject => "Konfirmasi Order", :bcc => ["aji.y@ras.co.id", "daniel@ras.co.id"])
+    mail(:to => email, :subject => "Konfirmasi Order", :bcc => ["aji.y@ras.co.id", "daniel@ras.co.id"])
   end
   
   def kontra_bon
