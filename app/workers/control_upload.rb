@@ -133,7 +133,7 @@ class ControlUpload
   end
 
   def intransit_pos
-    PosAutoIntransit.insert_delivered_stock_from_jde(Date.yesterday)
+    PosAutoIntransit.insert_delivered_stock_from_jde(Date.today)
   end
   
   def mailer_confirmation_order

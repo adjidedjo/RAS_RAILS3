@@ -14,7 +14,7 @@ class BatchToMart < ActiveRecord::Base
         f1.branch, (IFNULL(SUM(fw.quantity), 0)+IFNULL(SUM(rh.quantity),0)) AS total_target, IFNULL(rh.quantity,0) AS sisa,
         IFNULL(tl.week, f1.week) AS WEEK, IFNULL(tl.year, f1.year) AS YEAR FROM
         (
-          SELECT item_number, address_number, branch, WEEK, YEAR FROM dbmarketing.forecast_weeklies WHERE WEEK = '#{week}' AND YEAR = '#{wee_year}'
+          SELECT item_number, address_number, branch, WEEK, YEAR FROM dbmarketing.forecast_weeklies WHERE WEEK = '#{week}' AND YEAR = '#{week_year}'
           AND (CASE WHEN '' = '' THEN branch >= 0 ELSE branch = '' END)
           GROUP BY address_number, item_number, branch
           UNION
