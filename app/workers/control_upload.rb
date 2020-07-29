@@ -43,6 +43,10 @@ class ControlUpload
   
   ########################### END PPC
   
+  def rkm_weekly
+    BatchToMart.calculate_rkm_weekly
+  end
+  
   def monthly_process
     BatchToMart.monthly_customer_active
   end
