@@ -6,7 +6,7 @@ class BatchToMart < ActiveRecord::Base
     last_week_year = 2.week.ago.to_date.year
 
     ActiveRecord::Base.connection.execute("
-      REPLACE INTO sales_mart.WEEKLY_PLANS_B(AREA, address_number, sales_name, brand, target_penjualan, jumlah_penjualan, branch, total_target, remain, WEEK, YEAR)
+      REPLACE INTO sales_mart.WEEKLY_PLANS(AREA, address_number, sales_name, brand, target_penjualan, jumlah_penjualan, branch, total_target, remain, WEEK, YEAR)
       SELECT * FROM(
         SELECT cab.Cabang AS cabang, f1.address_number AS address_number, IFNULL(fw.sales_name, tl.salesman) AS sales_name,
         IFNULL(fw.brand, tl.jenisbrgdisc) AS brand,
