@@ -4,7 +4,7 @@ class JdeInvoice < ActiveRecord::Base
   
   def self.get_delivery_number(so_pos)
     find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PRODDTA.F4211 
-    WHERE SDVR01 LIKE '#{so_pos}%' AND AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
+    WHERE SDVR01 LIKE '#{so_pos}%' AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
   end
   
   def self.test_import_sales
