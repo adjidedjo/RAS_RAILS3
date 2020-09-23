@@ -22,10 +22,10 @@ class PosAutoIntransit < ActiveRecord::Base
   end
   
   def self.get_delivery_number_from_jde
-    PosSales.where("month(created_at) = 9 and year(created_at) = 2020").each do |ps|
+    PosSales.where("month(created_at) >= 9 and year(created_at) >= 2020 and 
+    (delivery_number is null or delivery_number = 0)").each do |ps|
       JdeInvoice.get_delivery_number(ps.no_so).each do |jde_del|
-        ps.delivery_number = jde_del.sddeln
-        ps.invoice_number = jde_del.sddoc
+        ps.update_attributes(:delivery_number => jde_del['sddeln'], :invoice_number => jde_del['sddoc'])
       end
     end
   end
