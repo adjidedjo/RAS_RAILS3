@@ -20,6 +20,15 @@ class PosAutoIntransit < ActiveRecord::Base
       end
     end
   end
+  
+  def self.get_delivery_number_from_jde
+    PosSales.where("month(created_at) = 9 and year(created_at) = 2020").each do |ps|
+      JdeInvoice.get_delivery_number(ps.no_so).each do |jde_del|
+        ps.delivery_number = jde_del.sddeln
+        ps.invoice_number = jde_del.sddoc
+      end
+    end
+  end
 
   def self.jde_date_to_date(date)
     Date.parse((date+1900000).to_s, 'YYYYYDDD')
