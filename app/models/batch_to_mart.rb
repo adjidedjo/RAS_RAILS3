@@ -84,7 +84,7 @@ class BatchToMart < ActiveRecord::Base
         fiscal_day, fiscal_month, fiscal_year, updated_at, cabang_id)
       SELECT area_id, jenisbrgdisc, kode_customer, customer, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), cabang_id
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
-            AND AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, kodejenis;")
+            AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, kodejenis;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSARTICLE (branch, brand, customer, customer_desc, product, article, article_desc, size, sales_quantity, sales_amount,
