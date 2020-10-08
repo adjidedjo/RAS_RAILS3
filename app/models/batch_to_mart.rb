@@ -54,7 +54,7 @@ class BatchToMart < ActiveRecord::Base
 
   def self.batch_transform_retail(month, year)
     ActiveRecord::Base.connection.execute("
-      REPLACE INTO sales_mart.RET1BRAND (branch, fiscal_day, fiscal_month, fiscal_year, branch, brand, sales_quantity, sales_amount, updated_at, cabang_id)
+      REPLACE INTO sales_mart.RET1BRAND (branch, fiscal_day, fiscal_month, fiscal_year, brand, sales_quantity, sales_amount, updated_at, cabang_id)
       SELECT area_id, jenisbrgdisc, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), cabang_id
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc;")
