@@ -4,8 +4,8 @@ class PosAutoIntransit < ActiveRecord::Base
   
   def self.insert_pos_to_jde(date)
     ps = ActiveRecord::Base.connection.execute("
-      SELECT sales.no_so AS no_order, UPPER(IFNULL(puc.nama_ktp, puc.nama)) AS penerima , puc.no_telepon AS telepon, 
-      UPPER(IFNULL(puc.alamat_ktp, puc.alamat)) AS alamat_penerima, IFNULL(puc.nik, '-') AS no_ktp FROM
+      SELECT sales.no_so AS no_order, UPPER(IFNULL(puc.nama_ktp, puc.nama)) AS penerima, 
+      UPPER(IFNULL(puc.alamat_ktp, puc.alamat)) AS alamat_penerima, puc.no_telepon AS telepon, IFNULL(puc.nik, '-') AS no_ktp FROM
       (
         SELECT * FROM point_of_sales_staging.sales WHERE DATE(created_at) BETWEEN '2020-10-14' AND '2020-10-14'
       ) AS sales

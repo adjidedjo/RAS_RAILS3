@@ -1,12 +1,12 @@
 class JdeInvoiceProcessing < ActiveRecord::Base
-  establish_connection "jdeoracle"
+  establish_connection ""
 #  self.abstract_class = true
   self.table_name = "PRODDTA.F03B11"
   
   def self.insert_pos_to_jde(pos)
-    ActiveRecord::Base.connection.execute("
+    jdeoracle.connection.execute("
       INSERT INTO PRODDTA.F55ADD1(ECVR01, ECC75PNAME, ECCF01, ECPH1, ECTX2) 
-      VALUES ('#{pos.order}', '#{pos.penerima}', '#{pos.telepon}', '#{pos.alamat_penerima}', '#{pos.no_ktp}')
+      VALUES ('#{pos.map{|x| x.inspect}.join(', ')}}'')
     ")
   end
   
