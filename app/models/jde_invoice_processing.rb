@@ -6,7 +6,7 @@ class JdeInvoiceProcessing < ActiveRecord::Base
   def self.insert_pos_to_jde(pos)
     connection.execute("
       INSERT INTO PRODDTA.F55ADD1(ECVR01, ECC75PNAME, ECCF01, ECPH1, ECTX2) 
-      VALUES ('#{pos.map{|x| x.inspect}.join(', ')}}'')
+      VALUES (#{pos.map{|x| x.inspect}.join(', ')})
     ")
   end
   
