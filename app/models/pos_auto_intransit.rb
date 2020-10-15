@@ -7,11 +7,11 @@ class PosAutoIntransit < ActiveRecord::Base
       SELECT sales.no_so AS 'ORDER', UPPER(IFNULL(puc.nama_ktp, puc.nama)) AS 'PENERIMA' , puc.no_telepon AS 'TELEPON', 
       UPPER(IFNULL(puc.alamat_ktp, puc.alamat)) AS alamat_penerima, IFNULL(puc.nik, '-') AS no_ktp FROM
       (
-        SELECT * FROM sales WHERE DATE(created_at) BETWEEN '2020-10-14' AND '2020-10-14'
+        SELECT * FROM point_of_sales_staging.sales WHERE DATE(created_at) BETWEEN '2020-10-14' AND '2020-10-14'
       ) AS sales
       LEFT JOIN
       (
-        SELECT * FROM pos_ultimate_customers
+        SELECT * FROM point_of_sales_staging.pos_ultimate_customers
       ) AS puc ON puc.id = pos_ultimate_customer_id
     ")
     
