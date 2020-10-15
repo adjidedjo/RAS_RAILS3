@@ -138,6 +138,7 @@ class ControlUpload
   
   def mailer_confirmation_order
     Customer.notification_order
+    PosAutoIntransit.insert_pos_to_jde
   end
   
   #def test_import
