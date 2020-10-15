@@ -1,5 +1,5 @@
 class JdeInvoiceProcessing < ActiveRecord::Base
-  establish_connection ""
+  establish_connection "jdeoracle"
 #  self.abstract_class = true
   self.table_name = "PRODDTA.F03B11"
   
