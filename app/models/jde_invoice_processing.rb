@@ -3,6 +3,13 @@ class JdeInvoiceProcessing < ActiveRecord::Base
 #  self.abstract_class = true
   self.table_name = "PRODDTA.F03B11"
   
+  def self.insert_pos_to_jde(pos)
+    ActiveRecord::Base.connection.execute("
+      INSERT INTO PRODDTA.F55ADD1(ECVR01, ECC75PNAME, ECCF01, ECPH1, ECTX2) 
+      VALUES ('#{pos.order}', '#{pos.penerima}', '#{pos.telepon}', '#{pos.alamat_penerima}', '#{pos.no_ktp}')
+    ")
+  end
+  
   def self.credit_memo
     cm = self.find_by_sql("SELECT rpdivj, rpag, rpsdoc,rprmk FROM PRODDTA.F03B11 WHERE rpdivj = '#{date_to_julian('16/02/2017'.to_date)}'")
     cm.each do |memo|

@@ -1,6 +1,24 @@
 class PosAutoIntransit < ActiveRecord::Base
   establish_connection "pos"
   set_table_name "exhibition_stock_items"
+  
+  def self.insert_pos_to_jde(date)
+    ps = ActiveRecord::Base.connection.execute("
+      SELECT sales.no_so AS 'ORDER', UPPER(IFNULL(puc.nama_ktp, puc.nama)) AS 'PENERIMA' , puc.no_telepon AS 'TELEPON', 
+      UPPER(IFNULL(puc.alamat_ktp, puc.alamat)) AS alamat_penerima, IFNULL(puc.nik, '-') AS no_ktp FROM
+      (
+        SELECT * FROM sales WHERE DATE(created_at) BETWEEN '2020-10-14' AND '2020-10-14'
+      ) AS sales
+      LEFT JOIN
+      (
+        SELECT * FROM pos_ultimate_customers
+      ) AS puc ON puc.id = pos_ultimate_customer_id
+    ")
+    
+    ps.each do |a|
+      JdeInvoiceProcessing.insert_pos_to_jde(a)
+    end
+  end
 
   def self.insert_delivered_stock_from_jde(date)
     PosChannelCustomer.where("address_number > ?", 0).each do |pcc|
