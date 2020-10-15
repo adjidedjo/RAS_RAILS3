@@ -9,7 +9,7 @@ class JdeInvoiceProcessing < ActiveRecord::Base
     if check.nil?
       connection.execute("
         INSERT INTO PRODDTA.F55ADD1(ECVR01, ECC75PNAME, ECCF01, ECPH1, ECTX2)
-        VALUES (#{pos.map{|x| x.inspect}.join(', ')})
+        VALUES (#{pos.map{ |i| "'%s'" % i }.join(', ')})
       ")
     end
   end
