@@ -6,7 +6,7 @@ class JdeInvoiceProcessing < ActiveRecord::Base
     check = connection.execute("
       SELECT * FROM PRODDTA.F55ADD1 WHERE ECVR01 = '#{pos.first}'
     ")
-    if check.nil?
+    if check.row_count == 0
       connection.execute("
         INSERT INTO PRODDTA.F55ADD1(ECVR01, ECC75PNAME, ECCF01, ECPH1, ECTX2)
         VALUES (#{pos.map{ |i| "'%s'" % i }.join(', ')})
