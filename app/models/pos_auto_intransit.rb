@@ -2,12 +2,12 @@ class PosAutoIntransit < ActiveRecord::Base
   establish_connection "pos"
   set_table_name "exhibition_stock_items"
   
-  def self.insert_pos_to_jde
+  def self.insert_pos_to_jde(date)
     ps = ActiveRecord::Base.connection.execute("
       SELECT sales.no_so AS no_order, UPPER(IFNULL(puc.nama_ktp, puc.nama)) AS penerima, 
       UPPER(IFNULL(puc.alamat_ktp, puc.alamat)) AS alamat_penerima, puc.no_telepon AS telepon, IFNULL(puc.nik, '-') AS no_ktp FROM
       (
-        SELECT * FROM point_of_sales_staging.sales WHERE DATE(created_at) = '#{Date.yesterday.to_date}' AND cancel_order = 0
+        SELECT * FROM point_of_sales_staging.sales WHERE DATE(created_at) = '#{date.to_date}' AND cancel_order = 0
       ) AS sales
       LEFT JOIN
       (
