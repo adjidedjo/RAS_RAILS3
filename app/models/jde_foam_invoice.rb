@@ -56,12 +56,12 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120278' AND '120280'
-         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D') AND RPRMR1 LIKE 'FKF%'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120290' AND '120295'
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
        (
-       SELECT * FROM PRODDTA.F4101 WHERE IMTMPL LIKE '%BUSA%'
+       SELECT * FROM PRODDTA.F4101
        ) IM ON TRIM(IM.IMLITM) = TRIM(SA.RPRMK)
        LEFT JOIN
        (
@@ -94,11 +94,11 @@ class JdeFoamInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'FI'
-       ) FI ON TRIM(FI.DRKY) LIKE '%'||TRIM(IM.IMSEG5)
+       ) FI ON TRIM(FI.DRKY) = TRIM(IM.IMSEG5)
        LEFT JOIN
        (
        SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'WB'
-       ) WB ON TRIM(WB.DRKY) LIKE '%'||TRIM(IM.IMSEG6)
+       ) WB ON TRIM(WB.DRKY) = TRIM(IM.IMSEG6)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
@@ -106,7 +106,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT * FROM PRODCTL.F0005 WHERE DRSY = '01' AND DRRT = '08'
-       ) AB ON TRIM(AB.DRKY) LIKE '%'||TRIM(CM.ABAC08)
+       ) AB ON TRIM(AB.DRKY) = TRIM(CM.ABAC08)
        LEFT JOIN
        (
        SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
@@ -119,7 +119,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE CM.ABAC02 = '11'")
+       WHERE CM.ABAC02 = '11' AND IM.IMTMPL LIKE '%BUSA%'")
     kandang.each do |k|
       insert_to_warehouse(k)
     end
@@ -152,8 +152,8 @@ class JdeFoamInvoice < ActiveRecord::Base
           harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
           ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
           nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
-          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: iv.areaid.strip, 
-          area_desc: iv.areadesc.strip, ketppb: iv.bp.strip, 
+          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: (iv.areaid.nil? ? 'A1' : iv.areaid.strip), 
+          area_desc: (iv.areadesc.nil? ? 'AREA 1' : iv.areadesc.strip), ketppb: iv.bp.strip, 
           tanggal: julian_to_date(iv.tanggalinvoice), nofaktur: iv.nofaktur.to_i, 
           lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
           alamat_so: '', reference: iv.referen1, customerpo_so: iv.referen,
