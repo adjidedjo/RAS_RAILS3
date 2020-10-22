@@ -52,11 +52,12 @@ class JdeFoamInvoice < ActiveRecord::Base
        CM1.ABALPH AS NAMASALES,
        IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, BR.DRDL01 AS BRAND, SBR.DRDL01 AS SUBBRAND, IM.IMSEG2 AS TIPE, 
        JN.DRDL01 AS NAMATIPE, IM.IMSEG3 AS DENSITYID, DE.DRDL01 AS DENSITYDESC, IM.IMSEG4 AS FEELID, FE.DRDL01 AS FEELDESC,
-       IM.IMSEG5 AS FITURID, FI.DRDL01 AS FITURBUSA, IM.IMSEG6 AS WARNAID, WB.DRDL01 AS WARNADESC, IMSEG7 AS PANJANG, IMSEG8 AS LEBAR, IMSEG9 AS TEBAL,
+       IM.IMSEG5 AS FITURID, FI.DRDL01 AS FITURBUSA, IM.IMSEG6 AS WARNAID, 
+       WB.DRDL01 AS WARNADESC, IMSEG7 AS PANJANG, IMSEG8 AS LEBAR, IMSEG9 AS TEBAL,
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120290' AND '120295'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120275' AND '120295'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
@@ -146,9 +147,11 @@ class JdeFoamInvoice < ActiveRecord::Base
         SalesWarehouse.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
           kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
           jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
-          tipeid: iv.tipe.strip, tipedesc: iv.namatipe.strip, densityid: iv.densityid.strip, densitydesc: iv.densitydesc.strip,
-          feelid: iv.feelid.strip, feeldesc: iv.feeldesc.strip, fiturid: iv.fiturid.strip, fiturdesc: iv.fiturbusa.strip, warnaid: iv.warnaid.strip,
-          warnadesc: iv.warnadesc.strip, panjang: iv.panjang.strip, lebar: iv.lebar.strip, tebal: iv.tebal.strip,
+          tipeid: (iv.tipe.nil? ? '' : iv.tipe.strip), tipedesc: (iv.namatipe.nil? ? '' : iv.namatipe.strip), 
+          densityid: (iv.densityid.nil? ? '' : iv.densityid.strip), densitydesc: (iv.densitydesc.nil? ? '' : iv.densitydesc.strip),
+          feelid: (iv.feelid.nil? ? '' : iv.feelid.strip), feeldesc: (iv.feeldesc.nil? ? '' : iv.feeldesc.strip), 
+          fiturid: iv.fiturid.strip, fiturdesc: (iv.fiturbusa.nil? ? '' : iv.fiturbusa.strip), warnaid: iv.warnaid.strip,
+          warnadesc: (iv.warnadesc.nil? ? '' : iv.warnadesc.strip), panjang: iv.panjang.strip, lebar: iv.lebar.strip, tebal: iv.tebal.strip,
           harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
           ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
           nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
