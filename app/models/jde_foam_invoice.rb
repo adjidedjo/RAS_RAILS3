@@ -120,7 +120,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA')")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA') AND REGEXP_LIKE(CM.ABAC02, '11|18')")
     kandang.each do |k|
       insert_to_warehouse(k)
     end
