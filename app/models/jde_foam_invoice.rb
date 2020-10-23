@@ -1,51 +1,8 @@
 class JdeFoamInvoice < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F03B11" #rp
-  
-  def self.get_delivery_number(so_pos)
-    find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PRODDTA.F4211 
-    WHERE SDVR01 LIKE '#{so_pos}%' AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
-  end
-  
-  # import account receivable 
-  def self.import_acc_receivable
-    AccountReceivable.destroy_all
-    ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, MAX(SM.SASLSM) AS KODESALES, 
-      MAX(CS.ABSIC) AS GR, NVL(MAX(CM1.ABALPH), '-') AS SALESMAN, MAX(IM.IMLITM) AS ITEM_NUMBER, IM.IMPRGR, RP.RPDDJ, SUM(RP.RPAAP) AS OPEN_AMOUNT FROM
-       (
-         SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' 
-         AND rpaap > 0 AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND REGEXP_LIKE(rppost,'P|D')
-       ) RP
-       LEFT JOIN
-       (
-         SELECT * FROM PRODDTA.F4101
-       ) IM ON IMLITM = RP.RPRMK
-       LEFT JOIN
-       (
-         SELECT * FROM PRODDTA.F0101 WHERE ABSIC = 'RET'
-       ) CS ON CS.ABAN8 = RP.RPAN8
-       LEFT JOIN
-       (
-         SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
-       ) SM ON SM.SAAN8 = RP.RPAN8 AND SM.SAIT44 = IM.IMSRP1
-       LEFT JOIN
-       (
-         SELECT * FROM PRODDTA.F0101
-       ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE CS.ABSIC = 'RET' GROUP BY RP.RPAN8, RP.RPMCU, RP.RPDDJ, IM.IMPRGR")
-    ar.each do |ars|
-      cabang = jde_cabang(ars.branch.to_i.to_s.strip)
-      dpd = Date.today - julian_to_date(ars.rpddj)
-      AccountReceivable.create(open_amount: ars.open_amount,
-        due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
-        fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
-        remark: ars.item_number.nil? ? '-' : ars.item_number.strip, customer_number: ars.kodecus,
-        customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
-        salesman_no: ars.kodesales, brand: ars.imprgr.nil? ? '-' : ars.imprgr.strip)
-    end
-  end
 
-  def self.import_sales_foam
+  def self.import_sales_foam(date)
     kandang = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
@@ -57,7 +14,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120245' AND '120274'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
@@ -124,13 +81,50 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    #Customer.batch_customer_active
-    #Customer.batch_calculate_customer_active
-    #import_credit_note(date)
-    #revise_credit_note(date)
-    #date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
-    #BatchToMart.batch_transform_retail(date.month, date.year)
-    #BatchToMart.batch_transform_direct(date.month, date.year)
+    BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+  end
+  
+  def self.get_delivery_number(so_pos)
+    find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PRODDTA.F4211 
+    WHERE SDVR01 LIKE '#{so_pos}%' AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
+  end
+  
+  # import account receivable 
+  def self.import_acc_receivable
+    AccountReceivable.destroy_all
+    ar = find_by_sql("SELECT RP.RPMCU AS BRANCH, RP.RPAN8 AS KODECUS, MAX(CS.ABALPH) AS CUSTOMER, MAX(SM.SASLSM) AS KODESALES, 
+      MAX(CS.ABSIC) AS GR, NVL(MAX(CM1.ABALPH), '-') AS SALESMAN, MAX(IM.IMLITM) AS ITEM_NUMBER, IM.IMPRGR, RP.RPDDJ, SUM(RP.RPAAP) AS OPEN_AMOUNT FROM
+       (
+         SELECT * FROM PRODDTA.F03B11 WHERE rpddj >= '#{date_to_julian(3.months.ago.beginning_of_month.to_date)}' 
+         AND rpaap > 0 AND REGEXP_LIKE(rpdct,'RI|RX|RO|RM') AND REGEXP_LIKE(rppost,'P|D')
+       ) RP
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F4101
+       ) IM ON IMLITM = RP.RPRMK
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F0101 WHERE ABSIC = 'RET'
+       ) CS ON CS.ABAN8 = RP.RPAN8
+       LEFT JOIN
+       (
+         SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
+       ) SM ON SM.SAAN8 = RP.RPAN8 AND SM.SAIT44 = IM.IMSRP1
+       LEFT JOIN
+       (
+         SELECT * FROM PRODDTA.F0101
+       ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
+       WHERE CS.ABSIC = 'RET' GROUP BY RP.RPAN8, RP.RPMCU, RP.RPDDJ, IM.IMPRGR")
+    ar.each do |ars|
+      cabang = jde_cabang(ars.branch.to_i.to_s.strip)
+      dpd = Date.today - julian_to_date(ars.rpddj)
+      AccountReceivable.create(open_amount: ars.open_amount,
+        due_date: julian_to_date(ars.rpddj), days_past_due: dpd, branch: cabang,
+        fiscal_month: julian_to_date(ars.rpddj).month, fiscal_year: julian_to_date(ars.rpddj).year,
+        remark: ars.item_number.nil? ? '-' : ars.item_number.strip, customer_number: ars.kodecus,
+        customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
+        salesman_no: ars.kodesales, brand: ars.imprgr.nil? ? '-' : ars.imprgr.strip)
+    end
   end
   
   def self.insert_to_warehouse(iv)

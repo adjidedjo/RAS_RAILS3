@@ -77,6 +77,7 @@ class ControlUpload
 
   def import_sales_jde_today
     JdeInvoice.import_sales(Date.today)
+    JdeFoamInvoice.import_sales_foam(Date.today)
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
   end
@@ -85,6 +86,7 @@ class ControlUpload
     JdeInvoice.import_sales(Date.yesterday)
     JdeSoDetail.import_hold_orders
     JdeInvoice.import_acc_receivable
+    JdeFoamInvoice.import_sales_foam(Date.yesterday)
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
   end

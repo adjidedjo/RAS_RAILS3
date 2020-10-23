@@ -1,4 +1,22 @@
 class BatchToMart < ActiveRecord::Base
+  def self.batch_transform_foam_datawarehouse(month, year)
+    SalesWarehouse.connection.execute("
+      REPLACE INTO foam_bybrands (area_id, area_desc,  branch_id, branch_desc, brand, subbrand, total_qty,
+      total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
+        SELECT area_id, area_desc,  cabang_id, cabang_desc, brand, subbrand, SUM(jumlah), SUM(harganetto2),
+        DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
+              FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
+              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand;")
+
+    SalesWarehouse.connection.execute("
+      REPLACE INTO foam_bycusbrands (area_id, area_desc,  branch_id, branch_desc, brand, subbrand, customer_id,
+      customer_desc, kota, salesman, total_qty, total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
+            SELECT area_id, area_desc,  cabang_id, cabang_desc, brand, subbrand, kode_customer, customer, kota, salesman, SUM(jumlah), SUM(harganetto2),
+            DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
+                  FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
+                  GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand, customer;")
+  end
+
   def self.calculate_rkm_weekly
     week = 1.week.ago.to_date.cweek
     week_year = 1.week.ago.to_date.year
