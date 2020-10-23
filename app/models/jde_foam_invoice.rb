@@ -57,7 +57,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120275' AND '120296'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120245' AND '120274'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D')
        ) SA
        LEFT JOIN
@@ -120,7 +120,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE CM.ABAC02 = '11' AND IM.IMTMPL LIKE '%BUSA%'")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA'")
     kandang.each do |k|
       insert_to_warehouse(k)
     end
@@ -187,6 +187,8 @@ class JdeFoamInvoice < ActiveRecord::Base
       'ONLINE'
     elsif grup.strip == '11'
       'INDUSTRI'
+    elsif grup.strip == '18'
+      'PERUSAHAAN'
     else
       '-'
     end
