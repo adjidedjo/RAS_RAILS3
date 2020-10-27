@@ -15,7 +15,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
-         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D')
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D') AND AND REGEXP_LIKE(RPMCU,'11002CL|11002CR')
        ) SA
        LEFT JOIN
        (
@@ -77,7 +77,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA') AND REGEXP_LIKE(CM.ABAC02, '11|18')")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA')")
     kandang.each do |k|
       insert_to_warehouse(k)
     end
