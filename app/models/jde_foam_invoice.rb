@@ -171,7 +171,7 @@ class JdeFoamInvoice < ActiveRecord::Base
     if grup.nil?
       '-'  
     elsif grup.strip == '15'
-      'RETAIL'
+      'RETAIL FOAM'
     elsif grup.strip == '12'
       'MODERN'
     elsif grup.strip == '16'
