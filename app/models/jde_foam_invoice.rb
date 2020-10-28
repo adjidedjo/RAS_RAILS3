@@ -184,6 +184,8 @@ class JdeFoamInvoice < ActiveRecord::Base
       'INDUSTRI'
     elsif grup.strip == '18'
       'PERUSAHAAN'
+    elsif grup.strip == '20'
+      'RETAIL FOAM'
     else
       '-'
     end
