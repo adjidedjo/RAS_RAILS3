@@ -14,7 +14,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120275' AND '120304'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D') 
          AND REGEXP_LIKE(RPMCU,'11002CL|11002CR')
        ) SA
@@ -82,7 +82,7 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    #BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+    BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
   end
   
   def self.get_delivery_number(so_pos)
