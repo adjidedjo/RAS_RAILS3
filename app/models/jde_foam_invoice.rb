@@ -6,7 +6,7 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
-       CM1.ABALPH AS NAMASALES,
+       CM1.ABALPH AS NAMASALES, SA.RPACR AS HARGAUSD,
        IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, BR.DRDL01 AS BRAND, SBR.DRDL01 AS SUBBRAND, IM.IMSEG2 AS TIPE, 
        JN.DRDL01 AS NAMATIPE, IM.IMSEG3 AS DENSITYID, DE.DRDL01 AS DENSITYDESC, IM.IMSEG4 AS FEELID, FE.DRDL01 AS FEELDESC,
        IM.IMSEG5 AS FITURID, FI.DRDL01 AS FITURBUSA, IM.IMSEG6 AS WARNAID, 
@@ -14,7 +14,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120275' AND '120304'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D') 
          AND REGEXP_LIKE(RPMCU,'11002CL|11002CR')
        ) SA
@@ -82,7 +82,7 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+    #BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
   end
   
   def self.get_delivery_number(so_pos)
@@ -163,7 +163,8 @@ class JdeFoamInvoice < ActiveRecord::Base
           diskonsum: adj.nil? ? 0 : adj.diskon6,
           diskonrp: adj.nil? ? 0 : adj.diskon7,
           cashback: adj.nil? ? 0 : adj.diskon8,
-          nupgrade: adj.nil? ? 0 : adj.diskon9)
+          nupgrade: adj.nil? ? 0 : adj.diskon9,
+          hargausd: (iv.hargausd.to_f / 100))
       end
   end
   
