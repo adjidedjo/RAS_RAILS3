@@ -15,7 +15,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
-         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RM') AND REGEXP_LIKE(rppost,'P|D') 
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D') 
          AND REGEXP_LIKE(RPMCU,'11002CL|11002CR')
        ) SA
        LEFT JOIN
@@ -72,7 +72,8 @@ class JdeFoamInvoice < ActiveRecord::Base
        ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
-       SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
+       SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAIT44 = 'F' AND 
+       SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
        ) SM ON SM.SAAN8 = SA.RPAN8
        LEFT JOIN
        (
@@ -82,6 +83,8 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
+    import_credit_note(date)
+    revise_credit_note(date)
     BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
   end
   
@@ -256,70 +259,84 @@ class JdeFoamInvoice < ActiveRecord::Base
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
-       CM1.ABALPH AS NAMASALES,
-       IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, IM.IMPRGR AS BRAND, IM.IMSEG1 AS TIPE, 
-       JN.DRDL01 AS NAMATIPE, IM.IMSRP3, NVL(GI.DRDL01,'-') AS GROUPITEM, IM.IMSEG2 AS KODEARTIKEL, 
-       ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
-       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
-       MC.MCDL01 AS BRANCHDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
+       CM1.ABALPH AS NAMASALES, SA.RPACR AS HARGAUSD,
+       IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, BR.DRDL01 AS BRAND, SBR.DRDL01 AS SUBBRAND, IM.IMSEG2 AS TIPE, 
+       JN.DRDL01 AS NAMATIPE, IM.IMSEG3 AS DENSITYID, DE.DRDL01 AS DENSITYDESC, IM.IMSEG4 AS FEELID, FE.DRDL01 AS FEELDESC,
+       IM.IMSEG5 AS FITURID, FI.DRDL01 AS FITURBUSA, IM.IMSEG6 AS WARNAID, 
+       WB.DRDL01 AS WARNADESC, IMSEG7 AS PANJANG, IMSEG8 AS LEBAR, IMSEG9 AS TEBAL,
+       (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
+       MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' AND RPAN8 = '103190' 
-         AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D')
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
+         AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D') 
+         AND REGEXP_LIKE(RPMCU,'11002CL|11002CR')
        ) SA
        LEFT JOIN
        (
-       SELECT * FROM PRODDTA.F4101 WHERE IMTMPL LIKE '%BJ MATRASS%'
+       SELECT * FROM PRODDTA.F4101
        ) IM ON TRIM(IM.IMLITM) = TRIM(SA.RPRMK)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0006
-       ) MC ON MC.MCMCU LIKE '%'||TRIM(SA.RPMCU)
+       ) MC ON TRIM(MC.MCMCU) = TRIM(SA.RPMCU)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 DRSY = '00' AND DRRT = '04'
-       ) CB ON CB.DRKY LIKE '%'||TRIM(MC.RP04)
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '00' AND DRRT = '04'
+       ) CB ON TRIM(CB.DRKY) = TRIM(MC.MCRP04)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'JN'
-       ) JN ON JN.DRKY LIKE '%'||TRIM(IM.IMSEG1)
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S1'
+       ) BR ON TRIM(BR.DRKY) = TRIM(IM.IMSRP1)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'AT'
-       ) ART ON ART.DRKY LIKE '%'||TRIM(IM.IMSEG2)
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S2'
+       ) SBR ON TRIM(SBR.DRKY) = TRIM(IM.IMSRP2)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'KA'
-       ) KA ON KA.DRKY LIKE '%'||TRIM(IM.IMSEG3)
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'TI' 
+       ) JN ON TRIM(JN.DRKY) = TRIM(IM.IMSEG2)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S3'
-       ) GI ON GI.DRKY LIKE '%'||IM.IMSRP3
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = '08'
+       ) DE ON TRIM(DE.DRKY) = TRIM(IM.IMSEG3)
        LEFT JOIN
        (
-       SELECT * FROM PRODDTA.F0101 AND ABAC02 = 11
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'FB'
+       ) FE ON TRIM(FE.DRKY) = TRIM(IM.IMSEG4)
+       LEFT JOIN
+       (
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'FI'
+       ) FI ON TRIM(FI.DRKY) = TRIM(IM.IMSEG5)
+       LEFT JOIN
+       (
+       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '56' AND DRRT = 'WB'
+       ) WB ON TRIM(WB.DRKY) = TRIM(IM.IMSEG6)
+       LEFT JOIN
+       (
+       SELECT * FROM PRODDTA.F0101
        ) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
-       SELECT * FROM PRODCTL.F0005 DRSY = '01' AND DRRT = '08'
-       ) AB ON AB.DRKY LIKE '%'||TRIM(CM.ABAC08)
+       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '01' AND DRRT = '08'
+       ) AB ON TRIM(AB.DRKY) = TRIM(CM.ABAC08)
        LEFT JOIN
        (
        SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
        ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
-       SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
-       ) SM ON SM.SAAN8 = SA.RPAN8 AND SM.SAIT44 = IM.IMSRP1
+       SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAIT44 = 'F' AND 
+       SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
+       ) SM ON SM.SAAN8 = SA.RPAN8
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       
-       WHERE IM.IMPRGR IS NOT NULL ORDER BY NOFAKTUR")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA') AND CM.ABAC02 != '17'")
     invoices.each do |iv|
       year = julian_to_date(iv.tanggalinvoice).to_date.year
       month = julian_to_date(iv.tanggalinvoice).to_date.month
-        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
+        check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM foam_datawarehouse.sales_warehouses
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
         AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'")
@@ -329,34 +346,36 @@ class JdeFoamInvoice < ActiveRecord::Base
             AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
             AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
         elsif check.empty?
-          cabang = jde_cabang(iv.bp.to_i.to_s.strip)
-          area = find_area(cabang)
           fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
           alamat_so = iv.orty == 'RI' ? (get_address_from_order(iv.noso, iv.doc).nil? ? '-' : get_address_from_order(iv.noso, iv.doc).address) : '-'
           adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
-          LaporanCabang.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
+          SalesWarehouse.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: 0, satuan: "PC",
-            jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
+            tipeid: (iv.tipe.nil? ? '' : iv.tipe.strip), tipedesc: (iv.namatipe.nil? ? '' : iv.namatipe.strip), 
+            densityid: (iv.densityid.nil? ? '' : iv.densityid.strip), densitydesc: (iv.densitydesc.nil? ? '' : iv.densitydesc.strip),
+            feelid: (iv.feelid.nil? ? '' : iv.feelid.strip), feeldesc: (iv.feeldesc.nil? ? '' : iv.feeldesc.strip), 
+            fiturid: iv.fiturid.strip, fiturdesc: (iv.fiturbusa.nil? ? '' : iv.fiturbusa.strip), warnaid: iv.warnaid.strip,
+            warnadesc: (iv.warnadesc.nil? ? '' : iv.warnadesc.strip), panjang: iv.panjang.strip, lebar: iv.lebar.strip, tebal: iv.tebal.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-            ketppb: "", tanggal_fetched: Date.today.to_date,
-            salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
-            fiscal_year: year,
-            fiscal_month: month, week: julian_to_date(iv.tanggalinvoice).to_date.cweek,
-              area_id: iv.areaid, area_desc: iv.areadesc, ketppb: iv.bp.strip, tanggal: julian_to_date(iv.tanggalinvoice),
-              nofaktur: iv.nofaktur.to_i, lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
-              alamat_so: alamat_so, reference: iv.referen1, customerpo_so: iv.referen,
-              diskon1: adj.nil? ? 0 : adj.diskon1,
-              diskon2: adj.nil? ? 0 : adj.diskon2,
-              diskon3: adj.nil? ? 0 : adj.diskon3,
-              diskon4: adj.nil? ? 0 : adj.diskon4,
-              diskon5: adj.nil? ? 0 : adj.diskon5,
-              diskonsum: adj.nil? ? 0 : adj.diskon6,
-              diskonrp: adj.nil? ? 0 : adj.diskon7,
-              cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
-      end
+            ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
+            nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
+            week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: (iv.areaid.nil? ? 'A1' : iv.areaid.strip), 
+            area_desc: (iv.areadesc.nil? ? 'AREA 1' : iv.areadesc.strip), ketppb: iv.bp.strip, 
+            tanggal: julian_to_date(iv.tanggalinvoice), nofaktur: iv.nofaktur.to_i, 
+            lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
+            alamat_so: '', reference: iv.referen1, customerpo_so: iv.referen,
+            diskon1: adj.nil? ? 0 : adj.diskon1,
+            diskon2: adj.nil? ? 0 : adj.diskon2,
+            diskon3: adj.nil? ? 0 : adj.diskon3,
+            diskon4: adj.nil? ? 0 : adj.diskon4,
+            diskon5: adj.nil? ? 0 : adj.diskon5,
+            diskonsum: adj.nil? ? 0 : adj.diskon6,
+            diskonrp: adj.nil? ? 0 : adj.diskon7,
+            cashback: adj.nil? ? 0 : adj.diskon8,
+            nupgrade: adj.nil? ? 0 : adj.diskon9,
+            hargausd: (iv.hargausd.to_f / 100))
+        end
     end
   end
 
@@ -366,12 +385,12 @@ class JdeFoamInvoice < ActiveRecord::Base
     AND REGEXP_LIKE(RWODCT,'RM')")
     invoices.each do |iv|
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, 
-        harganetto2 FROM dbmarketing.tblaporancabang 
+        harganetto2 FROM foam_datawarehouse.sales_warehouses
         WHERE nofaktur = '#{iv.rwdoc.to_i}' 
         AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
         AND lnid = '#{iv.rwsfx.to_i}'")
         if check.present?
-          ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang 
+          ActiveRecord::Base.connection.execute("UPDATE foam_datawarehouse.sales_warehouses
             SET harganetto2 = '#{iv.rwoag + iv.rwatad}' WHERE
             nofaktur = '#{iv.rwdoc.to_i}' 
             AND orty = '#{iv.rwodct.strip}' AND kode_customer = '#{iv.rwan8.to_i}'  
