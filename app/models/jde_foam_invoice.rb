@@ -14,9 +14,9 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120311' AND '120311'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D') 
-         AND REGEXP_LIKE(RPMCU,'CL|CR') AND RPAN8 = '2533542'
+         AND REGEXP_LIKE(RPMCU,'CL|CR')
        ) SA
        LEFT JOIN
        (
@@ -83,9 +83,50 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    #import_credit_note(date)
-    #revise_credit_note(date)
-    #BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+    import_credit_note(date)
+    revise_credit_note(date)
+    BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+  end
+  
+  def self.insert_to_warehouse(iv)
+    year = julian_to_date(iv.tanggalinvoice).to_date.year
+    month = julian_to_date(iv.tanggalinvoice).to_date.month
+    check = SalesWarehouse.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM foam_datawarehouse.sales_warehouses 
+      WHERE nofaktur = '#{iv.nofaktur.to_i}' 
+      AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
+      AND nosj = '#{iv.linefaktur.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}' AND
+      kodebrg = '#{iv.kodebarang.strip}'")
+      if check.empty?
+        fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
+        alamat_so = iv.orty == 'RI' ? (get_address_from_order(iv.noso, iv.doc).nil? ? '-' : get_address_from_order(iv.noso, iv.doc).address) : '-'
+        adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
+        SalesWarehouse.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
+          kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
+          jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
+          tipeid: (iv.tipe.nil? ? '' : iv.tipe.strip), tipedesc: (iv.namatipe.nil? ? '' : iv.namatipe.strip), 
+          densityid: (iv.densityid.nil? ? '' : iv.densityid.strip), densitydesc: (iv.densitydesc.nil? ? '' : iv.densitydesc.strip),
+          feelid: (iv.feelid.nil? ? '' : iv.feelid.strip), feeldesc: (iv.feeldesc.nil? ? '' : iv.feeldesc.strip), 
+          fiturid: iv.fiturid.strip, fiturdesc: (iv.fiturbusa.nil? ? '' : iv.fiturbusa.strip), warnaid: iv.warnaid.strip,
+          warnadesc: (iv.warnadesc.nil? ? '' : iv.warnadesc.strip), panjang: iv.panjang.strip, lebar: iv.lebar.strip, tebal: iv.tebal.strip,
+          harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
+          ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
+          nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
+          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: (iv.areaid.nil? ? 'A1' : iv.areaid.strip), 
+          area_desc: (iv.areadesc.nil? ? 'AREA 1' : iv.areadesc.strip), ketppb: iv.bp.strip, 
+          tanggal: julian_to_date(iv.tanggalinvoice), nofaktur: iv.nofaktur.to_i, 
+          lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
+          alamat_so: '', reference: iv.referen1, customerpo_so: iv.referen,
+          diskon1: adj.nil? ? 0 : adj.diskon1,
+          diskon2: adj.nil? ? 0 : adj.diskon2,
+          diskon3: adj.nil? ? 0 : adj.diskon3,
+          diskon4: adj.nil? ? 0 : adj.diskon4,
+          diskon5: adj.nil? ? 0 : adj.diskon5,
+          diskonsum: adj.nil? ? 0 : adj.diskon6,
+          diskonrp: adj.nil? ? 0 : adj.diskon7,
+          cashback: adj.nil? ? 0 : adj.diskon8,
+          nupgrade: adj.nil? ? 0 : adj.diskon9,
+          hargausd: (iv.hargausd.to_f / 100))
+      end
   end
   
   def self.get_delivery_number(so_pos)
@@ -129,46 +170,6 @@ class JdeFoamInvoice < ActiveRecord::Base
         customer: ars.customer.strip, customer_group: ars.gr, updated_at: Time.now, salesman: ars.salesman, 
         salesman_no: ars.kodesales, brand: ars.imprgr.nil? ? '-' : ars.imprgr.strip)
     end
-  end
-  
-  def self.insert_to_warehouse(iv)
-    year = julian_to_date(iv.tanggalinvoice).to_date.year
-    month = julian_to_date(iv.tanggalinvoice).to_date.month
-    check = SalesWarehouse.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM foam_datawarehouse.sales_warehouses 
-      WHERE nofaktur = '#{iv.nofaktur.to_i}' 
-      AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-      AND nosj = '#{iv.linefaktur.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'")
-      if check.empty?
-        fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
-        alamat_so = iv.orty == 'RI' ? (get_address_from_order(iv.noso, iv.doc).nil? ? '-' : get_address_from_order(iv.noso, iv.doc).address) : '-'
-        adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
-        SalesWarehouse.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
-          kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-          jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
-          tipeid: (iv.tipe.nil? ? '' : iv.tipe.strip), tipedesc: (iv.namatipe.nil? ? '' : iv.namatipe.strip), 
-          densityid: (iv.densityid.nil? ? '' : iv.densityid.strip), densitydesc: (iv.densitydesc.nil? ? '' : iv.densitydesc.strip),
-          feelid: (iv.feelid.nil? ? '' : iv.feelid.strip), feeldesc: (iv.feeldesc.nil? ? '' : iv.feeldesc.strip), 
-          fiturid: iv.fiturid.strip, fiturdesc: (iv.fiturbusa.nil? ? '' : iv.fiturbusa.strip), warnaid: iv.warnaid.strip,
-          warnadesc: (iv.warnadesc.nil? ? '' : iv.warnadesc.strip), panjang: iv.panjang.strip, lebar: iv.lebar.strip, tebal: iv.tebal.strip,
-          harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
-          ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
-          nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
-          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: (iv.areaid.nil? ? 'A1' : iv.areaid.strip), 
-          area_desc: (iv.areadesc.nil? ? 'AREA 1' : iv.areadesc.strip), ketppb: iv.bp.strip, 
-          tanggal: julian_to_date(iv.tanggalinvoice), nofaktur: iv.nofaktur.to_i, 
-          lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
-          alamat_so: '', reference: iv.referen1, customerpo_so: iv.referen,
-          diskon1: adj.nil? ? 0 : adj.diskon1,
-          diskon2: adj.nil? ? 0 : adj.diskon2,
-          diskon3: adj.nil? ? 0 : adj.diskon3,
-          diskon4: adj.nil? ? 0 : adj.diskon4,
-          diskon5: adj.nil? ? 0 : adj.diskon5,
-          diskonsum: adj.nil? ? 0 : adj.diskon6,
-          diskonrp: adj.nil? ? 0 : adj.diskon7,
-          cashback: adj.nil? ? 0 : adj.diskon8,
-          nupgrade: adj.nil? ? 0 : adj.diskon9,
-          hargausd: (iv.hargausd.to_f / 100))
-      end
   end
   
   def self.get_group_customer(grup)
@@ -267,7 +268,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120275' AND '120305'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D') 
          AND REGEXP_LIKE(RPMCU,'CL|CR')
        ) SA
@@ -381,7 +382,7 @@ class JdeFoamInvoice < ActiveRecord::Base
 
   def self.revise_credit_note(date)
     invoices = find_by_sql("SELECT * FROM PRODDTA.F03B112 WHERE 
-    RWDIVJ BETWEEN '120275' AND '120305'
+    RWDIVJ = '#{date_to_julian(date.to_date)}' 
     AND REGEXP_LIKE(RWODCT,'RM')")
     invoices.each do |iv|
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, 
