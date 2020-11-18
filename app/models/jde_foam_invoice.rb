@@ -15,7 +15,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
-         AND REGEXP_LIKE(rpdct,'RI|RO|RX') AND REGEXP_LIKE(rppost,'P|D') 
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX')
          AND REGEXP_LIKE(RPMCU,'CL|CR')
        ) SA
        LEFT JOIN
@@ -269,7 +269,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
-         AND REGEXP_LIKE(rpdct,'RM') AND REGEXP_LIKE(rppost,'P|D') 
+         AND REGEXP_LIKE(rpdct,'RM')
          AND REGEXP_LIKE(RPMCU,'CL|CR')
        ) SA
        LEFT JOIN

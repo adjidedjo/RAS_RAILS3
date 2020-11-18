@@ -77,7 +77,6 @@ class ControlUpload
 
   def import_sales_jde_today
     JdeInvoice.import_sales(Date.today)
-    JdeFoamInvoice.import_sales_foam(Date.today)
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
   end
@@ -86,9 +85,12 @@ class ControlUpload
     JdeInvoice.import_sales(Date.yesterday)
     JdeSoDetail.import_hold_orders
     JdeInvoice.import_acc_receivable
-    JdeFoamInvoice.import_sales_foam(Date.yesterday)
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
+  end
+  
+  def import_sales_foam_jde
+    JdeFoamInvoice.import_sales_foam(Date.today)
   end
   
   def load_customer_active
@@ -143,9 +145,9 @@ class ControlUpload
     PosAutoIntransit.insert_pos_to_jde(Date.yesterday)
   end
   
-  #def test_import
-  #  JdeInvoice.test_import_sales
-  #end
+  def test_import
+    JdeFoamInvoice.import_sales_foam(Date.today.to_date)
+  end
   
   #def auto_create_marketshare
   #  Marketshare.auto_create_next_month

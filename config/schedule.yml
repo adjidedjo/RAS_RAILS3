@@ -6,6 +6,15 @@
 #  description: migrate sales_report
 #  rails_envs: development, production, staging
 
+#jde_test_import:
+#   cron: "40 14 * * *"
+#   queue: cron
+#   class: ControlUpload
+#   args: "test_import"
+#   description: testing
+#   rails_envs: development, production, staging
+
+
 # DONT CHANGE!!!! FIXED!!! ###########################
   
 warehouse_stock:
@@ -33,28 +42,44 @@ jde_masters:
   rails_envs: development, production, staging
 
 jde_intransit_to_pos:
-  cron: "4 0 * * *"
+  cron: "0 6,9,13,16,18 * * *"
   queue: cron
   class: ControlUpload
   args: "intransit_pos"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
   
-jde_import_sales_items:
-  cron: "0 6,9 * * *"
+jde_import_sales_yesterday:
+  cron: "0 6 * * *"
   queue: cron
   class: ControlUpload
-  args: "import_sales_jde"
+  args: "import_sales_jde_yesterday"
   description: intransit jde to point of sales
   rails_envs: development, production, staging
+
+jde_import_sales_today:
+  cron: "10 12 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_sales_jde_today"
+  description: intransit jde to point of sales
+  rails_envs: development, production, staging
+
+jde_import_foam_sales:
+  cron: "0 8 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_sales_foam_jde"
+  description: import sales foam from jde to sales analytic
+  rails_envs: development, production, staging
   
-#jde_import_stock_daily:
-#  cron: "0 2 * * *"
-#  queue: cron
-#  class: ControlUpload
-#  args: "import_stock_daily"
-#  description: intransit jde to point of sales
-#  rails_envs: development, production, staging
+jde_import_stock_daily:
+  cron: "0 2 * * *"
+  queue: cron
+  class: ControlUpload
+  args: "import_stock_daily"
+  description: import stock daily
+  rails_envs: development, production, staging
   
 jde_order_buffer:
   cron: "5 6 * * *"
@@ -88,14 +113,15 @@ leadtime_delivery:
 #  args: "import_stock_hourly"
 #  description: intransit jde to point of sales
 #  rails_envs: development, production, staging
-#   
-# jde_import_stock_weekly:
-  # cron: "0 2 * * *"
-  # queue: cron
-  # class: ControlUpload
-  # args: "import_stock_weekly"
-  # description: intransit jde to point of sales
-  # rails_envs: development, production, staging
+#
+   
+#jde_import_stock_weekly:
+#  cron: "0 2 * * *"
+#  queue: cron
+#  class: ControlUpload
+#  args: "import_stock_weekly"
+#  description: intransit jde to point of sales
+#  rails_envs: development, production, staging
 
 #jde_import_stock_hourly_display:
 #  cron: "0 17 * * *"
@@ -183,14 +209,22 @@ jde_mailer_order_confirmation:
   args: "mailer_confirmation_order"
   description: Mail Confirmation Order
   rails_envs: development, production, staging
+
+rkm_weekly_calculation:
+  cron: "30 5 * * MON"
+  queue: cron
+  class: ControlUpload
+  args: "rkm_weekly"
+  description: rkm calculation weekly process
+  rails_envs: development, production, staging
  
-jde_test_import:
-   cron: "35 14 21 * *"
-   queue: cron
-   class: ControlUpload
-   args: "test_import"
-   description: testing
-   rails_envs: development, production, staging
+#jde_test_import:
+#   cron: "25 9 31 * *"
+#   queue: cron
+#   class: ControlUpload
+#   args: "test_import"
+#   description: testing
+#   rails_envs: development, production, staging
   
 
 # jde_net_sales:
