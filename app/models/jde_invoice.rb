@@ -153,7 +153,8 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, NVL(IM.IMSEG3, '-') AS KODEKAIN, NVL(KA.DRDL01, '-') AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
        LEFT JOIN
@@ -329,7 +330,8 @@ class JdeInvoice < ActiveRecord::Base
        ART.DRDL01 AS ARTICLE, NVL(IM.IMSEG3, '-') AS KODEKAIN, NVL(KA.DRDL01, '-') AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ = '#{date_to_julian(date.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RM')
        ) SA
        LEFT JOIN
