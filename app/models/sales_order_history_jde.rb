@@ -3,7 +3,7 @@ class SalesOrderHistoryJde < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F4211" #sd
 
-  scope :delivered, -> { where("sdnxtr >= ? and sdlttr >= ? and sddcto like ?", "580", "565", "ST") }
+  scope :delivered, -> { where("sdnxtr >= ? and sdlttr >= ? and regexp_like(sddcto, ?)", "580", "565", 'SK|ST') }
 
   def self.find_sales_transfer_to_showroom(date, showroom_id)
     where("sdaddj = ? and sdshan like ?", date_to_julian(date), showroom_id).delivered
