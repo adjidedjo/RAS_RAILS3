@@ -87,6 +87,10 @@ class JdeFetch < ActiveRecord::Base
     end
   end
   
+  def self.date_to_julian(date)
+    1000*(date.year-1900)+date.yday
+  end
+  
   def self.julian_to_date(jd_date)
     if jd_date.nil? || jd_date == 0
       0
