@@ -2,12 +2,13 @@ class JdeFetch < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F4102" #sd
   
-  def self.test_import_order_direct
+  def self.import_order_direct
     invoices = find_by_sql("SELECT MAX(SA.SDMCU) AS CABANG, SA.SDAN8 AS KODE, IM.IMPRGR AS BRAND, MAX(CM.ABALPH) AS CUSTOMER, MAX(CIT.ALCTY1) AS KOTA,
        SA.SDTRDJ AS TANGGALORDER, SUM(SA.SDPQOR) AS TOTALJUMLAH, SUM(SA.SDAEXP) AS TOTAL
        FROM
        (
-         SELECT * FROM PRODDTA.F4211 WHERE SDTRDJ BETWEEN  '121001' AND '121006'
+         SELECT * FROM PRODDTA.F4211 WHERE SDTRDJ BETWEEN  '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}'
          AND REGEXP_LIKE(SDDCTO,'SO|ZO') AND SDLTTR != '980'
        ) SA
        LEFT JOIN
