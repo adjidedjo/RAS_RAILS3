@@ -2,7 +2,7 @@ class JdeItemMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F4101" #im
 
-  scope :include_items, -> { where("imprgr in (?) and imdsc1 not like ?", ['ELITE', 'LADY', 'PURECARE', 'TECHGEL'], '%HOTEL%')}
+  scope :include_items, -> { where("imprgr in (?) and imdsc1 not like ?", ['ELITE', 'LADY', 'PURECARE', 'TECHGEL', 'ROYAL', 'SERENITY'], '%HOTEL%')}
 
   def self.get_item_number(short_item)
     where(imitm: short_item)
@@ -24,7 +24,7 @@ class JdeItemMaster < ActiveRecord::Base
   
 
   def self.get_new_items_from_jde
-    where("imtmpl like ? and imseg4 = ? and imupmj like ?", "%BJ MATRASS%", "S", date_to_julian(Date.yesterday.to_date)).include_items.each do |imjde|
+    where("imtmpl like ? and imseg4 like ? and imupmj like ?", "%BJ MATRASS%", "%S%", date_to_julian(Date.yesterday.to_date)).include_items.each do |imjde|
       pim = PosItemMaster.where("kode_barang like ?", imjde.imaitm.strip)
       if pim.empty?
         nama_brg = imjde.imdsc1.strip + " " + imjde.imdsc2.strip
@@ -64,6 +64,10 @@ class JdeItemMaster < ActiveRecord::Base
       8
     elsif brand == "TECHGEL"
       7
+    elsif brand == "ROYAL"
+      5
+    elsif brand == "SERENITY"
+      6
     end
   end
 end
