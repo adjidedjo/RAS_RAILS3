@@ -104,7 +104,7 @@ class JdeInvoice < ActiveRecord::Base
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9,
-              groupcust: iv.parentcust.strip,
+              groupcust: iv.parentcust,
               plankinggroup: iv.customerparent.strip)
       end
     end
@@ -252,7 +252,7 @@ class JdeInvoice < ActiveRecord::Base
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9,
-              groupcust: iv.parentcust.strip,
+              groupcust: iv.parentcust,
               plankinggroup: iv.customerparent.strip)
       end
     end
