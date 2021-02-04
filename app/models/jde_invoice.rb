@@ -14,10 +14,12 @@ class JdeInvoice < ActiveRecord::Base
        CM1.ABALPH AS NAMASALES,
        IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, IM.IMPRGR AS BRAND, IM.IMSEG1 AS TIPE, 
        JN.DRDL01 AS NAMATIPE, IM.IMSRP3, NVL(GI.DRDL01,'-') AS GROUPITEM, IM.IMSEG2 AS KODEARTIKEL, 
-       ART.DRDL01 AS ARTICLE, IM.IMSEG3 AS KODEKAIN, KA.DRDL01 AS KAIN, 
-       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
+       ART.DRDL01 AS ARTICLE, NVL(IM.IMSEG3, '-') AS KODEKAIN, NVL(KA.DRDL01, '-') AS KAIN, 
+       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
+       AO.MAPA8 AS PARENTCUST, AOCM.RPALPH AS CUSTOMERPARENT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '120328' AND '120328' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '121034' AND
+         '121035}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
        LEFT JOIN
@@ -46,6 +48,14 @@ class JdeInvoice < ActiveRecord::Base
        ) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
        (
+       SELECT * FROM PRODDTA.F0150
+       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.ABAN8)
+       LEFT JOIN
+       (
+       SELECT * FROM PRODDTA.F0101
+       ) AOCM ON TRIM(AO.MAPA8) = TRIM(AOCM.ABAN8)
+       LEFT JOIN
+       (
        SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
        ) CIT ON TRIM(CIT.ALAN8) = TRIM(CM.ABAN8)
        LEFT JOIN
@@ -64,7 +74,7 @@ class JdeInvoice < ActiveRecord::Base
         check = SalesReport.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM dbmarketing.tblaporancabang 
         WHERE nofaktur = '#{iv.nofaktur.to_i}' 
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-        AND nosj = '#{iv.linefaktur.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'
+        AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'
         AND kodebrg = '#{iv.kodebarang.strip}'")
         if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
@@ -93,7 +103,9 @@ class JdeInvoice < ActiveRecord::Base
               diskonsum: adj.nil? ? 0 : adj.diskon6,
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+              nupgrade: adj.nil? ? 0 : adj.diskon9,
+              groupcust: iv.parentcust.strip,
+              plankinggroup: iv.customerparent.strip)
       end
     end
     #Customer.batch_customer_active
