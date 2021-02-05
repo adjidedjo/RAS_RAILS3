@@ -109,9 +109,9 @@ class BatchToMart < ActiveRecord::Base
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
-      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
+      SELECT area_id, jenisbrgdisc, groupcust, plankinggroup, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
-            AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, nopo;")
+            AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, groupcust, nopo;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSPRODUCT (AREA, branch, cabang_id, brand, customer, customer_desc, product, sales_quantity, sales_amount,
