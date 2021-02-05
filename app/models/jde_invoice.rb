@@ -18,7 +18,7 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '121034' AND
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '121032' AND
          '121034' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
@@ -351,7 +351,8 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, IM.IMPRGR AS BRAND, IM.IMSEG1 AS TIPE, 
        JN.DRDL01 AS NAMATIPE, IM.IMSRP3, NVL(GI.DRDL01,'-') AS GROUPITEM, IM.IMSEG2 AS KODEARTIKEL, 
        ART.DRDL01 AS ARTICLE, NVL(IM.IMSEG3, '-') AS KODEKAIN, NVL(KA.DRDL01, '-') AS KAIN, 
-       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN FROM
+       IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
+       NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
          '#{date_to_julian(Date.today.to_date)}' 
@@ -381,6 +382,14 @@ class JdeInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
+       LEFT JOIN
+       (
+       SELECT * FROM PRODDTA.F0150
+       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAPA8)
+       LEFT JOIN
+       (
+       SELECT * FROM PRODDTA.F0101
+       ) AOCM ON TRIM(AO.MAPA8) = TRIM(AOCM.ABAN8)
        LEFT JOIN
        (
        SELECT ALAN8, MAX(ALCTY1) AS ALCTY1 FROM PRODDTA.F0116 GROUP BY ALAN8
@@ -435,7 +444,9 @@ class JdeInvoice < ActiveRecord::Base
               diskonsum: adj.nil? ? 0 : adj.diskon6,
               diskonrp: adj.nil? ? 0 : adj.diskon7,
               cashback: adj.nil? ? 0 : adj.diskon8,
-              nupgrade: adj.nil? ? 0 : adj.diskon9)
+              nupgrade: adj.nil? ? 0 : adj.diskon9,
+              groupcust: iv.parentcust,
+              plankinggroup: iv.customerparent.strip)
       end
     end
   end
