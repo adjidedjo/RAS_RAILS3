@@ -49,7 +49,7 @@ class JdeInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0150
-       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAPA8)
+       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAAN8)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
@@ -197,7 +197,7 @@ class JdeInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0150
-       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAPA8)
+       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAAN8)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
@@ -385,7 +385,7 @@ class JdeInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0150
-       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAPA8)
+       ) AO ON TRIM(SA.RPAN8) = TRIM(AO.MAAN8)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
