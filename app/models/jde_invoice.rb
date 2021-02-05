@@ -19,7 +19,7 @@ class JdeInvoice < ActiveRecord::Base
        NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '121032' AND
-         '121034' 
+         '121036' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
        LEFT JOIN
