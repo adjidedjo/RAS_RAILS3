@@ -134,13 +134,15 @@ class JdeCustomerMaster < ActiveRecord::Base
   end
   
   def self.find_area(cabang)
-    if cabang == "02"
+    if cabang == "02" || cabang == "25" || cabang == "52" || cabang == "53"
       2
     elsif cabang == "01"
       1
-    elsif cabang == "03" || cabang == "23"
+    elsif cabang == "03"
+      23
+    elsif cabang == "23"
       3
-    elsif cabang == "07" || cabang == "22"
+    elsif cabang == "07" || cabang == "22" || cabang == "54"
       7
     elsif cabang == "09"
       9
@@ -162,6 +164,10 @@ class JdeCustomerMaster < ActiveRecord::Base
       20
     elsif cabang == "50"
       50
+    elsif cabang == "26"
+      26
+    elsif cabang == "55"
+      55
     end
   end
   
@@ -180,7 +186,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
-    elsif bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
+    elsif bu == "11030" || bu == "11031" ||  bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "12111C" || bu == "12111D" || bu == "12111S" || bu == "18111" || bu == "18111C" || bu == "18111D" || bu == "18112" || bu == "18111S" || bu == "18111K" || bu == "18112C" || bu == "18112D" || bu == "18112K" #makasar
       "19"
@@ -188,7 +194,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       "04"
     elsif bu == "12131" || bu == "12132" || bu == "12131C" || bu == "12131D" || bu == "12131S" || bu == "18131" || bu == "18131C" || bu == "18131D" || bu == "18132" || bu == "18131S" || bu == "18131K" || bu == "18132C" || bu == "18132D" || bu == "18132K" #jember
       "22" 
-    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
+    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091K" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
       "11"
     elsif bu == "11041" || bu == "11042" || bu == "11041C" || bu == "11041D" || bu == "11041S" || bu == "18041" || bu == "18041C" || bu == "18041D" || bu == "18042" || bu == "18042S" || bu == "18042K" || bu == "18042C" || bu == "18042D" || bu == "18042K" #yogyakarta
       "10"
@@ -198,14 +204,20 @@ class JdeCustomerMaster < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
-    elsif bu.include?('180120') || bu.include?("180110") #tasikmalaya
-      "2"
+    elsif bu == "1801101" || bu == "1801101C" || bu == "1801101D" || bu == "1801101S" || bu == "1801101K" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201K" #tasikmalaya
+      "25"
+    elsif bu == "1801102" || bu == "1801102C" || bu == "1801102D" || bu == "1801102S" || bu == "1801102K" || bu == "1801202" || bu == "1801202C" || bu == "1801202D" || bu == "1801202S" || bu == "1801202K" #sukabumi
+      "52"
+    elsif bu == "1801103" || bu == "1801103C" || bu == "1801103D" || bu == "1801103S" || bu == "1801103K" || bu == "1801203" || bu == "1801203C" || bu == "1801203D" || bu == "1801203S" || bu == "1801203K" #sukabumi
+      "53"
     elsif bu.include?('1515') #new cikupa
       "23"
     elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     elsif bu == "1206104" || bu == "1206204" || bu == "1206104C" || bu == "1206104D" || bu == "1206104S" || bu == "1806104" || bu == "1806104" || bu == "1806104C" || bu == "1806104D" || bu == "1806104S" || bu == "1806204D" || bu == "1806204" || bu == "1806204K" #kediri
       "54"
+    elsif bu == "18181" || bu == "18182" || bu == "18181C" || bu == "18181D" || bu == "18181S" || bu == "18182C" || bu == "18182D" || bu == "18182S" #samarinda
+      "55"
     end
   end
     
@@ -236,6 +248,8 @@ class JdeCustomerMaster < ActiveRecord::Base
       "11"
     elsif sc.include?('SMGELITE') || sc.include?('SMGLADY')
       "8"
+    elsif sc.include?('SMRELITE') || sc.include?('SMRLADY')
+      "55"
     end 
   end
 end
