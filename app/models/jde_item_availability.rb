@@ -302,7 +302,7 @@ class JdeItemAvailability < ActiveRecord::Base
       "09"
     elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
-    elsif bu.include?('13061') || bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabaya
+    elsif bu.include?('13061') || bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabaya
       "07"
     elsif bu.include?('11052') ||  bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
