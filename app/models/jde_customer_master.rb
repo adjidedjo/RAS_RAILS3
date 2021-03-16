@@ -103,6 +103,54 @@ class JdeCustomerMaster < ActiveRecord::Base
     end
   end
   
+  
+  def self.checking_customer_limit_by_brand
+    customer = find_by_sql("
+      SELECT AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.brand, AI.aiasn, SUM(SD.open_order) AS open_order 
+      FROM PRODDTA.F03012 AI
+      LEFT JOIN (
+        SELECT aban8, abalph, absic, abmcu FROM PRODDTA.F0101
+        GROUP BY aban8, abalph, absic, abmcu
+      ) AB ON AI.aian8 = AB.aban8
+      LEFT JOIN
+      (
+        SELECT aladd1, alcty1, alan8 FROM PRODDTA.F0116 GROUP BY aladd1, alcty1, alan8
+      ) AL ON AI.aian8 = AL.alan8
+      LEFT JOIN
+      (
+        SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
+        GROUP BY rpan8, rpkco ORDER BY rpmcu
+      ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
+      LEFT JOIN
+      (
+        SELECT rpan8, rpkco, substr(rprmr1, 1,3) as brand, sum(rpaap) as open_order
+        FROM PRODDTA.F03B11 WHERE
+        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') and rprmr1 like 'F%' 
+        AND rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
+        AND '#{date_to_julian(Date.today.at_beginning_of_month)}' GROUP BY rpan8, rpkco, substr(rprmr1, 1,3)
+      ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
+      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aiasn != ' '
+      GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
+      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.brand, AI.aiasn
+    ")
+    customer.each do |nc|
+      find_cus = CustomerBrandLimit.where(address_number: nc.aian8, co: nc.aico, brand: nc.brand)
+      if find_cus.empty?
+        CustomerBrandLimit.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
+          city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
+          branch_id: jde_cabang(customer.first.abmcu.strip), 
+          area_id: assign_area(nc.aiasn), state: customer.first.aicusts, 
+          credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.open_order,
+          brand: find_brand_based_on_fk(nc.brand))
+       elsif find_cus.present?
+         find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
+         area_id: assign_area(nc.aiasn).to_i, amount_due: nc.rpag,
+         open_amount: nc.open_order)   
+      end
+    end
+  end
+  
   def self.sales_average
     find_by_sql("
       SELECT CS.address_number, CS.co, AR.rpag FROM customer_limits CS
@@ -130,6 +178,26 @@ class JdeCustomerMaster < ActiveRecord::Base
       0
     else
       Date.parse((jd_date+1900000).to_s, 'YYYYYDDD')
+    end
+  end
+  
+  def self.find_brand_based_on_fk(brand)
+    if brand == 'FKS'
+      "SERENITY"
+    elsif brand == 'FKC'
+      "CLASSIC"
+    elsif brand == 'FKE'
+      "ELITE"
+    elsif brand == 'FKL'
+      "LADY"
+    elsif brand == 'FKF'
+      "FOAM"
+    elsif brand == 'FKO'
+      "TOTE"
+    elsif brand == 'FKR'
+      "ROYAL"
+    else
+      "-"
     end
   end
   
