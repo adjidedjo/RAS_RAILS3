@@ -69,7 +69,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       (
         SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
         GROUP BY rpan8, rpkco ORDER BY rpmcu
-      ) RP ON RP.rpkco = AI.aico AND RP.rpan8 = AB.aban8
+      ) RP ON RP.rpan8 = AB.aban8
       LEFT JOIN
       (
         SELECT rpan8, rpkco, SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
@@ -81,8 +81,8 @@ class JdeCustomerMaster < ActiveRecord::Base
         SUM(CASE WHEN rpddj < '#{date_to_julian(Date.today.at_beginning_of_month)}' THEN rpaap END) open_order 
         FROM PRODDTA.F03B11 WHERE
         REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
-      ) SD ON SD.rpkco = AI.aico AND SD.rpan8 = AB.aban8
-      WHERE AI.aico > 0 AND AB.absic LIKE '%RET%' AND AI.aico != '0000' AND AI.aiasn != ' '
+      ) SD ON SD.rpan8 = AB.aban8
+      WHERE AB.absic LIKE '%RET%' AND AI.aico = '00000' AND AI.aiasn != ' '
       GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
       AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
     ")
