@@ -88,6 +88,7 @@ class JdeFoamInvoice < ActiveRecord::Base
     revise_credit_note(date)
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
+    BatchToMart.batch_transform_whs_datawarehouse(date.month, date.year)
   end
   
   def self.insert_to_warehouse(iv)
