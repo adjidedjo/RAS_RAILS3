@@ -278,6 +278,8 @@ class JdeInvoice < ActiveRecord::Base
       'PROJECT'
     elsif grup.strip == '13'
       'ONLINE'
+    elsif grup.strip == '19'
+      'WHS'
     else
       '-'
     end
