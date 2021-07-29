@@ -2,8 +2,8 @@ class BatchToMart < ActiveRecord::Base
 
   def self.batch_transform_whs_datawarehouse(month, year)
     ActiveRecord::Base.connection.execute("
-      REPLACE INTO foam_datawarehouse.WHS1BRAND (AREA, branch, cabang_id, brand,  fiscal_day, fiscal_month, fiscal_year, sales_quantity, sales_amount, updated_at)
-      SELECT area_id, area_id, cabang_id, jenisbrgdisc, DAY(tanggalsj), fiscal_month, fiscal_year, SUM(jumlah), SUM(harganetto2), NOW()
+      REPLACE INTO foam_datawarehouse.WHS1BRAND (AREA, branch, cabang_id, brand, date, fiscal_day, fiscal_month, fiscal_year, sales_quantity, sales_amount, updated_at)
+      SELECT area_id, area_id, cabang_id, jenisbrgdisc, tanggalsj, DAY(tanggalsj), fiscal_month, fiscal_year, SUM(jumlah), SUM(harganetto2), NOW()
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc;")
 
@@ -22,8 +22,8 @@ class BatchToMart < ActiveRecord::Base
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kodejenis, kodeartikel, lebar;")
 
     ActiveRecord::Base.connection.execute("
-    REPLACE INTO foam_datawarehouse.WHS2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
-      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
+    REPLACE INTO foam_datawarehouse.WHS2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, tanggalsj, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
+      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), date, DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, nopo;")
 
