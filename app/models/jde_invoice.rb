@@ -524,7 +524,7 @@ class JdeInvoice < ActiveRecord::Base
   end
   
   def self.jde_cabang(bu)
-    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" || bu == "11002S" || bu == "11002" || bu == "11003" #pusat
       "01"
     elsif bu == "11101" || bu == "11102" || bu == "11101C" || bu == "11101D" || bu == "11101S" || bu == "18101" || bu == "18101C" || bu == "18101D" || bu == "18102" || bu == "18101S" || bu == "18101K" #lampung
       "13" 
