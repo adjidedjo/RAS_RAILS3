@@ -54,10 +54,12 @@ class JdeCustomerMaster < ActiveRecord::Base
   
   def self.checking_customer_limit
     customer = find_by_sql("
-      SELECT AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      MAX(MC.MCRP04) AS kode_cabang, MAX(MC.MCMCU) AS MCMCU,
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn, SUM(SD.open_order) AS open_order 
-      FROM PRODDTA.F03012 AI
+      SELECT AI.*, RP.* ,AB.*, AL.*, SD.*, MC.*
+      FROM 
+      (
+       select aian8, max(aicusts) as aicusts, SUM(case when aico = '00000' then aiacl end) as credit_limit,
+       SUM(aiaprc) AS open_order from PRODDTA.F03012 GROUP BY aian8
+      ) AI
       LEFT JOIN (
         SELECT aban8, abalph, absic, abmcu FROM PRODDTA.F0101
         GROUP BY aban8, abalph, absic, abmcu
@@ -68,40 +70,37 @@ class JdeCustomerMaster < ActiveRecord::Base
       ) AL ON AI.aian8 = AL.alan8
       LEFT JOIN
       (
-        SELECT SUM(rpaap) AS rpag, rpan8, rpkco, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
-        GROUP BY rpan8, rpkco ORDER BY rpmcu
+        SELECT SUM(rpaap) AS rpag, rpan8, MAX(rpmcu) AS rpmcu FROM PRODDTA.F03B11 WHERE rppst NOT LIKE '%P%'
+        GROUP BY rpan8 ORDER BY rpmcu
       ) RP ON RP.rpan8 = AB.aban8
       LEFT JOIN
       (
-        SELECT rpan8, rpkco, MAX(rpmcu) AS mcu2, SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
+        SELECT rpan8, MAX(rpmcu) AS mcu2, SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(3.months.ago.beginning_of_month)}'
         AND '#{date_to_julian(3.months.ago.end_of_month)}' THEN rpag END) three,
         SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(2.months.ago.beginning_of_month)}'
         AND '#{date_to_julian(2.months.ago.end_of_month)}' THEN rpag END) two,
         SUM(CASE WHEN rpdivj BETWEEN '#{date_to_julian(1.months.ago.beginning_of_month)}'
-        AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one,
-        SUM(CASE WHEN rpddj < '#{date_to_julian(Date.today.at_beginning_of_month)}' THEN rpaap END) open_order 
+        AND '#{date_to_julian(1.months.ago.end_of_month)}' THEN rpag END) one
         FROM PRODDTA.F03B11 WHERE
-        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8, rpkco
+        REGEXP_LIKE(rpdct,'RI|RX|RO|RM') GROUP BY rpan8
       ) SD ON SD.rpan8 = AB.aban8
       LEFT JOIN
       (
-        SELECT MCMCU, MCRP04 FROM PRODDTA.F0006 GROUP BY MCMCU, MCRP04
+        SELECT MCMCU, MCRP04 AS kode_cabang FROM PRODDTA.F0006 WHERE MCRP04 like '%06%' GROUP BY MCMCU, MCRP04
       ) MC ON TRIM(MC.MCMCU) = TRIM(SD.MCU2)
-      WHERE AB.absic LIKE '%RET%' AND AI.aico = '00000'
-      GROUP BY AI.aiacl, AI.aidaoj, AI.aian8, AB.abalph, AB.absic, AL.alcty1, AI.aicusts, AB.abmcu, 
-      AB.absic, AI.aico, RP.rpag, AI.aiaprc, RP.rpmcu, SD.three, SD.two, SD.one, AI.aiasn
+      WHERE AB.absic LIKE '%RET%'
     ")
     customer.each do |nc|
-      find_cus = CustomerLimit.where(address_number: nc.aian8, co: nc.aico)
+      find_cus = CustomerLimit.where(address_number: nc.aian8)
       if find_cus.empty?
         CustomerLimit.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
-          city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
+          city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, 
           branch_id: (nc.kode_cabang.nil? ? 0 : area_by_jde(nc.kode_cabang.strip)), 
           area_id: (nc.kode_cabang.nil? ? 0 : area_by_jde(nc.kode_cabang.strip)), state: customer.first.aicusts, 
-          credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.open_order,
+          credit_limit: nc.credit_limit.to_i, amount_due: nc.rpag, open_amount: nc.open_order,
           three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)
        elsif find_cus.present?
-         find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.aiacl.to_i, 
+         find_cus.first.update_attributes!(state: nc.aicusts, credit_limit: nc.credit_limit.to_i, 
          branch_id: (nc.kode_cabang.nil? ? 0 : area_by_jde(nc.kode_cabang.strip)), 
          area_id: (nc.kode_cabang.nil? ? 0 : area_by_jde(nc.kode_cabang.strip)), amount_due: nc.rpag,
          open_amount: nc.open_order, three_months_ago: nc.three, two_months_ago: nc.two, one_month_ago: nc.one)   
@@ -144,7 +143,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       find_cus = CustomerBrandLimit.where(address_number: nc.aian8, co: nc.aico, brand: nc.brand)
       if find_cus.empty?
         CustomerBrandLimit.create!(address_number: nc.aian8, name: nc.abalph.strip, i_class: nc.absic.strip, 
-          city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, opened_date: julian_to_date(nc.aidaoj), 
+          city: nc.alcty1.nil? ? '-' : nc.alcty1.strip, 
           branch_id: jde_cabang(customer.first.abmcu.strip), 
           area_id: assign_area(nc.aiasn), state: customer.first.aicusts, 
           credit_limit: nc.aiacl.to_i, co: nc.aico, amount_due: nc.rpag, open_amount: nc.open_order,
@@ -210,7 +209,7 @@ class JdeCustomerMaster < ActiveRecord::Base
   def self.area_by_jde(cabang)
     if cabang == "01" || cabang == "16" || cabang == "18" || cabang == "19"
       2
-    elsif cabang == "06" || cabang == "13" || cabang == "20"
+    elsif cabang == "06" || cabang == "13" || cabang == "20" #JATIM
       7
     elsif cabang == "3"
       23
