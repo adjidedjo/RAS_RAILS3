@@ -86,7 +86,7 @@ class JdeCustomerMaster < ActiveRecord::Base
       ) SD ON SD.rpan8 = AB.aban8
       LEFT JOIN
       (
-        SELECT MCMCU, MCRP04 AS kode_cabang FROM PRODDTA.F0006 WHERE MCRP04 like '%06%' GROUP BY MCMCU, MCRP04
+        SELECT MCMCU, MCRP04 AS kode_cabang FROM PRODDTA.F0006 GROUP BY MCMCU, MCRP04
       ) MC ON TRIM(MC.MCMCU) = TRIM(SD.MCU2)
       WHERE AB.absic LIKE '%RET%'
     ")
