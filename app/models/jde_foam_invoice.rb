@@ -17,7 +17,7 @@ class JdeFoamInvoice < ActiveRecord::Base
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
          '#{date_to_julian(Date.today.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
-         AND REGEXP_LIKE(RPMCU,'CL|CR')
+         AND REGEXP_LIKE(RPMCU,'CL|CR|11012|11003')
        ) SA
        LEFT JOIN
        (
@@ -80,7 +80,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA|18 BARANG CETAKAN') AND CM.ABAC02 != '17'")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA|18 BARANG CETAKAN|BJ ROYAL 2') AND CM.ABAC02 != '17'")
     kandang.each do |k|
       insert_to_warehouse(k)
     end
@@ -236,7 +236,7 @@ class JdeFoamInvoice < ActiveRecord::Base
          SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
          '#{date_to_julian(Date.today.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RM')
-         AND REGEXP_LIKE(RPMCU,'CL|CR')
+         AND REGEXP_LIKE(RPMCU,'CL|CR|11012|11003')
        ) SA
        LEFT JOIN
        (
@@ -299,7 +299,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (
        SELECT * FROM PRODDTA.F0101
        ) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
-       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA|18 BARANG CETAKAN') AND CM.ABAC02 != '17'")
+       WHERE REGEXP_LIKE(IM.IMTMPL, 'WASTE_BUSA|BUSA|18 BARANG CETAKAN|BJ ROYAL 2') AND CM.ABAC02 != '17'")
     invoices.each do |iv|
       year = julian_to_date(iv.tanggalinvoice).to_date.year
       month = julian_to_date(iv.tanggalinvoice).to_date.month
