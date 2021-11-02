@@ -14,8 +14,8 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
-         '#{date_to_julian(Date.today.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
          AND REGEXP_LIKE(RPMCU,'CL|CR|11012|11003')
        ) SA
@@ -105,7 +105,7 @@ class JdeFoamInvoice < ActiveRecord::Base
         adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
         SalesWarehouse.create!(cabang_id: iv.branchid.strip, cabang_desc: iv.branchdesc.strip, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
           kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-          jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
+          jumlah: iv.jumlah.to_i, satuan: "PC", brand: iv.brand.strip, subbrand: iv.subbrand.strip,
           tipeid: (iv.tipe.nil? ? '' : iv.tipe.strip), tipedesc: (iv.namatipe.nil? ? '' : iv.namatipe.strip), 
           densityid: (iv.densityid.nil? ? '' : iv.densityid.strip), densitydesc: (iv.densitydesc.nil? ? '' : iv.densitydesc.strip),
           feelid: (iv.feelid.nil? ? '' : iv.feelid.strip), feeldesc: (iv.feeldesc.nil? ? '' : iv.feeldesc.strip), 
@@ -128,8 +128,13 @@ class JdeFoamInvoice < ActiveRecord::Base
           diskonrp: adj.nil? ? 0 : adj.diskon7,
           cashback: adj.nil? ? 0 : adj.diskon8,
           nupgrade: adj.nil? ? 0 : adj.diskon9,
-          hargausd: (iv.hargausd.to_f / 100))
+          hargausd: (iv.hargausd.to_f / 100),
+          kubikasi: iv.jumlah*get_conversion(iv.shortitem).first.conv)
       end
+  end
+  
+  def self.get_conversion(item_number)
+    find_by_sql("SELECT (UMCONV/10000000) as conv FROM PRODDTA.F41002 WHERE UMITM = '#{item_number}' AND UMRUM = 'M3'")
   end
   
   def self.get_delivery_number(so_pos)
