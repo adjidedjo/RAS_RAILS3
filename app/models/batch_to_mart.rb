@@ -1,5 +1,4 @@
 class BatchToMart < ActiveRecord::Base
-
   def self.batch_transform_whs_datawarehouse(month, year)
     ActiveRecord::Base.connection.execute("
       REPLACE INTO foam_datawarehouse.WHS1BRAND (AREA, branch, cabang_id, brand, date, fiscal_day, fiscal_month, fiscal_year, sales_quantity, sales_amount, updated_at)
@@ -91,32 +90,33 @@ class BatchToMart < ActiveRecord::Base
   def self.batch_transform_foam_datawarehouse(month, year)
     SalesWarehouse.connection.execute("
       REPLACE INTO foam_bybrands (channel, area_id, area_desc, branch_id, branch_desc, brand, subbrand, total_qty,
-       total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-       SELECT tipecust, area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, SUM(jumlah), SUM(harganetto2),
-       DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
+       kubikasi, total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
+       SELECT tipecust, area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, SUM(jumlah), SUM(kubikasi), 
+       SUM(harganetto2), DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
               GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand, tipecust;")
 
     SalesWarehouse.connection.execute("
-      REPLACE INTO foam_bychannel (channel, area_id, area_desc,  branch_id, branch_desc, total_qty,
+      REPLACE INTO foam_bychannel (channel, area_id, area_desc,  branch_id, branch_desc, total_qty, kubikasi, 
       total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-        SELECT tipecust, area_id, area_desc,  cabang_id, cabang_desc, SUM(jumlah), SUM(harganetto2),
+        SELECT tipecust, area_id, area_desc,  cabang_id, cabang_desc, SUM(jumlah), SUM(kubikasi), SUM(harganetto2),
         DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
               FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
               GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, tipecust;")
 
     SalesWarehouse.connection.execute("
-      REPLACE INTO foam_bysubbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, channel, total_qty,
-       total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, tipecust, SUM(jumlah), SUM(harganetto2),
+      REPLACE INTO foam_bysubbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, channel, 
+       total_qty, kubikasi, total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
+       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, tipecust, SUM(jumlah), SUM(kubikasi), SUM(harganetto2),
        DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
               GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, subbrand, tipecust;")
 
     SalesWarehouse.connection.execute("
       REPLACE INTO foam_bycusbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, customer_id,
-       customer_desc, channel, kota, salesman, total_qty, total_sales, total_sales_usd, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, kode_customer, customer, tipecust, kota, salesman, SUM(jumlah), SUM(harganetto2), SUM(hargausd),
+       customer_desc, channel, kota, salesman, total_qty, kubikasi, total_sales, total_sales_usd, dday, dweek, dmonth, dyear, tanggalsj, created_at)
+       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, kode_customer, customer, tipecust, kota, salesman, 
+       SUM(jumlah), SUM(kubikasi), SUM(harganetto2), SUM(hargausd),
        DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
                   GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand, customer;")
@@ -359,15 +359,16 @@ class BatchToMart < ActiveRecord::Base
           SELECT f1.branch, f1.address_number AS address_number, IFNULL(fw.sales_name, tl.salesman) AS sales_name, IFNULL(fw.week, tl.week) AS WEEK,
               IFNULL(fw.year, tl.fiscal_year) AS YEAR, f1.item_number AS item_number, IFNULL(fw.size, tl.lebar) AS size, IFNULL(fw.brand, tl.jenisbrgdisc) AS brand,
               IFNULL(fw.segment2_name, tl.namaartikel) AS segment2_name, IFNULL(fw.segment3_name, tl.namakain) AS segment3_name,
-              GREATEST(GREATEST(IFNULL(fw.quantity, 0) - IFNULL(tl.jumlah,0),0) + IFNULL(rh.quantity,0),0) FROM
+              (IFNULL(fw.quantity, 0) - IFNULL(tl.jumlah,0) + IFNULL(rh.quantity,0)) FROM
               (
                 SELECT item_number, address_number, branch FROM forecast_weeklies WHERE WEEK = '#{week}' AND YEAR = '#{week_year}'
+                AND address_number = '20081397' AND brand = 'ROYAL'
                 GROUP BY address_number, item_number, branch
 
                 UNION
 
                 SELECT DISTINCT(kodebrg), nopo, area_id FROM dbmarketing.tblaporancabang
-                WHERE week = '#{week}' and fiscal_year = '#{week_year}' AND nopo IS NOT NULL
+                WHERE week = '#{week}' and fiscal_year = '#{week_year}' AND nopo = '20081397' AND jenisbrgdisc = 'ROYAL'
                 AND tipecust = 'RETAIL' AND orty IN ('RI', 'RO', 'RX') GROUP BY area_id, kodebrg, nopo
               ) f1
               LEFT JOIN
