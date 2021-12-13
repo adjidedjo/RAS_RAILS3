@@ -12,10 +12,10 @@ class JdeFoamInvoice < ActiveRecord::Base
        IM.IMSEG4 AS FEELID, NVL(FE.DRDL01, '-') AS FEELDESC, IM.IMSEG5 AS FITURID, NVL(FI.DRDL01, '-') AS FITURBUSA, 
        IM.IMSEG6 AS WARNAID, NVL(WB.DRDL01, '-') AS WARNADESC, IMSEG7 AS PANJANG, IMSEG8 AS LEBAR, IMSEG9 AS TEBAL,
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
-       MC.MCDL01 AS BPDESC, CB.DRKY AS BRANCHID, CB.DRDL01 AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
+       MC.MCDL01 AS BPDESC, CB.CCCO AS BRANCHID, CB.CCNAME AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
-         '#{date_to_julian(Date.today.to_date)}'
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(date.to_date)}' AND
+         '#{date_to_julian(date.yesterday.to_date)}'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
          AND REGEXP_LIKE(RPMCU,'CL|CR|11012|11003')
        ) SA
@@ -29,8 +29,8 @@ class JdeFoamInvoice < ActiveRecord::Base
        ) MC ON TRIM(MC.MCMCU) = TRIM(SA.RPMCU)
        LEFT JOIN
        (
-       SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '00' AND DRRT = '04'
-       ) CB ON TRIM(CB.DRKY) = TRIM(MC.MCRP04)
+       SELECT CCCO, CCNAME from proddta.F0010;
+       ) CB ON TRIM(CB.DRKY) = TRIM(MC.MCCO)
        LEFT JOIN
        (
        SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S1'
@@ -84,8 +84,8 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    import_credit_note(date)
-    revise_credit_note(date)
+    #import_credit_note(date)
+    #revise_credit_note(date)
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
     BatchToMart.batch_transform_whs_datawarehouse(date.month, date.year)
@@ -94,7 +94,7 @@ class JdeFoamInvoice < ActiveRecord::Base
   def self.insert_to_warehouse(iv)
     year = julian_to_date(iv.tanggalinvoice).to_date.year
     month = julian_to_date(iv.tanggalinvoice).to_date.month
-    check = SalesWarehouse.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM foam_datawarehouse.sales_warehouses 
+    check = SalesWarehouse.find_by_sql("SELECT nofaktur, orty, lnid, harganetto2 FROM foam_datawarehouse.sales_warehouses_copy 
       WHERE nofaktur = '#{iv.nofaktur.to_i}' 
       AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
       AND nosj = '#{iv.linefaktur.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}' AND
@@ -129,7 +129,7 @@ class JdeFoamInvoice < ActiveRecord::Base
           cashback: adj.nil? ? 0 : adj.diskon8,
           nupgrade: adj.nil? ? 0 : adj.diskon9,
           hargausd: (iv.hargausd.to_f / 100),
-          kubikasi: iv.jumlah*get_conversion(iv.shortitem).first.conv)
+          kubikasi: get_conversion(iv.shortitem).first.nil? ? (iv.jumlah*0) : (iv.jumlah*get_conversion(iv.shortitem).first.conv))
       end
   end
   
