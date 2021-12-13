@@ -14,7 +14,7 @@ class JdeFoamInvoice < ActiveRecord::Base
        (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        MC.MCDL01 AS BPDESC, CB.CCCO AS BRANCHID, CB.CCNAME AS BRANCHDESC, CM.ABAC08 AS AREAID, AB.DRDL01 AS AREADESC FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(date.to_date)}' AND
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(date.to_date)}' AND
          '#{date_to_julian(date.yesterday.to_date)}'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
          AND REGEXP_LIKE(RPMCU,'CL|CR|11012|11003')
@@ -84,8 +84,8 @@ class JdeFoamInvoice < ActiveRecord::Base
     kandang.each do |k|
       insert_to_warehouse(k)
     end
-    #import_credit_note(date)
-    #revise_credit_note(date)
+    import_credit_note(date)
+    revise_credit_note(date)
     date = Date.today.day > 5 ? Date.today : 1.month.ago.to_date 
     BatchToMart.batch_transform_foam_datawarehouse(date.month, date.year)
     BatchToMart.batch_transform_whs_datawarehouse(date.month, date.year)
