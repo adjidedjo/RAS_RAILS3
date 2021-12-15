@@ -29,8 +29,8 @@ class JdeFoamInvoice < ActiveRecord::Base
        ) MC ON TRIM(MC.MCMCU) = TRIM(SA.RPMCU)
        LEFT JOIN
        (
-       SELECT CCCO, CCNAME from proddta.F0010;
-       ) CB ON TRIM(CB.DRKY) = TRIM(MC.MCCO)
+       SELECT CCCO, CCNAME from proddta.F0010
+       ) CB ON TRIM(CB.CCCO) = TRIM(MC.MCCO)
        LEFT JOIN
        (
        SELECT DRKY, DRDL01 FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S1'
@@ -114,8 +114,8 @@ class JdeFoamInvoice < ActiveRecord::Base
           harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
           ketppb: "", tanggal_fetched: Date.today.to_date, salesman: iv.namasales, orty: iv.orty.strip, 
           nopo: iv.kodesales, fiscal_year: year, fiscal_month: month, 
-          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: (iv.areaid.nil? ? 'A1' : iv.areaid.strip), 
-          area_desc: (iv.areadesc.nil? ? 'AREA 1' : iv.areadesc.strip), ketppb: iv.bp.strip, 
+          week: julian_to_date(iv.tanggalinvoice).to_date.cweek, area_id: iv.areaid.strip, 
+          area_desc: company(iv.area_id.strip), ketppb: iv.bp.strip, 
           tanggal: julian_to_date(iv.tanggalinvoice), nofaktur: iv.nofaktur.to_i, 
           lnid: iv.lineso, nosj: iv.linefaktur.to_i, alamatkirim: iv.doc,
           alamat_so: '', reference: iv.referen1, customerpo_so: iv.referen,
@@ -138,7 +138,7 @@ class JdeFoamInvoice < ActiveRecord::Base
   end
   
   def self.get_delivery_number(so_pos)
-    find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PRODDTA.F4211 
+    find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PROD(iv.areaid.nil? ? 'A1' : DTA.F4211 
     WHERE SDVR01 LIKE '#{so_pos}%' AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
   end
   
@@ -418,6 +418,16 @@ class JdeFoamInvoice < ActiveRecord::Base
       26
     elsif cabang == "55"
       55
+    end
+  end
+  
+  def self.company(co)
+    if co == "11000"
+      "RAS"
+    elsif co == "15000"
+      "ACA"
+    elsif co == "12000"
+      "BM"
     end
   end
   
