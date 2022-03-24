@@ -2,7 +2,7 @@ class JdeItemMaster < ActiveRecord::Base
   establish_connection "jdeoracle"
   self.table_name = "PRODDTA.F4101" #im
 
-  scope :include_items, -> { where("imprgr in (?) and imdsc1 not like ?", ['ELITE', 'LADY', 'PURECARE', 'TECHGEL', 'ROYAL', 'SERENITY'], '%HOTEL%')}
+  scope :include_items, -> { where("imprgr in (?) and imdsc1 not like ?", ['ELITE', 'LADY', 'PURECARE', 'TECHGEL', 'ROYAL', 'SERENITY', 'CLASSIC', 'MORO'], '%HOTEL%')}
 
   def self.get_item_number(short_item)
     where(imitm: short_item)
@@ -18,6 +18,19 @@ class JdeItemMaster < ActiveRecord::Base
     PosItemMaster.all.each do |pim|
       where("imlitm LIKE '%#{pim.kode_barang}%'").each do |imjde|
         pim.update_attributes!(jde_item_master: imjde.imaitm.strip)
+      end
+    end
+  end
+  
+
+  def self.get_new_items_from_jde_local(im)
+    where("imtmpl like ? and imlitm like ? and imstkt like ?", "%BJ MATRASS%", "#{im}%", "M").include_items.each do |imjde|
+      pim = PosItemMaster.where("kode_barang like '#{imjde.imlitm.strip}%'")
+      if pim.empty?
+	if imjde.imdsc2.present?
+          nama_brg = imjde.imdsc1.strip + " " + imjde.imdsc2.strip
+          PosItemMaster.create(kode_barang: imjde.imlitm.strip, nama: nama_brg, brand_id: brand(imjde.imprgr.strip), jenis: imjde.imseg1.strip, harga: 0)
+        end
       end
     end
   end

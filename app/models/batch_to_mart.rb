@@ -22,13 +22,13 @@ class BatchToMart < ActiveRecord::Base
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO foam_datawarehouse.WHS2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, date, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
-      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), tanggalsj, DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
+      SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), tanggalsj, DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), IFNULL(nopo,'-'), salesman, kota
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, nopo;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO foam_datawarehouse.WHS2PARENTCUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
-      SELECT area_id, jenisbrgdisc, groupcust, plankinggroup, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
+      SELECT area_id, jenisbrgdisc, groupcust, plankinggroup, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), IFNULL(nopo,'-'), salesman, kota
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, groupcust, nopo;")
 
@@ -56,14 +56,14 @@ class BatchToMart < ActiveRecord::Base
     REPLACE INTO foam_datawarehouse.WHS3SALPRODUCT (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, product, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, nopo, salesman, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO foam_datawarehouse.WHS3SALARTICLE (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, product, article, article_desc, size, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, nopo, salesman, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'WHS'AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
 
     ActiveRecord::Base.connection.execute("
@@ -91,35 +91,35 @@ class BatchToMart < ActiveRecord::Base
     SalesWarehouse.connection.execute("
       REPLACE INTO foam_bybrands (channel, area_id, area_desc, branch_id, branch_desc, brand, subbrand, total_qty,
        kubikasi, total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-       SELECT tipecust, area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, SUM(jumlah), SUM(kubikasi), 
+       SELECT tipecust, area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, SUM(jumlah), SUM(kubikasi),
        SUM(harganetto2), DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
-              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand, tipecust;")
+              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, brand, tipecust;")
 
     SalesWarehouse.connection.execute("
-      REPLACE INTO foam_bychannel (channel, area_id, area_desc,  branch_id, branch_desc, total_qty, kubikasi, 
+      REPLACE INTO foam_bychannel (channel, area_id, area_desc,  branch_id, branch_desc, total_qty, kubikasi,
       total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
         SELECT tipecust, area_id, area_desc,  cabang_id, cabang_desc, SUM(jumlah), SUM(kubikasi), SUM(harganetto2),
         DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
               FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
-              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, tipecust;")
+              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, tipecust;")
 
     SalesWarehouse.connection.execute("
-      REPLACE INTO foam_bysubbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, channel, 
+      REPLACE INTO foam_bysubbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, channel,
        total_qty, kubikasi, total_sales, dday, dweek, dmonth, dyear, tanggalsj, created_at)
        SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, tipecust, SUM(jumlah), SUM(kubikasi), SUM(harganetto2),
        DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
-              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, subbrand, tipecust;")
+              GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, subbrand, tipecust;")
 
     SalesWarehouse.connection.execute("
       REPLACE INTO foam_bycusbrands (area_id, area_desc, branch_id, branch_desc, brand, subbrand, customer_id,
        customer_desc, channel, kota, salesman, total_qty, kubikasi, total_sales, total_sales_usd, dday, dweek, dmonth, dyear, tanggalsj, created_at)
-       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, kode_customer, customer, tipecust, kota, salesman, 
+       SELECT area_id, area_desc, cabang_id, cabang_desc, brand, subbrand, kode_customer, customer, tipecust, kota, salesman,
        SUM(jumlah), SUM(kubikasi), SUM(harganetto2), SUM(hargausd),
        DAY(tanggalsj), WEEK(tanggalsj), MONTH(tanggalsj), YEAR(tanggalsj), tanggalsj, NOW()
        FROM sales_warehouses WHERE fiscal_month = '#{month}' AND fiscal_year = '#{year}'
-                  GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_desc, brand, customer;")
+                  GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, brand, customer;")
   end
 
   def self.calculate_rkm_weekly
@@ -199,27 +199,27 @@ class BatchToMart < ActiveRecord::Base
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
       SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, nopo;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2PARENTCUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at, salesmen, salesmen_desc, city)
       SELECT area_id, jenisbrgdisc, groupcust, plankinggroup, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), nopo, salesman, kota
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, groupcust, nopo;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSPRODUCT (AREA, branch, cabang_id, brand, customer, customer_desc, product, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, kode_customer, customer, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, kodejenis;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET2CUSARTICLE (AREA, branch, cabang_id, brand, customer, customer_desc, product, article, article_desc, size, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, kode_customer, customer, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, kode_customer, kodejenis, kodeartikel, lebar;")
 
     ActiveRecord::Base.connection.execute("
@@ -232,14 +232,14 @@ class BatchToMart < ActiveRecord::Base
     REPLACE INTO sales_mart.RET3SALPRODUCT (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, product, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, nopo, salesman, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET3SALARTICLE (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, product, article, article_desc, size, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, nopo, salesman, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
 
     ActiveRecord::Base.connection.execute("
@@ -252,14 +252,14 @@ class BatchToMart < ActiveRecord::Base
     REPLACE INTO sales_mart.RET4CITYPRODUCT (AREA, branch, cabang_id, brand, city, product, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, kota, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET4CITYARTICLE (AREA, branch, cabang_id, brand, city, product, article, article_desc, size, sales_quantity, sales_amount,
         fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, kota, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
-            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL'
+            FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
   end
 
