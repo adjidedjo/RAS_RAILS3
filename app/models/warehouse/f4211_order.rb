@@ -51,7 +51,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
       '#{ou.order_date}', '#{ou.quantity}', '#{ou.short_item}', 
       '#{ou.segment1}', '#{ou.customer}', '#{ou.ship_to}', '#{ou.typ}',
       '#{ou.last_status}', '#{ou.branch_desc}', '#{ou.originator}',
-      '#{(Date.today - ou.promised_delivery)}', '#{ou.next_status}', 
+      '#{(Date.today - ou.promised_delivery.to_date).to_i}', '#{ou.next_status}', 
       '#{category_days((Date.today - ou.promised_delivery))}', '#{Date.today}')")
     end
   end
@@ -72,7 +72,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
       "#{ou.segment1}", "#{ou.customer}", "#{ou.ship_to}", "#{ou.typ}",
       "#{ou.last_status}", "#{ou.branch_desc}", "#{ou.originator}",
       "#{(Date.today - ou.promised_delivery)}", "#{ou.next_status}", 
-      "#{category_days((Date.today - ou.promised_delivery))}", "#{Date.today}")')
+      "#{category_days((Date.today - ou.promised_delivery).to_i)}", "#{Date.today}")')
     end
   end
 
@@ -109,7 +109,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
   end
   
   def self.jde_cabang(bu)
-    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" || bu == "11002" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" || bu == "11002S" || bu == "11002" || bu == "11003" #pusat
       "01"
     elsif bu == "11101" || bu == "11102" || bu == "11101C" || bu == "11101D" || bu == "11101S" || bu == "18101" || bu == "18101C" || bu == "18101D" || bu == "18102" || bu == "18101S" || bu == "18101K" #lampung
       "13" 
@@ -119,11 +119,11 @@ class Warehouse::F4211Order < ActiveRecord::Base
       "09"
     elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
-    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabaya
+    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S"  || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" || bu == "18062" #surabaya
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
-    elsif bu == "11030" ||  bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
+    elsif bu == "11030" || bu == "11031" ||  bu == "18031" || bu == "18031C" || bu == "18031D" || bu == "18032" || bu == "18031S" || bu == "18031K" #narogong
       "03"
     elsif bu == "12111" || bu == "12112" || bu == "12111C" || bu == "12111D" || bu == "12111S" || bu == "18111" || bu == "18111C" || bu == "18111D" || bu == "18112" || bu == "18111S" || bu == "18111K" || bu == "18112C" || bu == "18112D" || bu == "18112K" #makasar
       "19"
@@ -131,7 +131,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
       "04"
     elsif bu == "12131" || bu == "12132" || bu == "12131C" || bu == "12131D" || bu == "12131S" || bu == "18131" || bu == "18131C" || bu == "18131D" || bu == "18132" || bu == "18131S" || bu == "18131K" || bu == "18132C" || bu == "18132D" || bu == "18132K" #jember
       "22" 
-    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
+    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091K" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
       "11"
     elsif bu == "11041" || bu == "11042" || bu == "11041C" || bu == "11041D" || bu == "11041S" || bu == "18041" || bu == "18041C" || bu == "18041D" || bu == "18042" || bu == "18042S" || bu == "18042K" || bu == "18042C" || bu == "18042D" || bu == "18042K" #yogyakarta
       "10"
@@ -141,14 +141,20 @@ class Warehouse::F4211Order < ActiveRecord::Base
       "05"
     elsif bu == "11121" || bu == "11122" || bu == "11121C" || bu == "11121D" || bu == "11121S" || bu == "18121" || bu == "18121C" || bu == "18121D" || bu == "18122" || bu == "18121S" || bu == "18121K" || bu == "18122C" || bu == "18122D" || bu == "18122K" #pekanbaru
       "20"
-    elsif bu.include?('180120') || bu.include?("180110") #tasikmalaya
-      "2"
+    elsif bu == "1801101" || bu == "1801101C" || bu == "1801101D" || bu == "1801101S" || bu == "1801101K" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201K" #tasikmalaya
+      "25"
+    elsif bu == "1801102" || bu == "1801102C" || bu == "1801102D" || bu == "1801102S" || bu == "1801102K" || bu == "1801202" || bu == "1801202C" || bu == "1801202D" || bu == "1801202S" || bu == "1801202K" #sukabumi
+      "52"
+    elsif bu == "1801103" || bu == "1801103C" || bu == "1801103D" || bu == "1801103S" || bu == "1801103K" || bu == "1801203" || bu == "1801203C" || bu == "1801203D" || bu == "1801203S" || bu == "1801203K" #sukabumi
+      "53"
     elsif bu.include?('1515') #new cikupa
       "23"
     elsif bu == "12171" || bu == "12172" || bu == "12171C" || bu == "12171D" || bu == "12171S" || bu == "18171" || bu == "18172" || bu == "18171C" || bu == "18171D" || bu == "18171S" || bu == "18172D" || bu == "18172" || bu == "18172K" #manado
       "26"
     elsif bu == "1206104" || bu == "1206204" || bu == "1206104C" || bu == "1206104D" || bu == "1206104S" || bu == "1806104" || bu == "1806104" || bu == "1806104C" || bu == "1806104D" || bu == "1806104S" || bu == "1806204D" || bu == "1806204" || bu == "1806204K" #kediri
       "54"
+    elsif bu == "18181" || bu == "18182" || bu == "18181C" || bu == "18181D" || bu == "18181S" || bu == "18182C" || bu == "18182D" || bu == "18182S" #samarinda
+      "55"
     end
   end
   

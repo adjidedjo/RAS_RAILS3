@@ -15,9 +15,10 @@ class Warehouse::F41021Stock < ActiveRecord::Base
     while r = stocks.fetch_hash
       item_master = JdeItemMaster.get_item_number(r["LIITM"]).first
       fullnamabarang = item_master.imdsc1.strip + " " + item_master.imdsc2.strip
+      receipt = (r["LILRCJ"].nil? ? "0000-00-00" :  JdeInvoice.julian_to_date(r["LILRCJ"]))
       self.create(short_item: r["LIITM"].to_i, item_number: item_master.imlitm.strip, brand: item_master.imprgr.strip,
         description: fullnamabarang, branch: r["LIMCU"].strip, onhand: r["LIPQOH"]/10000, 
-        glcat: item_master.imsrp2, receipt_date: JdeInvoice.julian_to_date(r["LILRCJ"]), 
+        glcat: item_master.imsrp2, receipt_date: receipt, 
         branch_code: jde_cabang(r["LIMCU"].strip), article: r["ARTICLE"].strip, panjang: r["PANJANG"].strip, 
         lebar: r["LEBAR"].strip)
     end
@@ -40,7 +41,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
   
   
   def self.jde_cabang(bu)
-    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" #pusat
+    if bu == "11001" || bu == "11001D" || bu == "11001C" || bu == "18001" || bu == "11002S" || bu == "11002" || bu == "11003" #pusat
       "01"
     elsif bu == "11101" || bu == "11102" || bu == "11101C" || bu == "11101D" || bu == "11101S" || bu == "18101" || bu == "18101C" || bu == "18101D" || bu == "18102" || bu == "18101S" || bu == "18101K" #lampung
       "13" 
@@ -50,7 +51,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
       "09"
     elsif bu == "12001" || bu == "12002" || bu == "12001C" || bu == "12001D" #bestari mulia
       "50"
-    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" #surabaya
+    elsif bu == "12061" || bu == "12062" || bu == "12001" || bu == "12061C" || bu == "12061D" || bu == "12061S" || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S"  || bu == "18061" || bu == "18061C" || bu == "18061D" || bu == "18061S" || bu == "18062" #surabaya
       "07"
     elsif bu == "18151" || bu == "18151C" || bu == "18151D" || bu == "18152" || bu == "18151S" || bu == "18151K" || bu == "11151" #cikupa
       "23"
@@ -62,7 +63,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
       "04"
     elsif bu == "12131" || bu == "12132" || bu == "12131C" || bu == "12131D" || bu == "12131S" || bu == "18131" || bu == "18131C" || bu == "18131D" || bu == "18132" || bu == "18131S" || bu == "18131K" || bu == "18132C" || bu == "18132D" || bu == "18132K" #jember
       "22" 
-    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
+    elsif bu == "11091" || bu == "11092" || bu == "11091C" || bu == "11091D" || bu == "11091K" || bu == "11091S" || bu == "18091" || bu == "18091C" || bu == "18091D" || bu == "18092" || bu == "18091S" || bu == "18091K" || bu == "18092C" || bu == "18092D" || bu == "18092K" #palembang
       "11"
     elsif bu == "11041" || bu == "11042" || bu == "11041C" || bu == "11041D" || bu == "11041S" || bu == "18041" || bu == "18041C" || bu == "18041D" || bu == "18042" || bu == "18042S" || bu == "18042K" || bu == "18042C" || bu == "18042D" || bu == "18042K" #yogyakarta
       "10"
@@ -75,7 +76,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
     elsif bu == "1801101" || bu == "1801101C" || bu == "1801101D" || bu == "1801101S" || bu == "1801101K" || bu == "1801201" || bu == "1801201C" || bu == "1801201D" || bu == "1801201S" || bu == "1801201K" #tasikmalaya
       "25"
     elsif bu == "1801102" || bu == "1801102C" || bu == "1801102D" || bu == "1801102S" || bu == "1801102K" || bu == "1801202" || bu == "1801202C" || bu == "1801202D" || bu == "1801202S" || bu == "1801202K" #sukabumi
-      "28"
+      "52"
     elsif bu == "1801103" || bu == "1801103C" || bu == "1801103D" || bu == "1801103S" || bu == "1801103K" || bu == "1801203" || bu == "1801203C" || bu == "1801203D" || bu == "1801203S" || bu == "1801203K" #sukabumi
       "53"
     elsif bu.include?('1515') #new cikupa
