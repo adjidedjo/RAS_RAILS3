@@ -33,7 +33,7 @@ class Warehouse::F41021Stock < ActiveRecord::Base
     stock.each do |st|
       ActiveRecord::Base.establish_connection("warehouse").connection.execute("
         INSERT INTO sales_mart.BRANCH_CAPACITIES (product, brand, branch, branch_jde, quantity, created_at) VALUES
-        ('#{st.glcat}', '#{st.brand}', '#{st.branch_code}', '#{st.branch}', '#{st.onhand}', '#{Time.now}')
+        ('#{st.glcat}', '#{st.brand}', '#{st.branch_code}', '#{st.branch}', '#{st.onhand}', '#{Date.today}')
       ")
     end
   end
