@@ -273,7 +273,7 @@ class JdeItemAvailability < ActiveRecord::Base
         '#{fus.qty_out}', '#{fus.qty_in}', '#{fus.qty_adjin}', '#{fus.qty_adjout}',
         '#{fus.stock_branch == '0' ? 0 : jde_cabang(fus.stock_branch.strip)}',
         '#{Cabang.branch_description(jde_cabang(fus.stock_branch.strip)).nil? ? '-' : Cabang.branch_description(jde_cabang(fus.stock_branch.strip)).Cabang}',
-        '#{Date.yesterday}', '#{fus.short.to_i}', '#{Time.now}', '#{Time.now}', DAY(NOW()), MONTH(NOW()), YEAR(NOW()))")
+        '#{Date.yesterday}', '#{fus.short.to_i}', '#{Date.today}', '#{Date.today}', DAY(NOW()), MONTH(NOW()), YEAR(NOW()))")
     end
   end
 
