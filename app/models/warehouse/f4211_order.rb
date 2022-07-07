@@ -49,7 +49,7 @@ class Warehouse::F4211Order < ActiveRecord::Base
       branch_desc, originator, exceeds, next_status, day_category, created_at) VALUES ('#{ou.order_no}', 
       '#{ou.promised_delivery}', '#{ou.branch}', '#{ou.brand}', '#{ou.item_number}', '#{ou.description}',
       '#{ou.order_date}', '#{ou.quantity}', '#{ou.short_item}', 
-      '#{ou.segment1}', '#{ou.customer}', '#{ou.ship_to}', '#{ou.typ}',
+      '#{ou.segment1}', '#{ou.customer.gsub(/\s|"|'/, '')}', '#{ou.ship_to}', '#{ou.typ}',
       '#{ou.last_status}', '#{ou.branch_desc}', '#{ou.originator}',
       '#{(Date.today - ou.promised_delivery.to_date).to_i}', '#{ou.next_status}', 
       '#{category_days((Date.today - ou.promised_delivery))}', '#{Date.today}')")
