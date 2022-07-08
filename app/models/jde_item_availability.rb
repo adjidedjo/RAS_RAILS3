@@ -333,7 +333,7 @@ class JdeItemAvailability < ActiveRecord::Base
     elsif bu == "1206104" || bu == "1206204" || bu == "1206104C" || bu == "1206104D" || bu == "1206104S" || bu == "1806104" || bu == "1806104" || bu == "1806104C" || bu == "1806104D" || bu == "1806104S" || bu == "1806204D" || bu == "1806204" || bu == "1806204K" #kediri
       "54"
     else
-      "-"
+      "0"
     end
   end
 end
