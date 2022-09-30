@@ -7,7 +7,7 @@ class Aging < ActiveRecord::Base
 	(#{JdeInvoice.date_to_julian(Date.today)} - LOT.LINCDJ) AS AGING 
 	FROM
 	  (
-  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000 AND  LILOTN != ' '
+  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000
           ) LOT 
         LEFT JOIN
          (
