@@ -16,23 +16,40 @@ class Aging < ActiveRecord::Base
         LEFT JOIN
          (
            SELECT * FROM PRODDTA.F0006
-         ) BU ON BU.MCMCU = LOT.LIMCU")
+         ) BU ON BU.MCMCU LIKE ('%' || LOT.LIMCU || '%')")
     aging.each do |a|
       AgingStockDetail.create!(
         short_item: a.liitm,
         item_number: a.imlitm,
         description: a.imdsc1,
-        brand: a.imsrp1,
+        brand: brand(a.imsrp1.strip),
         branch_plan: a.limcu.strip,
         branch_plan_desc: a.mcdl01,
         lot_number: a.lilotn,
         glpt: a.liglpt,
         grouping: grouping(a.liglpt.strip),
         aging: a.aging,
+        quantity: a.lipqoh/10000,
         cats: category(a.aging.to_i),
         created_at: Date.today
       )
     end 
+  end
+
+  def self.brand(b)
+    if b == 'E'
+      'ELITE'
+    elsif b == 'L'
+      'LADY'
+    elsif b == 'S'
+      'SERENITY'
+    elsif b == 'R'
+      'ROYAL'
+    elsif b == 'O'
+      'TOTE'
+    elsif b == 'C'
+      'CLASSIC'
+    end
   end
 
   def self.grouping(glpt)
