@@ -22,7 +22,7 @@ class Aging < ActiveRecord::Base
         short_item: a.liitm,
         item_number: a.imlitm,
         description: a.imdsc1,
-        brand: brand(a.imsrp1.strip),
+        brand: brand(a.imsrp1.nil? ? '-' : a.imsrp1.strip),
         branch_plan: a.limcu.strip,
         branch_plan_desc: a.mcdl01,
         lot_number: a.lilotn,
@@ -49,6 +49,8 @@ class Aging < ActiveRecord::Base
       'TOTE'
     elsif b == 'C'
       'CLASSIC'
+    else
+      b
     end
   end
 
