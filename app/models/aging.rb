@@ -4,10 +4,10 @@ class Aging < ActiveRecord::Base
 
   def self.daily_aging_stock(date)
     aging = find_by_sql("SELECT LOT.LIITM, IM.IMLITM, IM.IMDSC1, IM.IMDSC2, IM.IMSRP1, LOT.LIMCU, BU.MCDL01, LOT.LILOTN, LOT.LIGLPT, LOT.LIPQOH, 
-	(#{JdeInvoice.date_to_julian(Date.today)} - LOT.LINCDJ) AS AGING 
+	LOT.LINCDJ AS AGING 
 	FROM
 	  (
-  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000
+  	    SELECT * FROM PRODDTA.F41021
           ) LOT 
         LEFT JOIN
          (
@@ -28,9 +28,9 @@ class Aging < ActiveRecord::Base
         lot_number: a.lilotn,
         glpt: a.liglpt,
         grouping: grouping(a.liglpt.strip),
-        aging: a.aging,
+        aging: cats((Date.today - JdeInvoice.julian_to_date(a.aging)).to_i),
         quantity: a.lipqoh/10000,
-        cats: category(a.aging.to_i),
+        cats: a.aging.to_i,
         created_at: Date.today
       )
     end 
