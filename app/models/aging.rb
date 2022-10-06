@@ -28,9 +28,9 @@ class Aging < ActiveRecord::Base
         lot_number: a.lilotn,
         glpt: a.liglpt,
         grouping: grouping(a.liglpt.strip),
-        aging: cats((Date.today - JdeInvoice.julian_to_date(a.aging)).to_i),
+        aging: (Date.today - JdeInvoice.julian_to_date(a.aging)),
         quantity: a.lipqoh/10000,
-        cats: a.aging.to_i,
+        cats: category((Date.today - JdeInvoice.julian_to_date(a.aging)).to_i),
         created_at: Date.today
       )
     end 
