@@ -7,7 +7,7 @@ class Aging < ActiveRecord::Base
 	LOT.LINCDJ AS AGING 
 	FROM
 	  (
-  	    SELECT * FROM PRODDTA.F41021
+  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000
           ) LOT 
         LEFT JOIN
          (
