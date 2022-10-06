@@ -17,6 +17,7 @@ class Aging < ActiveRecord::Base
          (
            SELECT * FROM PRODDTA.F0006
          ) BU ON BU.MCMCU LIKE ('%' || LOT.LIMCU || '%')")
+    AgingStockDetail.connection.execute("TRUNCATE aging_stock_details;")
     aging.each do |a|
       AgingStockDetail.create!(
         short_item: a.liitm,
