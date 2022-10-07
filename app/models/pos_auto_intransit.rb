@@ -22,7 +22,7 @@ class PosAutoIntransit < ActiveRecord::Base
   end
 
   def self.insert_delivered_stock_from_jde(date)
-    PosChannelCustomer.where("address_number > ?", 0).each do |pcc|
+    PosChannelCustomer.select("id, address_number").where("address_number is not ?", nil).each do |pcc|
       SalesOrderHistoryJde.find_sales_transfer_to_showroom(date.to_date, pcc.address_number).each do |soh|
         stocking_type = (soh.sdmcu.include? "D") ? "RE" : "CS"
         jde_date_today = jde_date_to_date(soh.sdaddj.to_i)
@@ -31,10 +31,6 @@ class PosAutoIntransit < ActiveRecord::Base
         if duplicate_stock.blank?
           self.create(channel_customer_id: pcc.id, serial: soh.sdlotn.strip, kode_barang: soh.sdlitm.strip, no_sj: soh.sddeln.to_i, nama: nama_brg,
             jumlah: soh.sdsoqs.to_i.to_s[0..-5], stok_awal: soh.sdsoqs.to_i.to_s[0..-5], no_so: soh.sddoco.to_i, tanggal_sj: jde_date_today, stocking_type: stocking_type)
-          item_masters = PosItemMaster.find_by_kode_barang(soh.sdlitm.strip)
-          if item_masters.present?
-            item_masters.update_attributes!(nama: nama_brg)
-          end
         end
       end
     end
