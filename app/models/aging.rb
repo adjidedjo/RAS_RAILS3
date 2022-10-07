@@ -7,7 +7,7 @@ class Aging < ActiveRecord::Base
 	LOT.LINCDJ AS AGING 
 	FROM
 	  (
-  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000
+  	    SELECT * FROM PRODDTA.F41021 WHERE LIPQOH >= 10000 AND LINCDJ > 0
           ) LOT 
         LEFT JOIN
          (
@@ -17,8 +17,8 @@ class Aging < ActiveRecord::Base
          (
            SELECT * FROM PRODDTA.F0006
          ) BU ON BU.MCMCU LIKE ('%' || LOT.LIMCU || '%')")
-    AgingStockDetail.connection.execute("TRUNCATE aging_stock_details;")
     aging.each do |a|
+      jde_date = JdeInvoice.julian_to_date(a.aging)
       AgingStockDetail.create!(
         short_item: a.liitm,
         item_number: a.imlitm,
@@ -29,9 +29,9 @@ class Aging < ActiveRecord::Base
         lot_number: a.lilotn,
         glpt: a.liglpt,
         grouping: grouping(a.liglpt.strip),
-        aging: (Date.today - JdeInvoice.julian_to_date(a.aging)),
+        aging: (jde_date.to_date..Date.today.to_date).count,
         quantity: a.lipqoh/10000,
-        cats: category((Date.today - JdeInvoice.julian_to_date(a.aging)).to_i),
+        cats: category((jde_date.to_date..Date.today.to_date).count),
         created_at: Date.today
       )
     end 
