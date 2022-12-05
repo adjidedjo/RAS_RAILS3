@@ -7,8 +7,8 @@ class SalesOrderHistoryJde < ActiveRecord::Base
 
   def self.find_sales_transfer_to_showroom(date, date_to, showroom_id)
     find_by_sql("SELECT SDMCU, SDDOCO, SDADDJ, SDLITM, SDDSC1, SDDSC2, SDLOTN, SDDELN, SDSOQS FROM PRODDTA.F4211
- 		WHERE SDNXTR >= 580 AND SDLTTR >= 565 AND REGEXP_LIKE(SDDCTO, 'SK|ST') 
-    		AND SDADDJ BETWEEN '#{date_to_julian(date)}' AND '#{date_to_julian(date_to)}' AND SDSHAN LIKE '#{showroom_id}' 
+ 		WHERE REGEXP_LIKE(SDDCTO, 'SK|ST') 
+    		AND SDADDJ = '#{date_to_julian(date)}' AND SDSHAN LIKE '#{showroom_id}' 
 		GROUP BY SDMCU, SDDOCO, SDADDJ, SDLITM, SDDSC1, SDDSC2, SDLOTN, SDDELN, SDSOQS")
   end
 
