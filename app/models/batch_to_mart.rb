@@ -226,7 +226,7 @@ class BatchToMart < ActiveRecord::Base
     REPLACE INTO sales_mart.RET3SALBRAND (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, sales_quantity, sales_amount, fiscal_day, fiscal_month, fiscal_year, updated_at)
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, nopo, salesman, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
-            AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo;")
+            AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' AND harganetto2 > 0 GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo;")
 
     ActiveRecord::Base.connection.execute("
     REPLACE INTO sales_mart.RET3SALPRODUCT (AREA, branch, cabang_id, brand, salesmen, salesmen_desc, product, sales_quantity, sales_amount,
