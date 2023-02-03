@@ -176,28 +176,6 @@ class BatchToMart < ActiveRecord::Base
   end
 
   def self.batch_transform_retail(month, year)
-    ActiveRecord::Base.connection.execute("
-      -- update data penjualan untuk forecast
-	REPLACE INTO sales_mart.RET3SALITEMNUMBER (item_number, panjang, lebar, nopo, salesman, week, month, year, total)
-	SELECT kodebrg, panjang, lebar, nopo, salesman, week, fiscal_month, fiscal_year, SUM(jumlah) as jumlah FROM tblaporancabang t 
-	WHERE week = #{Date.today.cweek} and fiscal_year = #{Date.today.year} and nopo is not null and harganetto2 > 0
-	GROUP BY kodebrg, nopo, salesman, week, fiscal_month, fiscal_year;
-
-	-- update forecast per minggu, dijalankan setiap hari
-	UPDATE forecasts f left join 
-	(
-	  SELECT item_number, SUM(total) AS total, nopo, week, year FROM sales_mart.RET3SALITEMNUMBER
-	  WHERE week = #{Date.today.cweek} and year = #{Date.today.year} GROUP BY nopo, item_number, week, year
-	) AS rs
-	on f.address_number = rs.nopo and (f.item_number = rs.item_number and f.week = rs.week and f.year = rs.year)
-	set f.sold = rs.total
-	where f.`year` = #{Date.today.year} and f.week = #{Date.today.cweek} AND rs.total > 0;
-
-	-- update outstanding forecast
-	UPDATE forecasts set sisa = IF((quantity - sold) < 0, 0, (quantity - sold)) WHERE week = #{Date.today.cweek} and `year` = #{Date.today.year};
-
-	-- update rmse
-	UPDATE forecasts set abs_error  = POWER((sold-quantity),2)  WHERE week = #{Date.today.cweek} and `year` = #{Date.today.year};")
 
     ActiveRecord::Base.connection.execute("
       REPLACE INTO sales_mart.RET1BRAND (AREA, branch, cabang_id, brand,  fiscal_day, fiscal_month, fiscal_year, sales_quantity, sales_amount, updated_at)
@@ -284,6 +262,28 @@ class BatchToMart < ActiveRecord::Base
       SELECT area_id, area_id, cabang_id, jenisbrgdisc, kota, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW()
             FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust = 'RETAIL' AND nopo IS NOT NULL
             AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, cabang_id, area_id, jenisbrgdisc, nopo, kodejenis, kodeartikel, lebar;")
+
+    ActiveRecord::Base.connection.execute("
+      -- update data penjualan untuk forecast
+	REPLACE INTO sales_mart.RET3SALITEMNUMBER (item_number, panjang, lebar, nopo, salesman, week, month, year, total)
+	SELECT kodebrg, panjang, lebar, nopo, salesman, week, fiscal_month, fiscal_year, SUM(jumlah) as jumlah FROM tblaporancabang t 
+	WHERE week = #{Date.today.cweek} and fiscal_year = #{Date.today.year} and nopo is not null and harganetto2 > 0
+	GROUP BY kodebrg, nopo, salesman, week, fiscal_month, fiscal_year;")
+
+    ActiveRecord::Base.connection.execute("-- update forecast per minggu, dijalankan setiap hari
+	UPDATE forecasts f left join 
+	(
+	  SELECT item_number, SUM(total) AS total, nopo, week, year FROM sales_mart.RET3SALITEMNUMBER
+	  WHERE week = #{Date.today.cweek} and year = #{Date.today.year} GROUP BY nopo, item_number, week, year
+	) AS rs
+	on f.address_number = rs.nopo and (f.item_number = rs.item_number and f.week = rs.week and f.year = rs.year)
+	set f.sold = rs.total
+	where f.`year` = #{Date.today.year} and f.week = #{Date.today.cweek} AND rs.total > 0;")
+    ActiveRecord::Base.connection.execute("-- update outstanding forecast
+	UPDATE forecasts set sisa = IF((quantity - sold) < 0, 0, (quantity - sold)) WHERE week = #{Date.today.cweek} 
+	and `year` = #{Date.today.year};")
+    ActiveRecord::Base.connection.execute("-- update rmse
+	UPDATE forecasts set abs_error  = POWER((sold-quantity),2)  WHERE week = #{Date.today.cweek} and `year` = #{Date.today.year};")	
   end
 
   def self.batch_transform_direct(month, year)
