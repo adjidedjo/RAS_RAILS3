@@ -254,7 +254,7 @@ class JdeInvoice < ActiveRecord::Base
               nupgrade: adj.nil? ? 0 : adj.diskon9,
               groupcust: iv.parentcust,
               plankinggroup: iv.customerparent.strip,
-	      totalnettofaktur: iv.plan_family)
+	      Jenis_Customer: iv.plan_family)
       end
     end
     #Customer.batch_customer_active
