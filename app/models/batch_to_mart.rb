@@ -267,7 +267,7 @@ class BatchToMart < ActiveRecord::Base
       -- update data penjualan untuk forecast
 	REPLACE INTO sales_mart.RET3SALITEMNUMBER (item_number, panjang, lebar, nopo, salesman, week, month, year, total)
 	SELECT kodebrg, panjang, lebar, nopo, salesman, week, fiscal_month, fiscal_year, SUM(jumlah) as jumlah FROM tblaporancabang t 
-	WHERE week = '#{Date.today.cweek}' and fiscal_year = '#{Date.today.year}' and nopo is not null
+	WHERE week = '#{Date.today.cweek}' and fiscal_year = '#{Date.today.year}' and nopo is not null and tipecust != '-'
 	GROUP BY kodebrg, nopo, salesman, week, fiscal_month, fiscal_year;")
 
     ActiveRecord::Base.connection.execute("-- update forecast per minggu, dijalankan setiap hari
