@@ -6,6 +6,52 @@ class JdeInvoice < ActiveRecord::Base
     find_by_sql("SELECT SDDOC, SDDELN, MAX(SDVR01) AS SDVR01 FROM PRODDTA.F4211 
     WHERE SDVR01 LIKE '#{so_pos}%' AND SDDELN > 0 GROUP BY SDDELN, SDDOC")
   end
+
+  def self.test_import_sales_for_forecast
+    abc = find_by_sql("
+	      SELECT SA.RPDIVJ, MAX(SA.RPDOC) AS RPDOC, SM.SASLSM AS KODESALES, MAX(CM1.ABALPH) AS NAMASALES, CM.ABAC02 AS TIPECUST, IM.IMLITM AS ITEM_NUMBER, 
+		MAX(IM.IMPRGR) AS BRAND, MAX(IM.FOR_BRAND_GROUP) AS GROUP_FORECAST,
+		SUM(SA.RPU/100) AS JUMLAH  FROM 
+	(
+		SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '123001' AND '1230035' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+	) SA
+	LEFT JOIN
+	(
+	  SELECT IMLITM, IMPRGR, IMSEG1,
+		NVL(CASE
+			WHEN IMPRGR = 'CLASSIC' THEN 'SERENITY'
+			WHEN IMSEG1 NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV') THEN 'ACCESSORIES'
+		END, IMPRGR) AS FOR_BRAND_GROUP, IMSRP1
+		FROM PRODDTA.F4101 WHERE IMTMPL LIKE '%BJ MATRASS%'
+	) IM ON TRIM(IM.IMLITM) = TRIM(SA.RPRMK)
+	LEFT JOIN
+	(
+		SELECT * FROM PRODDTA.F0101
+	) CM ON TRIM(SA.RPAN8) = TRIM(CM.ABAN8)
+	LEFT JOIN
+	(
+	  SELECT SASLSM, SAIT44, SAAN8 FROM PRODDTA.F40344 WHERE SAEXDJ > (select 1000*(to_char(sysdate, 'yyyy')-1900)+to_char(sysdate, 'ddd') as julian from dual)
+	) SM ON SM.SAAN8 = SA.RPAN8 AND SM.SAIT44 = IM.IMSRP1
+	LEFT JOIN
+	(
+		SELECT * FROM PRODDTA.F0101
+	) CM1 ON TRIM(SM.SASLSM) = TRIM(CM1.ABAN8)
+	WHERE IM.IMPRGR IS NOT NULL AND SM.SASLSM IS NOT NULL
+	AND SA.RPU = (CASE WHEN IM.IMSEG1 NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV') AND SA.RPAG = 0 THEN 0 ELSE SA.RPU END)
+	GROUP BY SA.RPDIVJ, IM.IMLITM, SM.SASLSM, CM.ABAC02
+	ORDER BY SA.RPDIVJ
+    ")
+    abc.each do |a|
+      date = julian_to_date(a.rpdivj)
+      week = date.to_date.cweek
+      month =  date.to_date.month
+      year = date.to_date.year
+      ActiveRecord::Base.connection.execute("
+	REPLACE INTO sales_mart.test_jde_for_forecast(item_number, brand, segment1_code, segment2_code, segment3_code, panjang, lebar, product_name, area_id, nopo, 
+	salesman, customer_type, MONTH, YEAR, WEEK, total) VALUES (
+'#{a.item_number}', '#{a.brand}', '', '', '', '', '', '', '', '#{a.kodesales}', '#{a.namasales}', '#{a.tipecust}', '#{month}', '#{year}', '#{week}', '#{a.jumlah}')")
+    end
+  end
   
   def self.test_import_sales
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
@@ -166,8 +212,8 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
-         '#{date_to_julian(Date.today.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian('03/01/2023'.to_date)}' AND
+         '#{date_to_julian('03/01/2023'.to_date)}' AND RPMCU LIKE '%18051%'
          AND REGEXP_LIKE(rpdct,'RI|RO|RX')
        ) SA
        LEFT JOIN
