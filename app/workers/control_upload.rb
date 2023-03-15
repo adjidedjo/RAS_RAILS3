@@ -146,9 +146,9 @@ class ControlUpload
     PosAutoIntransit.insert_pos_to_jde(Date.yesterday)
   end
   
-  def test_import
-    JdeFoamInvoice.import_sales_foam(Date.today.to_date)
-  end
+  # def test_import
+  #   JdeFoamInvoice.import_sales_foam(Date.today.to_date)
+  # end
   
   #def auto_create_marketshare
   #  Marketshare.auto_create_next_month
