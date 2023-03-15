@@ -14,7 +14,7 @@ class JdeForecast < ActiveRecord::Base
             TRIM(MAX(IM.FOR_BRAND_GROUP)) AS GROUP_FORECAST, 
             SUM(SA.RPU/100) AS JUMLAH, MAX(TRIM(IM.IMDSC1)) AS DSC1, MAX(TRIM(IM.IMDSC2)) AS DSC2  FROM
             (
-            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '123061' AND '123074' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ = '#{date_to_julian(Date.yesterday.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
             ) SA
             LEFT JOIN
             (
