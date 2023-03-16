@@ -5,7 +5,7 @@ class SourceForecast < ActiveRecord::Base
     def self.insert_into_table(invoicedate, fmonth, fweek, year, cabang_id, rpdoc, branch,
         kodesales, namasales, tipecust, item_number, tipe, article, kain, panjang, 
         lebar, group_forecast, jumlah, dsc1, dsc2)
-        description = (dsc1.strip + ' ' + dsc2.strip)
+        description = ((dsc1.nil? ? '' : dsc1.strip) + ' ' + (dsc2.nil? ? '' : dsc2.strip))
         find_area = ActiveRecord::Base.connection.execute("SELECT area_id FROM dbmarketing.gudangs WHERE code = '#{cabang_id}'")
         area_id = find_area.first.nil? ? branch : find_area.first[0]
         ActiveRecord::Base.connection.execute("REPLACE INTO sales_mart.DETAIL_SALES_FOR_FORECASTS (nopo, salesman, 
