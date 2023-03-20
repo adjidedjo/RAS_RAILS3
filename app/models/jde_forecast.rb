@@ -14,7 +14,7 @@ class JdeForecast < ActiveRecord::Base
             TRIM(MAX(IM.FOR_BRAND_GROUP)) AS GROUP_FORECAST, 
             SUM(SA.RPU/100) AS JUMLAH, MAX(TRIM(IM.IMDSC1)) AS DSC1, MAX(TRIM(IM.IMDSC2)) AS DSC2  FROM
             (
-            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ = '#{JdeInvoice.date_to_julian(Date.yesterday.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '123060' AND '123077' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
             ) SA
             LEFT JOIN
             (
@@ -53,7 +53,7 @@ class JdeForecast < ActiveRecord::Base
             AND SA.RPU = (CASE WHEN IM.IMSEG1 NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV') AND SA.RPAG = 0 THEN 0 ELSE SA.RPU END)
             GROUP BY SA.RPDIVJ, IM.IMLITM, SM.SASLSM, CM.ABAC02, SA.RPMCU")
         fore.each do |a|
-            SourceForecast.insert_into_table(a.invoicedate, a.fmonth, a.fweek, a.year, a.cabang_id, a.rpdoc, a.branch,
+            SourceForecast.insert_into_table(a.invoicedate.to_date, a.fmonth, a.fweek, a.year, a.cabang_id, a.rpdoc, a.branch,
                 a.kodesales, a.namasales, a.tipecust, a.item_number, a.tipe, a.article, a.kain, a.panjang, 
                 a.lebar, a.group_forecast, a.jumlah, a.dsc1, a.dsc2)
         end
