@@ -14,7 +14,8 @@ class JdeForecast < ActiveRecord::Base
             TRIM(MAX(IM.FOR_BRAND_GROUP)) AS GROUP_FORECAST, 
             SUM(SA.RPU/100) AS JUMLAH, MAX(TRIM(IM.IMDSC1)) AS DSC1, MAX(TRIM(IM.IMDSC2)) AS DSC2  FROM
             (
-            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '123060' AND '123077' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+            SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' 
+            AND '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
             ) SA
             LEFT JOIN
             (
@@ -57,5 +58,9 @@ class JdeForecast < ActiveRecord::Base
                 a.kodesales, a.namasales, a.tipecust, a.item_number, a.tipe, a.article, a.kain, a.panjang, 
                 a.lebar, a.group_forecast, a.jumlah, a.dsc1, a.dsc2)
         end
+    end
+
+    def self.date_to_julian(date)
+      1000*(date.year-1900)+date.yday
     end
 end
