@@ -403,8 +403,8 @@ class JdeInvoice < ActiveRecord::Base
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian('11/03/2022'.to_date)}' AND
-         '#{date_to_julian('23/03/2022'.to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}' 
          AND REGEXP_LIKE(rpdct,'RM')
        ) SA
        LEFT JOIN
