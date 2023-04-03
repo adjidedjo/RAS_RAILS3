@@ -270,22 +270,6 @@ class BatchToMart < ActiveRecord::Base
 	WHERE week = '#{Date.today.cweek}' and fiscal_year = '#{Date.today.year}' and nopo is not null and tipecust != '-'
 	GROUP BY kodebrg, nopo, salesman, week, fiscal_month, fiscal_year;")
 
-    ActiveRecord::Base.connection.execute("
-      -- update data penjualan untuk forecast
-	REPLACE INTO sales_mart.DETAIL_SALES_FOR_FORECASTS(item_number, brand, segment1_code, segment2_code, segment3_code, panjang, lebar, 			product_name, area_id, nopo, salesman, customer_type, MONTH, YEAR, WEEK, total)
-	SELECT kodebrg, 
-		CASE 
-			WHEN jenisbrgdisc = 'CLASSIC' THEN 'SERENITY'
-			WHEN kodejenis NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV') THEN 'ACCESSORIES'
-		ELSE
-			jenisbrgdisc
-		END, kodejenis, kodeartikel, kodekain, panjang, lebar, CONCAT(kodejenis,' ',namaartikel,' ',namakain), area_id, 
-		nopo, salesman, tipecust, fiscal_month, fiscal_year, WEEK, SUM(jumlah) 
-	FROM dbmarketing.tblaporancabang
-	WHERE fiscal_month = '#{Date.yesterday.month}' AND fiscal_year = '#{Date.yesterday.year}' AND tipecust != '-' AND nopo IS NOT NULL AND
-	jumlah = (CASE WHEN kodejenis NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV') AND harganetto2 = 0 THEN 0 ELSE jumlah END)
-	GROUP BY kodebrg, nopo, WEEK, fiscal_month, fiscal_year;")
-
     ActiveRecord::Base.connection.execute("-- update forecast per minggu, dijalankan setiap hari
 	UPDATE forecasts f left join 
 	(
