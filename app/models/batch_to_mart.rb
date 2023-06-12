@@ -370,6 +370,50 @@ class BatchToMart < ActiveRecord::Base
        AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis, kodeartikel, lebar;")
   end
 
+ def self.batch_transform_ecom(month, year)
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC1BRAND (fiscal_day, fiscal_month, fiscal_year, branch, brand, sales_quantity, sales_amount, updated_at, DATE, WEEK)
+       SELECT DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, SUM(jumlah), SUM(harganetto2), NOW(), tanggalsj, WEEK
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}'
+       GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc;")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC1PRODUCT (branch, brand, product, sales_quantity, sales_amount,
+       fiscal_day, fiscal_month, fiscal_year, updated_at, DATE, WEEK)
+       SELECT area_id, jenisbrgdisc, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), tanggalsj, WEEK
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kodejenis;")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC1ARTICLE (branch, brand, product, article, article_desc, size, sales_quantity, sales_amount,
+       fiscal_day, fiscal_month, fiscal_year, updated_at, DATE, WEEK)
+       SELECT area_id, jenisbrgdisc, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), tanggalsj, WEEK
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kodejenis, kodeartikel, lebar;")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC2CUSBRAND (branch, brand, customer, customer_desc, sales_quantity, sales_amount, fiscal_day, fiscal_week, fiscal_month, fiscal_year, updated_at, city)
+       SELECT area_id, jenisbrgdisc, kode_customer, customer, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), WEEK(tanggalsj), fiscal_month, fiscal_year, NOW(), kota
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer;")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC2CUSPRODUCT (branch, brand, customer, customer_desc, product, sales_quantity, sales_amount,
+       fiscal_day, fiscal_month, fiscal_year, updated_at, DATE, WEEK)
+       SELECT area_id, jenisbrgdisc, kode_customer, customer, kodejenis, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), tanggalsj, WEEK
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis;")
+
+    ActiveRecord::Base.connection.execute("
+      REPLACE INTO sales_mart.EC2CUSARTICLE (branch, brand, customer, customer_desc, product, article, article_desc, size, sales_quantity, sales_amount,
+       fiscal_day, fiscal_month, fiscal_year, updated_at, DATE, WEEK)
+       SELECT area_id, jenisbrgdisc, kode_customer, customer, kodejenis, kodeartikel, namaartikel, lebar, SUM(jumlah), SUM(harganetto2), DAY(tanggalsj), fiscal_month, fiscal_year, NOW(), tanggalsj, WEEK
+       FROM dbmarketing.tblaporancabang WHERE jenisbrgdisc != ' ' AND area_id IS NOT NULL AND tipecust IN ('ONLINE')
+       AND fiscal_month = '#{month}' AND fiscal_year = '#{year}' GROUP BY DAY(tanggalsj), fiscal_month, fiscal_year, area_id, jenisbrgdisc, kode_customer, kodejenis, kodeartikel, lebar;")
+
+  end
+
   def self.calculate_rkm(week1, week2)
     week = week1
     week_year = 2021
