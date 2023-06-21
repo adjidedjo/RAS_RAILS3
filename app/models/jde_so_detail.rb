@@ -80,8 +80,9 @@ class JdeSoDetail < ActiveRecord::Base
     AND sls.saexdj > '#{date_to_julian(Date.today.to_date)}' AND REGEXP_LIKE(so.sddcto,'SO|ZO')
     AND so.sdnxtr LIKE '%#{525}%' AND cust.absic LIKE '%RET%' GROUP BY ho.hodoco, ho.hohcod, ho.homcu, so.sdsrp1")
     hold.each do |ou|
+      promised_delivery = ((julian_to_date(ou.order_date) == 0) ? Date.today : julian_to_date(ou.order_date))
       HoldOrder.create(order_no: ou.hodoco.to_i, customer: ou.shipto.strip, 
-      promised_delivery: julian_to_date(ou.order_date), branch: ou.homcu.strip, 
+      promised_delivery: promised_delivery, branch: ou.homcu.strip, 
       brand: ou.sdsrp1.strip, hdcd: ou.hohcod.strip, 
       salesman: ou.salesman.strip)
     end
