@@ -11,7 +11,7 @@ class JdeForecast < ActiveRecord::Base
             SM.SASLSM AS KODESALES,MAX(TRIM(CM1.ABALPH)) AS NAMASALES, TRIM(MAX(CT.DRDL01)) AS TIPECUST, 
             IM.IMLITM AS ITEM_NUMBER,MAX(IM.IMSEG1) AS TIPE, MAX(IM.IMSEG2) AS ARTICLE, 
             MAX(NVL(IM.IMSEG3, '-')) AS KAIN, MAX(IM.IMSEG5) AS PANJANG, MAX(IM.IMSEG6) AS LEBAR,
-            TRIM(MAX(IM.FOR_BRAND_GROUP)) AS GROUP_FORECAST, 
+            TRIM(MAX(BR.DRDL01)) AS GROUP_FORECAST, 
             SUM(SA.RPU/100) AS JUMLAH, MAX(TRIM(IM.IMDSC1)) AS DSC1, MAX(TRIM(IM.IMDSC2)) AS DSC2  FROM
             (
             SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' 
@@ -21,15 +21,19 @@ class JdeForecast < ActiveRecord::Base
             (
             SELECT IMLITM, IMPRGR, IMSEG1, IMSEG2, IMSEG3, IMSEG4, IMSEG5, IMSEG6, IMSRP3, IMDSC1, IMDSC2,
             NVL(CASE
-            WHEN IMPRGR = 'CLASSIC' THEN 'SERENITY'
-            WHEN IMSEG1 NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV', 'ET', 'LT') THEN 'ACCESSORIES'
-            END, IMPRGR) AS FOR_BRAND_GROUP, IMSRP1
+            WHEN IMSRP1 = 'C' THEN 'S'
+            WHEN IMSEG1 NOT IN ('KM', 'KB', 'SA', 'SB', 'ST', 'HB', 'DV', 'ET', 'LT') THEN 'A'
+            END, IMSRP1) AS FOR_BRAND_GROUP, IMSRP1
             FROM PRODDTA.F4101 WHERE IMTMPL LIKE '%BJ MATRASS%'
             ) IM ON TRIM(IM.IMLITM) = TRIM(SA.RPRMK)
             LEFT JOIN
             (
             SELECT * FROM PRODDTA.F0006
             ) BU ON TRIM(SA.RPMCU) = TRIM(BU.MCMCU)
+            LEFT JOIN
+            (
+            SELECT * FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S1'
+            ) BR ON TRIM(IM.FOR_BRAND_GROUP) = TRIM(BR.DRKY)
             LEFT JOIN
             (
             SELECT * FROM PRODCTL.F0005 WHERE DRSY = '00' AND DRRT = '04'
