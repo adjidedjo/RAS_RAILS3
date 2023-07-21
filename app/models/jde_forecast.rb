@@ -1,5 +1,5 @@
 class JdeForecast < ActiveRecord::Base
-    establish_connection "jdeoracle"
+    establish_connection "jdecam"
     self.table_name = "PRODDTA.F03B11" #rp
 
     def self.forecast_data

@@ -1,5 +1,5 @@
 class JdeInvoice < ActiveRecord::Base
-  establish_connection "jdeoracle"
+  establish_connection "jdecam"
   self.table_name = "PRODDTA.F03B11" #rp
   
   def self.get_delivery_number(so_pos)
@@ -46,6 +46,7 @@ class JdeInvoice < ActiveRecord::Base
   end
 
   def self.import_sales(date)
+    establish_connection "jdeoracle"
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
