@@ -242,18 +242,19 @@ class JdeInvoice < ActiveRecord::Base
 
   private
   def self.import_credit_note(date)
+    establish_connection "jdeoracle"
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
-       CM1.ABALPH AS NAMASALES,
-       IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, IM.IMPRGR AS BRAND, IM.IMSEG1 AS TIPE, 
+       CM1.ABALPH AS NAMASALES, IM.IMPRP4 AS PLAN_FAMILY,
+       IM.IMITM AS SHORTITEM, SA.RPRMK AS KODEBARANG, IM.IMDSC1 AS DSC1, IM.IMDSC2 AS DSC2, TRIM(BR.DRDL01) AS BRAND, IM.IMSEG1 AS TIPE, 
        JN.DRDL01 AS NAMATIPE, IM.IMSRP3, NVL(GI.DRDL01,'-') AS GROUPITEM, IM.IMSEG2 AS KODEARTIKEL, 
        ART.DRDL01 AS ARTICLE, NVL(IM.IMSEG3, '-') AS KODEKAIN, NVL(KA.DRDL01, '-') AS KAIN, 
        IM.IMSEG4 AS ST, IM.IMSEG5 AS PANJANG, IM.IMSEG6 AS LEBAR, (CASE WHEN SA.RPDCT = 'RM' THEN SUBSTR(SA.RPRMR1, 1, 8) ELSE SA.RPRMR1 END) AS REFEREN1, SA.RPVR01 AS REFEREN,
        NVL(AO.MAPA8, SA.RPAN8) AS PARENTCUST, NVL(AOCM.ABALPH, SA.RPALPH) AS CUSTOMERPARENT FROM
        (
-         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian("18/03/2023".to_date)}' AND
-         '#{date_to_julian("31/03/2023".to_date)}' 
+         SELECT * FROM PRODDTA.F03B11 WHERE RPUPMJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
+         '#{date_to_julian(Date.today.to_date)}'
          AND REGEXP_LIKE(rpdct,'RM')
        ) SA
        LEFT JOIN
@@ -263,19 +264,23 @@ class JdeInvoice < ActiveRecord::Base
        LEFT JOIN
        (
        SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'JN'
-       ) JN ON TRIM(JN.DRKY) = TRIM(IM.IMSEG1)
+       ) JN ON JN.DRKY LIKE '%'||TRIM(IM.IMSEG1)
        LEFT JOIN
        (
        SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'AT'
-       ) ART ON TRIM(ART.DRKY) = TRIM(IM.IMSEG2)
+       ) ART ON ART.DRKY LIKE '%'||TRIM(IM.IMSEG2)
        LEFT JOIN
        (
        SELECT * FROM PRODCTL.F0005 WHERE DRSY = '55' AND DRRT = 'KA'
-       ) KA ON TRIM(KA.DRKY) = TRIM(IM.IMSEG3)
+       ) KA ON KA.DRKY LIKE '%'||TRIM(IM.IMSEG3)
        LEFT JOIN
        (
        SELECT * FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S3'
-       ) GI ON TRIM(GI.DRKY)= TRIM(IM.IMSRP3)
+       ) GI ON GI.DRKY LIKE '%'||IM.IMSRP3
+       LEFT JOIN
+       (
+       SELECT * FROM PRODCTL.F0005 WHERE DRSY = '41' AND DRRT = 'S1'
+       ) BR ON TRIM(IM.IMSRP1) = TRIM(BR.DRKY)
        LEFT JOIN
        (
        SELECT * FROM PRODDTA.F0101
@@ -310,12 +315,7 @@ class JdeInvoice < ActiveRecord::Base
         AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
         AND lnid = '#{iv.lineso.to_i}' AND tanggalsj = '#{julian_to_date(iv.tanggalinvoice)}'
         AND kodebrg = '#{iv.kodebarang.strip}'")
-        if check.present? && (check.first.harganetto2 != iv.total)
-          ActiveRecord::Base.connection.execute("UPDATE dbmarketing.tblaporancabang SET harganetto2 = '#{iv.total}' WHERE
-            nofaktur = '#{iv.nofaktur.to_i}' 
-            AND orty = '#{iv.orty.strip}' AND kode_customer = '#{iv.kodecustomer.to_i}'  
-            AND lnid = '#{iv.lineso.to_i}' AND fiscal_month = '#{month}' AND nofaktur = '#{iv.nofaktur.to_i}'")
-        elsif check.empty?
+        if check.empty?
           cabang = jde_cabang(iv.bp.to_i.to_s.strip)
           area = find_area(cabang)
           fullnamabarang = "#{iv.dsc1.strip} " "#{iv.dsc2.strip}"
@@ -323,9 +323,9 @@ class JdeInvoice < ActiveRecord::Base
           adj = import_adjustment(iv.linefaktur.to_i, iv.noso.to_i, iv.doc) #find price_adjustment
           LaporanCabang.create!(cabang_id: cabang, noso: iv.nofaktur.to_i, tanggalsj: julian_to_date(iv.tanggalinvoice),
             kodebrg: iv.kodebarang.strip, namabrg: fullnamabarang, kode_customer: iv.kodecustomer.to_i, customer: iv.customer, 
-            jumlah: 0, satuan: "PC",
+            jumlah: iv.jumlah.to_s.gsub(/0/,"").to_i, satuan: "PC",
             jenisbrgdisc: iv.brand.strip, kodejenis: iv.tipe.strip, jenisbrg: iv.namatipe.strip, kodeartikel: iv.kodeartikel, namaartikel: iv.article,
-            kodekain: iv.kodekain.strip, namakain: iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
+            kodekain: iv.kodekain.strip, namakain: iv.kain.nil? ? '-' : iv.kain.strip, panjang: iv.panjang.to_i, lebar: iv.lebar.to_i, namabrand: iv.groupitem.strip,
             harganetto1: iv.total, harganetto2: iv.total, kota: iv.kota, tipecust: get_group_customer(iv.tipecust), 
             ketppb: "", tanggal_fetched: Date.today.to_date,
             salesman: iv.namasales, orty: iv.orty.strip, nopo: iv.kodesales, 
@@ -344,7 +344,8 @@ class JdeInvoice < ActiveRecord::Base
               cashback: adj.nil? ? 0 : adj.diskon8,
               nupgrade: adj.nil? ? 0 : adj.diskon9,
               groupcust: iv.parentcust,
-              plankinggroup: iv.customerparent.strip)
+              plankinggroup: iv.customerparent.strip,
+	      Jenis_Customer: iv.plan_family)
       end
     end
   end
