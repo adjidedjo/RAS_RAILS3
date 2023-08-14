@@ -46,7 +46,7 @@ class JdeInvoice < ActiveRecord::Base
   end
 
   def self.import_sales(date)
-    establish_connection "jdeoracle"
+    establish_connection "jdecam"
     invoices = find_by_sql("SELECT SA.RPLNID AS LINEFAKTUR, SA.RPDOC AS NOFAKTUR, SA.RPDCT AS ORTY, SA.RPSDOC AS NOSO, SA.RPSDCT AS DOC, SA.RPSFX AS LINESO, 
        SA.RPDIVJ AS TANGGALINVOICE, SA.RPU/100 AS JUMLAH, SA.RPAG AS TOTAL, 
        SA.RPMCU AS BP, SA.RPAN8 AS KODECUSTOMER, SA.RPALPH AS CUSTOMER, CM.ABAC02 AS TIPECUST, NVL(TRIM(CIT.ALCTY1), '-') AS KOTA, SM.SASLSM AS KODESALES, 
@@ -59,7 +59,7 @@ class JdeInvoice < ActiveRecord::Base
        (
          SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' AND
          '#{date_to_julian(Date.today.to_date)}'
-         AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+         AND REGEXP_LIKE(rpdct,'RI|RO|RX|RH')
        ) SA
        LEFT JOIN
        (
