@@ -15,7 +15,7 @@ class JdeForecast < ActiveRecord::Base
             SUM(SA.RPU/100) AS JUMLAH, MAX(TRIM(IM.IMDSC1)) AS DSC1, MAX(TRIM(IM.IMDSC2)) AS DSC2  FROM
             (
             SELECT * FROM PRODDTA.F03B11 WHERE RPDIVJ BETWEEN '#{date_to_julian(Date.yesterday.to_date)}' 
-            AND '#{date_to_julian('31/07/2023'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX')
+            AND '#{date_to_julian('31/07/2023'.to_date)}' AND REGEXP_LIKE(rpdct,'RI|RO|RX|RH')
             ) SA
             LEFT JOIN
             (
