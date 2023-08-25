@@ -87,6 +87,7 @@ class ControlUpload
     JdeInvoice.import_acc_receivable
     JdeForecast.forecast_data
     JdePbj.order_managements
+    JdeWhsInvoice.import_sales(Date.today)
     #JdeSoDetail.import_transfers_consigment
     #JdeSoDetail.import_sales_consigment
   end
